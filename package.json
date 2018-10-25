@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Websocket based trading bot for cryptocurrencies",
   "main": "src/index.ts",
-  "repository": "woutercleymans/SockTrader",
+  "repository": "cwouter/SockTrader",
   "scripts": {
     "pretest": "tsc -p tsconfig.spec.json",
     "test": "cross-env NODE_ENV=test mocha --require source-map-support/register build/tests/**/*.spec.js",
