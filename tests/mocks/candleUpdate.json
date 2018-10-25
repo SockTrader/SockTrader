@@ -1,0 +1,19 @@
+{
+  "jsonrpc": "2.0",
+  "method": "updateCandles",
+  "params": {
+    "data": [
+      {
+        "timestamp": "2018-09-08T14:11:00.000Z",
+        "open": "0.033850",
+        "close": "0.033844",
+        "min": "0.033844",
+        "max": "0.033850",
+        "volume": "2.110",
+        "volumeQuote": "0.071414091"
+      }
+    ],
+    "symbol": "ETHBTC",
+    "period": "M1"
+  }
+}

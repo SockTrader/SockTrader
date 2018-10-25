@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+import "source-map-support/register";
+import HitBTC, {CandleInterval} from "./core/exchanges/hitBTC";
+import SockTrader from "./core/sockTrader";
+
+// Import custom strategy
+import MyFancyStrategy from "./strategies/myFancyStrategy";
+
+// Get exchange credentials
+const credentials = require("../credentials.json");
+
+// Initialize SockTrader
+const sockTrader = new SockTrader();
+const hitBTC = HitBTC.getInstance(credentials.publicKey, credentials.secretKey);
+
+// Add exchange
+sockTrader.addExchange(hitBTC);
+
+// Add strategy
+sockTrader.addStrategy({
+    strategy: MyFancyStrategy,
+    pair: "BTCETH",
+    interval: CandleInterval.FIVE_MINUTES,
+    exchange: hitBTC,
+});
+
+// Start trading :-)
+sockTrader.start();

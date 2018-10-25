@@ -1,0 +1,18 @@
+{
+  "method": "report",
+  "params": {
+    "id": "38727737293",
+    "clientOrderId": "123clientOrderId",
+    "symbol": "BTCETH",
+    "side": "buy",
+    "status": "filled",
+    "type": "limit",
+    "timeInForce": "GTC",
+    "quantity": "0.02",
+    "price": "0.001273",
+    "cumQuantity": "0",
+    "createdAt": "2018-06-27T09:03:44.680Z",
+    "updatedAt": "2018-06-27T09:03:44.680Z",
+    "reportType": "trade"
+  }
+}
