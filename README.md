@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/cwouter/node-dahua-api.svg?branch=master)](https://travis-ci.com/cwouter/node-dahua-api)
+[![Build Status](https://travis-ci.org/cwouter/SockTrader.svg?branch=master)](https://travis-ci.org/cwouter/SockTrader)
 
 # Cryptocurrency trading bot
 ###### Based on Node JS EventEmitter and Websockets
