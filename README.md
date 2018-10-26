@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/cwouter/node-dahua-api.svg?branch=master)](https://travis-ci.com/cwouter/node-dahua-api)
+
 # Cryptocurrency trading bot
 ###### Based on Node JS EventEmitter and Websockets
 
