@@ -1,11 +1,11 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Build Status](https://travis-ci.org/cwouter/SockTrader.svg?branch=master)](https://travis-ci.org/cwouter/SockTrader)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4ff5f03cd3df6fe8f776/maintainability)](https://codeclimate.com/github/cwouter/SockTrader/maintainability)
-![Dependencies](https://david-dm.org/cwouter/SockTrader.svg)
+[![Dependencies](https://david-dm.org/cwouter/SockTrader.svg)](https://david-dm.org/cwouter/SockTrader)
 
 
-### Cryptocurrency trading bot
-###### WebSocket and event based trading bot written in TypeScript. 
+# Cryptocurrency trading bot
+##### WebSocket and event based trading bot written in TypeScript. 
 
 Project is currently under development!
 
@@ -61,7 +61,7 @@ sockTrader.addStrategy({
 sockTrader.start();
 ```
 
-And secondly create a file: `src/strategies/myStrategy.ts`
+And secondly create a strategy file: `src/strategies/myStrategy.ts`
 Example:
 ```typescript
 import {ICandle} from "../core/candleCollection";

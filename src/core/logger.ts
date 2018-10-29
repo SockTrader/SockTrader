@@ -1,6 +1,5 @@
 import moment from "moment";
 import {createLogger, format, transports} from "winston";
-// const logzioTransport = require('winston-logzio');
 const defaults = {silent: process.env.NODE_ENV === "test"};
 
 const stringFormat = format.printf((info) => {
