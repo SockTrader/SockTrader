@@ -45,7 +45,6 @@ export default class CandleCollection extends EventEmitter {
             endDate: new Date(),
         });
 
-
         this.candles = this.fillCandleGaps(candles, interval);
         this.emit("update", this.candles);
     }
@@ -111,22 +110,20 @@ export default class CandleCollection extends EventEmitter {
 
         let candlePos = 1;
         while (true) {
-            try {
-                const intervalDate: Moment = moment(interval.next().toDate());
-                let candle = rawCandles[rawCandles.length - 1 - candlePos];
-                candle = (typeof candle === "undefined") ? rawCandles[rawCandles.length - 1] : candle;
-
-                let newCandle: ICandle = candle;
-                if (!intervalDate.isSame(candle.timestamp, "minute")) {
-                    newCandle = this.getRecycledCandle(candles[0], intervalDate);
-                } else {
-                    candlePos += 1;
-                }
-
-                candles.unshift(newCandle);
-            } catch (e) {
+            if (!interval.hasNext()) {
                 break;
             }
+
+            const nextInterval: Moment = moment(interval.next().toDate());
+            let candle = rawCandles[rawCandles.length - 1 - candlePos] || rawCandles[rawCandles.length - 1];
+
+            if (!nextInterval.isSame(candle.timestamp, "minute")) {
+                candle = this.getRecycledCandle(candles[0], nextInterval);
+            } else {
+                candlePos += 1;
+            }
+
+            candles.unshift(candle);
         }
 
         return candles;
