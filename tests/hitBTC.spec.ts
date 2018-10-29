@@ -10,7 +10,7 @@ const pair = 'BTCETH';
 
 describe('HitBTC', () => {
 
-    it('get exchange orderbook', () => {
+    it.skip('get exchange orderbook', () => {
         const exc = new HitBTC();
         const ob1 = new Orderbook(pair, 6);
 
@@ -82,7 +82,7 @@ describe('HitBTC', () => {
         send.reset();
     });
 
-    it('update orderbook on exchange', () => {
+    it.skip('update orderbook on exchange', () => {
         const exc = new HitBTC();
         const emit = stub(exc, 'emit');
 

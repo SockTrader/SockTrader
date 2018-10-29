@@ -31,7 +31,7 @@ export interface IIntervalDict {
 export default class CandleCollection extends EventEmitter {
     private candles: ICandle[] = [];
 
-    public constructor(private interval: ICandleInterval, autoGenerateCandles: boolean = true) {
+    public constructor(private interval: ICandleInterval, autoGenerateCandles: boolean = true, private retentionPeriod: number = 0) {
         super();
 
         if (autoGenerateCandles) {
@@ -40,7 +40,13 @@ export default class CandleCollection extends EventEmitter {
     }
 
     public set(candles: ICandle[]): void {
-        this.candles = this.fillCandleGaps(candles, this.interval, new Date());
+        const interval = parser.parseExpression(this.interval.cron, {
+            currentDate: candles[0].timestamp.toDate(),
+            endDate: new Date(),
+        });
+
+
+        this.candles = this.fillCandleGaps(candles, interval);
         this.emit("update", this.candles);
     }
 
@@ -98,14 +104,10 @@ export default class CandleCollection extends EventEmitter {
     /**
      * Fill gaps in candle list until now, based on a cron expression.
      */
-    private fillCandleGaps(rawCandles: ICandle[], cronExpression: ICandleInterval, endDate: Date): ICandle[] {
+    private fillCandleGaps(rawCandles: ICandle[], interval: any): ICandle[] {
         rawCandles = this.sort(rawCandles);
 
         const candles: ICandle[] = [rawCandles[rawCandles.length - 1]]; // Copy last candle (not included in interval)
-        const interval = parser.parseExpression(cronExpression.cron, {
-            currentDate: candles[0].timestamp.toDate(),
-            endDate,
-        });
 
         let candlePos = 1;
         while (true) {
@@ -139,12 +141,12 @@ export default class CandleCollection extends EventEmitter {
         timestamp,
     });
 
-    private getRecycledCandle = (prevCandle: ICandle, timestamp: Moment): ICandle => ({
+    private getRecycledCandle = ({close}: ICandle, timestamp: Moment): ICandle => ({
         volume: 0,
-        open: prevCandle.close,
-        high: prevCandle.close,
-        low: prevCandle.close,
-        close: prevCandle.close,
+        open: close,
+        high: close,
+        low: close,
+        close,
         timestamp,
     });
 }

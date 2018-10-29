@@ -6,8 +6,7 @@
   "repository": "cwouter/SockTrader",
   "scripts": {
     "pretest": "tsc -p tsconfig.spec.json",
-    "test": "cross-env NODE_ENV=test mocha --require source-map-support/register build/tests/**/*.spec.js",
-    "dev-test": "cross-env NODE_ENV=test nodemon -e ts --exec \"npm test\"",
+    "test": "cross-env NODE_ENV=test mocha --exit --require source-map-support/register build/tests/**/*.spec.js",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile\"",
     "compile": "tsc && node ./build/index.js",
     "docs": "esdoc"
@@ -53,6 +52,7 @@
     "nanoid": "^1.2.5",
     "nanoid-dictionary": "^1.0.1",
     "numeral": "^2.0.6",
+    "technicalindicators": "^2.0.5",
     "typescript": "^3.1.1",
     "websocket": "^1.0.28",
     "winston": "^3.1.0"
