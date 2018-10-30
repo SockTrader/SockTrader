@@ -1,4 +1,4 @@
-import {CronJob} from "cron";
+import {CronJob, time} from "cron";
 import parser from "cron-parser";
 import {EventEmitter} from "events";
 import {Moment} from "moment";
@@ -100,6 +100,14 @@ export default class CandleCollection extends EventEmitter {
         }, undefined, true, "Europe/Brussels");
     }
 
+    private candleEqualsInterval(candle: ICandle, timestamp: Moment): boolean {
+        return candle.timestamp.isSame(timestamp, "minute");
+    }
+
+    private equalsRetentionPeriod(candles: []): boolean {
+        return candles.length === this.retentionPeriod;
+    }
+
     /**
      * Fill gaps in candle list until now, based on a cron expression.
      */
@@ -107,31 +115,39 @@ export default class CandleCollection extends EventEmitter {
         rawCandles = this.sort(rawCandles);
 
         const candles: ICandle[] = [];
+        const generateCandle = this.getCandleGenerator(rawCandles);
 
-        let candlePos = 0;
         while (true) {
             const nextInterval: Moment = moment(interval.prev().toDate());
-            let candle = rawCandles[candlePos];
-
-            if (!nextInterval.isSame(candle.timestamp, "minute")) {
-                candle = this.getRecycledCandle(rawCandles[candlePos], nextInterval);
-            } else {
-                candlePos += 1;
-            }
+            const candle = generateCandle(nextInterval);
 
             candles.unshift(candle);
 
-            if (candles.length === this.retentionPeriod) {
+            if (this.equalsRetentionPeriod(candles as [])) {
                 break;
             }
 
-            const lastRawCandle = rawCandles[rawCandles.length - 1].timestamp;
-            if (lastRawCandle.isSame(nextInterval, "minute")) {
+            if (this.candleEqualsInterval(rawCandles[rawCandles.length - 1], nextInterval)) {
                 break;
             }
         }
 
         return candles;
+    }
+
+    private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
+        let position = 0;
+        return (nextInterval) => {
+            let candle = candles[position];
+
+            if (!this.candleEqualsInterval(candle, nextInterval)) {
+                candle = this.getRecycledCandle(candles[position], nextInterval);
+            } else {
+                position += 1;
+            }
+
+            return candle;
+        };
     }
 
     private getEmptyCandle = (timestamp: Moment): ICandle => ({
