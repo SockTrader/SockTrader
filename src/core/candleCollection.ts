@@ -41,11 +41,11 @@ export default class CandleCollection extends EventEmitter {
 
     public set(candles: ICandle[]): void {
         const interval = parser.parseExpression(this.interval.cron, {
-            currentDate: candles[0].timestamp.toDate(),
-            endDate: new Date(),
+            endDate: candles[0].timestamp.toDate(),
+            currentDate: new Date(),
         });
 
-        this.candles = this.fillCandleGaps(candles, interval);
+        this.candles = this.fillCandleGaps(candles, interval).reverse();
         this.emit("update", this.candles);
     }
 
@@ -106,25 +106,29 @@ export default class CandleCollection extends EventEmitter {
     private fillCandleGaps(rawCandles: ICandle[], interval: any): ICandle[] {
         rawCandles = this.sort(rawCandles);
 
-        const lastIndex = rawCandles.length - 1;
-        const candles: ICandle[] = [rawCandles[lastIndex]]; // Copy last candle (not included in interval)
+        const candles: ICandle[] = [];
 
-        let candlePos = 1;
+        let candlePos = 0;
         while (true) {
-            if (!interval.hasNext()) {
-                break;
-            }
-
-            const nextInterval: Moment = moment(interval.next().toDate());
-            let candle = rawCandles[lastIndex - candlePos] || rawCandles[lastIndex];
+            const nextInterval: Moment = moment(interval.prev().toDate());
+            let candle = rawCandles[candlePos];
 
             if (!nextInterval.isSame(candle.timestamp, "minute")) {
-                candle = this.getRecycledCandle(candles[0], nextInterval);
+                candle = this.getRecycledCandle(rawCandles[candlePos], nextInterval);
             } else {
                 candlePos += 1;
             }
 
             candles.unshift(candle);
+
+            if (candles.length === this.retentionPeriod) {
+                break;
+            }
+
+            const lastRawCandle = rawCandles[rawCandles.length - 1].timestamp;
+            if (lastRawCandle.isSame(nextInterval, "minute")) {
+                break;
+            }
         }
 
         return candles;
