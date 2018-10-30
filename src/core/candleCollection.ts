@@ -106,7 +106,8 @@ export default class CandleCollection extends EventEmitter {
     private fillCandleGaps(rawCandles: ICandle[], interval: any): ICandle[] {
         rawCandles = this.sort(rawCandles);
 
-        const candles: ICandle[] = [rawCandles[rawCandles.length - 1]]; // Copy last candle (not included in interval)
+        const lastIndex = rawCandles.length - 1;
+        const candles: ICandle[] = [rawCandles[lastIndex]]; // Copy last candle (not included in interval)
 
         let candlePos = 1;
         while (true) {
@@ -115,7 +116,7 @@ export default class CandleCollection extends EventEmitter {
             }
 
             const nextInterval: Moment = moment(interval.next().toDate());
-            let candle = rawCandles[rawCandles.length - 1 - candlePos] || rawCandles[rawCandles.length - 1];
+            let candle = rawCandles[lastIndex - candlePos] || rawCandles[lastIndex];
 
             if (!nextInterval.isSame(candle.timestamp, "minute")) {
                 candle = this.getRecycledCandle(candles[0], nextInterval);
