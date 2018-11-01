@@ -91,7 +91,7 @@ export default class CandleCollection extends EventEmitter {
             const last = moment(cron.lastDate()).second(0).millisecond(0);
 
             if (this.candles.length <= 0) {
-                this.candles.unshift(this.getEmptyCandle(last));
+                this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last));
             } else if (last.isAfter(this.candles[0].timestamp, "minute")) {
                 this.candles.unshift(this.getRecycledCandle(this.candles[0], last));
             }
@@ -135,6 +135,9 @@ export default class CandleCollection extends EventEmitter {
         return candles;
     }
 
+    /**
+     * Returns a function which will either return a new candle or recycle a previous candle.
+     */
     private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
         let position = 0;
         return (nextInterval) => {
@@ -150,21 +153,15 @@ export default class CandleCollection extends EventEmitter {
         };
     }
 
-    private getEmptyCandle = (timestamp: Moment): ICandle => ({
-        open: 0,
-        high: 0,
-        volume: 0,
-        low: 0,
-        close: 0,
-        timestamp,
-    });
-
+    /**
+     * Copy candle based on the close value of a different candle
+     */
     private getRecycledCandle = ({close}: ICandle, timestamp: Moment): ICandle => ({
-        volume: 0,
         open: close,
         high: close,
         low: close,
         close,
+        volume: 0,
         timestamp,
     });
 }
