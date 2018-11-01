@@ -24,34 +24,26 @@ const getFileTransport = (level, file) => new transports.File({
     level,
 });
 
+const getConsoleTransport = (level) => new transports.Console({...defaults, format: consoleFormat, level});
+
 const errorLogger = createLogger({
     levels: {error: 3},
-    transports: [
-        getFileTransport("error", "error"),
-        new transports.Console({...defaults, format: consoleFormat, level: "error"}),
-    ],
+    transports: [getFileTransport("error", "error"), getConsoleTransport("error")],
 });
 
 const infoLogger = createLogger({
     levels: {info: 2},
-    transports: [
-        getFileTransport("info", "system"),
-        new transports.Console({...defaults, format: consoleFormat, level: "info"}),
-    ],
+    transports: [getFileTransport("info", "system"), getConsoleTransport("info")],
 });
 
 const debugLogger = createLogger({
     levels: {debug: 1},
-    transports: [
-        getFileTransport("debug", "debug"),
-    ],
+    transports: [getFileTransport("debug", "debug")],
 });
 
 const inputLogger = createLogger({
     levels: {input: 0},
-    transports: [
-        new transports.File({filename: "./src/logs/input.log", level: "input", format: fileFormat}),
-    ],
+    transports: [getFileTransport("input", "input")],
 });
 
 export default {
