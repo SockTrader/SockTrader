@@ -24,7 +24,6 @@ const getFileTransport = (level, file) => new transports.File({
     level,
 });
 
-
 const errorLogger = createLogger({
     levels: {error: 3},
     transports: [

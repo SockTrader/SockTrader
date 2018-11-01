@@ -9,8 +9,11 @@
     "test": "cross-env NODE_ENV=test mocha --exit --require source-map-support/register build/tests/**/*.spec.js",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile\"",
     "compile": "tsc && node ./build/index.js",
-    "docs": "esdoc"
+    "docs": "esdoc",
+    "lint": "tslint --project ./",
+    "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
+  "pre-commit": ["pre-commit", "lint"],
   "authors": [
     "wouter cleymans"
   ],
@@ -78,6 +81,7 @@
     "esdoc-standard-plugin": "^1.0.0",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
+    "pre-commit": "^1.2.2",
     "sinon": "^7.1.0",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
