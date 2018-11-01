@@ -30,15 +30,19 @@ export interface IIntervalDict {
  */
 export default class CandleCollection extends EventEmitter {
     private candles: ICandle[] = [];
+    private cronjob: CronJob;
 
-    public constructor(private interval: ICandleInterval, autoGenerateCandles: boolean = true, private retentionPeriod: number = 0) {
+    public constructor(private interval: ICandleInterval, generateCandles: boolean = true, private retentionPeriod: number = 0) {
         super();
 
-        if (autoGenerateCandles) {
-            this.autoGenerateCandles(interval);
-        }
+        // @TODO replace timezone by a config variable
+        const candleGenerator = this.generateCandles.bind(this);
+        this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, "Europe/Brussels");
     }
 
+    /**
+     * Immediately set/replace all candles in the collection
+     */
     public set(candles: ICandle[]): void {
         const interval = parser.parseExpression(this.interval.cron, {
             endDate: candles[0].timestamp.toDate(),
@@ -52,13 +56,20 @@ export default class CandleCollection extends EventEmitter {
     public sort = (candles: ICandle[]): ICandle[] => candles.sort((a, b) => b.timestamp.diff(a.timestamp));
 
     /**
+     * Stop automatic candle generator
+     */
+    public stop() {
+        this.cronjob.stop();
+    }
+
+    /**
      * Update or insert newly received candles
      */
     public update(candles: ICandle[]): void {
         let needsSort = false;
         candles.forEach((updatedCandle) => {
             const candleUpdated = this.candles.some((candle, idx) => {
-                if (candle.timestamp.isSame(updatedCandle.timestamp, "minute")) {
+                if (this.candleEqualsTimestamp(candle, updatedCandle.timestamp)) {
                     this.candles[idx] = updatedCandle;
                     return true;
                 }
@@ -67,6 +78,7 @@ export default class CandleCollection extends EventEmitter {
 
             if (!candleUpdated) {
                 const l = this.candles.unshift(updatedCandle);
+                this.removeRetentionOverflow(this.candles);
 
                 // You need at least 2 candles to sort the list..
                 if (l >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
@@ -84,55 +96,53 @@ export default class CandleCollection extends EventEmitter {
     }
 
     /**
-     * Generate new candles on each candle interval
+     * Validates if a candle occurs on a certain timestamp
      */
-    private autoGenerateCandles(cronExpression: ICandleInterval): void {
-        const cron = new CronJob(cronExpression.cron, () => {
-            const last = moment(cron.lastDate()).second(0).millisecond(0);
-
-            if (this.candles.length <= 0) {
-                this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last));
-            } else if (last.isAfter(this.candles[0].timestamp, "minute")) {
-                this.candles.unshift(this.getRecycledCandle(this.candles[0], last));
-            }
-
-            this.emit("update", this.candles);
-        }, undefined, true, "Europe/Brussels");
-    }
-
-    private candleEqualsInterval(candle: ICandle, timestamp: Moment): boolean {
+    private candleEqualsTimestamp(candle: ICandle, timestamp: Moment): boolean {
         return candle.timestamp.isSame(timestamp, "minute");
-    }
-
-    private equalsRetentionPeriod(candles: []): boolean {
-        return candles.length === this.retentionPeriod;
     }
 
     /**
      * Fill gaps in candle list until now, based on a cron expression.
      */
-    private fillCandleGaps(rawCandles: ICandle[], interval: any): ICandle[] {
-        rawCandles = this.sort(rawCandles);
+    private fillCandleGaps(candles: ICandle[], interval: any): ICandle[] {
+        candles = this.sort(candles);
 
-        const candles: ICandle[] = [];
-        const generateCandle = this.getCandleGenerator(rawCandles);
+        const result: ICandle[] = [];
+        const generateCandle = this.getCandleGenerator(candles);
 
         while (true) {
             const nextInterval: Moment = moment(interval.prev().toDate());
             const candle = generateCandle(nextInterval);
 
-            candles.unshift(candle);
+            result.unshift(candle);
 
-            if (this.equalsRetentionPeriod(candles as [])) {
+            if (result.length === this.retentionPeriod) {
                 break;
             }
 
-            if (this.candleEqualsInterval(rawCandles[rawCandles.length - 1], nextInterval)) {
+            if (this.candleEqualsTimestamp(candles[candles.length - 1], nextInterval)) {
                 break;
             }
         }
 
-        return candles;
+        return result;
+    }
+
+    /**
+     * Generate new candles on each candle interval
+     */
+    private generateCandles(): void {
+        const last = moment(this.cronjob.lastDate()).second(0).millisecond(0);
+
+        if (this.candles.length <= 0) {
+            this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last));
+        } else if (last.isAfter(this.candles[0].timestamp, "minute")) {
+            this.candles.unshift(this.getRecycledCandle(this.candles[0], last));
+        }
+
+        this.removeRetentionOverflow(this.candles);
+        this.emit("update", this.candles);
     }
 
     /**
@@ -143,7 +153,7 @@ export default class CandleCollection extends EventEmitter {
         return (nextInterval) => {
             let candle = candles[position];
 
-            if (!this.candleEqualsInterval(candle, nextInterval)) {
+            if (!this.candleEqualsTimestamp(candle, nextInterval)) {
                 candle = this.getRecycledCandle(candles[position], nextInterval);
             } else {
                 position += 1;
@@ -164,4 +174,13 @@ export default class CandleCollection extends EventEmitter {
         volume: 0,
         timestamp,
     });
+
+    /**
+     * Removes candles outside the retention period
+     */
+    private removeRetentionOverflow(candles: ICandle[]): void {
+        if (this.retentionPeriod > 0 && candles.length > this.retentionPeriod) {
+            candles.splice(this.retentionPeriod - candles.length);
+        }
+    }
 }
