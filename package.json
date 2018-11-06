@@ -22,6 +22,9 @@
     "wouter cleymans"
   ],
   "license": "GPL-3.0",
+  "nyc": {
+    "exclude": "**/*.spec.js"
+  },
   "nodemonConfig": {
     "ignore": [
       "logs/*"
