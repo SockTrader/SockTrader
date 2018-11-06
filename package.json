@@ -6,7 +6,8 @@
   "repository": "cwouter/SockTrader",
   "scripts": {
     "pretest": "tsc -p tsconfig.spec.json",
-    "test": "cross-env NODE_ENV=test mocha --exit --require source-map-support/register build/tests/**/*.spec.js",
+    "test": "cross-env NODE_ENV=test nyc mocha --exit --require source-map-support/register build/tests/**/*.spec.js",
+    "posttest": "nyc report --reporter=json",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile\"",
     "compile": "tsc && node ./build/index.js",
     "docs": "esdoc",
@@ -77,6 +78,7 @@
     "@types/sinon": "^5.0.2",
     "@types/websocket": "0.0.40",
     "chai": "^4.2.0",
+    "codecov": "^3.1.0",
     "cross-env": "^5.2.0",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
