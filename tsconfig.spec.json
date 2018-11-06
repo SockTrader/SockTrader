@@ -1,6 +1,6 @@
 {
   "include": [
-    "./tests/**/*.ts"
+    "./test/**/*.ts"
   ],
   "exclude": [
     "./node_modules"

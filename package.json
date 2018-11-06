@@ -6,7 +6,7 @@
   "repository": "cwouter/SockTrader",
   "scripts": {
     "pretest": "tsc -p tsconfig.spec.json",
-    "test": "cross-env NODE_ENV=test nyc mocha --exit --require source-map-support/register build/tests/**/*.spec.js",
+    "test": "cross-env NODE_ENV=test nyc mocha --exit --require source-map-support/register build/test/**/*.spec.js",
     "posttest": "nyc report --reporter=json",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile\"",
     "compile": "tsc && node ./build/index.js",

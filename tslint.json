@@ -6,7 +6,7 @@
   "jsRules": {},
   "linterOptions": {
     "exclude": [
-      "./tests/**/*.test.ts"
+      "./test/**/*.test.ts"
     ]
   },
   "rules": {
