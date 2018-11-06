@@ -13,7 +13,10 @@
     "lint": "tslint --project ./",
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
-  "pre-commit": ["pre-commit", "lint"],
+  "pre-commit": [
+    "pre-commit",
+    "lint"
+  ],
   "authors": [
     "wouter cleymans"
   ],
@@ -43,7 +46,7 @@
     ]
   },
   "dependencies": {
-    "cron": "^1.4.1",
+    "cron": "^1.5.0",
     "cron-parser": "^2.6.0",
     "decimal.js-light": "^2.4.1",
     "lodash.reverse": "^4.0.1",
@@ -52,11 +55,11 @@
     "lodash.uniqwith": "^4.5.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
-    "nanoid": "^1.2.5",
+    "nanoid": "^2.0.0",
     "nanoid-dictionary": "^1.0.1",
     "numeral": "^2.0.6",
     "technicalindicators": "^2.0.5",
-    "typescript": "^3.1.1",
+    "typescript": "^3.1.6",
     "websocket": "^1.0.28",
     "winston": "^3.1.0"
   },
@@ -82,7 +85,7 @@
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "pre-commit": "^1.2.2",
-    "sinon": "^7.1.0",
+    "sinon": "^7.1.1",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0"

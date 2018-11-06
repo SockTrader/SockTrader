@@ -2,7 +2,7 @@ import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import {alphabets as dict, numbers} from "nanoid-dictionary";
 import generate from "nanoid/generate";
-import {client as WebSocketClient, connection} from "websocket";
+import {client as WebSocketClient, connection, IMessage} from "websocket";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import Orderbook, {IOrderbookEntry} from "../orderbook";
@@ -10,7 +10,7 @@ import {IOrder, OrderSide} from "../orderInterface";
 import {IExchange} from "./exchangeInterface";
 
 export interface IResponseMapper {
-    onReceive(msg: any): void;
+    onReceive(msg: IMessage): void;
 }
 
 export interface ITradeablePair {
@@ -281,7 +281,7 @@ export default abstract class Exchange extends EventEmitter implements IExchange
         this.connection = conn;
         this.connection.on("error", (error) => logger.error("Connection Error: " + error.toString()));
         this.connection.on("close", () => logger.info("Connection Closed"));
-        this.connection.on("message", (data: any) => this.mapper.onReceive(data));
+        this.connection.on("message", (data: IMessage) => this.mapper.onReceive(data));
 
         this.loadCurrencies();
     }

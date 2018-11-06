@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
 import moment = require("moment");
+import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
@@ -75,14 +76,15 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         this.removeAllListeners();
     }
 
-    // @TODO fix type any
-    public onReceive(msg: any): void {
+    public onReceive(msg: IMessage): void {
         if (msg.type !== "utf8") {
             throw new Error("Response is not UTF8!");
         }
 
-        const d = JSON.parse(msg.utf8Data);
-        this.emit(`api.${d.method || d.id}`, d);
+        if (msg.utf8Data) {
+            const d = JSON.parse(msg.utf8Data);
+            this.emit(`api.${d.method || d.id}`, d);
+        }
     }
 
     private mapCandles(data: IHitBTCCandlesResponse): ICandle[] {
@@ -99,7 +101,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
     private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
         const result = response.result.map(({id, tickSize, quantityIncrement}) => ({
             id,
-            quantityIncrement: parseInt(quantityIncrement, 10),
+            quantityIncrement: parseFloat(quantityIncrement),
             tickSize: parseFloat(tickSize),
         }));
         this.exchange.onCurrenciesLoaded(result);

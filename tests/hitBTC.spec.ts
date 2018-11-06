@@ -10,6 +10,11 @@ const pair = 'BTCETH';
 
 describe('HitBTC', () => {
 
+    const getExchange = () => {
+        const exc = new HitBTC();
+        return {send: stub(exc, 'send'), exc};
+    };
+
     it.skip('get exchange orderbook', () => {
         const exc = new HitBTC();
         const ob1 = new Orderbook(pair, 6);
@@ -50,39 +55,35 @@ describe('HitBTC', () => {
     });
 
     it('subscribe to exchange reports', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+        const {exc, send} = getExchange();
         exc.subscribeReports();
         assert.deepEqual(send.getCall(0).args, ['subscribeReports']);
         send.reset();
     });
 
     it('subscribe to orderbook for given pair', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+        const {exc, send} = getExchange();
         exc.subscribeOrderbook(pair);
         assert.deepEqual(send.getCall(0).args, ['subscribeOrderbook', {symbol: pair}]);
         send.reset();
     });
 
     it('subscribe to candles for given pair', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+        const {exc, send} = getExchange();
         exc.subscribeCandles(pair, CandleInterval.ONE_MONTH);
         assert.deepEqual(send.getCall(0).args, ['subscribeCandles', {period: '1M', symbol: pair}]);
         send.reset();
     });
 
-    it('authenticate on exchange', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+    it('should authenticate user on exchange', () => {
+        const {exc, send} = getExchange();
         exc.login('PUB_123', 'PRIV_123');
         expect(send.getCall(0).args[0]).to.equal('login');
         expect(send.getCall(0).args[1]).to.deep.include({algo: 'HS256', pKey: 'PUB_123'});
         send.reset();
     });
 
-    it.skip('update orderbook on exchange', () => {
+    it.skip('should update an in memory orderbook', () => {
         const exc = new HitBTC();
         const emit = stub(exc, 'emit');
 
@@ -104,20 +105,42 @@ describe('HitBTC', () => {
         emit.reset();
     });
 
-    it.skip('get exchange configuration', () => {
-        const exc = new HitBTC();
-        const emit = stub(exc, 'send');
-        const once = spy(exc, 'once');
-        // exc.fetchCurrencies();
-        expect(emit.getCall(0).args).to.deep.equal(['getSymbols']);
-        expect(once.getCall(0).args).to.deep.include('api.getSymbols');
-        emit.reset();
-        once.restore();
+    it('should load configuration for all currencies', () => {
+        const {exc, send} = getExchange();
+        const isReady = spy(exc, 'isReady');
+
+        exc.loadCurrencies();
+        expect(send.getCall(0).args).to.deep.equal(['getSymbols']);
+
+        exc.mapper.onReceive({
+            type: "utf8",
+            utf8Data: JSON.stringify({
+                id: "getSymbols",
+                method: "getSymbols",
+                result: [
+                    {
+                        id: "BTCUSD",
+                        tickSize: "0.000001",
+                        quantityIncrement: "0.001",
+                    }
+                ]
+            }),
+        });
+
+        expect(isReady.calledOnce).to.deep.equal(true);
+        expect(exc["isCurrenciesLoaded"]).to.equal(true);
+        expect(exc["currencies"]).to.deep.equal([{
+            "id": "BTCUSD",
+            "quantityIncrement": 0.001,
+            "tickSize": 0.000001
+        }]);
+
+        isReady.restore();
+        send.reset();
     });
 
-    it('cancel order', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+    it('should cancel an order', () => {
+        const {exc, send} = getExchange();
         exc['setOrderInProgress'] = fake();
         const order = {
             clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
@@ -139,8 +162,7 @@ describe('HitBTC', () => {
     });
 
     it('adjust existing order', () => {
-        const exc = new HitBTC();
-        const send = stub(exc, 'send');
+        const {exc, send} = getExchange();
         const order = {
             clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
             createdAt: new Date(),
