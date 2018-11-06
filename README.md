@@ -1,4 +1,5 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Coverage](https://codecov.io/gh/cwouter/SockTrader/branch/master/graph/badge.svg)](https://codecov.io/gh/cwouter/SockTrader)
 [![Build Status](https://travis-ci.org/cwouter/SockTrader.svg?branch=master)](https://travis-ci.org/cwouter/SockTrader)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4ff5f03cd3df6fe8f776/maintainability)](https://codeclimate.com/github/cwouter/SockTrader/maintainability)
 [![Dependencies](https://david-dm.org/cwouter/SockTrader.svg)](https://david-dm.org/cwouter/SockTrader)
