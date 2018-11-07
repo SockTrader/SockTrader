@@ -99,7 +99,7 @@ export default class CandleCollection extends EventEmitter {
      * Validates if a candle occurs on a certain timestamp
      */
     private candleEqualsTimestamp(candle: ICandle, timestamp: Moment): boolean {
-        return candle.timestamp.isSame(timestamp, "minute");
+        return candle.timestamp.isSameOrAfter(timestamp, "minute");
     }
 
     /**

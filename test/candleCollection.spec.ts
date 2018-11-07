@@ -100,6 +100,33 @@ describe('CandleCollection', () => {
                 {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTimestamp(start, 1)},
             ]
         ]);
+        clock.restore();
     });
 
+    it('Should update the collection', () => {
+        const start = moment().seconds(0).millisecond(0);
+        const results = [];
+
+        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
+        collection.on("update", (candles: ICandle[]) => {
+            const testCandles = candles.map(c => ({...c, timestamp: c.timestamp.toISOString()}));
+            results.push(testCandles);
+        });
+
+        // @TODO verify test results..
+
+        const end = start.clone().add(1, 'minutes');
+        // const end = start.clone().subtract(1, 'minutes');
+        collection.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: end}]);
+        collection.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: end}]);
+
+        expect(results).to.deep.equal([
+            [
+                {open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTimestamp(start, 1)},
+            ],
+            [
+                {open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTimestamp(start, 1)}
+            ],
+        ]);
+    })
 });
