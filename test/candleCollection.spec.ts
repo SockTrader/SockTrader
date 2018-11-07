@@ -4,9 +4,10 @@ import {describe, it} from 'mocha';
 import sinon from 'sinon';
 
 import CandleCollection, {ICandle} from "../src/core/candleCollection";
-import moment = require("moment");
+import moment, {Moment} from 'moment';
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");
+const getTimestamp = (start: Moment, minutes = 0): string => start.clone().add(minutes, 'minutes').toISOString();
 
 describe('CandleCollection', () => {
 
@@ -30,63 +31,14 @@ describe('CandleCollection', () => {
         collection.on("update", (candles: ICandle[]) => {
             const testCandles = candles.map(c => ({...c, timestamp: c.timestamp.toISOString()}));
             expect(testCandles).to.deep.equal([
-                {
-                    open: 3,
-                    high: 3,
-                    low: 3,
-                    close: 3,
-                    volume: 0,
-                    timestamp: start.clone().add(7, "minutes").toISOString()
-                },
-                {
-                    open: 3,
-                    high: 3,
-                    low: 3,
-                    close: 3,
-                    volume: 0,
-                    timestamp: start.clone().add(6, "minutes").toISOString()
-                },
-                {
-                    open: 2,
-                    high: 4,
-                    low: 2,
-                    close: 3,
-                    volume: 10,
-                    timestamp: start.clone().add(5, "minutes").toISOString()
-                },
-                {
-                    open: 2,
-                    high: 2,
-                    low: 2,
-                    close: 2,
-                    volume: 0,
-                    timestamp: start.clone().add(4, "minutes").toISOString()
-                },
-                {
-                    open: 2,
-                    high: 2,
-                    low: 2,
-                    close: 2,
-                    volume: 0,
-                    timestamp: start.clone().add(3, "minutes").toISOString()
-                },
-                {
-                    open: 2,
-                    high: 2,
-                    low: 2,
-                    close: 2,
-                    volume: 0,
-                    timestamp: start.clone().add(2, "minutes").toISOString()
-                },
-                {
-                    open: 1.5,
-                    high: 3,
-                    low: 1,
-                    close: 2,
-                    volume: 5,
-                    timestamp: start.clone().add(1, "minutes").toISOString()
-                },
-                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().toISOString()},
+                {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTimestamp(start, 7)},
+                {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTimestamp(start, 6)},
+                {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: getTimestamp(start, 5)},
+                {open: 2, high: 2, low: 2, close: 2, volume: 0, timestamp: getTimestamp(start, 4)},
+                {open: 2, high: 2, low: 2, close: 2, volume: 0, timestamp: getTimestamp(start, 3)},
+                {open: 2, high: 2, low: 2, close: 2, volume: 0, timestamp: getTimestamp(start, 2)},
+                {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: getTimestamp(start, 1)},
+                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTimestamp(start)},
             ]);
         });
 
@@ -102,30 +54,9 @@ describe('CandleCollection', () => {
         collection.on("update", (candles: ICandle[]) => {
             const testCandles = candles.map(c => ({...c, timestamp: c.timestamp.toISOString()}));
             expect(testCandles).to.deep.equal([
-                {
-                    open: 3,
-                    high: 3,
-                    low: 3,
-                    close: 3,
-                    volume: 0,
-                    timestamp: start.clone().add(7, "minutes").toISOString()
-                },
-                {
-                    open: 3,
-                    high: 3,
-                    low: 3,
-                    close: 3,
-                    volume: 0,
-                    timestamp: start.clone().add(6, "minutes").toISOString()
-                },
-                {
-                    open: 2,
-                    high: 4,
-                    low: 2,
-                    close: 3,
-                    volume: 10,
-                    timestamp: start.clone().add(5, "minutes").toISOString()
-                },
+                {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTimestamp(start, 7)},
+                {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTimestamp(start, 6)},
+                {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: getTimestamp(start, 5)},
             ]);
         });
 
@@ -147,22 +78,28 @@ describe('CandleCollection', () => {
             results.push(testCandles);
         });
 
-        collection.set([{open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()}]);
-
+        // Generate new empty candle
         clock.tick('01:00');
-        collection.stop();
 
-        const testResults = [
+        // Overwrite previous candles by using "set"
+        collection.set([{open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().add(1, 'minutes')}]);
+
+        // Generate a new candle based on the previous one
+        clock.tick('01:00');
+
+        collection.stop();
+        expect(results).to.deep.equal([
             [
-                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().toISOString()}
+                {open: 0, high: 0, low: 0, close: 0, volume: 0, timestamp: getTimestamp(start, 1)}
             ],
             [
-                {open: 1.5, high: 1.5, low: 1.5, close: 1.5, volume: 0, timestamp: start.clone().add(1, "minute").toISOString()},
-                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().toISOString()}
+                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTimestamp(start, 1)},
+            ],
+            [
+                {open: 1.5, high: 1.5, low: 1.5, close: 1.5, volume: 0, timestamp: getTimestamp(start, 2)},
+                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTimestamp(start, 1)},
             ]
-        ];
-
-        expect(results).to.deep.equal(testResults);
+        ]);
     });
 
 });
