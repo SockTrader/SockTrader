@@ -80,7 +80,7 @@ export default abstract class Exchange extends EventEmitter implements IExchange
      * Factory function which will manage the candles
      */
     public getCandleCollection(pair: string, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
-        const key = `${pair}_${interval}`;
+        const key = `${pair}_${interval.code}`;
         if (this.candles[key]) {
             return this.candles[key];
         }
