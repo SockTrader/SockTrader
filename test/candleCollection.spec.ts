@@ -16,8 +16,8 @@ const getTime = (start: Moment, action = '+', minutes = 0): Moment => {
 describe('CandleCollection', () => {
 
     it('Should sort all candles, with the latest candle first and the last candle last', () => {
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
-        const candles = collection.sort([
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
+        const candles = cc.sort([
             {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()},
             {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: start.clone().add(5, "minutes")},
             {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: start.clone().add(1, "day")},
@@ -31,8 +31,8 @@ describe('CandleCollection', () => {
     });
 
     it('Should fill all candle gaps until last interval occurrence before current time', () => {
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
-        collection.on("update", (candles: ICandle[]) => {
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
+        cc.on("update", (candles: ICandle[]) => {
             expect(convertTimestamp(candles)).to.deep.equal([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, '+', 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, '+', 6).toArray()},
@@ -45,7 +45,7 @@ describe('CandleCollection', () => {
             ]);
         });
 
-        collection.set([
+        cc.set([
             {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()},
             {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: start.clone().add(5, "minutes")},
             {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: start.clone().add(1, "minutes")},
@@ -53,8 +53,8 @@ describe('CandleCollection', () => {
     });
 
     it('Should fill all candle gaps until retention period is met', () => {
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false, 3);
-        collection.on("update", (candles: ICandle[]) => {
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false, 3);
+        cc.on("update", (candles: ICandle[]) => {
             expect(convertTimestamp(candles)).to.deep.equal([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, '+', 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, '+', 6).toArray()},
@@ -62,7 +62,7 @@ describe('CandleCollection', () => {
             ]);
         });
 
-        collection.set([
+        cc.set([
             {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()},
             {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: start.clone().add(5, "minutes")},
             {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: start.clone().add(1, "minutes")},
@@ -74,19 +74,19 @@ describe('CandleCollection', () => {
         const clock = sinon.useFakeTimers(new Date());
         const results = [];
 
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, true);
-        collection.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, true);
+        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
 
         // Generate new empty candle
         clock.tick('01:00');
 
         // Overwrite previous candles by using "set"
-        collection.set([{open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().add(1, 'minutes')}]);
+        cc.set([{open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone().add(1, 'minutes')}]);
 
         // Generate a new candle based on the previous one
         clock.tick('01:00');
 
-        collection.stop();
+        cc.stop();
         expect(results).to.deep.equal([
             [
                 {open: 0, high: 0, low: 0, close: 0, volume: 0, timestamp: getTime(start, '+', 1).toArray()}
@@ -106,12 +106,12 @@ describe('CandleCollection', () => {
         const start = moment().seconds(0).millisecond(0);
         const results = [];
 
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
-        collection.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false);
+        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
 
-        collection.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, '-', 1)}]);
-        collection.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, '+', 1)}]);
-        collection.update([{open: 1, high: 4, low: 0, close: 3.5, volume: 3, timestamp: getTime(start, '+', 1)}]);
+        cc.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, '-', 1)}]);
+        cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, '+', 1)}]);
+        cc.update([{open: 1, high: 4, low: 0, close: 3.5, volume: 3, timestamp: getTime(start, '+', 1)}]);
 
         expect(results).to.deep.equal([
             [
@@ -136,12 +136,12 @@ describe('CandleCollection', () => {
         const results = [];
 
         // @TODO fix bug when retentionPeriod = 1
-        const collection = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false, 2);
-        collection.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        const cc = new CandleCollection({code: 'M1', cron: "00 */1 * * * *"}, false, 2);
+        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
 
-        collection.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, '-', 1)}]);
-        collection.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, '+', 1)}]);
-        collection.update([{open: 3, high: 4, low: 2, close: 3.5, volume: 1, timestamp: getTime(start, '+', 2)}]);
+        cc.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, '-', 1)}]);
+        cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, '+', 1)}]);
+        cc.update([{open: 3, high: 4, low: 2, close: 3.5, volume: 1, timestamp: getTime(start, '+', 2)}]);
 
         expect(results).to.deep.equal([
             [
