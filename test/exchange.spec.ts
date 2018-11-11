@@ -1,11 +1,12 @@
 /* tslint:disable */
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
-import {spy} from 'sinon';
+import {spy, mock} from 'sinon';
 import Exchange, {ITradeablePair} from "../src/core/exchanges/exchange";
 import {OrderSide} from "../src/core/orderInterface";
 import Orderbook from "../src/core/orderbook";
 import CandleCollection from "../src/core/candleCollection";
+import {client} from "websocket";
 
 const pair = 'BTCETH';
 
@@ -104,5 +105,17 @@ describe('Exchange', () => {
 
         exc.onReport({params: {reportType: "suspended", clientOrderId: '321'}});
         expect(removeOrder.callCount).to.eq(5);
+    });
+
+    it("Should connect via a websocket connection string", () => {
+        const exc = new MockExchange();
+        const spyOn = spy(exc["socketClient"], "on");
+        const spyConnect = spy(exc["socketClient"], "connect");
+
+        exc.connect('wss://my.fake.socket');
+
+        expect(spyOn.args[0][0]).to.equal("connectFailed");
+        expect(spyOn.args[1][0]).to.equal("connect");
+        expect(spyConnect.args[0]).to.deep.equal(['wss://my.fake.socket']);
     });
 });
