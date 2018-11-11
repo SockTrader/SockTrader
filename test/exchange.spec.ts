@@ -61,6 +61,7 @@ describe('Exchange', () => {
     });
 
     it('Should return a cached orderbook for a trading pair', () => {
+        expect(() => exc.getOrderbook("FAKE")).to.throw("No configuration found for pair: \"FAKE\"");
         exc["currencies"] = [{tickSize: 0.001, id: pair} as ITradeablePair];
         const ob = exc.getOrderbook(pair);
         expect(ob).to.be.an.instanceof(Orderbook);
