@@ -11,7 +11,7 @@
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile\"",
     "compile": "tsc && node ./build/index.js",
     "docs": "esdoc",
-    "lint": "tslint --project ./",
+    "lint": "tslint --fix --project ./",
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
   "pre-commit": [
