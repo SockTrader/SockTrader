@@ -24,7 +24,7 @@ const getFileTransport = (level, file) => new transports.File({
     level,
 })
 
-const getConsoleTransport =level => new transports.Console({...defaults, format: consoleFormat, level})
+const getConsoleTransport = level => new transports.Console({...defaults, format: consoleFormat, level})
 
 const errorLogger = createLogger({
     levels: {error: 3},

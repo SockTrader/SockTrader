@@ -99,7 +99,7 @@ export default class HitBTC extends BaseExchange {
      * Update candles
      */
     onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
-        const candleCollection = this.getCandleCollection(pair, interval,candles => this.emit("app.updateCandles", candles))
+        const candleCollection = this.getCandleCollection(pair, interval, candles => this.emit("app.updateCandles", candles))
         return candleCollection[method](data)
     }
 
