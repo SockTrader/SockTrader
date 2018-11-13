@@ -5,7 +5,7 @@ import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../cand
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../orderInterface";
-import Exchange, {IOrderbookData, IResponseMapper} from "./exchange";
+import BaseExchange, {IOrderbookData, IResponseMapper} from "./baseExchange";
 import HitBTCMapper from "./hitBTCMapper";
 
 export const CandleInterval: IIntervalDict = {
@@ -21,7 +21,7 @@ export const CandleInterval: IIntervalDict = {
     ONE_MONTH: {code: "1M", cron: "00 00 00 00 */1 *"},
 };
 
-export default class HitBTC extends Exchange {
+export default class HitBTC extends BaseExchange {
 
     public readonly mapper: IResponseMapper = new HitBTCMapper(this);
     private static instance: HitBTC | null = null;

@@ -26,7 +26,7 @@ export interface IOrderbookData {
     symbol: string;
 }
 
-export default abstract class Exchange extends EventEmitter implements IExchange {
+export default abstract class BaseExchange extends EventEmitter implements IExchange {
     public isAuthenticated: boolean = false;
     public isCurrenciesLoaded: boolean = false;
     public readonly abstract mapper: IResponseMapper;

@@ -2,7 +2,7 @@
 import {expect} from 'chai';
 import {describe, it} from 'mocha';
 import {spy, mock} from 'sinon';
-import Exchange, {ITradeablePair} from "../src/core/exchanges/exchange";
+import BaseExchange, {ITradeablePair} from "../src/core/exchanges/baseExchange";
 import {OrderSide} from "../src/core/orderInterface";
 import Orderbook from "../src/core/orderbook";
 import CandleCollection from "../src/core/candleCollection";
@@ -12,7 +12,7 @@ import {connection} from "websocket";
 const pair = 'BTCETH';
 
 // @ts-ignore
-class MockExchange extends Exchange {
+class MockExchange extends BaseExchange {
     public constructor() {
         super();
     }

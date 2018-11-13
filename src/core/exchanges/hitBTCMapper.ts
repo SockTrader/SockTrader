@@ -4,7 +4,7 @@ import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
-import Exchange, {IResponseMapper} from "./exchange";
+import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 
 export interface IHitBTCOrderbookResponse {
@@ -59,7 +59,7 @@ interface IHitBTCGetSymbolsResponse {
 
 export default class HitBTCMapper extends EventEmitter implements IResponseMapper {
 
-    constructor(private exchange: Exchange) {
+    constructor(private exchange: BaseExchange) {
         super();
 
         // Listen for all events that onReceive will be throwing..

@@ -2,7 +2,7 @@ import {EventEmitter} from "events";
 import CandleCollection, {ICandleInterval} from "../candleCollection";
 import Orderbook from "../orderbook";
 import {IOrder} from "../orderInterface";
-import {IOrderbookData, IResponseMapper, ITradeablePair} from "./exchange";
+import {IOrderbookData, IResponseMapper, ITradeablePair} from "./baseExchange";
 
 export interface IExchange extends EventEmitter {
 
@@ -34,7 +34,7 @@ export interface IExchange extends EventEmitter {
 
     onReport(data: any): void;
 
-    onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: any, interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: any, interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
     onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 
