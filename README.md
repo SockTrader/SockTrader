@@ -67,9 +67,9 @@ Example:
 ```typescript
 import {ICandle} from "../core/candleCollection";
 import Orderbook from "../core/orderbook";
-import Strategy from "../core/strategy";
+import BaseStrategy from "../core/strategy";
 
-export default class MyStrategy extends Strategy {
+export default class MyStrategy extends BaseStrategy {
 
     public notifyOrder(data: any): void {
         // Will be called when the exchange confirms an order

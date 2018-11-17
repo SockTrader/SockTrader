@@ -1,99 +1,98 @@
-import {Decimal} from "decimal.js-light"
-import {EventEmitter} from "events"
-import {alphabets as dict, numbers} from "nanoid-dictionary"
-import generate from "nanoid/generate"
-import {client as WebSocketClient, connection, IMessage} from "websocket"
-import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection"
-import logger from "../logger"
-import Orderbook, {IOrderbookEntry} from "../orderbook"
-import {IOrder, OrderSide} from "../orderInterface"
-import {IExchange} from "./exchangeInterface"
+import {Decimal} from "decimal.js-light";
+import {EventEmitter} from "events";
+import {alphabets as dict, numbers} from "nanoid-dictionary";
+import generate from "nanoid/generate";
+import {client as WebSocketClient, connection, IMessage} from "websocket";
+import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
+import logger from "../logger";
+import Orderbook, {IOrderbookEntry} from "../orderbook";
+import {IOrder, OrderSide} from "../orderInterface";
+import {IExchange} from "./exchangeInterface";
 
 export interface IResponseMapper {
-    onReceive(msg: IMessage): void
+    onReceive(msg: IMessage): void;
 }
 
 export interface ITradeablePair {
-    id: string
-    quantityIncrement: number
-    tickSize: number
+    id: string;
+    quantityIncrement: number;
+    tickSize: number;
 }
 
 export interface IOrderbookData {
-    ask: IOrderbookEntry[]
-    bid: IOrderbookEntry[]
-    sequence: number
-    symbol: string
+    ask: IOrderbookEntry[];
+    bid: IOrderbookEntry[];
+    sequence: number;
+    symbol: string;
 }
 
 export default abstract class BaseExchange extends EventEmitter implements IExchange {
-    isAuthenticated = false
-    isCurrenciesLoaded = false
-    readonly abstract mapper: IResponseMapper
-    protected socketClient: WebSocketClient = new WebSocketClient()
-    private candles: { [key: string]: CandleCollection } = {}
-    private connection?: connection
-    private currencies: ITradeablePair[] = []
-    private openOrders: IOrder[] = []
-    private orderbooks: { [key: string]: Orderbook } = {}
-    private orderIncrement = 0
-    private orderInProgress: { [key: string]: boolean } = {}
-    private ready = false
+    isAuthenticated = false;
+    isCurrenciesLoaded = false;
+    protected openOrders: IOrder[] = [];
+    protected socketClient: WebSocketClient = new WebSocketClient();
+    private candles: { [key: string]: CandleCollection } = {};
+    private connection?: connection;
+    private currencies: ITradeablePair[] = [];
+    private orderbooks: { [key: string]: Orderbook } = {};
+    private orderIncrement = 0;
+    private orderInProgress: { [key: string]: boolean } = {};
+    private ready = false;
 
     protected constructor() {
-        super()
+        super();
 
-        this.onCreate()
+        this.onCreate();
     }
 
-    abstract adjustOrder(order: IOrder, price: number, qty: number): void
+    abstract adjustOrder(order: IOrder, price: number, qty: number): void;
 
     buy(symbol: string, price: number, qty: number): string {
-        return this.createOrder(symbol, price, qty, OrderSide.BUY)
+        return this.createOrder(symbol, price, qty, OrderSide.BUY);
     }
 
-    abstract cancelOrder(order: IOrder): void
+    abstract cancelOrder(order: IOrder): void;
 
     connect(connectionString: string): this {
-        this.socketClient.on("connectFailed", error => logger.error("Connect Error: " + error.toString()))
-        this.socketClient.on("connect", (conn: connection) => this.onConnect(conn))
+        this.socketClient.on("connectFailed", error => logger.error("Connect Error: " + error.toString()));
+        this.socketClient.on("connect", (conn: connection) => this.onConnect(conn));
 
-        this.socketClient.connect(connectionString)
+        this.socketClient.connect(connectionString);
 
-        return this
+        return this;
     }
 
     destroy(): void {
-        this.removeAllListeners()
+        this.removeAllListeners();
     }
 
     emit(event: string | symbol, ...args: any[]): boolean {
-        const result = super.emit(event, ...args)
+        const result = super.emit(event, ...args);
         if (!result && process.env.NODE_ENV === "dev") {
-            logger.debug(`No listener found for: "${event.toString()}"`)
+            logger.debug(`No listener found for: "${event.toString()}"`);
         }
 
-        return result
+        return result;
     }
 
     /**
      * Factory function which will manage the candles
      */
     getCandleCollection(pair: string, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
-        const key = `${pair}_${interval.code}`
+        const key = `${pair}_${interval.code}`;
         if (this.candles[key]) {
-            return this.candles[key]
+            return this.candles[key];
         }
 
-        this.candles[key] = new CandleCollection(interval)
-        this.candles[key].on("update", updateHandler)
-        return this.candles[key]
+        this.candles[key] = new CandleCollection(interval);
+        this.candles[key].on("update", updateHandler);
+        return this.candles[key];
     }
 
     /**
      * Returns all open orders
      */
-    getOpenOrders = (): IOrder[] => this.openOrders
+    getOpenOrders = (): IOrder[] => this.openOrders;
 
     /**
      * Factory function which will manage the orderbooks
@@ -102,18 +101,18 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     getOrderbook(pair: string): Orderbook {
         if (this.orderbooks[pair]) {
-            return this.orderbooks[pair]
+            return this.orderbooks[pair];
         }
 
-        const config = this.currencies.find(row => row.id === pair)
+        const config = this.currencies.find(row => row.id === pair);
         if (!config) {
-            throw new Error(`No configuration found for pair: "${pair}"`)
+            throw new Error(`No configuration found for pair: "${pair}"`);
         }
 
-        const precision = new Decimal(config.tickSize).decimalPlaces()
+        const precision = new Decimal(config.tickSize).decimalPlaces();
 
-        this.orderbooks[pair] = new Orderbook(pair, precision)
-        return this.orderbooks[pair]
+        this.orderbooks[pair] = new Orderbook(pair, precision);
+        return this.orderbooks[pair];
     }
 
     /**
@@ -122,27 +121,27 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     isReady(): boolean {
         if (this.ready) {
-            return this.ready
+            return this.ready;
         }
 
         if (this.isCurrenciesLoaded && this.isAuthenticated) {
-            this.ready = true
-            this.emit("ready")
+            this.ready = true;
+            this.emit("ready");
         }
 
-        return this.ready
+        return this.ready;
     }
 
     /**
      * Authenticate user on exchange
      */
-    abstract login(publicKey: string, privateKey: string): void
+    abstract login(publicKey: string, privateKey: string): void;
 
     on(event: string, listener: (args: any[]) => void): this {
         if (process.env.NODE_ENV === "dev") {
-            logger.debug(`Listener created for: "${event.toString()}"`)
+            logger.debug(`Listener created for: "${event.toString()}"`);
         }
-        return super.on(event, listener)
+        return super.on(event, listener);
     }
 
     /**
@@ -150,89 +149,89 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     onCreate(): void {
         setInterval(() => {
-            this.orderIncrement = 0
-        },          1000 * 60 * 5) // Reset increment every 5 minutes
+            this.orderIncrement = 0;
+        },          1000 * 60 * 5); // Reset increment every 5 minutes
     }
 
     onCurrenciesLoaded(currencies: ITradeablePair[]): void {
-        this.currencies = currencies
-        this.isCurrenciesLoaded = true
-        this.isReady()
+        this.currencies = currencies;
+        this.isCurrenciesLoaded = true;
+        this.isReady();
     }
 
     // @TODO FIX ANY TYPE
     onReport(data: any): void {
-        const order: IOrder = data.params
-        const orderId = order.clientOrderId
+        const order: IOrder = data.params;
+        const orderId = order.clientOrderId;
 
-        this.setOrderInProgress(orderId, false)
+        this.setOrderInProgress(orderId, false);
 
         if (order.reportType === "replaced") {
-            const oldOrderId = data.params.originalRequestClientOrderId
+            const oldOrderId = data.params.originalRequestClientOrderId;
 
-            this.setOrderInProgress(oldOrderId, false)
-            this.removeOrder(oldOrderId)
-            this.addOrder(order) // Order is replaced with a new one
+            this.setOrderInProgress(oldOrderId, false);
+            this.removeOrder(oldOrderId);
+            this.addOrder(order); // Order is replaced with a new one
         } else if (order.reportType === "new") {
-            this.addOrder(order) // New order created
+            this.addOrder(order); // New order created
         } else if (order.reportType === "trade" && data.params.status === "filled") {
-            this.removeOrder(orderId) // Order is 100% filled
+            this.removeOrder(orderId); // Order is 100% filled
         } else if (["canceled", "expired", "suspended"].indexOf(order.reportType) > -1) {
-            this.removeOrder(orderId) // Order is invalid
+            this.removeOrder(orderId); // Order is invalid
         }
 
-        this.emit("app.report", data)
+        this.emit("app.report", data);
     }
 
-    abstract onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void
+    abstract onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
-    abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void
+    abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 
     sell(symbol: string, price: number, qty: number): string {
-        return this.createOrder(symbol, price, qty, OrderSide.SELL)
+        return this.createOrder(symbol, price, qty, OrderSide.SELL);
     }
 
     /**
      * Send request over socket connection
      */
     send(method: string, params: object = {}): void {
-        const command = {method, params, id: method}
+        const command = {method, params, id: method};
         if (this.connection === undefined) {
-            throw new Error("First connect to the exchange before sending instructions..")
+            throw new Error("First connect to the exchange before sending instructions..");
         }
 
-        this.connection.send(JSON.stringify(command))
+        this.connection.send(JSON.stringify(command));
     }
 
     /**
      * Listen for new candles
      */
-    abstract subscribeCandles(pair: string, interval: ICandleInterval): void
+    abstract subscribeCandles(pair: string, interval: ICandleInterval): void;
 
     /**
      * Listen for orderbook changes
      */
-    abstract subscribeOrderbook(pair: string): void
+    abstract subscribeOrderbook(pair: string): void;
 
     /**
      * Listen for actions that are happening on the remote exchange
      */
-    abstract subscribeReports(): void
+    abstract subscribeReports(): void;
 
     /**
      * Add order to internal array
      */
     protected addOrder(order: IOrder): void {
-        this.openOrders.push(order)
+        this.openOrders.push(order);
     }
 
     /**
      * Send order base function
      */
     protected createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
-        const orderId = this.generateOrderId(pair)
-        this.setOrderInProgress(orderId)
-        return orderId
+        const orderId = this.generateOrderId(pair);
+        this.setOrderInProgress(orderId);
+        return orderId;
     }
 
     /**
@@ -242,12 +241,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @returns {string}
      */
     protected generateOrderId(pair: string): string {
-        this.orderIncrement += 1
+        this.orderIncrement += 1;
 
-        const alphabet = `${dict.english.lowercase}${dict.english.uppercase}${numbers}_-.|`
-        const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`
+        const alphabet = `${dict.english.lowercase}${dict.english.uppercase}${numbers}_-.|`;
+        const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`;
 
-        return orderId + generate(alphabet, 32 - orderId.length)
+        return orderId + generate(alphabet, 32 - orderId.length);
     }
 
     /**
@@ -258,39 +257,36 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected isAdjustingOrderAllowed(order: IOrder, price: number, qty: number): boolean {
         if (this.orderInProgress[order.clientOrderId]) {
-            return false // Order still in progress
+            return false; // Order still in progress
         }
 
         if (order.price === price && order.quantity === qty) {
-            return false // Old order === new order. No need to replace!
+            return false; // Old order === new order. No need to replace!
         }
 
-        this.setOrderInProgress(order.clientOrderId)
-        return true
+        this.setOrderInProgress(order.clientOrderId);
+        return true;
     }
 
     /**
      * Load trading pair configuration
      */
-    protected abstract loadCurrencies(): void
+    protected abstract loadCurrencies(): void;
 
     /**
      * Triggers when the exchange is connected to the websocket API
      */
     protected onConnect(conn: connection): void {
-        this.connection = conn
-        this.connection.on("error", error => logger.error("Connection Error: " + error.toString()))
-        this.connection.on("close", () => logger.info("Connection Closed"))
-        this.connection.on("message", (data: IMessage) => this.mapper.onReceive(data))
-
-        this.loadCurrencies()
+        this.connection = conn;
+        this.connection.on("error", error => logger.error("Connection Error: " + error.toString()));
+        this.connection.on("close", () => logger.info("Connection Closed"));
     }
 
     /**
      * Remove order from internal array
      */
     protected removeOrder(orderId: string): void {
-        this.openOrders = this.openOrders.filter(o => o.clientOrderId !== orderId)
+        this.openOrders = this.openOrders.filter(o => o.clientOrderId !== orderId);
     }
 
     /**
@@ -298,9 +294,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected setOrderInProgress(orderId: string, state = true): void {
         if (state === false) {
-            delete this.orderInProgress[orderId]
+            delete this.orderInProgress[orderId];
         } else {
-            this.orderInProgress[orderId] = state
+            this.orderInProgress[orderId] = state;
         }
     }
 }

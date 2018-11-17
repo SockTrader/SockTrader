@@ -38,17 +38,17 @@ export enum OrderTimeInForce {
 }
 
 export interface IOrder {
-    clientOrderId: string
-    createdAt: Date
-    cumQuantity: number
-    id: string
-    price: number
-    quantity: number
-    reportType: ReportType
-    side: OrderSide
-    status: OrderStatus
-    symbol: string
-    timeInForce: OrderTimeInForce
-    type: OrderType
-    updatedAt: Date
+    clientOrderId: string;
+    createdAt: Date;
+    cumQuantity: number;
+    id: string;
+    price: number;
+    quantity: number;
+    reportType: ReportType;
+    side: OrderSide;
+    status: OrderStatus;
+    symbol: string;
+    timeInForce: OrderTimeInForce;
+    type: OrderType;
+    updatedAt: Date;
 }

@@ -1,6 +1,6 @@
-import {Decimal} from "decimal.js-light"
-import reverse from "lodash.reverse"
-import sortBy from "lodash.sortby"
+import {Decimal} from "decimal.js-light";
+import reverse from "lodash.reverse";
+import sortBy from "lodash.sortby";
 
 export enum Operator {
     PLUS = "+",
@@ -13,16 +13,16 @@ export enum OrderbookSide {
 }
 
 export interface IOrderbookEntry {
-    price: number
-    size: number
+    price: number;
+    size: number;
 }
 
 export interface IOrderbook {
-    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void
+    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void;
 
-    getEntries(side: OrderbookSide, amount: number): IOrderbookEntry[]
+    getEntries(side: OrderbookSide, amount: number): IOrderbookEntry[];
 
-    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void
+    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void;
 }
 
 /**
@@ -31,8 +31,8 @@ export interface IOrderbook {
  */
 export default class Orderbook implements IOrderbook {
 
-    ask: IOrderbookEntry[] = []
-    bid: IOrderbookEntry[] = []
+    ask: IOrderbookEntry[] = [];
+    bid: IOrderbookEntry[] = [];
 
     constructor(protected pair: string, protected precision = 8) {
     }
@@ -44,8 +44,8 @@ export default class Orderbook implements IOrderbook {
      * @returns {number}
      */
     static getBidAskSpreadPerc(bid: number, ask: number): number {
-        const increase: Decimal = new Decimal(ask).minus(bid)
-        return increase.dividedBy(bid).toNumber()
+        const increase: Decimal = new Decimal(ask).minus(bid);
+        return increase.dividedBy(bid).toNumber();
     }
 
     /**
@@ -54,8 +54,8 @@ export default class Orderbook implements IOrderbook {
      * @param {IOrderbookEntry[]} bid
      */
     addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void {
-        this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"])
-        this.bid = reverse(sortBy(this.applyIncrement(this.bid, bid), ["price"]))
+        this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"]);
+        this.bid = reverse(sortBy(this.applyIncrement(this.bid, bid), ["price"]));
     }
 
     /**
@@ -66,15 +66,15 @@ export default class Orderbook implements IOrderbook {
      * @returns {number}
      */
     getAdjustedPrice(price: number, operator: Operator, ticks = 1): number {
-        const decPrice: Decimal = new Decimal(price)
+        const decPrice: Decimal = new Decimal(price);
 
         const func = (operator === Operator.PLUS)
             ? (a: Decimal, b: Decimal | number) => a.plus(b)
-            : (a: Decimal, b: Decimal | number) => a.minus(b)
+            : (a: Decimal, b: Decimal | number) => a.minus(b);
 
-        const m: number = Math.pow(10, this.precision)
-        const natNum: Decimal = decPrice.times(m)
-        return func(natNum, ticks).dividedBy(m).toNumber()
+        const m: number = Math.pow(10, this.precision);
+        const natNum: Decimal = decPrice.times(m);
+        return func(natNum, ticks).dividedBy(m).toNumber();
     }
 
     /**
@@ -84,7 +84,7 @@ export default class Orderbook implements IOrderbook {
      * @returns {IOrderbookEntry[]}
      */
     getEntries(side: "bid" | "ask", amount = 1): IOrderbookEntry[] {
-        return this[side].slice(0, Math.abs(amount))
+        return this[side].slice(0, Math.abs(amount));
     }
 
     /**
@@ -94,8 +94,8 @@ export default class Orderbook implements IOrderbook {
      * @returns {number}
      */
     getSatDiff(num1: number, num2: number): number {
-        const multipl: number = Math.pow(10, this.precision)
-        return Math.abs(new Decimal(num1).times(multipl).toNumber() - new Decimal(num2).times(multipl).toNumber())
+        const multipl: number = Math.pow(10, this.precision);
+        return Math.abs(new Decimal(num1).times(multipl).toNumber() - new Decimal(num2).times(multipl).toNumber());
     }
 
     /**
@@ -104,8 +104,8 @@ export default class Orderbook implements IOrderbook {
      * @param {IOrderbookEntry[]} bid
      */
     setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void {
-        this.ask = sortBy(ask, ["price"])
-        this.bid = reverse(sortBy(bid, ["price"]))
+        this.ask = sortBy(ask, ["price"]);
+        this.bid = reverse(sortBy(bid, ["price"]));
     }
 
     /**
@@ -114,18 +114,18 @@ export default class Orderbook implements IOrderbook {
      * @param {IOrderbookEntry[]} inc
      */
     private applyIncrement(oldBook: IOrderbookEntry[], inc: IOrderbookEntry[] = []): IOrderbookEntry[] {
-        let newBook: IOrderbookEntry[] = oldBook.slice(0)
+        let newBook: IOrderbookEntry[] = oldBook.slice(0);
 
         inc.forEach(({price, size}) => {
 
             // Remove outdated records from copy of oldBook
-            newBook = newBook.filter(v => v.price !== price)
+            newBook = newBook.filter(v => v.price !== price);
 
             if (size > 0) {
-                newBook.push({price, size}) // Add updated record to orderBook
+                newBook.push({price, size}); // Add updated record to orderBook
             }
-        })
+        });
 
-        return newBook
+        return newBook;
     }
 }

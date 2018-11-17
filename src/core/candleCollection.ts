@@ -1,26 +1,26 @@
-import {CronJob, time} from "cron"
-import parser from "cron-parser"
-import {EventEmitter} from "events"
-import {Moment} from "moment"
-import moment = require("moment")
-import logger from "./logger"
+import {CronJob} from "cron";
+import parser from "cron-parser";
+import {EventEmitter} from "events";
+import {Moment} from "moment";
+import moment = require("moment");
+import logger from "./logger";
 
 export interface ICandle {
-    close: number
-    high: number
-    low: number
-    open: number
-    timestamp: Moment
-    volume: number
+    close: number;
+    high: number;
+    low: number;
+    open: number;
+    timestamp: Moment;
+    volume: number;
 }
 
 export interface ICandleInterval {
-    code: string
-    cron: string
+    code: string;
+    cron: string;
 }
 
 export interface IIntervalDict {
-    [key: string]: ICandleInterval
+    [key: string]: ICandleInterval;
 }
 
 /**
@@ -29,15 +29,15 @@ export interface IIntervalDict {
  * The collection can automatically generate values if no new values were pushed during a time interval.
  */
 export default class CandleCollection extends EventEmitter {
-    private candles: ICandle[] = []
-    private cronjob: CronJob
+    private candles: ICandle[] = [];
+    private cronjob: CronJob;
 
     constructor(private interval: ICandleInterval, generateCandles = true, private retentionPeriod = 0) {
-        super()
+        super();
 
         // @TODO replace timezone by a config variable
-        const candleGenerator = this.generateCandles.bind(this)
-        this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, "Europe/Brussels")
+        const candleGenerator = this.generateCandles.bind(this);
+        this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, "Europe/Brussels");
     }
 
     /**
@@ -47,116 +47,116 @@ export default class CandleCollection extends EventEmitter {
         const interval = parser.parseExpression(this.interval.cron, {
             endDate: candles[0].timestamp.toDate(),
             currentDate: new Date(),
-        })
+        });
 
-        this.candles = this.fillCandleGaps(candles, interval).reverse()
-        this.emit("update", this.candles)
+        this.candles = this.fillCandleGaps(candles, interval).reverse();
+        this.emit("update", this.candles);
     }
 
-    sort = (candles: ICandle[]): ICandle[] => candles.sort((a, b) => b.timestamp.diff(a.timestamp))
+    sort = (candles: ICandle[]): ICandle[] => candles.sort((a, b) => b.timestamp.diff(a.timestamp));
 
     /**
      * Stop automatic candle generator
      */
     stop() {
-        this.cronjob.stop()
+        this.cronjob.stop();
     }
 
     /**
      * Update or insert newly received candles
      */
     update(candles: ICandle[]): void {
-        let needsSort = false
+        let needsSort = false;
         candles.forEach(updatedCandle => {
             const candleUpdated = this.candles.some((candle, idx) => {
                 if (this.candleEqualsTimestamp(candle, updatedCandle.timestamp)) {
-                    this.candles[idx] = updatedCandle
-                    return true
+                    this.candles[idx] = updatedCandle;
+                    return true;
                 }
-                return false
-            })
+                return false;
+            });
 
             if (!candleUpdated) {
-                const l = this.candles.unshift(updatedCandle)
-                this.removeRetentionOverflow(this.candles)
+                const l = this.candles.unshift(updatedCandle);
+                this.removeRetentionOverflow(this.candles);
 
                 // You need at least 2 candles to sort the list..
                 if (l >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
-                    logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(updatedCandle)}`)
-                    needsSort = true
+                    logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(updatedCandle)}`);
+                    needsSort = true;
                 }
             }
-        })
+        });
 
         if (needsSort) {
-            this.candles = this.sort(this.candles)
+            this.candles = this.sort(this.candles);
         }
 
-        this.emit("update", this.candles)
+        this.emit("update", this.candles);
     }
 
     /**
      * Validates if a candle occurs on a certain timestamp
      */
     private candleEqualsTimestamp(candle: ICandle, timestamp: Moment): boolean {
-        return candle.timestamp.isSameOrAfter(timestamp, "minute")
+        return candle.timestamp.isSameOrAfter(timestamp, "minute");
     }
 
     /**
      * Fill gaps in candle list until now, based on a cron expression.
      */
     private fillCandleGaps(candles: ICandle[], interval: any): ICandle[] {
-        candles = this.sort(candles)
+        candles = this.sort(candles);
 
-        const result: ICandle[] = []
-        const generateCandle = this.getCandleGenerator(candles)
+        const result: ICandle[] = [];
+        const generateCandle = this.getCandleGenerator(candles);
 
         while (true) {
-            const nextInterval: Moment = moment(interval.prev().toDate())
-            const candle = generateCandle(nextInterval)
+            const nextInterval: Moment = moment(interval.prev().toDate());
+            const candle = generateCandle(nextInterval);
 
-            result.unshift(candle)
+            result.unshift(candle);
 
-            if (result.length === this.retentionPeriod) break
+            if (result.length === this.retentionPeriod) break;
 
-            if (this.candleEqualsTimestamp(candles[candles.length - 1], nextInterval)) break
+            if (this.candleEqualsTimestamp(candles[candles.length - 1], nextInterval)) break;
         }
 
-        return result
+        return result;
     }
 
     /**
      * Generate new candles on each candle interval
      */
     private generateCandles(): void {
-        const last = moment(this.cronjob.lastDate()).second(0).millisecond(0)
+        const last = moment(this.cronjob.lastDate()).second(0).millisecond(0);
 
         if (this.candles.length <= 0) {
-            this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last))
+            this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last));
         } else if (last.isAfter(this.candles[0].timestamp, "minute")) {
-            this.candles.unshift(this.getRecycledCandle(this.candles[0], last))
+            this.candles.unshift(this.getRecycledCandle(this.candles[0], last));
         }
 
-        this.removeRetentionOverflow(this.candles)
-        this.emit("update", this.candles)
+        this.removeRetentionOverflow(this.candles);
+        this.emit("update", this.candles);
     }
 
     /**
      * Returns a function which will either return a new candle or recycle a previous candle.
      */
     private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
-        let position = 0
+        let position = 0;
         return nextInterval => {
-            let candle = candles[position]
+            let candle = candles[position];
 
             if (!this.candleEqualsTimestamp(candle, nextInterval)) {
-                candle = this.getRecycledCandle(candles[position], nextInterval)
+                candle = this.getRecycledCandle(candles[position], nextInterval);
             } else {
-                position += 1
+                position += 1;
             }
 
-            return candle
-        }
+            return candle;
+        };
     }
 
     /**
@@ -176,7 +176,7 @@ export default class CandleCollection extends EventEmitter {
      */
     private removeRetentionOverflow(candles: ICandle[]): void {
         if (this.retentionPeriod > 0 && candles.length > this.retentionPeriod) {
-            candles.splice(this.retentionPeriod - candles.length)
+            candles.splice(this.retentionPeriod - candles.length);
         }
     }
 }
