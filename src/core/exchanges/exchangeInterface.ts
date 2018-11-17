@@ -2,7 +2,7 @@ import {EventEmitter} from "events";
 import CandleCollection, {ICandleInterval} from "../candleCollection";
 import Orderbook from "../orderbook";
 import {IOrder} from "../orderInterface";
-import {IOrderbookData, IResponseMapper, ITradeablePair} from "./baseExchange";
+import {IOrderbookData, ITradeablePair} from "./baseExchange";
 
 export interface IExchange extends EventEmitter {
 
