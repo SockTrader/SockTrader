@@ -1,3 +1,4 @@
+<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/cwouter/SockTrader/master/docs/SockTraderLogo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
