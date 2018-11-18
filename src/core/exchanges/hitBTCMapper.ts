@@ -4,6 +4,7 @@ import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
+import {IOrder} from "../orderInterface";
 import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 
@@ -54,6 +55,28 @@ interface IHitBTCGetSymbolsResponse {
         quoteCurrency: string;
         takeLiquidityRate: string;
         tickSize: string;
+    }>;
+}
+
+interface IHitBTCReportResponse {
+    jsonrpc: string;
+    method: string;
+    params: Array<{
+        clientOrderId: string;
+        createdAt: string;
+        cumQuantity: string;
+        id: string;
+        originalRequestClientOrderId?: string;
+        postOnly: boolean;
+        price: string;
+        quantity: string;
+        reportType: string;
+        side: string;
+        status: string;
+        symbol: string;
+        timeInForce: string;
+        type: string;
+        updatedAt: string;
     }>;
 }
 
@@ -112,12 +135,28 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         this.exchange.isReady();
     }
 
-    private onReport(data: JSON): void {
-        // @TODO map response to internal data structure
-        this.exchange.onReport(data);
+    private onReport(data: IHitBTCReportResponse): void {
+        data.params.forEach(report => {
+            this.exchange.onReport({
+                clientOrderId: report.clientOrderId,
+                originalRequestClientOrderId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
+                createdAt: moment(report.createdAt),
+                cumQuantity: parseFloat(report.cumQuantity),
+                id: report.id,
+                price: parseFloat(report.price),
+                quantity: parseFloat(report.quantity),
+                reportType: report.reportType,
+                side: report.side,
+                status: report.status,
+                symbol: report.symbol,
+                timeInForce: report.timeInForce,
+                type: report.type,
+                updatedAt: moment(report.updatedAt),
+            } as IOrder);
+        });
     }
 
-    private onUpdateCandles(data: IHitBTCCandlesResponse, method: "set"|"update") {
+    private onUpdateCandles(data: IHitBTCCandlesResponse, method: "set" | "update") {
         let interval: ICandleInterval | undefined;
         Object.keys(CandleInterval).some(key => {
             if (CandleInterval[key].code === data.params.period) {

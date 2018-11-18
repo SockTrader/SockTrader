@@ -1,3 +1,5 @@
+import {Moment} from "moment";
+
 export enum OrderSide {
     BUY = "buy",
     SELL = "sell",
@@ -39,9 +41,10 @@ export enum OrderTimeInForce {
 
 export interface IOrder {
     clientOrderId: string;
-    createdAt: Date;
+    createdAt: Moment;
     cumQuantity: number;
     id: string;
+    originalRequestClientOrderId?: string;
     price: number;
     quantity: number;
     reportType: ReportType;
@@ -50,5 +53,5 @@ export interface IOrder {
     symbol: string;
     timeInForce: OrderTimeInForce;
     type: OrderType;
-    updatedAt: Date;
+    updatedAt: Moment;
 }

@@ -23,8 +23,7 @@ export default abstract class BaseStrategy extends EventEmitter {
         super();
     }
 
-    // @TODO fix any..
-    notifyOrder(data: any): void {
+    notifyOrder(data: IOrder): void {
         throw new Error("Implement method: notifyOrder");
     }
 

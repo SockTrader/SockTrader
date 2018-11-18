@@ -6,7 +6,7 @@ import {client as WebSocketClient, connection, IMessage} from "websocket";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import Orderbook, {IOrderbookEntry} from "../orderbook";
-import {IOrder, OrderSide} from "../orderInterface";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../orderInterface";
 import {IExchange} from "./exchangeInterface";
 
 export interface IResponseMapper {
@@ -73,6 +73,21 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         }
 
         return result;
+    }
+
+    /**
+     * Generates orderId based on trading pair, timestamp, increment and random string. With max length 32 characters
+     * ex: 15COVETH1531299734778DkXBry9y-sQ
+     * @param pair
+     * @returns {string}
+     */
+    generateOrderId(pair: string): string {
+        this.orderIncrement += 1;
+
+        const alphabet = `${dict.english.lowercase}${dict.english.uppercase}${numbers}_-.|`;
+        const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`;
+
+        return orderId + generate(alphabet, 32 - orderId.length);
     }
 
     /**
@@ -159,28 +174,26 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.isReady();
     }
 
-    // @TODO FIX ANY TYPE
-    onReport(data: any): void {
-        const order: IOrder = data.params;
+    onReport(order: IOrder): void {
         const orderId = order.clientOrderId;
 
         this.setOrderInProgress(orderId, false);
 
-        if (order.reportType === "replaced") {
-            const oldOrderId = data.params.originalRequestClientOrderId;
+        if (order.reportType === ReportType.REPLACED && order.originalRequestClientOrderId) {
+            const oldOrderId = order.originalRequestClientOrderId;
 
             this.setOrderInProgress(oldOrderId, false);
             this.removeOrder(oldOrderId);
             this.addOrder(order); // Order is replaced with a new one
-        } else if (order.reportType === "new") {
+        } else if (order.reportType === ReportType.NEW) {
             this.addOrder(order); // New order created
-        } else if (order.reportType === "trade" && data.params.status === "filled") {
+        } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
             this.removeOrder(orderId); // Order is 100% filled
-        } else if (["canceled", "expired", "suspended"].indexOf(order.reportType) > -1) {
+        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
             this.removeOrder(orderId); // Order is invalid
         }
 
-        this.emit("app.report", data);
+        this.emit("app.report", order);
     }
 
     abstract onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
@@ -232,21 +245,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         const orderId = this.generateOrderId(pair);
         this.setOrderInProgress(orderId);
         return orderId;
-    }
-
-    /**
-     * Generates orderId based on trading pair, timestamp, increment and random string. With max length 32 characters
-     * ex: 15COVETH1531299734778DkXBry9y-sQ
-     * @param pair
-     * @returns {string}
-     */
-    protected generateOrderId(pair: string): string {
-        this.orderIncrement += 1;
-
-        const alphabet = `${dict.english.lowercase}${dict.english.uppercase}${numbers}_-.|`;
-        const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`;
-
-        return orderId + generate(alphabet, 32 - orderId.length);
     }
 
     /**

@@ -3,26 +3,42 @@ import {assert, expect} from 'chai';
 import {describe, it} from 'mocha';
 import {stub, spy, fake} from 'sinon';
 import Orderbook from '../src/core/orderbook';
-import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from '../src/core/orderInterface';
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../src/core/orderInterface";
 import HitBTC, {CandleInterval} from '../src/core/exchanges/hitBTC';
+import moment = require("moment");
 
 const pair = 'BTCETH';
 
 describe('HitBTC', () => {
+    const getOrder = (): IOrder => ({
+        clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
+        createdAt: moment(),
+        cumQuantity: 0,
+        id: '38727737188',
+        price: 0.001263,
+        quantity: 0.02,
+        reportType: ReportType.NEW,
+        side: OrderSide.BUY,
+        status: OrderStatus.NEW,
+        symbol: pair,
+        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+        type: OrderType.LIMIT,
+        updatedAt: moment(),
+    })
 
     const getExchange = () => {
         const exc = new HitBTC();
         return {send: stub(exc, 'send'), exc};
     };
 
-    it.skip('get exchange orderbook', () => {
+    it('get exchange orderbook', () => {
         const exc = new HitBTC();
         const ob1 = new Orderbook(pair, 6);
 
         // No configuration given
         expect(() => exc.getOrderbook(pair)).to.throw();
 
-        exc['config'] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
+        exc['currencies'] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
 
         // Returns a new empty orderbook
         expect(exc.getOrderbook(pair)).to.deep.equal({pair, precision: 6, ask: [], bid: []});
@@ -83,11 +99,11 @@ describe('HitBTC', () => {
         send.reset();
     });
 
-    it.skip('should update an in memory orderbook', () => {
+    it('should update an in memory orderbook', () => {
         const exc = new HitBTC();
         const emit = stub(exc, 'emit');
 
-        exc['config'] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
+        exc['currencies'] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
         exc.onUpdateOrderbook({
             sequence: 1,
             symbol: pair,
@@ -98,7 +114,7 @@ describe('HitBTC', () => {
             'app.updateOrderbook', {
                 ask: [{price: 0.0015, size: 100}],
                 bid: [{price: 0.001391, size: 40}],
-                pair: 'COVETH',
+                pair: 'BTCETH',
                 precision: 6,
             },
         ]);
@@ -142,43 +158,13 @@ describe('HitBTC', () => {
     it('should cancel an order', () => {
         const {exc, send} = getExchange();
         exc['setOrderInProgress'] = fake();
-        const order = {
-            clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
-            createdAt: new Date(),
-            cumQuantity: 0,
-            id: '38727737188',
-            price: 0.001263,
-            quantity: 0.02,
-            reportType: ReportType.NEW,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: pair,
-            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            type: OrderType.LIMIT,
-            updatedAt: new Date(),
-        };
-        exc.cancelOrder(order);
+        exc.cancelOrder(getOrder());
         expect(send.getCall(0).args).to.deep.equal(['cancelOrder', {clientOrderId: '4559a45057ded19e04d715c4b40f7ddd'}]);
     });
 
     it('adjust existing order', () => {
         const {exc, send} = getExchange();
-        const order = {
-            clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
-            createdAt: new Date(),
-            cumQuantity: 0,
-            id: '38727737188',
-            price: 0.001263,
-            quantity: 0.02,
-            reportType: ReportType.NEW,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: pair,
-            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            type: OrderType.LIMIT,
-            updatedAt: new Date(),
-        };
-        exc.adjustOrder(order, 0.002, 0.5);
+        exc.adjustOrder(getOrder(), 0.002, 0.5);
         expect(send.getCall(0).args[0]).to.deep.equal('cancelReplaceOrder');
         expect(send.getCall(0).args[1]).to.deep.include({
             clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
@@ -190,21 +176,7 @@ describe('HitBTC', () => {
 
     it('is adjusting allowed', () => {
         const exc = new HitBTC();
-        const order = {
-            clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
-            createdAt: new Date(),
-            cumQuantity: 0,
-            id: '38727737188',
-            price: 0.001263,
-            quantity: 0.02,
-            reportType: ReportType.NEW,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: pair,
-            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            type: OrderType.LIMIT,
-            updatedAt: new Date(),
-        };
+        const order = getOrder();
 
         expect(exc['isAdjustingOrderAllowed'](order, 0.002, 0.02)).to.equal(true);
         expect(exc['isAdjustingOrderAllowed'](order, 0.002, 0.02)).to.equal(false);
@@ -212,11 +184,6 @@ describe('HitBTC', () => {
         exc['orderInProgress'] = {};
         expect(exc['isAdjustingOrderAllowed'](order, 0.001263, 0.02)).to.equal(false);
     });
-
-    // it('get cache path', () => {
-    //     const exc = new HitBTC();
-    //     expect(exc['getCachePath']()).to.have.string('src/cache');
-    // });
 
     it('generate new order id', () => {
         const exc = new HitBTC();
@@ -226,21 +193,7 @@ describe('HitBTC', () => {
 
     it('get open orders', () => {
         const exc = new HitBTC();
-        const order = {
-            clientOrderId: '4559a45057ded19e04d715c4b40f7ddd',
-            createdAt: new Date(),
-            cumQuantity: 0,
-            id: '38727737188',
-            price: 0.001263,
-            quantity: 0.02,
-            reportType: ReportType.NEW,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: pair,
-            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            type: OrderType.LIMIT,
-            updatedAt: new Date(),
-        };
+        const order = getOrder();
 
         expect(exc['getOpenOrders']()).to.deep.eq([]);
 
