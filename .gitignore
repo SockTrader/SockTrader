@@ -6,7 +6,6 @@ src/logs/*
 
 node_modules/
 credentials.json
-docs
 
 # User-specific stuff
 .idea
