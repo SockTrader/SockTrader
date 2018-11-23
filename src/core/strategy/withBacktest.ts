@@ -5,7 +5,6 @@ import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType}
 import BaseStrategy, {IStrategyClass} from "./baseStrategy";
 
 export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
-    let openOrders: IOrder[] = [];
     const baseOrder = {
         createdAt: moment(),
         cumQuantity: 0,
@@ -16,6 +15,8 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
     };
 
     return class BackTest extends (Strategy as IStrategyClass<BaseStrategy>) {
+
+        openOrders: IOrder[] = [];
 
         constructor(public pair: string, public exchange: IExchange) {
             super(pair, exchange);
@@ -36,26 +37,27 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
                     quantity: data.qty,
                     price: data.price,
                 };
-                openOrders.push(order);
+                this.openOrders.push(order);
                 this.notifyOrder(order);
                 return false;
             }
 
             if (event.toString() === "app.adjustOrder") {
-                openOrders = openOrders.filter(oo => oo.id !== data.order.id);
+                const oldOrder = this.openOrders.find(oo => oo.id === data.order.id);
                 const orderId = this.exchange.generateOrderId(data.symbol);
                 const order = {
-                    ...baseOrder,
+                    ...oldOrder,
+                    updatedAt: moment(),
                     id: orderId,
-                    originalRequestClientOrderId: data.order.id,
-                    reportType: ReportType.REPLACED,
-                    side: data.side,
                     clientOrderId: orderId,
-                    symbol: data.symbol,
+                    originalRequestClientOrderId: data.order.id,
                     quantity: data.qty,
                     price: data.price,
-                };
-                openOrders.push(order);
+                } as IOrder;
+
+                this.openOrders.push(order);
+                this.openOrders = this.openOrders.filter(oo => oo.id !== data.order.id);
+
                 this.notifyOrder(order);
                 return false;
             }
@@ -63,12 +65,12 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             return super.emit(event, ...args);
         }
 
-        notifyOrder(data: IOrder): void {
-            super.notifyOrder(data);
-        }
+        // notifyOrder(data: IOrder): void {
+        //     super.notifyOrder(data);
+        // }
 
         processOpenOrders(candle: ICandle) {
-            openOrders.forEach(order => {
+            this.openOrders.forEach(order => {
                 if (order.createdAt.isAfter(candle.timestamp)) {
                     return; // Candle should be newer than order!
                 }

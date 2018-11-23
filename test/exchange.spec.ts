@@ -40,34 +40,34 @@ describe("Exchange", () => {
         exc = new MockExchange();
     });
 
-    it("it should generate a random order id", () => {
+    it("Should generate a random order id", () => {
         const orderId = exc["generateOrderId"](pair);
         expect(orderId).to.be.a("string");
         expect(orderId).to.have.lengthOf(32);
     });
 
-    it("it should create a buy order", () => {
+    it("Should create a buy order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.buy(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
         expect(createOrder.args[0]).to.deep.equal(["BTCETH", 1, 10, "buy"]);
     });
 
-    it("it should create a sell order", () => {
+    it("Should create a sell order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.sell(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
         expect(createOrder.args[0]).to.deep.equal(["BTCETH", 1, 10, "sell"]);
     });
 
-    it("it should put an order into progress when creating an order", () => {
+    it("Should put an order into progress when creating an order", () => {
         const setOrderInProgress = spy(exc, "setOrderInProgress" as any);
         const orderId = exc["createOrder"](pair, 1, 10, OrderSide.SELL);
         expect(setOrderInProgress.calledOnce).to.eq(true);
         expect(exc["orderInProgress"][orderId]).to.equal(true);
     });
 
-    it("it should put an order in/out of progress", () => {
+    it("Should put an order in/out of progress", () => {
         const id = "ORDER_123";
         exc["setOrderInProgress"](id, true);
         expect(exc["orderInProgress"][id]).to.equal(true);
@@ -75,7 +75,7 @@ describe("Exchange", () => {
         expect(exc["orderInProgress"][id]).to.equal(undefined);
     });
 
-    it("it should return a cached orderbook for a trading pair", () => {
+    it("Should return a cached orderbook for a trading pair", () => {
         expect(() => exc.getOrderbook("FAKE")).to.throw("No configuration found for pair: \"FAKE\"");
         exc["currencies"] = [{tickSize: 0.001, id: pair} as ITradeablePair];
         const ob = exc.getOrderbook(pair);
@@ -86,7 +86,7 @@ describe("Exchange", () => {
         expect(ob).to.be.equal(ob2);
     });
 
-    it("it should return a cached candle collection for a trading pair", () => {
+    it("Should return a cached candle collection for a trading pair", () => {
         const interval = {code: "M1", cron: "00 */1 * * * *"};
         const ob = exc.getCandleCollection(pair, interval, () => {
         });
@@ -98,7 +98,7 @@ describe("Exchange", () => {
         expect(ob).to.be.equal(ob2);
     });
 
-    it("it should track all order changes", () => {
+    it("Should track all order changes", () => {
         const addOrder = spy(exc, "addOrder" as any);
         const removeOrder = spy(exc, "removeOrder" as any);
         const report = getReport();
@@ -138,7 +138,7 @@ describe("Exchange", () => {
         expect(spyConnect.args[0]).to.deep.equal(["wss://my.fake.socket"]);
     });
 
-    it("it should remove all event listeners once the exchange is destroyed", () => {
+    it("Should remove all event listeners once the exchange is destroyed", () => {
         // This test should prevent memory leaks in an exchange.
         const spyRemoveListeners = spy(exc, "removeAllListeners");
 
@@ -148,7 +148,7 @@ describe("Exchange", () => {
         expect(spyRemoveListeners.calledOnce).to.eq(true);
     });
 
-    it("it should send messages over a socket connection", () => {
+    it("Should send messages over a socket connection", () => {
         expect(() => exc.send("test_method", {param1: "param1", param2: "param2"}))
             .to.throw("First connect to the exchange before sending instructions..");
 
