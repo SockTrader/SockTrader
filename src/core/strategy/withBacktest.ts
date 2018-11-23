@@ -15,6 +15,7 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
     };
 
     return class BackTest extends (Strategy as IStrategyClass<BaseStrategy>) {
+        filledOrders: IOrder[] = [];
 
         openOrders: IOrder[] = [];
 
@@ -69,27 +70,27 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
         //     super.notifyOrder(data);
         // }
 
-        processOpenOrders(candle: ICandle) {
+        processOpenOrders(candle: ICandle): void {
+            const openOrders: IOrder[] = [];
             this.openOrders.forEach(order => {
                 if (order.createdAt.isAfter(candle.timestamp)) {
                     return; // Candle should be newer than order!
                 }
 
                 const filledReport = {...order, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-                if (order.side === OrderSide.BUY && candle.high > order.price) {
+                if ((order.side === OrderSide.BUY && candle.low < order.price) ||
+                    (order.side === OrderSide.SELL && candle.high > order.price)) {
                     this.notifyOrder(filledReport);
-                    console.log("Buy order filled!");
-                } else if (order.side === OrderSide.SELL && candle.low < order.price) {
-                    this.notifyOrder(filledReport);
-                    console.log("Sell order filled!");
+                    return this.filledOrders.push(filledReport);
                 }
+
+                openOrders.push(order);
             });
+            this.openOrders = openOrders;
         }
 
         updateCandles(candles: ICandle[]): void {
             this.processOpenOrders(candles[0]);
-
-            console.log("Candles captured");
             super.updateCandles(candles);
         }
 

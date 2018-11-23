@@ -22,7 +22,7 @@ describe('HitBTC', () => {
         status: OrderStatus.NEW,
         symbol: pair,
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.LIMIT,
+        type: OrderType.MARKET,
         updatedAt: moment(),
     })
 
