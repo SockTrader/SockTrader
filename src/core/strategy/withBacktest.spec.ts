@@ -2,11 +2,11 @@
 import {expect} from "chai";
 import {describe, it} from "mocha";
 import {stub, spy} from "sinon";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../src/core/orderInterface";
-import {withBacktest} from "../src/core/strategy";
-import BaseStrategy from "../src/core/strategy/baseStrategy";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../orderInterface";
+import {withBacktest} from "./index";
+import BaseStrategy from "./baseStrategy";
 import moment = require("moment");
-import {ICandle} from "../src/core/candleCollection";
+import {ICandle} from "../candleCollection";
 
 class MyStrategy extends BaseStrategy {
 }

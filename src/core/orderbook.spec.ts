@@ -2,7 +2,7 @@
 import {expect} from "chai";
 import {spy} from 'sinon';
 import {describe, it} from 'mocha';
-import Orderbook, {Operator} from "../src/core/orderbook";
+import Orderbook, {Operator} from "./orderbook";
 import {exceptions} from "winston";
 
 const pair = "BTCETH";

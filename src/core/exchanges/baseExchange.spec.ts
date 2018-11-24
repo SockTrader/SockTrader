@@ -2,10 +2,10 @@
 import {expect} from "chai";
 import {describe, it} from "mocha";
 import {mock, spy} from "sinon";
-import BaseExchange, {ITradeablePair} from "../src/core/exchanges/baseExchange";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../src/core/orderInterface";
-import Orderbook from "../src/core/orderbook";
-import CandleCollection from "../src/core/candleCollection";
+import BaseExchange, {ITradeablePair} from "./baseExchange";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
+import Orderbook from "../orderbook";
+import CandleCollection from "../candleCollection";
 import {EventEmitter} from "events";
 import moment = require("moment");
 

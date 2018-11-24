@@ -66,10 +66,6 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             return super.emit(event, ...args);
         }
 
-        // notifyOrder(data: IOrder): void {
-        //     super.notifyOrder(data);
-        // }
-
         processOpenOrders(candle: ICandle): void {
             const openOrders: IOrder[] = [];
             this.openOrders.forEach(order => {
@@ -93,10 +89,5 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             this.processOpenOrders(candles[0]);
             super.updateCandles(candles);
         }
-
-        // updateOrderbook(orderBook: IOrderbook): void {
-        //     console.log("Orderbook update captured");
-        //     super.updateOrderbook(orderBook);
-        // }
     };
 };
