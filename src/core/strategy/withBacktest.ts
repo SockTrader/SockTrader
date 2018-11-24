@@ -74,7 +74,7 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             const openOrders: IOrder[] = [];
             this.openOrders.forEach(order => {
                 if (order.createdAt.isAfter(candle.timestamp)) {
-                    return; // Candle should be newer than order!
+                    return openOrders.push(order); // Candle should be newer than order!
                 }
 
                 const filledReport = {...order, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
