@@ -2,14 +2,14 @@
 import {expect} from "chai";
 import {describe, it} from "mocha";
 import {mock, spy} from "sinon";
-import BaseExchange, {ITradeablePair} from "./baseExchange";
+import BaseExchange from "./baseExchange";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import Orderbook from "../orderbook";
 import CandleCollection from "../candleCollection";
 import {EventEmitter} from "events";
 import moment = require("moment");
 
-const pair = "BTCETH";
+const pair = "BTCUSD";
 
 // @ts-ignore
 class MockExchange extends BaseExchange {
@@ -20,7 +20,7 @@ class MockExchange extends BaseExchange {
 
 describe("Exchange", () => {
     let exc = new MockExchange();
-    let getReport = (): IOrder => ({
+    const getReport = (): IOrder => ({
         clientOrderId: "123",
         createdAt: moment(),
         cumQuantity: 0,
@@ -30,11 +30,28 @@ describe("Exchange", () => {
         reportType: ReportType.NEW,
         side: OrderSide.BUY,
         status: OrderStatus.NEW,
-        symbol: "BTCETH",
+        symbol: "BTCUSD",
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
         type: OrderType.MARKET,
         updatedAt: moment(),
     });
+
+    const getOrder = (): IOrder => ({
+        clientOrderId: "4559a45057ded19e04d715c4b40f7ddd",
+        createdAt: moment(),
+        cumQuantity: 0,
+        id: "38727737188",
+        price: 0.001263,
+        quantity: 0.02,
+        reportType: ReportType.NEW,
+        side: OrderSide.BUY,
+        status: OrderStatus.NEW,
+        symbol: pair,
+        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+        type: OrderType.MARKET,
+        updatedAt: moment(),
+    });
+
 
     beforeEach(() => {
         exc = new MockExchange();
@@ -50,14 +67,14 @@ describe("Exchange", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.buy(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
-        expect(createOrder.args[0]).to.deep.equal(["BTCETH", 1, 10, "buy"]);
+        expect(createOrder.args[0]).to.deep.equal(["BTCUSD", 1, 10, "buy"]);
     });
 
     it("Should create a sell order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.sell(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
-        expect(createOrder.args[0]).to.deep.equal(["BTCETH", 1, 10, "sell"]);
+        expect(createOrder.args[0]).to.deep.equal(["BTCUSD", 1, 10, "sell"]);
     });
 
     it("Should put an order into progress when creating an order", () => {
@@ -73,17 +90,6 @@ describe("Exchange", () => {
         expect(exc["orderInProgress"][id]).to.equal(true);
         exc["setOrderInProgress"](id, false);
         expect(exc["orderInProgress"][id]).to.equal(undefined);
-    });
-
-    it("Should return a cached orderbook for a trading pair", () => {
-        expect(() => exc.getOrderbook("FAKE")).to.throw("No configuration found for pair: \"FAKE\"");
-        exc["currencies"] = [{tickSize: 0.001, id: pair} as ITradeablePair];
-        const ob = exc.getOrderbook(pair);
-        expect(ob).to.be.an.instanceof(Orderbook);
-        expect(ob).to.not.be.equal(new Orderbook(pair, 3));
-
-        const ob2 = exc.getOrderbook(pair);
-        expect(ob).to.be.equal(ob2);
     });
 
     it("Should return a cached candle collection for a trading pair", () => {
@@ -160,5 +166,48 @@ describe("Exchange", () => {
 
         exc.send("test", {param1: "1", param2: "2"});
         mockConnection.verify();
+    });
+
+    it("Should store all open orders", () => {
+        // const exc = new HitBTC();
+        const order = getOrder();
+
+        expect(exc.getOpenOrders()).to.deep.eq([]);
+
+        exc["addOrder"](order);
+        expect(exc.getOpenOrders()).to.deep.eq([order]);
+    });
+
+    it("Should generate new order id's", () => {
+        expect(exc.generateOrderId(pair).length).to.be.equal(32);
+        expect(exc.generateOrderId(pair)).to.be.an("string");
+    });
+
+    it("Should verify if an order can be adjusted", () => {
+        const order = getOrder();
+
+        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).to.equal(true);
+        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).to.equal(false);
+
+        exc["orderInProgress"] = {};
+        expect(exc["isAdjustingOrderAllowed"](order, 0.001263, 0.02)).to.equal(false);
+    });
+
+    it("Should get singleton exchange orderbook", () => {
+        // No configuration given
+        expect(() => exc.getOrderbook(pair)).to.throw("No configuration found for pair: \"BTCUSD\"");
+
+        exc["currencies"] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
+
+        // Returns a new empty orderbook
+        const orderbook = exc.getOrderbook(pair);
+        expect(orderbook).to.deep.equal({pair, precision: 6, ask: [], bid: []});
+        expect(orderbook).to.be.an.instanceof(Orderbook);
+        expect(exc["orderbooks"][pair]).to.equal(orderbook);
+
+        expect(orderbook).to.not.equal(new Orderbook(pair, 6));
+
+        const orderbook2 = exc.getOrderbook(pair);
+        expect(orderbook2).to.equal(orderbook);
     });
 });
