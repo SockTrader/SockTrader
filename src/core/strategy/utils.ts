@@ -1,4 +1,6 @@
-const recurValidator = (validator: (a: number, b: number) => boolean) => {
+type Validator = (a: number, b: number) => boolean;
+
+const recurValidator = (validator: Validator) => {
     const recursiveCheck = (a: number[], b: number[], depth = 0): boolean => {
         if (a[depth] === b[depth]) {
             return (a.length < depth + 2 || b.length < depth + 2)
