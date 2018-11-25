@@ -14,7 +14,7 @@ class MyStrategy extends BaseStrategy {
 let exchange = {generateOrderId: () => undefined};
 let Backtest = withBacktest(MyStrategy as any);
 
-describe("BackTest", () => {
+describe("Backtest", () => {
 
     let backtest = undefined;
     let notifyOrder = undefined;
