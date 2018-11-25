@@ -16,7 +16,7 @@
 ## Features
 
 - 🚀 Realtime super-fast websocket trading
-- 📈 50+ Technical indicators
+- 📈 50+ Technical indicators ([docs](https://github.com/anandanand84/technicalindicators))
 - 🌈 Written in typescript!
 - 🌿 Unit tested source code
 - 💎 Strategy testing with LIVE exchange data. (under development)
