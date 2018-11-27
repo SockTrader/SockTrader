@@ -17,7 +17,7 @@ export interface IExchange extends EventEmitter {
 
     cancelOrder(order: IOrder): void;
 
-    connect(connectionString?: string): this;
+    connect(connectionString?: string): void;
 
     destroy(): void;
 

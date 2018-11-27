@@ -1,10 +1,16 @@
 import moment = require("moment");
-import {ICandle} from "../candleCollection";
+import {ICandle, ICandleInterval} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
+import logger from "../logger";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import BaseStrategy, {IStrategyClass} from "./baseStrategy";
 
-export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
+export interface IBacktestConfiguration {
+    candles: ICandle[];
+    interval: ICandleInterval;
+}
+
+export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?: IBacktestConfiguration) => {
     const baseOrder = {
         createdAt: moment(),
         cumQuantity: 0,
@@ -21,8 +27,35 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
 
         constructor(public pair: string, public exchange: IExchange) {
             super(pair, exchange);
+
+            if (typeof config !== "undefined") {
+                // @ts-ignore
+                this.exchange.once("ready", () => this.emitCandles(config.candles, config.interval));
+                this.decoupleExchange();
+            }
         }
 
+        /**
+         * Prevents the exchange from connecting with the remote exchange
+         */
+        decoupleExchange() {
+            this.exchange.connect = () => {
+                logger.info("Strategy is ready for backtest!");
+                this.exchange.emit("ready");
+            };
+
+            this.exchange.send = (method: string, params = {}) => {
+                logger.info("Event silenced by backtest :" + JSON.stringify({event: method, params}));
+            };
+        }
+
+        /**
+         * Intercept the emit events of the strategy and store the values internally
+         * instead of forwarding the events to the exchange.
+         *
+         * @param event
+         * @param args
+         */
         emit(event: string | symbol, ...args: any[]): boolean {
             const [data] = args;
 
@@ -66,6 +99,27 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             return super.emit(event, ...args);
         }
 
+        /**
+         * Creates an expanding list of candles. And triggers the exchange so that it processes the candles
+         * as if it were candles coming from the remote exchange
+         *
+         * @param candles
+         * @param interval
+         */
+        emitCandles(candles: ICandle[], interval: ICandleInterval): void {
+            candles.reduce<ICandle[]>((acc, val) => {
+                const processedCandles = [val, ...acc];
+                this.exchange.emit("app.updateCandles", processedCandles);
+                return processedCandles;
+            }, []);
+        }
+
+        /**
+         * Validates if an open order can be closed by comparing the current candle values
+         * with the values of an open order
+         *
+         * @param candle
+         */
         processOpenOrders(candle: ICandle): void {
             const openOrders: IOrder[] = [];
             this.openOrders.forEach(order => {
@@ -85,6 +139,11 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => {
             this.openOrders = openOrders;
         }
 
+        /**
+         * The backtest will listen for new candles and process the openOrders.
+         *
+         * @param candles
+         */
         updateCandles(candles: ICandle[]): void {
             this.processOpenOrders(candles[0]);
             super.updateCandles(candles);

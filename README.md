@@ -19,8 +19,8 @@
 - 📈 50+ Technical indicators ([docs](https://github.com/anandanand84/technicalindicators))
 - 🌈 Written in typescript!
 - 🌿 Unit tested source code
-- 💎 Strategy testing with LIVE exchange data. (under development)
-- 🏡 Backtesting engine with local data (under development)
+- 💎 Strategy testing with LIVE exchange data.
+- 🏡 Backtesting engine with local data.
 - More features soon..
 
 ## Quick start

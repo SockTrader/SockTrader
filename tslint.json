@@ -16,7 +16,6 @@
     "semicolon": [true, "always"],
     "member-access": [true, "no-public"],
     "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
-    "align": [true, "arguments", "elements", "members", "parameters", "statements"],
     "arrow-parens": [true, "ban-single-arg-parens"],
     "no-inferrable-types": true,
     "no-unused-variable": true,

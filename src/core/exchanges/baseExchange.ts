@@ -53,13 +53,11 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract cancelOrder(order: IOrder): void;
 
-    connect(connectionString: string): this {
+    connect(connectionString: string): void {
         this.socketClient.on("connectFailed", error => logger.error("Connect Error: " + error.toString()));
         this.socketClient.on("connect", (conn: connection) => this.onConnect(conn));
 
         this.socketClient.connect(connectionString);
-
-        return this;
     }
 
     destroy(): void {
@@ -163,9 +161,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * Exchange created event. Bootstrap the exchange asynchronously
      */
     onCreate(): void {
-        setInterval(() => {
-            this.orderIncrement = 0;
-        },          1000 * 60 * 5); // Reset increment every 5 minutes
+        setInterval(() => { this.orderIncrement = 0; }, 1000 * 60 * 5); // Reset increment every 5 minutes
     }
 
     onCurrenciesLoaded(currencies: ITradeablePair[]): void {

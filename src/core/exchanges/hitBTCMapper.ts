@@ -170,7 +170,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
             return this.exchange.onUpdateCandles(data.params.symbol, this.mapCandles(data), interval, method);
         }
 
-        logger.debug(`Interval: "${data.params.period}" is not recognized by the system. The e|xchange callback "onUpdateCandles" was not triggered.`);
+        logger.debug(`Interval: "${data.params.period}" is not recognized by the system. The exchange callback "onUpdateCandles" was not triggered.`);
     }
 
     private onUpdateOrderbook(data: IHitBTCOrderbookResponse, method: "addIncrement" | "setOrders"): void {

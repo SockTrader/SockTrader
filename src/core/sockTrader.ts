@@ -27,37 +27,39 @@ export default class SockTrader {
         this.strategyConfigurations.push(config);
     }
 
+    bindExchangeToStrategies(exchange: IExchange, strategies: BaseStrategy[]): void {
+        exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
+        exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
+        exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
+    }
+
+    bindStrategiesToExchange(exchange: IExchange, strategies: BaseStrategy[]): void {
+        strategies.forEach(strategy => {
+            strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
+            strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
+        });
+    }
+
     start(): void {
         if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
 
         this.exchanges.forEach(exchange => {
-            const configList = this.strategyConfigurations.filter(str => str.exchange === exchange);
-            if (configList.length <= 0) {
+            const config = this.strategyConfigurations.filter(str => str.exchange === exchange);
+            if (config.length <= 0) {
                 return; // No strategyConfigurations found for exchange
             }
 
-            this.initializeStrategies(exchange, configList);
+            const strategies = config.map(c => new c.strategy(c.pair, c.exchange));
+            this.bindStrategiesToExchange(exchange, strategies);
+            this.bindExchangeToStrategies(exchange, strategies);
+            this.subscribeToExchangeEvents(exchange, strategies, config);
             exchange.connect();
         });
     }
 
-    /**
-     * Glue the exchange events to the corresponding strategyConfigurations
-     */
-    private initializeStrategies(exchange: IExchange, config: IStrategyConfiguration[]): void {
-        const strategies = config.map(c => new c.strategy(c.pair, c.exchange));
-
-        strategies.forEach(strategy => {
-            strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
-            strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
-        });
-
-        exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
-        exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
-        exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
-
+    subscribeToExchangeEvents(exchange: IExchange, strategies: BaseStrategy[], config: IStrategyConfiguration[]): void {
         exchange.once("ready", () => exchange.subscribeReports());
 
         // Be sure to only subscribe once to a certain trading pair.
