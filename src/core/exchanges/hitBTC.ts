@@ -121,7 +121,7 @@ export default class HitBTC extends BaseExchange {
     subscribeCandles = (pair: string, interval: ICandleInterval): void => this.send("subscribeCandles", {
         symbol: pair,
         period: interval.code,
-    });
+    })
 
     subscribeOrderbook = (pair: string): void => this.send("subscribeOrderbook", {symbol: pair});
 
