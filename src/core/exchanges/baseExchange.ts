@@ -171,12 +171,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     onReport(order: IOrder): void {
-        const orderId = order.clientOrderId;
+        const orderId = order.id;
 
         this.setOrderInProgress(orderId, false);
 
-        if (order.reportType === ReportType.REPLACED && order.originalRequestClientOrderId) {
-            const oldOrderId = order.originalRequestClientOrderId;
+        if (order.reportType === ReportType.REPLACED && order.originalId) {
+            const oldOrderId = order.originalId;
 
             this.setOrderInProgress(oldOrderId, false);
             this.removeOrder(oldOrderId);
@@ -250,7 +250,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @param qty
      */
     protected isAdjustingOrderAllowed(order: IOrder, price: number, qty: number): boolean {
-        if (this.orderInProgress[order.clientOrderId]) {
+        if (this.orderInProgress[order.id]) {
             return false; // Order still in progress
         }
 
@@ -258,7 +258,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             return false; // Old order === new order. No need to replace!
         }
 
-        this.setOrderInProgress(order.clientOrderId);
+        this.setOrderInProgress(order.id);
         return true;
     }
 
@@ -280,7 +280,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * Remove order from internal array
      */
     protected removeOrder(orderId: string): void {
-        this.openOrders = this.openOrders.filter(o => o.clientOrderId !== orderId);
+        this.openOrders = this.openOrders.filter(o => o.id !== orderId);
     }
 
     /**

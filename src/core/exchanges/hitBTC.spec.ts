@@ -126,7 +126,7 @@ describe("HitBTC", () => {
     it("Should cancel an order", () => {
         // @ts-ignore
         const setOrderInProgress = stub(exchange, "setOrderInProgress");
-        exchange.cancelOrder({clientOrderId: "123"} as IOrder);
+        exchange.cancelOrder({id: "123"} as IOrder);
 
         expect(setOrderInProgress.calledOnce).to.equal(true);
         expect(setOrderInProgress.args[0]).to.deep.equal(["123"]);
@@ -141,7 +141,7 @@ describe("HitBTC", () => {
         const adjustAllowed = stub(exchange, "isAdjustingOrderAllowed");
         adjustAllowed.returns(true);
 
-        exchange.adjustOrder({symbol: "BTCUSD", clientOrderId: "123"} as IOrder, 0.002, 0.5);
+        exchange.adjustOrder({symbol: "BTCUSD", id: "123"} as IOrder, 0.002, 0.5);
         expect(send.calledOnce).to.equal(true);
         expect(send.args[0][0]).to.equal("cancelReplaceOrder");
         expect(send.args[0][1]).to.include({clientOrderId: "123", price: 0.002, quantity: 0.5, strictValidate: true});

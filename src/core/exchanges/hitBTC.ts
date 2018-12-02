@@ -49,7 +49,7 @@ export default class HitBTC extends BaseExchange {
             const newOrderId = this.generateOrderId(order.symbol);
 
             this.send("cancelReplaceOrder", {
-                clientOrderId: order.clientOrderId,
+                clientOrderId: order.id,
                 price,
                 quantity: qty,
                 requestClientId: newOrderId,
@@ -62,8 +62,8 @@ export default class HitBTC extends BaseExchange {
      * Cancel existing order on exchange
      */
     cancelOrder(order: IOrder): void {
-        this.setOrderInProgress(order.clientOrderId);
-        this.send("cancelOrder", {clientOrderId: order.clientOrderId});
+        this.setOrderInProgress(order.id);
+        this.send("cancelOrder", {clientOrderId: order.id});
     }
 
     connect() {

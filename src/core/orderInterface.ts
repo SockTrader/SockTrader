@@ -8,18 +8,18 @@ export enum OrderSide {
 export enum OrderStatus {
     NEW = "new",
     SUSPENDED = "suspended",
-    PARTIALLY_FILLED = "partiallyFilled",
-    FILLED = "filled",
     CANCELED = "canceled",
     EXPIRED = "expired",
+    PARTIALLY_FILLED = "partiallyFilled",
+    FILLED = "filled",
 }
 
 export enum ReportType {
-    STATUS = "status",
     NEW = "new",
+    SUSPENDED = "suspended",
     CANCELED = "canceled",
     EXPIRED = "expired",
-    SUSPENDED = "suspended",
+    STATUS = "status",
     TRADE = "trade",
     REPLACED = "replaced",
 }
@@ -27,8 +27,6 @@ export enum ReportType {
 export enum OrderType {
     LIMIT = "limit",
     MARKET = "market",
-    STOP_LIMIT = "stopLimit",
-    STOP_MARKET = "stopMarket",
 }
 
 export enum OrderTimeInForce {
@@ -40,11 +38,9 @@ export enum OrderTimeInForce {
 }
 
 export interface IOrder {
-    clientOrderId: string;
     createdAt: Moment;
-    cumQuantity: number;
     id: string;
-    originalRequestClientOrderId?: string;
+    originalId?: string;
     price: number;
     quantity: number;
     reportType: ReportType;

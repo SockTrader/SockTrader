@@ -4,7 +4,7 @@ import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
-import {IOrder} from "../orderInterface";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 
@@ -138,21 +138,19 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
     private onReport(data: IHitBTCReportResponse): void {
         data.params.forEach(report => {
             this.exchange.onReport({
-                clientOrderId: report.clientOrderId,
-                originalRequestClientOrderId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
+                id: report.clientOrderId,
+                originalId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
                 createdAt: moment(report.createdAt),
-                cumQuantity: parseFloat(report.cumQuantity),
-                id: report.id,
                 price: parseFloat(report.price),
                 quantity: parseFloat(report.quantity),
-                reportType: report.reportType,
-                side: report.side,
-                status: report.status,
+                reportType: report.reportType as ReportType,
+                side: report.side as OrderSide,
+                status: report.status as OrderStatus,
                 symbol: report.symbol,
-                timeInForce: report.timeInForce,
-                type: report.type,
+                timeInForce: report.timeInForce as OrderTimeInForce,
+                type: report.type as OrderType,
                 updatedAt: moment(report.updatedAt),
-            } as IOrder);
+            });
         });
     }
 

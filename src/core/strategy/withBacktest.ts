@@ -7,17 +7,16 @@ import BaseStrategy, {IStrategyClass} from "./baseStrategy";
 
 export interface IBacktestConfiguration {
     candles: ICandle[];
+    capital: number;
     interval: ICandleInterval;
 }
 
 export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?: IBacktestConfiguration) => {
     const baseOrder = {
         createdAt: moment(),
-        cumQuantity: 0,
+        updatedAt: moment(),
         status: OrderStatus.NEW,
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.MARKET,
-        updatedAt: moment(),
     };
 
     return class BackTest extends (Strategy as IStrategyClass<BaseStrategy>) {
@@ -30,8 +29,8 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
 
             if (typeof config !== "undefined") {
                 // @ts-ignore
-                this.exchange.once("ready", () => this.emitCandles(config.candles, config.interval));
                 this.decoupleExchange();
+                this.exchange.once("ready", () => this.emitCandles(config.candles, config.interval));
             }
         }
 
@@ -61,12 +60,12 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
 
             if (event.toString() === "app.signal") {
                 const orderId = this.exchange.generateOrderId(data.symbol);
-                const order = {
+                const order: IOrder = {
                     ...baseOrder,
                     id: orderId,
+                    type: OrderType.LIMIT,
                     reportType: ReportType.NEW,
                     side: data.side,
-                    clientOrderId: orderId,
                     symbol: data.symbol,
                     quantity: data.qty,
                     price: data.price,
@@ -77,17 +76,17 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
             }
 
             if (event.toString() === "app.adjustOrder") {
-                const oldOrder = this.openOrders.find(oo => oo.id === data.order.id);
+                const oldOrder = this.openOrders.find(oo => oo.id === data.order.id) as IOrder;
                 const orderId = this.exchange.generateOrderId(data.symbol);
-                const order = {
+                const order: IOrder = {
                     ...oldOrder,
-                    updatedAt: moment(),
                     id: orderId,
-                    clientOrderId: orderId,
-                    originalRequestClientOrderId: data.order.id,
+                    updatedAt: moment(),
+                    type: OrderType.LIMIT,
+                    originalId: data.order.id,
                     quantity: data.qty,
                     price: data.price,
-                } as IOrder;
+                };
 
                 this.openOrders.push(order);
                 this.openOrders = this.openOrders.filter(oo => oo.id !== data.order.id);

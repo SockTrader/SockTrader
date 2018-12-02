@@ -21,10 +21,8 @@ class MockExchange extends BaseExchange {
 describe("Exchange", () => {
     let exc = new MockExchange();
     const getReport = (): IOrder => ({
-        clientOrderId: "123",
-        createdAt: moment(),
-        cumQuantity: 0,
         id: "123",
+        createdAt: moment(),
         price: 10,
         quantity: 0.5,
         reportType: ReportType.NEW,
@@ -32,15 +30,13 @@ describe("Exchange", () => {
         status: OrderStatus.NEW,
         symbol: "BTCUSD",
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.MARKET,
+        type: OrderType.LIMIT,
         updatedAt: moment(),
     });
 
     const getOrder = (): IOrder => ({
-        clientOrderId: "4559a45057ded19e04d715c4b40f7ddd",
+        id: "4559a45057ded19e04d715c4b40f7ddd",
         createdAt: moment(),
-        cumQuantity: 0,
-        id: "38727737188",
         price: 0.001263,
         quantity: 0.02,
         reportType: ReportType.NEW,
@@ -48,7 +44,7 @@ describe("Exchange", () => {
         status: OrderStatus.NEW,
         symbol: pair,
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.MARKET,
+        type: OrderType.LIMIT,
         updatedAt: moment(),
     });
 
@@ -114,8 +110,8 @@ describe("Exchange", () => {
         exc.onReport({
             ...report,
             reportType: ReportType.REPLACED,
-            originalRequestClientOrderId: "123",
-            clientOrderId: "321",
+            originalId: "123",
+            id: "321",
         });
         expect(removeOrder.calledOnce).to.eq(true);
         expect(addOrder.calledTwice).to.eq(true);

@@ -61,7 +61,7 @@ describe("Backtest", () => {
 
         expect(notifyOrder.args[1][0]).to.include({
             symbol: "ETHBTC", price: 1, quantity: 10, side: OrderSide.BUY,
-            originalRequestClientOrderId: "123", clientOrderId: "456",
+            originalId: "123", id: "456",
         });
         expect(backtest.openOrders[0]).to.include({
             symbol: "ETHBTC", price: 1, quantity: 10, side: OrderSide.BUY,
