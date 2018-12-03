@@ -1,37 +1,75 @@
-import moment = require("moment");
+import moment from "moment";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import logger from "../logger";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
-import BaseStrategy, {IStrategyClass} from "./baseStrategy";
+import BaseStrategy, {ISignal, IStrategyClass} from "./baseStrategy";
 
 export interface IBacktestConfiguration {
-    candles: ICandle[];
+    candles?: ICandle[];
     capital: number;
-    interval: ICandleInterval;
+    interval?: ICandleInterval;
 }
 
-export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?: IBacktestConfiguration) => {
-    const baseOrder = {
-        createdAt: moment(),
-        updatedAt: moment(),
-        status: OrderStatus.NEW,
-        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-    };
-
+export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config: IBacktestConfiguration) => {
     return class BackTest extends (Strategy as IStrategyClass<BaseStrategy>) {
-        filledOrders: IOrder[] = [];
 
+        capital: number = config.capital;
+        filledOrders: IOrder[] = [];
         openOrders: IOrder[] = [];
+        progress = 0;
 
         constructor(public pair: string, public exchange: IExchange) {
             super(pair, exchange);
 
-            if (typeof config !== "undefined") {
+            if (config.candles !== undefined && config.interval !== undefined) {
                 // @ts-ignore
                 this.decoupleExchange();
-                this.exchange.once("ready", () => this.emitCandles(config.candles, config.interval));
+                this.exchange.once("ready", () => this.emitCandles(config.candles as ICandle[], config.interval as ICandleInterval));
             }
+        }
+
+        /**
+         * Creates an adjusted clone of an IOrder instance
+         * @param order
+         * @param price
+         * @param quantity
+         */
+        createOrderFromOrder(order: IOrder, price: number, quantity: number): IOrder {
+            const candleTime = (config.candles === undefined) ? moment() : config.candles[this.progress].timestamp;
+            const orderId = this.exchange.generateOrderId(order.symbol);
+
+            return {
+                ...order,
+                id: orderId,
+                updatedAt: candleTime,
+                type: OrderType.LIMIT,
+                originalId: order.id,
+                quantity,
+                price,
+            };
+        }
+
+        /**
+         * Converts strategy signal into an IOrder instance
+         * @param signal
+         */
+        createOrderFromSignal(signal: ISignal): IOrder {
+            const candleTime = (config.candles === undefined) ? moment() : config.candles[this.progress].timestamp;
+
+            return {
+                createdAt: candleTime,
+                updatedAt: candleTime,
+                status: OrderStatus.NEW,
+                timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+                id: this.exchange.generateOrderId(signal.symbol),
+                type: OrderType.LIMIT,
+                reportType: ReportType.NEW,
+                side: signal.side,
+                symbol: signal.symbol,
+                quantity: signal.qty,
+                price: signal.price,
+            };
         }
 
         /**
@@ -59,17 +97,8 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
             const [data] = args;
 
             if (event.toString() === "app.signal") {
-                const orderId = this.exchange.generateOrderId(data.symbol);
-                const order: IOrder = {
-                    ...baseOrder,
-                    id: orderId,
-                    type: OrderType.LIMIT,
-                    reportType: ReportType.NEW,
-                    side: data.side,
-                    symbol: data.symbol,
-                    quantity: data.qty,
-                    price: data.price,
-                };
+                const order = this.createOrderFromSignal(data);
+
                 this.openOrders.push(order);
                 this.notifyOrder(order);
                 return false;
@@ -77,20 +106,10 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
 
             if (event.toString() === "app.adjustOrder") {
                 const oldOrder = this.openOrders.find(oo => oo.id === data.order.id) as IOrder;
-                const orderId = this.exchange.generateOrderId(data.symbol);
-                const order: IOrder = {
-                    ...oldOrder,
-                    id: orderId,
-                    updatedAt: moment(),
-                    type: OrderType.LIMIT,
-                    originalId: data.order.id,
-                    quantity: data.qty,
-                    price: data.price,
-                };
+                const order = this.createOrderFromOrder(oldOrder, data.price, data.qty);
 
                 this.openOrders.push(order);
                 this.openOrders = this.openOrders.filter(oo => oo.id !== data.order.id);
-
                 this.notifyOrder(order);
                 return false;
             }
@@ -102,15 +121,33 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config?
          * Creates an expanding list of candles. And triggers the exchange so that it processes the candles
          * as if it were candles coming from the remote exchange
          *
-         * @param candles
+         * @param c
          * @param interval
          */
-        emitCandles(candles: ICandle[], interval: ICandleInterval): void {
-            candles.reduce<ICandle[]>((acc, val) => {
+        emitCandles(c: ICandle[], interval: ICandleInterval): void {
+            const candles = (c[c.length - 1].timestamp.isBefore(c[0].timestamp)) ? c.reverse() : c;
+
+            candles.reduce<ICandle[]>((acc, val, idx) => {
                 const processedCandles = [val, ...acc];
+                this.progress = idx;
                 this.exchange.emit("app.updateCandles", processedCandles);
                 return processedCandles;
             }, []);
+        }
+
+        notifyOrder(order: IOrder): void {
+            super.notifyOrder(order);
+            if (order.status !== OrderStatus.FILLED) {
+                return;
+            }
+
+            if (order.side === OrderSide.BUY) {
+                this.capital -= (order.price * order.quantity);
+                // console.log("capital: ", this.capital, "\n");
+            } else if (order.side === OrderSide.SELL) {
+                this.capital += (order.price * order.quantity);
+                // console.log("capital: ", this.capital, "\n");
+            }
         }
 
         /**

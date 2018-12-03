@@ -4,7 +4,7 @@ import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
+import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 

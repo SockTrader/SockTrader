@@ -12,7 +12,7 @@ class MyStrategy extends BaseStrategy {
 }
 
 let exchange = {generateOrderId: () => undefined};
-let Backtest = withBacktest(MyStrategy as any)();
+let Backtest = withBacktest(MyStrategy as any)({ capital: 1000 });
 
 describe("Backtest", () => {
 

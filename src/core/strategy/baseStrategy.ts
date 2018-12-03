@@ -8,6 +8,19 @@ export interface IStrategyClass<T> {
     new(pair: string, exchange: IExchange): T;
 }
 
+export interface ISignal {
+    price: number;
+    qty: number;
+    side: OrderSide;
+    symbol: string;
+}
+
+export interface IAdjustSignal {
+    order: IOrder;
+    price: number;
+    qty: number;
+}
+
 /**
  * @class BaseStrategy
  * @classdesc Reusable strategy class
@@ -23,7 +36,7 @@ export default abstract class BaseStrategy extends EventEmitter {
         super();
     }
 
-    notifyOrder(data: IOrder): void {
+    notifyOrder(order: IOrder): void {
         throw new Error("Implement method: notifyOrder");
     }
 
@@ -36,14 +49,14 @@ export default abstract class BaseStrategy extends EventEmitter {
     }
 
     protected adjust(order: IOrder, price: number, qty: number): void {
-        this.emit("app.adjustOrder", {order, price, qty});
+        this.emit("app.adjustOrder", {order, price, qty} as IAdjustSignal);
     }
 
     protected buy(symbol: string, price: number, qty: number): void {
-        this.emit("app.signal", {symbol, price, qty, side: OrderSide.BUY});
+        this.emit("app.signal", {symbol, price, qty, side: OrderSide.BUY} as ISignal);
     }
 
     protected sell(symbol: string, price: number, qty: number): void {
-        this.emit("app.signal", {symbol, price, qty, side: OrderSide.SELL});
+        this.emit("app.signal", {symbol, price, qty, side: OrderSide.SELL} as ISignal);
     }
 }
