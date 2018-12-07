@@ -15,6 +15,8 @@
 
 ## Features
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/cwouter/SockTrader.svg)](https://greenkeeper.io/)
+
 - 🚀 Realtime super-fast websocket trading
 - 📈 50+ Technical indicators ([docs](https://github.com/anandanand84/technicalindicators))
 - 🌈 Written in typescript!
