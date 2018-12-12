@@ -1,4 +1,5 @@
 import moment from "moment";
+import CapitalAnalyzer, {IAnalyzer} from "../analyzers/capitalAnalyzer";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import logger from "../logger";
@@ -13,6 +14,9 @@ export interface IBacktestConfiguration {
 
 export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config: IBacktestConfiguration) => {
     return class BackTest extends (Strategy as IStrategyClass<BaseStrategy>) {
+        analyzers: IAnalyzer[] = [
+            new CapitalAnalyzer(config.capital),
+        ];
 
         capital: number = config.capital;
         filledOrders: IOrder[] = [];
@@ -26,6 +30,31 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
                 // @ts-ignore
                 this.decoupleExchange();
                 this.exchange.once("ready", () => this.emitCandles(config.candles as ICandle[], config.interval as ICandleInterval));
+            }
+        }
+
+        // @TODO remove me! should be calculated by an analyzer
+        analyze(order: IOrder) {
+            if (order.status !== OrderStatus.FILLED) {
+                return;
+            }
+
+            const oldCapital = this.capital;
+            if (order.side === OrderSide.BUY) {
+                this.capital -= (order.price * order.quantity);
+            } else if (order.side === OrderSide.SELL) {
+                this.capital += (order.price * order.quantity);
+            }
+
+            console.log("capital: ", this.capital, " : ", this.calcPerc(oldCapital, this.capital), "\n");
+        }
+
+        // @TODO remove me! should be calculated by an analyzer
+        calcPerc(a: number, b: number): string {
+            if (b > a) {
+                return `+${(b - a) / a * 100}%`;
+            } else {
+                return `-${(b - a) / b * 100}%`;
             }
         }
 
@@ -135,19 +164,14 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
             }, []);
         }
 
+        // @TODO move to baseStrategy ??
         notifyOrder(order: IOrder): void {
             super.notifyOrder(order);
-            if (order.status !== OrderStatus.FILLED) {
-                return;
-            }
+            // this.analyzers.forEach((analyzer: IAnalyzer) => {
+            //     analyzer.analyze(order);
+            // });
 
-            if (order.side === OrderSide.BUY) {
-                this.capital -= (order.price * order.quantity);
-                // console.log("capital: ", this.capital, "\n");
-            } else if (order.side === OrderSide.SELL) {
-                this.capital += (order.price * order.quantity);
-                // console.log("capital: ", this.capital, "\n");
-            }
+            this.analyze(order);
         }
 
         /**
@@ -158,19 +182,23 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
          */
         processOpenOrders(candle: ICandle): void {
             const openOrders: IOrder[] = [];
-            this.openOrders.forEach(order => {
-                if (order.createdAt.isAfter(candle.timestamp)) {
-                    return openOrders.push(order); // Candle should be newer than order!
+            this.openOrders.forEach(oo => {
+                if (oo.createdAt.isAfter(candle.timestamp)) {
+                    return openOrders.push(oo); // Candle should be newer than order!
                 }
 
-                const filledReport = {...order, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-                if ((order.side === OrderSide.BUY && candle.low < order.price) ||
-                    (order.side === OrderSide.SELL && candle.high > order.price)) {
-                    this.notifyOrder(filledReport);
-                    return this.filledOrders.push(filledReport);
+                const order = {...oo, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
+                if (oo.side === OrderSide.BUY && candle.low < oo.price && this.fillBuyOrder(order)) {
+                    this.filledOrders.push(order);
+                    return this.notifyOrder(order);
                 }
 
-                openOrders.push(order);
+                if (oo.side === OrderSide.SELL && candle.high > oo.price && this.fillSellOrder(order)) {
+                    this.filledOrders.push(order);
+                    return this.notifyOrder(order);
+                }
+
+                openOrders.push(oo);
             });
             this.openOrders = openOrders;
         }
@@ -183,6 +211,39 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
         updateCandles(candles: ICandle[]): void {
             this.processOpenOrders(candles[0]);
             super.updateCandles(candles);
+        }
+
+        /**
+         * Fill buy order if a user has enough quantity of the base asset
+         *
+         * @param order
+         */
+        private fillBuyOrder(order: IOrder): boolean {
+            const orders = [...this.openOrders, order];
+            const requiredCapital: number = orders.reduce<number>((acc, cur) => {
+                return (cur.side === OrderSide.BUY) ? acc + (cur.quantity * cur.price) : acc;
+            }, 0);
+
+            // @TODO possible bug! this.capital is not updated after the analyzers did their thing..
+            return (this.capital >= requiredCapital);
+        }
+
+        /**
+         * Fill sell order if a user has bought enough quantity of that same asset
+         *
+         * @param order
+         */
+        private fillSellOrder(order: IOrder): boolean {
+            const qty: number = this.filledOrders.reduce<number>((acc, cur) => {
+                if (cur.side === OrderSide.BUY) {
+                    acc += cur.quantity;
+                } else {
+                    acc -= cur.quantity;
+                }
+                return acc;
+            }, 0);
+
+            return (qty <= order.quantity);
         }
     };
 };

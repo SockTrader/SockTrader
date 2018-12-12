@@ -2,13 +2,18 @@ import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
+import SocketServer from "./socketServer";
 import BaseStrategy, {IStrategyClass} from "./strategy/baseStrategy";
 
-interface IStrategyConfiguration {
+interface IStrategyConfig {
     exchange: IExchange;
     interval: ICandleInterval;
     pair: string;
     strategy: IStrategyClass<BaseStrategy>;
+}
+
+interface ISockTraderConfig {
+    webserver: boolean;
 }
 
 /**
@@ -17,27 +22,26 @@ interface IStrategyConfiguration {
  */
 export default class SockTrader {
     private exchanges: IExchange[] = [];
-    private strategyConfigurations: IStrategyConfiguration[] = [];
+    private socketServer: SocketServer | undefined;
+    private strategyConfigurations: IStrategyConfig[] = [];
 
-    addExchange(exchange: IExchange): void {
+    constructor(private config: ISockTraderConfig = { webserver: true }) {
+        if (this.config.webserver) {
+            this.socketServer = new SocketServer();
+            this.socketServer.start();
+        }
+    }
+
+    addExchange(exchange: IExchange): this {
         this.exchanges.push(exchange);
+
+        return this;
     }
 
-    addStrategy(config: IStrategyConfiguration): void {
+    addStrategy(config: IStrategyConfig): this {
         this.strategyConfigurations.push(config);
-    }
 
-    bindExchangeToStrategies(exchange: IExchange, strategies: BaseStrategy[]): void {
-        exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
-        exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
-        exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
-    }
-
-    bindStrategiesToExchange(exchange: IExchange, strategies: BaseStrategy[]): void {
-        strategies.forEach(strategy => {
-            strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
-            strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
-        });
+        return this;
     }
 
     start(): void {
@@ -59,7 +63,7 @@ export default class SockTrader {
         });
     }
 
-    subscribeToExchangeEvents(exchange: IExchange, strategies: BaseStrategy[], config: IStrategyConfiguration[]): void {
+    subscribeToExchangeEvents(exchange: IExchange, strategies: BaseStrategy[], config: IStrategyConfig[]): void {
         exchange.once("ready", () => exchange.subscribeReports());
 
         // Be sure to only subscribe once to a certain trading pair.
@@ -70,5 +74,18 @@ export default class SockTrader {
 
         uniqWith(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval)
             .map(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
+    }
+
+    private bindExchangeToStrategies(exchange: IExchange, strategies: BaseStrategy[]): void {
+        exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
+        exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
+        exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
+    }
+
+    private bindStrategiesToExchange(exchange: IExchange, strategies: BaseStrategy[]): void {
+        strategies.forEach(strategy => {
+            strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
+            strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
+        });
     }
 }
