@@ -39,7 +39,6 @@ export default class WebServer extends WebSocketServer {
 
             const connection = request.accept("echo-protocol", request.origin);
 
-
             console.log((new Date()) + " Connection accepted.");
             connection.on("message", (message: IMessage) => {
                 if (message.type === "utf8" && message.utf8Data !== undefined) {
