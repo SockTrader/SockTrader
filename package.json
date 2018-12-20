@@ -80,7 +80,7 @@
     "@types/mocha": "^5.2.5",
     "@types/nanoid": "^1.2.0",
     "@types/numeral": "0.0.25",
-    "@types/sinon": "^5.0.2",
+    "@types/sinon": "^7.0.2",
     "@types/websocket": "0.0.40",
     "chai": "^4.2.0",
     "codecov": "^3.1.0",
