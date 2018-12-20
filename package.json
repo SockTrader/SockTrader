@@ -21,6 +21,9 @@
   "authors": [
     "wouter cleymans"
   ],
+  "engines": {
+    "node": ">=10.14.2"
+  },
   "license": "GPL-3.0",
   "nyc": {
     "exclude": [
@@ -81,6 +84,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/mocha": "^5.2.5",
     "@types/nanoid": "^1.2.0",
+    "@types/node": "^10.12.15",
     "@types/numeral": "0.0.25",
     "@types/sinon": "^5.0.2",
     "@types/websocket": "0.0.40",

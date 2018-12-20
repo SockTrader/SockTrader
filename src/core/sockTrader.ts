@@ -1,8 +1,8 @@
+import process, {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
-import SocketServer from "./socketServer";
 import BaseStrategy, {IStrategyClass} from "./strategy/baseStrategy";
 
 interface IStrategyConfig {
@@ -13,7 +13,7 @@ interface IStrategyConfig {
 }
 
 interface ISockTraderConfig {
-    webserver: boolean;
+    webServer: boolean;
 }
 
 /**
@@ -22,13 +22,17 @@ interface ISockTraderConfig {
  */
 export default class SockTrader {
     private exchanges: IExchange[] = [];
-    private socketServer: SocketServer | undefined;
     private strategyConfigurations: IStrategyConfig[] = [];
+    private webServer: ChildProcess | undefined;
 
-    constructor(private config: ISockTraderConfig = { webserver: true }) {
-        if (this.config.webserver) {
-            this.socketServer = new SocketServer();
-            this.socketServer.start();
+    constructor(private config: ISockTraderConfig = {webServer: true}) {
+        if (this.config.webServer) {
+            this.webServer = process.fork(`${__dirname}/webServer.js`, [], {
+                stdio: ["ipc"],
+            });
+            this.webServer.on("message", msg => {
+                console.log("msg received", msg);
+            });
         }
     }
 
@@ -44,7 +48,19 @@ export default class SockTrader {
         return this;
     }
 
-    start(): void {
+    isWebServerReady(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            // @TODO!!
+            // if (this.webServer === undefined) return resolve(true);
+            // this.webServer.once("ready", () => resolve(true));
+            // this.webServer.once("exit", () => reject(false));
+        });
+    }
+
+    async start(): Promise<void> {
+        const ready = await this.isWebServerReady();
+        console.log("READDDYYYY", ready);
+
         if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }

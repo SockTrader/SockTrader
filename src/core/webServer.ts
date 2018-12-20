@@ -1,9 +1,9 @@
 import http, {Server} from "http";
 import {IMessage, IServerConfig, server as WebSocketServer} from "websocket";
 
-export default class SocketServer extends WebSocketServer {
+export default class WebServer extends WebSocketServer {
 
-    server: Server;
+    private server: Server;
 
     constructor() {
 
@@ -23,21 +23,23 @@ export default class SocketServer extends WebSocketServer {
     }
 
     start() {
-        console.log("start called!");
-        // setImmediate();
         this.server.listen(8080, () => {
-            console.log((new Date()) + " SERVER IS LISTENING ON PORT 8080");
+            if (process.send !== undefined) process.send("ready");
+            console.log("WebServer listening on port 8080", new Date());
+
         });
 
         this.on("request", request => {
             // if (!originIsAllowed(request.origin)) {
-                // Make sure we only accept requests from an allowed origin
-                // request.reject();
-                // console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
-                // return;
+            // Make sure we only accept requests from an allowed origin
+            // request.reject();
+            // console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
+            // return;
             // }
 
             const connection = request.accept("echo-protocol", request.origin);
+
+
             console.log((new Date()) + " Connection accepted.");
             connection.on("message", (message: IMessage) => {
                 if (message.type === "utf8" && message.utf8Data !== undefined) {
@@ -49,8 +51,11 @@ export default class SocketServer extends WebSocketServer {
                 }
             });
             connection.on("close", (reasonCode, description) => {
-                console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.");
+                console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.", reasonCode, description);
             });
         });
     }
 }
+
+const webServer = new WebServer();
+webServer.start();
