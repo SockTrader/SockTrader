@@ -62,7 +62,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
     "nanoid": "^2.0.0",
-    "nanoid-dictionary": "^1.0.1",
+    "nanoid-dictionary": "^2.0.0",
     "numeral": "^2.0.6",
     "technicalindicators": "^2.0.5",
     "typescript": "^3.1.6",
