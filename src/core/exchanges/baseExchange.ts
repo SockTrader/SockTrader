@@ -1,6 +1,6 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
-import {alphabets as dict, numbers} from "nanoid-dictionary";
+import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
@@ -82,7 +82,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     generateOrderId(pair: string): string {
         this.orderIncrement += 1;
 
-        const alphabet = `${dict.english.lowercase}${dict.english.uppercase}${numbers}_-.|`;
+        const alphabet = `${lowercase}${uppercase}${numbers}_-.|`;
         const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`;
 
         return orderId + generate(alphabet, 32 - orderId.length);
