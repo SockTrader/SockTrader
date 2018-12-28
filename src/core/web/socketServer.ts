@@ -1,4 +1,5 @@
 import http, {Server} from "http";
+import process from "process";
 import {IMessage, IServerConfig, server as WebSocketServer} from "websocket";
 
 export default class SocketServer extends WebSocketServer {
@@ -17,17 +18,12 @@ export default class SocketServer extends WebSocketServer {
         super(config);
 
         this.server = server;
-    }
-
-    ipcSend(message: any) {
-        if (process.send !== undefined) {
-            process.send(message);
-        }
+        this.ipcReceive();
     }
 
     start() {
         this.server.listen(SocketServer.PORT, () => {
-            this.ipcSend({ type: "STATUS", payload: "ready" });
+            this.ipcSend({type: "STATUS", payload: "ready"});
             console.log(`SocketServer started on port ${SocketServer.PORT}`);
         });
 
@@ -38,6 +34,11 @@ export default class SocketServer extends WebSocketServer {
             // console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
             // return;
             // }
+
+            /**
+             * @TODO do something with multiple connections..
+             * Solution: broadcast to all clients??
+             */
 
             const connection = request.accept("echo-protocol", request.origin);
 
@@ -55,6 +56,24 @@ export default class SocketServer extends WebSocketServer {
                 console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.", reasonCode, description);
             });
         });
+    }
+
+    private ipcReceive() {
+        process.on("message", event => {
+            if (!event.type) {
+                throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+            }
+
+            // @TODO Should we use an internal emit here??
+            // @TODO Or directly send the events to all the active connections??
+            this.emit(event.type, event.payload);
+        });
+    }
+
+    private ipcSend(message: any) {
+        if (process.send !== undefined) {
+            process.send(message);
+        }
     }
 }
 

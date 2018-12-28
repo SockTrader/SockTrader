@@ -1,5 +1,4 @@
-import process, {ChildProcess} from "child_process";
-import {EventEmitter} from "events";
+import {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
@@ -24,7 +23,7 @@ interface ISockTraderConfig {
  */
 export default class SockTrader {
     private exchanges: IExchange[] = [];
-    private socketServer: ChildProcess | undefined;
+    private socketServer?: ChildProcess;
     private socketServerReady = false;
     private strategyConfigurations: IStrategyConfig[] = [];
 
@@ -83,6 +82,8 @@ export default class SockTrader {
             const strategies = config.map(c => new c.strategy(c.pair, c.exchange));
             this.bindStrategiesToExchange(exchange, strategies);
             this.bindExchangeToStrategies(exchange, strategies);
+            this.bindExchangeToSocketServer(exchange);
+            this.bindStrategiesToSocketServer(strategies);
             this.subscribeToExchangeEvents(exchange, strategies, config);
             exchange.connect();
         });
@@ -101,6 +102,15 @@ export default class SockTrader {
             .map(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
     }
 
+    private bindExchangeToSocketServer(exchange: IExchange) {
+        if (this.socketServer) {
+            exchange.on("app.updateCandles", candles => {
+                // @ts-ignore
+                this.socketServer.send({type: "CANDLES", payload: candles});
+            });
+        }
+    }
+
     private bindExchangeToStrategies(exchange: IExchange, strategies: BaseStrategy[]): void {
         exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
         exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
@@ -112,5 +122,29 @@ export default class SockTrader {
             strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
             strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
         });
+    }
+
+    private bindStrategiesToSocketServer(strategies: BaseStrategy[]) {
+        if (this.socketServer) {
+            strategies.forEach(strategy => {
+
+                /**
+                 * @TODO Backtest will block incoming "app.signal" events..
+                 */
+                strategy.on("app.signal", signal => {
+                    // @ts-ignore
+                    this.socketServer.send({
+                        type: "SIGNAL",
+                        payload: signal,
+                    });
+                });
+
+                // @ts-ignore
+                strategy.on("app.adjustOrder", order => this.socketServer.send({
+                    type: "ADJUST_ORDER",
+                    payload: order,
+                }));
+            });
+        }
     }
 }

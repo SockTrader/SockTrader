@@ -14,6 +14,10 @@ export default (): ChildProcess => {
     });
 
     childProcess.on("message", event => {
+        if (!event.type) {
+            throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+        }
+
         childProcess.emit(event.type, event.payload);
     });
 
