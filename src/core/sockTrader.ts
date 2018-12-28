@@ -1,9 +1,11 @@
 import process, {ChildProcess} from "child_process";
+import {EventEmitter} from "events";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
 import BaseStrategy, {IStrategyClass} from "./strategy/baseStrategy";
+import spawnServer from "./web/spawnServer";
 
 interface IStrategyConfig {
     exchange: IExchange;
@@ -22,17 +24,14 @@ interface ISockTraderConfig {
  */
 export default class SockTrader {
     private exchanges: IExchange[] = [];
+    private socketServer: ChildProcess | undefined;
+    private socketServerReady = false;
     private strategyConfigurations: IStrategyConfig[] = [];
-    private webServer: ChildProcess | undefined;
 
     constructor(private config: ISockTraderConfig = {webServer: true}) {
         if (this.config.webServer) {
-            this.webServer = process.fork(`${__dirname}/webServer.js`, [], {
-                stdio: ["ipc"],
-            });
-            this.webServer.on("message", msg => {
-                console.log("msg received", msg);
-            });
+            this.socketServer = spawnServer();
+            this.resolveServerStatus();
         }
     }
 
@@ -48,18 +47,28 @@ export default class SockTrader {
         return this;
     }
 
-    isWebServerReady(): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            // @TODO!!
-            // if (this.webServer === undefined) return resolve(true);
-            // this.webServer.once("ready", () => resolve(true));
-            // this.webServer.once("exit", () => reject(false));
-        });
+    resolveServerStatus(): Promise<boolean> {
+        return new Promise<boolean>(((resolve, reject) => {
+            if (!this.socketServer) {
+                return Promise.resolve(true);
+            }
+
+            if (this.socketServerReady) {
+                return Promise.resolve(true);
+            }
+
+            this.socketServer.once("STATUS", status => {
+                this.socketServerReady = (status === "ready");
+                return (this.socketServerReady) ? resolve(true) : reject(false);
+            });
+        }));
     }
 
     async start(): Promise<void> {
-        const ready = await this.isWebServerReady();
-        console.log("READDDYYYY", ready);
+        const serverStatus = await this.resolveServerStatus();
+        if (!serverStatus) {
+            throw new Error("Unable to start socketServer");
+        }
 
         if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");

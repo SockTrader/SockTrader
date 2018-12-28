@@ -1,15 +1,12 @@
 import http, {Server} from "http";
 import {IMessage, IServerConfig, server as WebSocketServer} from "websocket";
 
-export default class WebServer extends WebSocketServer {
+export default class SocketServer extends WebSocketServer {
+    private static PORT = 8080;
 
     private server: Server;
 
     constructor() {
-
-        // Node fork child process
-        // https://dzone.com/articles/understanding-execfile-spawn-exec-and-fork-in-node
-
         const server = http.createServer((request, response) => {
             console.log((new Date()) + " Received request for " + request.url);
             response.writeHead(404);
@@ -22,11 +19,16 @@ export default class WebServer extends WebSocketServer {
         this.server = server;
     }
 
-    start() {
-        this.server.listen(8080, () => {
-            if (process.send !== undefined) process.send("ready");
-            console.log("WebServer listening on port 8080", new Date());
+    ipcSend(message: any) {
+        if (process.send !== undefined) {
+            process.send(message);
+        }
+    }
 
+    start() {
+        this.server.listen(SocketServer.PORT, () => {
+            this.ipcSend({ type: "STATUS", payload: "ready" });
+            console.log(`SocketServer started on port ${SocketServer.PORT}`);
         });
 
         this.on("request", request => {
@@ -56,5 +58,5 @@ export default class WebServer extends WebSocketServer {
     }
 }
 
-const webServer = new WebServer();
+const webServer = new SocketServer();
 webServer.start();
