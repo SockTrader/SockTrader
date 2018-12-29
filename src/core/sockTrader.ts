@@ -24,13 +24,12 @@ interface ISockTraderConfig {
 export default class SockTrader {
     private exchanges: IExchange[] = [];
     private socketServer?: ChildProcess;
-    private socketServerReady = false;
     private strategyConfigurations: IStrategyConfig[] = [];
 
     constructor(private config: ISockTraderConfig = {webServer: true}) {
         if (this.config.webServer) {
             this.socketServer = spawnServer();
-            this.resolveServerStatus();
+            this.socketServer.on("START_TRADING", () => this.start());
         }
     }
 
@@ -46,29 +45,7 @@ export default class SockTrader {
         return this;
     }
 
-    resolveServerStatus(): Promise<boolean> {
-        return new Promise<boolean>(((resolve, reject) => {
-            if (!this.socketServer) {
-                return Promise.resolve(true);
-            }
-
-            if (this.socketServerReady) {
-                return Promise.resolve(true);
-            }
-
-            this.socketServer.once("STATUS", status => {
-                this.socketServerReady = (status === "ready");
-                return (this.socketServerReady) ? resolve(true) : reject(false);
-            });
-        }));
-    }
-
     async start(): Promise<void> {
-        const serverStatus = await this.resolveServerStatus();
-        if (!serverStatus) {
-            throw new Error("Unable to start socketServer");
-        }
-
         if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
@@ -105,8 +82,7 @@ export default class SockTrader {
     private bindExchangeToSocketServer(exchange: IExchange) {
         if (this.socketServer) {
             exchange.on("app.updateCandles", candles => {
-                // @ts-ignore
-                this.socketServer.send({type: "CANDLES", payload: candles});
+                if (this.socketServer) this.socketServer.send({type: "CANDLE_UPDATE", payload: candles});
             });
         }
     }
