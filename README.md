@@ -71,7 +71,10 @@ sockTrader.addStrategy({
     interval: CandleInterval.FIVE_MINUTES,
     exchange: hitBTC,
 });
-sockTrader.start();
+
+// Uncomment if you want to start the bot from the terminal.
+// Otherwise you would need the dashboard to start the application.
+// sockTrader.start();
 ```
 
 And secondly create a strategy file: `src/strategies/myStrategy.ts`

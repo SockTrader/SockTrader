@@ -1,81 +1,101 @@
+import fs from "fs";
 import http, {Server} from "http";
 import process from "process";
-import {IMessage, IServerConfig, server as WebSocketServer} from "websocket";
+import {connection, IMessage, server as WebSocketServer} from "websocket";
+import config from "../../config";
+import {actions} from "./whitelist";
 
-export default class SocketServer extends WebSocketServer {
-    private static PORT = 8080;
+export default class SocketServer {
+    private static PORT = config.socketServer.port;
+    private client?: connection;
+    private readonly httpServer: Server;
 
-    private server: Server;
+    private server: WebSocketServer;
 
     constructor() {
-        const server = http.createServer((request, response) => {
+        this.httpServer = http.createServer((request, response) => {
             console.log((new Date()) + " Received request for " + request.url);
             response.writeHead(404);
             response.end();
         });
 
-        const config: IServerConfig = {httpServer: server};
-        super(config);
-
-        this.server = server;
+        this.server = new WebSocketServer({httpServer: this.httpServer});
         this.ipcReceive();
     }
 
+    createWebMessage = (data: any): IMessage => ({
+        type: "utf8",
+        utf8Data: JSON.stringify(data),
+    })
+
+    /**
+     * Initializes the socketServer.
+     * -> starts to listen on a specified port
+     * -> accepts requests coming from a certain frontend.
+     */
     start() {
-        this.server.listen(SocketServer.PORT, () => {
-            this.ipcSend({type: "STATUS", payload: "ready"});
+        this.httpServer.listen(SocketServer.PORT, () => {
+            this.ipcSend(this.createWebMessage({type: "STATUS", payload: "ready"}));
             console.log(`SocketServer started on port ${SocketServer.PORT}`);
         });
 
-        this.on("request", request => {
-            // if (!originIsAllowed(request.origin)) {
-            // Make sure we only accept requests from an allowed origin
-            // request.reject();
-            // console.log((new Date()) + " Connection from origin " + request.origin + " rejected.");
-            // return;
-            // }
+        this.server.on("request", request => {
+            // @TODO validate request, request.reject() if not valid
 
-            /**
-             * @TODO do something with multiple connections..
-             * Solution: broadcast to all clients??
-             */
+            if (this.client) {
+                return console.error("Max 1 client allowed!");
+            }
 
-            const connection = request.accept("echo-protocol", request.origin);
+            this.client = request.accept("echo-protocol", request.origin);
 
             console.log((new Date()) + " Connection accepted.");
-            connection.on("message", (message: IMessage) => {
-                if (message.type === "utf8" && message.utf8Data !== undefined) {
-                    console.log("Received Message: " + message.utf8Data);
-                    connection.sendUTF(message.utf8Data);
-                } else if (message.type === "binary" && message.binaryData !== undefined) {
-                    console.log("Received Binary Message of " + message.binaryData.length + " bytes");
-                    connection.sendBytes(message.binaryData);
-                }
-            });
-            connection.on("close", (reasonCode, description) => {
-                console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.", reasonCode, description);
+            this.client.on("message", this.ipcSend.bind(this));
+
+            this.client.on("close", (reasonCode, description) => {
+                if (this.client) console.log(`Client ${this.client.remoteAddress} disconnected.`, reasonCode, description);
+                this.client = undefined;
             });
         });
     }
 
+    /**
+     * Receives events coming from the trading bot.
+     * -> forward incoming events to a web client
+     */
     private ipcReceive() {
-        process.on("message", event => {
-            if (!event.type) {
+        process.on("message", ({type, payload}) => {
+            if (!type) {
                 throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
             }
 
-            // @TODO Should we use an internal emit here??
-            // @TODO Or directly send the events to all the active connections??
-            this.emit(event.type, event.payload);
+            // Send data if a client is connected.
+            if (this.client) this.client.sendUTF(JSON.stringify({type, payload}));
         });
     }
 
-    private ipcSend(message: any) {
-        if (process.send !== undefined) {
-            process.send(message);
+    /**
+     * Notify trading bot about things that are going on in the socketServer.
+     * -> forward requests coming from a web frontend
+     * -> notify when the server is initialized, new open connection, a closed connection, etc..
+     * -> only allow whitelisted actions
+     *
+     * @param message
+     */
+    private ipcSend(message: IMessage) {
+        if (message.type !== "utf8" || message.utf8Data === undefined) {
+            return console.error("Incoming message is not correct");
+        }
+
+        const msg = JSON.parse(message.utf8Data);
+        if (actions.indexOf(msg.type) > -1 && process.send !== undefined) {
+            process.send(msg);
         }
     }
 }
+
+process.on("uncaughtException", err => {
+    fs.writeSync(1, `Caught exception: ${err}\n`);
+});
 
 const webServer = new SocketServer();
 webServer.start();

@@ -1,11 +1,11 @@
 src/index.ts
+src/config.ts
 src/strategies/*
 !src/strategies/.gitkeep
 src/logs/*
 !src/logs/.gitkeep
 
 node_modules/
-credentials.json
 
 # User-specific stuff
 .idea

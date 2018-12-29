@@ -2,16 +2,14 @@
 import "source-map-support/register";
 import HitBTC, {CandleInterval} from "./core/exchanges/hitBTC";
 import SockTrader from "./core/sockTrader";
+import config from "./config";
 
 // Import custom strategy
 import MyFancyStrategy from "./strategies/myFancyStrategy";
 
-// Get exchange credentials
-const credentials = require("../credentials.json");
-
 // Initialize SockTrader
 const sockTrader = new SockTrader();
-const hitBTC = HitBTC.getInstance(credentials.publicKey, credentials.secretKey);
+const hitBTC = HitBTC.getInstance(config.HitBTC.publicKey, config.HitBTC.secretKey);
 
 // Add exchange
 sockTrader.addExchange(hitBTC);
@@ -24,5 +22,6 @@ sockTrader.addStrategy({
     exchange: hitBTC,
 });
 
-// Start trading :-)
-sockTrader.start();
+// Uncomment if you want to start the bot using the command line.
+// sockTrader.start();
+// Otherwise start SockTraderDashboard..
