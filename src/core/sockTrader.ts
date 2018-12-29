@@ -45,6 +45,9 @@ export default class SockTrader {
         return this;
     }
 
+    /**
+     * @TODO Fix bug: events will be bound again each times you call "start"
+     */
     async start(): Promise<void> {
         if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
@@ -79,6 +82,7 @@ export default class SockTrader {
             .map(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
     }
 
+    // @TODO this won't work with more than 1 exchange
     private bindExchangeToSocketServer(exchange: IExchange) {
         if (this.socketServer) {
             exchange.on("app.updateCandles", candles => {
