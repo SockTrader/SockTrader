@@ -10,6 +10,7 @@
     "posttest": "nyc report --reporter=json",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile && node ./build/index.js\"",
     "compile": "tsc",
+    "compile-es5": "tsc --target \"ES5\"",
     "docs": "esdoc",
     "lint": "tslint --fix --project ./",
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"

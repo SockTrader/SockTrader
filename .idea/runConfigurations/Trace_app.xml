@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Trace app" type="JavaScriptNodeJsTraceType" factoryName="Spy-js for Node.js" config="" node="project" node-params="" app="build/index.js" app-params="" working-dir="$PROJECT_DIR$" proxy-port="3547" pass-parent-env="true" limits="1,3,3,50">
+    <method v="2" />
+  </configuration>
+</component>
