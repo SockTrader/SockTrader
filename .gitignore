@@ -1,4 +1,5 @@
 # Application start script
+src/backtest.ts
 src/index.ts
 
 # App configuration

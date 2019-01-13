@@ -1,39 +1,41 @@
-import {ChildProcess, fork} from "child_process";
-import process from "process";
+import {fork} from "child_process";
+import ipc from "node-ipc";
 import config from "../../config";
 
-export default (): ChildProcess => {
+export default () => {
 
     // @TODO conditionally add execArgv
-    const childProcess = fork(`${__dirname}/socketServer.js`, [], {
-        stdio: ["ipc"],
-        execArgv: [`--inspect=${config.socketServer.debugPort}`],
+    const childProcess = fork(`${__dirname}/webServer.js`, [], {
+        stdio: "inherit",
+        silent: true,
+        execArgv: [`--inspect=${config.webServer.debugPort}`],
     });
+    // const childProcess = fork(`${__dirname}/webServer.js`, [], {
+    //     stdio: ["ipc"],
+    //     silent: true,
+    //     stdio: ["inherit"],
+    //     execArgv: [`--inspect=${config.webServer.debugPort}`],
+    // });
 
     /**
      * Pipe output of child process to stdout of master process
      */
-    childProcess.stdout.pipe(process.stdout);
+    // childProcess.stdout.pipe(process.stdout);
 
     childProcess.on("exit", (code, signal) => {
-        console.log("exit", {code, signal});
+        console.log("WebServer script exit: ", {code, signal});
     });
 
     childProcess.on("error", msg => {
-        console.log("error", msg);
+        console.log("WebServer script error: ", msg);
     });
 
-    /**
-     * Re-emit incoming messages as separate events
-     * This makes it easier to handle each event separately
-     */
-    childProcess.on("message", event => {
-        if (!event.type) {
-            throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
-        }
+    ipc.config.id = "server";
+    ipc.config.retry = 1500;
+    ipc.config.silent = false;
 
-        childProcess.emit(event.type, event.payload);
-    });
+    ipc.serve();
+    ipc.server.start();
 
-    return childProcess;
+    return ipc.server;
 };

@@ -1,6 +1,6 @@
 export default {
   timezone: "Europe/Brussels",
-  socketServer: {
+  webServer: {
     debugPort: "50000",
     port: 8080,
   },

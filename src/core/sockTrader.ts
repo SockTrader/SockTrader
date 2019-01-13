@@ -1,4 +1,3 @@
-import {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
@@ -6,37 +5,32 @@ import {IExchange} from "./exchanges/exchangeInterface";
 import BaseStrategy, {IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
 
-interface IStrategyConfig {
-    exchange: IExchange;
+export interface IStrategyConfig {
     interval: ICandleInterval;
     pair: string;
     strategy: IStrategyClass<BaseStrategy>;
 }
 
-interface ISockTraderConfig {
-    webServer: boolean;
+export interface ISockTraderConfig {
+    webServer?: boolean;
 }
 
 /**
  * @class SockTrader
  * @classdesc Main class to start trading with SockTrader
  */
-export default class SockTrader {
-    private exchanges: IExchange[] = [];
-    private socketServer?: ChildProcess;
-    private strategyConfigurations: IStrategyConfig[] = [];
+export default abstract class SockTrader {
+    protected exchange!: IExchange;
+    protected strategyConfigurations: IStrategyConfig[] = [];
+    protected webServer?: any;
 
-    constructor(private config: ISockTraderConfig = {webServer: true}) {
+    constructor(protected config: ISockTraderConfig = { webServer: true }) {
         if (this.config.webServer) {
-            this.socketServer = spawnServer();
-            this.socketServer.on("START_TRADING", () => this.start());
+            this.webServer = spawnServer();
+            // console.log("START TRADAAAADIING!");
+            // this.sendToSocketServer("STATUS", "TEST");
+            this.webServer.on("START_TRADING", () => this.start());
         }
-    }
-
-    addExchange(exchange: IExchange): this {
-        this.exchanges.push(exchange);
-
-        return this;
     }
 
     addStrategy(config: IStrategyConfig): this {
@@ -45,86 +39,64 @@ export default class SockTrader {
         return this;
     }
 
-    /**
-     * @TODO Fix bug: events will be bound again each times you call "start"
-     */
     async start(): Promise<void> {
-        if (this.strategyConfigurations.length < 1 || this.exchanges.length < 1) {
+        if (this.strategyConfigurations.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
-
-        this.exchanges.forEach(exchange => {
-            const config = this.strategyConfigurations.filter(str => str.exchange === exchange);
-            if (config.length <= 0) {
-                return; // No strategyConfigurations found for exchange
-            }
-
-            const strategies = config.map(c => new c.strategy(c.pair, c.exchange));
-            this.bindStrategiesToExchange(exchange, strategies);
-            this.bindExchangeToStrategies(exchange, strategies);
-            this.bindExchangeToSocketServer(exchange);
-            this.bindStrategiesToSocketServer(strategies);
-            this.subscribeToExchangeEvents(exchange, strategies, config);
-            exchange.connect();
-        });
     }
 
-    subscribeToExchangeEvents(exchange: IExchange, strategies: BaseStrategy[], config: IStrategyConfig[]): void {
+    subscribeToExchangeEvents(config: IStrategyConfig[]): void {
+        const exchange = this.exchange;
+
         exchange.once("ready", () => exchange.subscribeReports());
 
         // Be sure to only subscribe once to a certain trading pair.
         // Even if multiple strategyConfigurations are listening to the same events.
         // Because we will dispatch the same data to each strategy.
-        uniqBy(strategies, "pair")
-            .map(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
+        const uniquePairs = uniqBy<IStrategyConfig>(config, "pair");
+        uniquePairs.forEach(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
 
-        uniqWith(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval)
-            .map(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
+        const uniquePairInterval = uniqWith<IStrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
+        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
     }
 
-    // @TODO this won't work with more than 1 exchange
-    private bindExchangeToSocketServer(exchange: IExchange) {
-        if (this.socketServer) {
-            exchange.on("app.updateCandles", candles => {
-                if (this.socketServer) this.socketServer.send({type: "CANDLE_UPDATE", payload: candles});
-            });
-        }
+    protected bindExchangeToSocketServer() {
+        // @TODO send location of parsed file to webServer instead of candle list
+        // if (this.webServer) {
+        //     exchange.on("app.updateCandles", candles => this.sendToSocketServer("CANDLE_UPDATE", [candles[0]]));
+        // }
     }
 
-    private bindExchangeToStrategies(exchange: IExchange, strategies: BaseStrategy[]): void {
-        exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
-        exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
-        exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
+    // private bindExchangeToSocketServer(exchange: IExchange) {
+    //     if (this.webServer) {
+    //         exchange.on("app.updateCandles", candles => this.sendToSocketServer("CANDLE_UPDATE", [candles[0]]));
+    //     }
+    // }
+
+    protected bindExchangeToStrategy(strategy: BaseStrategy): void {
+        const exchange = this.exchange;
+        exchange.on("app.report", report => strategy.notifyOrder(report));
+        exchange.on("app.updateOrderbook", orderbook => strategy.updateOrderbook(orderbook));
+        exchange.on("app.updateCandles", candles => strategy.updateCandles(candles));
     }
 
-    private bindStrategiesToExchange(exchange: IExchange, strategies: BaseStrategy[]): void {
-        strategies.forEach(strategy => {
-            strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
-            strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
-        });
+    protected bindStrategyToExchange(strategy: BaseStrategy): void {
+        const exchange = this.exchange;
+        strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
+        strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
     }
 
-    private bindStrategiesToSocketServer(strategies: BaseStrategy[]) {
-        if (this.socketServer) {
-            strategies.forEach(strategy => {
+    // @TODO this won't work with multiple strategies
+    protected bindStrategyToSocketServer(strategy: BaseStrategy) {
+        if (!this.webServer) return;
 
-                /**
-                 * @TODO Backtest will block incoming "app.signal" events..
-                 */
-                strategy.on("app.signal", signal => {
-                    // @ts-ignore
-                    this.socketServer.send({
-                        type: "SIGNAL",
-                        payload: signal,
-                    });
-                });
+        // @TODO send live/production reports to dashboard
+        // strategy.on("app.signal", sendSignal);
+        // strategy.on("app.adjustOrder", sendAdjustOrder);
+        // strategy.on("backtest.adjustOrder", sendAdjustOrder);
+    }
 
-                // @ts-ignore
-                strategy.on("app.adjustOrder", order => this.socketServer.send({
-                    type: "ADJUST_ORDER",
-                    payload: order,
-                }));
-            });
-        }
+    protected sendToSocketServer(type: string, payload: any) {
+        if (this.webServer) this.webServer.broadcast("ipc.message", {type, payload});
     }
 }
