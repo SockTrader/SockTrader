@@ -1,12 +1,17 @@
 import fs from "fs";
 import http, {Server} from "http";
+import ipc from "node-ipc";
 import process from "process";
 import {connection, IMessage, server as WebSocketServer} from "websocket";
 import config from "../../config";
 import {actions} from "./whitelist";
 
-export default class SocketServer {
-    private static PORT = config.socketServer.port;
+ipc.config.id = "webserver";
+ipc.config.retry = 1000;
+ipc.config.silent = false;
+
+export default class WebServer {
+    private static PORT = config.webServer.port;
     private client?: connection;
     private readonly httpServer: Server;
 
@@ -20,24 +25,21 @@ export default class SocketServer {
         });
 
         this.server = new WebSocketServer({httpServer: this.httpServer});
-        this.ipcReceive();
+        this.connectIPC();
     }
 
     createWebMessage = (data: any): IMessage => ({
         type: "utf8",
         utf8Data: JSON.stringify(data),
-    })
+    });
 
     /**
-     * Initializes the socketServer.
+     * Initializes the WebSocketServer.
      * -> starts to listen on a specified port
      * -> accepts requests coming from a certain frontend.
      */
     start() {
-        this.httpServer.listen(SocketServer.PORT, () => {
-            this.ipcSend(this.createWebMessage({type: "STATUS", payload: "ready"}));
-            console.log(`SocketServer started on port ${SocketServer.PORT}`);
-        });
+        this.httpServer.listen(WebServer.PORT, () => console.log(`WebServer ready on: ${WebServer.PORT}`));
 
         this.server.on("request", request => {
             // @TODO validate request, request.reject() if not valid
@@ -49,7 +51,13 @@ export default class SocketServer {
             this.client = request.accept("echo-protocol", request.origin);
 
             console.log((new Date()) + " Connection accepted.");
-            this.client.on("message", this.ipcSend.bind(this));
+            this.client.on("message", ({type, utf8Data}: IMessage) => {
+                if (type !== "utf8" || utf8Data === undefined) {
+                    return console.error("Incoming message is not correct");
+                }
+
+                this.ipcSend(JSON.parse(utf8Data));
+            });
 
             this.client.on("close", (reasonCode, description) => {
                 if (this.client) console.log(`Client ${this.client.remoteAddress} disconnected.`, reasonCode, description);
@@ -58,12 +66,29 @@ export default class SocketServer {
         });
     }
 
+    private connectIPC() {
+        ipc.connectTo("server", () => {
+            ipc.of.server.on("connect", () => {
+                // ipc.log("IPC Connected to server!");
+                ipc.of.server.emit("STATUS", {payload: "IPC ready"});
+            });
+
+            ipc.of.server.on("disconnect", () => {
+                ipc.log("IPC Disconnected!");
+            });
+
+            this.ipcReceive();
+        });
+    }
+
     /**
      * Receives events coming from the trading bot.
-     * -> forward incoming events to a web client
+     * -> forward incoming events to the WebSocketServer.
      */
     private ipcReceive() {
-        process.on("message", ({type, payload}) => {
+        ipc.of.server.on("ipc.message", ({type, payload}: { payload: any, type: string }) => {
+            ipc.log("WebServer server received a message!", type);
+
             if (!type) {
                 throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
             }
@@ -74,21 +99,16 @@ export default class SocketServer {
     }
 
     /**
-     * Notify trading bot about things that are going on in the socketServer.
+     * Notify trading bot about things that are going on in the WebSocketServer.
      * -> forward requests coming from a web frontend
      * -> notify when the server is initialized, new open connection, a closed connection, etc..
      * -> only allow whitelisted actions
      *
      * @param message
      */
-    private ipcSend(message: IMessage) {
-        if (message.type !== "utf8" || message.utf8Data === undefined) {
-            return console.error("Incoming message is not correct");
-        }
-
-        const msg = JSON.parse(message.utf8Data);
-        if (actions.indexOf(msg.type) > -1 && process.send !== undefined) {
-            process.send(msg);
+    private ipcSend({type, payload}: { payload: any, type: string }) {
+        if (actions.indexOf(type) > -1 && process.send !== undefined) {
+            ipc.of.server.emit(type, payload);
         }
     }
 }
@@ -97,5 +117,5 @@ process.on("uncaughtException", err => {
     fs.writeSync(1, `Caught exception: ${err}\n`);
 });
 
-const webServer = new SocketServer();
+const webServer = new WebServer();
 webServer.start();

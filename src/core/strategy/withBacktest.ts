@@ -17,7 +17,6 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
         analyzers: IAnalyzer[] = [
             new CapitalAnalyzer(config.capital),
         ];
-
         capital: number = config.capital;
         filledOrders: IOrder[] = [];
         openOrders: IOrder[] = [];
@@ -27,9 +26,11 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
             super(pair, exchange);
 
             if (config.candles !== undefined && config.interval !== undefined) {
-                // @ts-ignore
                 this.decoupleExchange();
-                this.exchange.once("ready", () => this.emitCandles(config.candles as ICandle[], config.interval as ICandleInterval));
+                this.exchange.once("ready", () => {
+                    this.emit("backtest.candles", config.candles);
+                    this.emitCandles(config.candles as ICandle[], config.interval as ICandleInterval);
+                });
             }
         }
 
@@ -125,21 +126,11 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
         emit(event: string | symbol, ...args: any[]): boolean {
             const [data] = args;
 
-            if (event.toString() === "app.signal") {
-                const order = this.createOrderFromSignal(data);
-
-                this.openOrders.push(order);
-                this.notifyOrder(order);
+            if (event === "app.signal") {
+                this.onSignal(data);
                 return false;
-            }
-
-            if (event.toString() === "app.adjustOrder") {
-                const oldOrder = this.openOrders.find(oo => oo.id === data.order.id) as IOrder;
-                const order = this.createOrderFromOrder(oldOrder, data.price, data.qty);
-
-                this.openOrders.push(order);
-                this.openOrders = this.openOrders.filter(oo => oo.id !== data.order.id);
-                this.notifyOrder(order);
+            } else if (event === "app.adjustOrder") {
+                this.onAdjustOrder(data);
                 return false;
             }
 
@@ -164,14 +155,29 @@ export default <T extends BaseStrategy>(Strategy: IStrategyClass<T>) => (config:
             }, []);
         }
 
-        // @TODO move to baseStrategy ??
         notifyOrder(order: IOrder): void {
             super.notifyOrder(order);
+            this.emit("backtest.report", order);
             // this.analyzers.forEach((analyzer: IAnalyzer) => {
             //     analyzer.analyze(order);
             // });
 
             this.analyze(order);
+        }
+
+        onAdjustOrder(event: any) {
+            const oldOrder = this.openOrders.find(oo => oo.id === event.order.id) as IOrder;
+            const order = this.createOrderFromOrder(oldOrder, event.price, event.qty);
+
+            this.openOrders.push(order);
+            this.openOrders = this.openOrders.filter(oo => oo.id !== event.order.id);
+            this.notifyOrder(order);
+        }
+
+        onSignal(event: any) {
+            const order = this.createOrderFromSignal(event);
+            this.openOrders.push(order);
+            this.notifyOrder(order);
         }
 
         /**
