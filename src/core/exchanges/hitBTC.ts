@@ -71,6 +71,24 @@ export default class HitBTC extends BaseExchange {
     }
 
     /**
+     * Sends new order to exchange
+     */
+    createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
+        const orderId = super.createOrder(pair, price, qty, side);
+
+        logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
+        this.send("newOrder", {
+            clientOrderId: orderId,
+            price,
+            quantity: qty,
+            side,
+            symbol: pair,
+            type: "limit",
+        });
+        return orderId;
+    }
+
+    /**
      * Shortcut function for receiving tradeable symbols via socket
      */
     loadCurrencies(): void {
@@ -126,24 +144,6 @@ export default class HitBTC extends BaseExchange {
     subscribeOrderbook = (pair: string): void => this.send("subscribeOrderbook", {symbol: pair});
 
     subscribeReports = (): void => this.send("subscribeReports");
-
-    /**
-     * Sends new order to exchange
-     */
-    protected createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
-        const orderId = super.createOrder(pair, price, qty, side);
-
-        logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
-        this.send("newOrder", {
-            clientOrderId: orderId,
-            price,
-            quantity: qty,
-            side,
-            symbol: pair,
-            type: "limit",
-        });
-        return orderId;
-    }
 
     protected onConnect(conn: connection): void {
         super.onConnect(conn);

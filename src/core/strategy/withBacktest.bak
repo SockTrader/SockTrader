@@ -5,7 +5,7 @@ import {stub, spy} from "sinon";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../orderInterface";
 import {withBacktest} from "./index";
 import BaseStrategy from "./baseStrategy";
-import moment = require("moment");
+import moment from "moment";
 import {ICandle} from "../candleCollection";
 
 class MyStrategy extends BaseStrategy {

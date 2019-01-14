@@ -1,8 +1,7 @@
 import {CronJob} from "cron";
 import parser from "cron-parser";
 import {EventEmitter} from "events";
-import {Moment} from "moment";
-import moment = require("moment");
+import moment, {Moment} from "moment";
 import config from "../config";
 import logger from "./logger";
 

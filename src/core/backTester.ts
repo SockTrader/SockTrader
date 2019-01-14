@@ -1,4 +1,7 @@
-import hitBTC from "./exchanges/hitBTC";
+import CandleLoader, {Parser} from "./candleLoader";
+import {IExchange} from "./exchanges/exchangeInterface";
+import localExchange from "./exchanges/localExchange";
+import LocalExchange from "./exchanges/localExchange";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
 import BaseStrategy from "./strategy/baseStrategy";
 
@@ -8,29 +11,48 @@ import BaseStrategy from "./strategy/baseStrategy";
  */
 export default class BackTester extends SockTrader {
 
+    private candleLoader?: CandleLoader;
+
     constructor(config: ISockTraderConfig = {webServer: true}) {
         super(config);
 
         // @TODO replace with local exchange!
-        this.exchange = hitBTC.getInstance("", "");
+        this.exchange = localExchange.getInstance();
+        // this.exchange.emit("backtest.candles", []);
     }
 
-    /**
-     * @TODO Fix bug: events will be bound again each times you call "start"
-     */
+    setCandleLoader(path: string, parser?: Parser): this {
+        this.candleLoader = new CandleLoader(path, parser);
+
+        return this;
+    }
+
     async start(): Promise<void> {
         await super.start();
 
-        this.subscribeToExchangeEvents(this.strategyConfigurations);
+        if (!this.candleLoader) {
+            throw new Error("No candle loader defined.");
+        }
 
-        this.strategyConfigurations.forEach(c => {
-            const strategy = new c.strategy(c.pair, this.exchange);
-            this.bindStrategyToExchange(strategy);
-            this.bindExchangeToStrategy(strategy); // @TODO verify
-            this.bindExchangeToSocketServer();
-            this.bindStrategyToSocketServer(strategy);
-            this.exchange.connect();
-        });
+        if (!this.eventsBound) {
+            this.subscribeToExchangeEvents(this.strategyConfigurations);
+
+            this.strategyConfigurations.forEach(c => {
+                const strategy = new c.strategy(c.pair, this.exchange);
+                this.bindStrategyToExchange(strategy);
+                this.bindExchangeToStrategy(strategy); // @TODO verify
+                this.bindExchangeToSocketServer();
+                this.bindStrategyToSocketServer(strategy);
+            });
+
+            this.eventsBound = true;
+        }
+
+        (this.exchange as LocalExchange).emitCandles(this.candleLoader);
+    }
+
+    protected bindExchangeToStrategy(strategy: BaseStrategy): void {
+        super.bindExchangeToStrategy(strategy);
     }
 
     // @TODO this won't work with multiple strategies
@@ -78,10 +100,4 @@ export default class BackTester extends SockTrader {
         // strategy.on("app.adjustOrder", sendAdjustOrder);
         // strategy.on("backtest.adjustOrder", sendAdjustOrder);
     }
-
-    // private bindExchangeToStrategy(exchange: IExchange, strategies: BaseStrategy[]): void {
-    //     exchange.on("app.report", report => strategies.forEach(strategy => strategy.notifyOrder(report)));
-    //     exchange.on("app.updateOrderbook", orderbook => strategies.forEach(strategy => strategy.updateOrderbook(orderbook)));
-    //     exchange.on("app.updateCandles", candles => strategies.forEach(strategy => strategy.updateCandles(candles)));
-    // }
 }

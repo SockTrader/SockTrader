@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import moment = require("moment");
+import moment from "moment";
 import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
