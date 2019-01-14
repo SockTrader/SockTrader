@@ -10,11 +10,11 @@ export default class CandleLoader {
 
     static async parseFileReader(fileReader: IAsyncFileReader, extension: string): Promise<IDataFrame<number, any>> {
         if (extension === "json") {
-            return fileReader.parseJSON();
+            return await fileReader.parseJSON();
         }
 
         if (extension === "csv") {
-            return fileReader.parseCSV({dynamicTyping: true});
+            return await fileReader.parseCSV({dynamicTyping: true});
         }
 
         throw new Error("File extension is not valid! Expecting a CSV or JSON file.");
