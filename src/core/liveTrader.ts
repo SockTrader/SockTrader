@@ -14,9 +14,6 @@ export default class LiveTrader extends SockTrader {
         return this;
     }
 
-    /**
-     * @TODO Fix bug: events will be bound again each times you call "start"
-     */
     async start(): Promise<void> {
         await super.start();
 
@@ -24,16 +21,23 @@ export default class LiveTrader extends SockTrader {
             throw new Error("No exchange defined!");
         }
 
-        this.subscribeToExchangeEvents(this.strategyConfigurations);
+        if (!this.eventsBound) {
+            this.subscribeToExchangeEvents(this.strategyConfigurations);
 
-        this.strategyConfigurations.forEach(c => {
-            const strategy = new c.strategy(c.pair, this.exchange);
-            this.bindStrategyToExchange(strategy);
-            this.bindExchangeToStrategy(strategy); // @TODO verify
-            this.bindExchangeToSocketServer();
-            this.bindStrategyToSocketServer(strategy);
-            this.exchange.connect();
-        });
+            this.strategyConfigurations.forEach(c => {
+                const strategy = new c.strategy(c.pair, this.exchange);
+                this.bindStrategyToExchange(strategy);
+                this.bindExchangeToStrategy(strategy); // @TODO verify
+                this.bindExchangeToSocketServer();
+                this.bindStrategyToSocketServer(strategy);
+            });
+
+            this.eventsBound = true;
+        }
+
+        // @TODO cannot connect multiple times to the same exchange
+        // -> start function might be called multiple times by the dashboard?
+        this.exchange.connect();
     }
 
     // @TODO this won't work with multiple strategies

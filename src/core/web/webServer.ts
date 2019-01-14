@@ -31,7 +31,7 @@ export default class WebServer {
     createWebMessage = (data: any): IMessage => ({
         type: "utf8",
         utf8Data: JSON.stringify(data),
-    });
+    })
 
     /**
      * Initializes the WebSocketServer.

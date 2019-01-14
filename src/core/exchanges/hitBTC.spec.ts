@@ -1,7 +1,7 @@
 /* tslint:disable */
 import {expect} from "chai";
 import {describe, it} from "mocha";
-import moment = require("moment");
+import moment from "moment";
 import {spy, stub} from "sinon";
 import {IOrder, OrderSide} from "../orderInterface";
 import HitBTC, {CandleInterval} from "./hitBTC";

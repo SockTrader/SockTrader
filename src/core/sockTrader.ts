@@ -2,8 +2,9 @@ import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
-import BaseStrategy, {IStrategyClass} from "./strategy/baseStrategy";
+import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
+import {OrderSide} from "./orderInterface";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
@@ -20,6 +21,7 @@ export interface ISockTraderConfig {
  * @classdesc Main class to start trading with SockTrader
  */
 export default abstract class SockTrader {
+    protected eventsBound = false;
     protected exchange!: IExchange;
     protected strategyConfigurations: IStrategyConfig[] = [];
     protected webServer?: any;
@@ -82,8 +84,9 @@ export default abstract class SockTrader {
 
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         const exchange = this.exchange;
-        strategy.on("app.signal", ({symbol, price, qty, side}) => exchange[side](symbol, price, qty));
-        strategy.on("app.adjustOrder", ({order, price, qty}) => exchange.adjustOrder(order, price, qty));
+        // @TODO add cancel order event!
+        strategy.on("app.signal", ({symbol, price, qty, side}: ISignal) => exchange.createOrder(symbol, price, qty, side));
+        strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 
     // @TODO this won't work with multiple strategies

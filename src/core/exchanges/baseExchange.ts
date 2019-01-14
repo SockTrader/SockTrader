@@ -29,9 +29,9 @@ export interface IOrderbookData {
 export default abstract class BaseExchange extends EventEmitter implements IExchange {
     isAuthenticated = false;
     isCurrenciesLoaded = false;
+    protected candles: { [key: string]: CandleCollection } = {};
     protected openOrders: IOrder[] = [];
     protected socketClient: WebSocketClient = new WebSocketClient();
-    private candles: { [key: string]: CandleCollection } = {};
     private connection?: connection;
     private currencies: ITradeablePair[] = [];
     private orderbooks: { [key: string]: Orderbook } = {};
@@ -58,6 +58,15 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.socketClient.on("connect", (conn: connection) => this.onConnect(conn));
 
         this.socketClient.connect(connectionString);
+    }
+
+    /**
+     * Send order base function
+     */
+    createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
+        const orderId = this.generateOrderId(pair);
+        this.setOrderInProgress(orderId);
+        return orderId;
     }
 
     destroy(): void {
@@ -145,11 +154,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
-    /**
-     * Authenticate user on exchange
-     */
-    abstract login(publicKey: string, privateKey: string): void;
-
     on(event: string, listener: (args: any[]) => void): this {
         if (process.env.NODE_ENV === "dev") {
             logger.debug(`Listener created for: "${event.toString()}"`);
@@ -232,15 +236,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected addOrder(order: IOrder): void {
         this.openOrders.push(order);
-    }
-
-    /**
-     * Send order base function
-     */
-    protected createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
-        const orderId = this.generateOrderId(pair);
-        this.setOrderInProgress(orderId);
-        return orderId;
     }
 
     /**

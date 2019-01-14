@@ -7,7 +7,7 @@ import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType}
 import Orderbook from "../orderbook";
 import CandleCollection from "../candleCollection";
 import {EventEmitter} from "events";
-import moment = require("moment");
+import moment from "moment";
 
 const pair = "BTCUSD";
 
