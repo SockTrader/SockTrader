@@ -1,11 +1,11 @@
 /* tslint:disable */
 import {expect} from "chai";
-import {describe, it} from "mocha";
+import 'jest';
 import {mock, spy} from "sinon";
-import BaseExchange from "./baseExchange";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
-import Orderbook from "../orderbook";
-import CandleCollection from "../candleCollection";
+import BaseExchange from "../core/exchanges/baseExchange";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/orderInterface";
+import Orderbook from "../core/orderbook";
+import CandleCollection from "../core/candleCollection";
 import {EventEmitter} from "events";
 import moment from "moment";
 

@@ -1,6 +1,6 @@
 /* tslint:disable */
-import {describe, it} from "mocha";
-import {crossDown, crossUp} from "./utils";
+import 'jest';
+import {crossDown, crossUp} from "../core/strategy/utils";
 import {expect} from "chai";
 
 describe("Strategy utilities", () => {

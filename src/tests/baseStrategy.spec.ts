@@ -1,9 +1,9 @@
 /* tslint:disable */
 import {expect} from "chai";
-import {describe, it} from "mocha";
-import BaseStrategy from "./baseStrategy";
+import 'jest';
+import BaseStrategy from "../core/strategy/baseStrategy";
 import {stub} from "sinon";
-import {IOrder, OrderSide} from "../orderInterface";
+import {IOrder, OrderSide} from "../core/orderInterface";
 
 class MyStrategy extends BaseStrategy {
 }
