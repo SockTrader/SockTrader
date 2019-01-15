@@ -1,8 +1,8 @@
 /* tslint:disable */
 import {expect} from "chai";
 import {spy} from 'sinon';
-import {describe, it} from 'mocha';
-import Orderbook, {Operator} from "./orderbook";
+import 'jest';
+import Orderbook, {Operator} from "../core/orderbook";
 
 const pair = "BTCETH";
 describe('Orderbook', () => {

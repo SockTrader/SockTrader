@@ -1,9 +1,9 @@
 /* tslint:disable */
 import {expect} from 'chai';
-import {describe, it} from 'mocha';
+import 'jest';
 import sinon from 'sinon';
 
-import CandleCollection, {ICandle} from "./candleCollection";
+import CandleCollection, {ICandle} from "../core/candleCollection";
 import moment, {Moment} from 'moment';
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");

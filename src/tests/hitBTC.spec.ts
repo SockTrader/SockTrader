@@ -1,11 +1,11 @@
 /* tslint:disable */
 import {expect} from "chai";
-import {describe, it} from "mocha";
+import 'jest';
 import moment from "moment";
 import {spy, stub} from "sinon";
-import {IOrder, OrderSide} from "../orderInterface";
-import HitBTC, {CandleInterval} from "./hitBTC";
-import CandleCollection, {ICandle} from "../candleCollection";
+import {IOrder, OrderSide} from "../core/orderInterface";
+import HitBTC, {CandleInterval} from "../core/exchanges/hitBTC";
+import CandleCollection, {ICandle} from "../core/candleCollection";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
 
