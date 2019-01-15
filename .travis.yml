@@ -9,5 +9,6 @@ install:
   - npm install
 
 script:
+  - cp src/config.ts.dist src/config.ts
   - npm test
   - codecov -f coverage/*.json
