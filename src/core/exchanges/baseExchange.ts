@@ -160,7 +160,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
-    on(event: string, listener: (args: any[]) => void): this {
+    on(event: string, listener: (...args: any[]) => void): this {
         if (process.env.NODE_ENV === "dev") {
             logger.debug(`Listener created for: "${event.toString()}"`);
         }
@@ -184,12 +184,14 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     onReport(order: IOrder): void {
         const orderId = order.id;
+        let oldOrder: IOrder | undefined;
 
         this.setOrderInProgress(orderId, false);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
             const oldOrderId = order.originalId;
 
+            oldOrder = this.openOrders.find(oo => oo.id === oldOrderId);
             this.setOrderInProgress(oldOrderId, false);
             this.removeOrder(oldOrderId);
             this.addOrder(order); // Order is replaced with a new one
@@ -201,7 +203,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             this.removeOrder(orderId); // Order is invalid
         }
 
-        this.emit("app.report", order);
+        this.emit("app.report", order, oldOrder);
     }
 
     abstract onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;

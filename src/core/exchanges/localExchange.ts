@@ -4,10 +4,16 @@ import CandleLoader from "../candleLoader";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import BaseExchange from "./baseExchange";
 
+export interface IAssetMap {
+    [key: string]: number;
+}
+
 export default class LocalExchange extends BaseExchange {
 
     private static instance?: LocalExchange;
-    private capital = 0;
+    private assets: IAssetMap = {
+        USD: 100000,
+    };
     private currentCandle?: ICandle;
     private filledOrders: IOrder[] = [];
 
@@ -15,6 +21,7 @@ export default class LocalExchange extends BaseExchange {
         super();
 
         this.prependListener("app.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));
+        this.on("app.report", (order: IOrder) => this.updateAssets(order));
     }
 
     static getInstance() {
@@ -54,8 +61,14 @@ export default class LocalExchange extends BaseExchange {
      * Cancel existing order on exchange
      */
     cancelOrder(order: IOrder): void {
-        // this.setOrderInProgress(order.id);
-        // this.send("cancelOrder", {clientOrderId: order.id});
+        this.setOrderInProgress(order.id);
+
+        const canceledOrder: IOrder = {
+            ...order,
+            reportType: ReportType.CANCELED,
+        };
+
+        this.onReport(canceledOrder);
     }
 
     /**
@@ -143,26 +156,42 @@ export default class LocalExchange extends BaseExchange {
 
     subscribeReports = (): void => undefined;
 
-    private isBuyAllowed(order: IOrder): boolean {
-        const orders = [...this.openOrders, order];
-        const requiredCapital: number = orders.reduce<number>((acc, cur) => {
-            return (cur.side === OrderSide.BUY) ? acc + (cur.quantity * cur.price) : acc;
-        }, 0);
+    private getOrderPrice(price: number, qty: number) {
+        return price * qty;
+    }
 
-        // @TODO possible bug! this.capital is not updated after the analyzers did their thing..
-        return (this.capital >= requiredCapital);
+    private isBuyAllowed(order: IOrder): boolean {
+        const pair: Pair = order.pair;
+        const orderPrice: number = this.getOrderPrice(order.price, order.quantity);
+
+        return this.assets[pair[1]] > orderPrice;
     }
 
     private isSellAllowed(order: IOrder): boolean {
-        const qty: number = this.filledOrders.reduce<number>((acc, cur) => {
-            if (cur.side === OrderSide.BUY) {
-                acc += cur.quantity;
-            } else {
-                acc -= cur.quantity;
-            }
-            return acc;
-        }, 0);
+        const pair: Pair = order.pair;
+        const orderPrice: number = this.getOrderPrice(order.price, order.quantity);
 
-        return (qty <= order.quantity);
+        return this.assets[pair[0]] > orderPrice;
+    }
+
+    private updateAssets(order: IOrder, oldOrder?: IOrder) {
+        let [target, source] = order.pair;
+
+        if (order.side === OrderSide.SELL) {
+            target = order.pair[1];
+            source = order.pair[0];
+        }
+
+        if (ReportType.REPLACED === order.reportType && oldOrder) {
+            this.assets[source] += this.getOrderPrice(oldOrder.price, oldOrder.quantity);
+            this.assets[source] -= this.getOrderPrice(order.price, order.quantity);
+        } else if (ReportType.NEW === order.reportType) {
+            this.assets[source] -= this.getOrderPrice(order.price, order.quantity);
+        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+            this.assets[target] += this.getOrderPrice(order.price, order.quantity);
+            console.log(this.assets);
+        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
+            this.assets[source] += this.getOrderPrice(order.price, order.quantity);
+        }
     }
 }
