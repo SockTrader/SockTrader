@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SpyJsConfiguration">
+    <event-filters>
+      <event-filter name="No node modules">
+        <event-filter-conditions>
+          <event-filter-condition type="file" value="*/node_modules/*" />
+        </event-filter-conditions>
+      </event-filter>
+    </event-filters>
+  </component>
+</project>

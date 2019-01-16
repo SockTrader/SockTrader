@@ -7,28 +7,22 @@
     "./node_modules"
   ],
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths" : {
-      "nanoid-dictionary": ["src/types/nanoidDictionary.d.ts"]
+      "*": [
+        "node_modules/*",
+        "src/types/*"
+      ]
     },
-    "lib": [
-      "es6"
-    ],
-    // No need for "es5" if you have "es6"
-    "types": [
-      "node"
-    ],
-    // When you code for nodejs
     "target": "es6",
-    // NodeJs v8.9.3 supports most of the es6 features
-    "pretty": false,
     "esModuleInterop": true,
     "module": "commonjs",
-    "outDir": "./build",
+    "outDir": "build",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
+    "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strict": true

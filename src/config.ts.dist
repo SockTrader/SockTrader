@@ -1,0 +1,12 @@
+export default {
+  timezone: "Europe/Brussels",
+  webServer: {
+    debugPort: "50000",
+    port: 8080,
+  },
+
+  HitBTC: {
+    publicKey: "my_public_key",
+    secretKey: "my_secret_key",
+  },
+};

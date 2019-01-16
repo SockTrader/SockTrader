@@ -1,10 +1,11 @@
 /* tslint:disable */
 import {expect} from "chai";
 import {spy} from 'sinon';
-import {describe, it} from 'mocha';
-import Orderbook, {Operator} from "./orderbook";
+import 'jest';
+import Orderbook, {Operator} from "../core/orderbook";
+import {Pair} from "../types/pair";
 
-const pair = "BTCETH";
+const pair: Pair = ["BTC", "ETH"];
 describe('Orderbook', () => {
     let ob = new Orderbook(pair, 8);
     beforeEach(() => {

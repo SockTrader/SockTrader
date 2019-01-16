@@ -1,4 +1,5 @@
 import {Moment} from "moment";
+import {Pair} from "../types/pair";
 
 export enum OrderSide {
     BUY = "buy",
@@ -41,12 +42,12 @@ export interface IOrder {
     createdAt: Moment;
     id: string;
     originalId?: string;
+    pair: Pair;
     price: number;
     quantity: number;
     reportType: ReportType;
     side: OrderSide;
     status: OrderStatus;
-    symbol: string;
     timeInForce: OrderTimeInForce;
     type: OrderType;
     updatedAt: Moment;

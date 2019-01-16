@@ -3,6 +3,7 @@ import {EventEmitter} from "events";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
+import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import Orderbook, {IOrderbookEntry} from "../orderbook";
@@ -13,8 +14,12 @@ export interface IResponseMapper {
     onReceive(msg: IMessage): void;
 }
 
+export interface ICurrencyMap {
+    [key: string]: ITradeablePair;
+}
+
 export interface ITradeablePair {
-    id: string;
+    id: Pair;
     quantityIncrement: number;
     tickSize: number;
 }
@@ -22,18 +27,18 @@ export interface ITradeablePair {
 export interface IOrderbookData {
     ask: IOrderbookEntry[];
     bid: IOrderbookEntry[];
+    pair: Pair;
     sequence: number;
-    symbol: string;
 }
 
 export default abstract class BaseExchange extends EventEmitter implements IExchange {
+    currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
+    protected candles: { [key: string]: CandleCollection } = {};
     protected openOrders: IOrder[] = [];
     protected socketClient: WebSocketClient = new WebSocketClient();
-    private candles: { [key: string]: CandleCollection } = {};
     private connection?: connection;
-    private currencies: ITradeablePair[] = [];
     private orderbooks: { [key: string]: Orderbook } = {};
     private orderIncrement = 0;
     private orderInProgress: { [key: string]: boolean } = {};
@@ -47,8 +52,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract adjustOrder(order: IOrder, price: number, qty: number): void;
 
-    buy(symbol: string, price: number, qty: number): string {
-        return this.createOrder(symbol, price, qty, OrderSide.BUY);
+    buy(pair: Pair, price: number, qty: number): string {
+        return this.createOrder(pair, price, qty, OrderSide.BUY);
     }
 
     abstract cancelOrder(order: IOrder): void;
@@ -58,6 +63,15 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.socketClient.on("connect", (conn: connection) => this.onConnect(conn));
 
         this.socketClient.connect(connectionString);
+    }
+
+    /**
+     * Send order base function
+     */
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
+        const orderId = this.generateOrderId(pair);
+        this.setOrderInProgress(orderId);
+        return orderId;
     }
 
     destroy(): void {
@@ -79,7 +93,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @param pair
      * @returns {string}
      */
-    generateOrderId(pair: string): string {
+    generateOrderId(pair: Pair): string {
         this.orderIncrement += 1;
 
         const alphabet = `${lowercase}${uppercase}${numbers}_-.|`;
@@ -91,7 +105,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Factory function which will manage the candles
      */
-    getCandleCollection(pair: string, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
+    getCandleCollection(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
         const key = `${pair}_${interval.code}`;
         if (this.candles[key]) {
             return this.candles[key];
@@ -112,20 +126,21 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @param pair
      * @returns {Orderbook}
      */
-    getOrderbook(pair: string): Orderbook {
-        if (this.orderbooks[pair]) {
-            return this.orderbooks[pair];
+    getOrderbook(pair: Pair): Orderbook {
+        const ticker = pair.join("");
+        if (this.orderbooks[ticker]) {
+            return this.orderbooks[ticker];
         }
 
-        const config = this.currencies.find(row => row.id === pair);
+        const config = this.currencies[ticker];
         if (!config) {
-            throw new Error(`No configuration found for pair: "${pair}"`);
+            throw new Error(`No configuration found for pair: "${ticker}"`);
         }
 
         const precision = new Decimal(config.tickSize).decimalPlaces();
 
-        this.orderbooks[pair] = new Orderbook(pair, precision);
-        return this.orderbooks[pair];
+        this.orderbooks[ticker] = new Orderbook(pair, precision);
+        return this.orderbooks[ticker];
     }
 
     /**
@@ -145,12 +160,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
-    /**
-     * Authenticate user on exchange
-     */
-    abstract login(publicKey: string, privateKey: string): void;
-
-    on(event: string, listener: (args: any[]) => void): this {
+    on(event: string, listener: (...args: any[]) => void): this {
         if (process.env.NODE_ENV === "dev") {
             logger.debug(`Listener created for: "${event.toString()}"`);
         }
@@ -161,23 +171,27 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * Exchange created event. Bootstrap the exchange asynchronously
      */
     onCreate(): void {
-        setInterval(() => { this.orderIncrement = 0; }, 1000 * 60 * 5); // Reset increment every 5 minutes
+        setInterval(() => {
+            this.orderIncrement = 0;
+        }, 1000 * 60 * 5); // Reset increment every 5 minutes
     }
 
     onCurrenciesLoaded(currencies: ITradeablePair[]): void {
-        this.currencies = currencies;
+        currencies.forEach(currency => this.currencies[currency.id.join("")] = currency);
         this.isCurrenciesLoaded = true;
         this.isReady();
     }
 
     onReport(order: IOrder): void {
         const orderId = order.id;
+        let oldOrder: IOrder | undefined;
 
         this.setOrderInProgress(orderId, false);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
             const oldOrderId = order.originalId;
 
+            oldOrder = this.openOrders.find(oo => oo.id === oldOrderId);
             this.setOrderInProgress(oldOrderId, false);
             this.removeOrder(oldOrderId);
             this.addOrder(order); // Order is replaced with a new one
@@ -189,15 +203,15 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             this.removeOrder(orderId); // Order is invalid
         }
 
-        this.emit("app.report", order);
+        this.emit("app.report", order, oldOrder);
     }
 
-    abstract onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    abstract onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
     abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 
-    sell(symbol: string, price: number, qty: number): string {
-        return this.createOrder(symbol, price, qty, OrderSide.SELL);
+    sell(pair: Pair, price: number, qty: number): string {
+        return this.createOrder(pair, price, qty, OrderSide.SELL);
     }
 
     /**
@@ -215,12 +229,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Listen for new candles
      */
-    abstract subscribeCandles(pair: string, interval: ICandleInterval): void;
+    abstract subscribeCandles(pair: Pair, interval: ICandleInterval): void;
 
     /**
      * Listen for orderbook changes
      */
-    abstract subscribeOrderbook(pair: string): void;
+    abstract subscribeOrderbook(pair: Pair): void;
 
     /**
      * Listen for actions that are happening on the remote exchange
@@ -232,15 +246,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected addOrder(order: IOrder): void {
         this.openOrders.push(order);
-    }
-
-    /**
-     * Send order base function
-     */
-    protected createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
-        const orderId = this.generateOrderId(pair);
-        this.setOrderInProgress(orderId);
-        return orderId;
     }
 
     /**

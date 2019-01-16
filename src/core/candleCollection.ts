@@ -1,8 +1,8 @@
 import {CronJob} from "cron";
 import parser from "cron-parser";
 import {EventEmitter} from "events";
-import {Moment} from "moment";
-import moment = require("moment");
+import moment, {Moment} from "moment";
+import config from "../config";
 import logger from "./logger";
 
 export interface ICandle {
@@ -35,9 +35,8 @@ export default class CandleCollection extends EventEmitter {
     constructor(private interval: ICandleInterval, generateCandles = true, private retentionPeriod = 0) {
         super();
 
-        // @TODO replace timezone by a config variable
         const candleGenerator = this.generateCandles.bind(this);
-        this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, "Europe/Brussels");
+        this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, config.timezone);
     }
 
     /**
