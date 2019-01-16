@@ -3,6 +3,7 @@ import MyStrategy from "../strategies/myStrategy";
 import {IExchange} from "../core/exchanges/exchangeInterface";
 import SockTrader from "../core/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
+import {Pair} from "../types/pair";
 
 class ConcreteSockTrader extends SockTrader {
 
@@ -19,6 +20,9 @@ class ConcreteSockTrader extends SockTrader {
 
 const hitBTC = new HitBTC("PUB_123", "SEC_123");
 const sockTrader = new ConcreteSockTrader();
+const btcEthPair : Pair = ["BTC", "ETH"];
+const btcCovPair : Pair = ["BTC", "COV"];
+
 
 describe("subscribeToExchangeEvents", () => {
     test("Should subscribe to orderbook once with 2 configs: same pair, different interval", function () {
@@ -33,12 +37,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.addExchange(hitBTC);
         sockTrader.subscribeToExchangeEvents([{
             strategy: MyStrategy,
-            pair: "BTCETH",
+            pair: btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: MyStrategy,
-                pair: "BTCETH",
+                pair: btcEthPair,
                 interval: CandleInterval.FOUR_HOURS,
             },
         ]);
@@ -46,10 +50,10 @@ describe("subscribeToExchangeEvents", () => {
 
         expect(mockSubscribeReports).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledWith("BTCETH");
+        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith("BTCETH", CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith("BTCETH", CandleInterval.FOUR_HOURS);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FOUR_HOURS);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -66,15 +70,15 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
         sockTrader.addExchange(hitBTC);
-
+        
         sockTrader.subscribeToExchangeEvents([{
             strategy: MyStrategy,
-            pair: "BTCETH",
+            pair:btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: MyStrategy,
-                pair: "BTCCOV",
+                pair: btcCovPair,
                 interval: CandleInterval.FIVE_MINUTES,
             },
         ]);
@@ -82,11 +86,11 @@ describe("subscribeToExchangeEvents", () => {
 
         expect(mockSubscribeReports).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledTimes(2);
-        expect(mockSubscribeOrderbook).toBeCalledWith("BTCETH");
-        expect(mockSubscribeOrderbook).toBeCalledWith("BTCCOV");
+        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
+        expect(mockSubscribeOrderbook).toBeCalledWith(btcCovPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith("BTCETH", CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith("BTCCOV", CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, CandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -106,12 +110,12 @@ describe("subscribeToExchangeEvents", () => {
 
         sockTrader.subscribeToExchangeEvents([{
             strategy: MyStrategy,
-            pair: "BTCETH",
+            pair: btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: MyStrategy,
-                pair: "BTCETH",
+                pair: btcEthPair,
                 interval: CandleInterval.FIVE_MINUTES,
             },
         ]);
@@ -119,9 +123,9 @@ describe("subscribeToExchangeEvents", () => {
 
         expect(mockSubscribeReports).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledWith("BTCETH");
+        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(1);
-        expect(mockSubscribeCandles).toBeCalledWith("BTCETH", CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -143,7 +147,7 @@ describe("bindExchangeToStrategy", () => {
         hitBTC.on = mockOn;
 
         sockTrader.addExchange(hitBTC);
-        sockTrader["bindExchangeToStrategy"](new MyStrategy("BTCETH", hitBTC));
+        sockTrader["bindExchangeToStrategy"](new MyStrategy(btcEthPair, hitBTC));
         expect(mockOn).toBeCalledWith("app.report", expect.anything());
         expect(mockOn).toBeCalledWith("app.updateOrderbook", expect.anything());
         expect(mockOn).toBeCalledWith("app.updateCandles", expect.anything());
@@ -154,7 +158,7 @@ describe("bindStrategyToExchange", () => {
     test("Should bind strategy events to exchange", function () {
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
-        const myStrategy: MyStrategy = new MyStrategy("BTCETH", hitBTC);
+        const myStrategy: MyStrategy = new MyStrategy(btcEthPair, hitBTC);
         const spyOn = jest.spyOn(myStrategy, "on");
 
         sockTrader["bindStrategyToExchange"](myStrategy);
@@ -167,7 +171,7 @@ describe("sendToSocketServer", () => {
     test("Should broadcast payload to socket server", function () {
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
-        const myStrategy: MyStrategy = new MyStrategy("BTCETH", hitBTC);
+        const myStrategy: MyStrategy = new MyStrategy(btcEthPair, hitBTC);
         const spyOn = jest.spyOn(myStrategy, "on");
 
         sockTrader["bindStrategyToExchange"](myStrategy);
