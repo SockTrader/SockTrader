@@ -37,10 +37,18 @@ export default abstract class BaseStrategy extends EventEmitter {
         super();
     }
 
+    /**
+     * Called when exchange confirms and order
+     * @param {IOrder} order
+     */
     notifyOrder(order: IOrder): void {
         throw new Error("Implement method: notifyOrder");
     }
 
+    /**
+     * Called on each new candle from exchange
+     * @param {ICandle[]} candles
+     */
     updateCandles(candles: ICandle[]): void {
         throw new Error("Implement method: updateCandles");
     }

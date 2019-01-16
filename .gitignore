@@ -8,6 +8,7 @@ src/config.ts
 # Custom user strategies
 src/strategies/*
 !src/strategies/.gitkeep
+!src/strategies/simpleMovingAverage.ts
 
 # Logs produced by the user & framework
 src/logs/*
