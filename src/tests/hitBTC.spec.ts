@@ -8,8 +8,10 @@ import HitBTC, {CandleInterval} from "../core/exchanges/hitBTC";
 import CandleCollection, {ICandle} from "../core/candleCollection";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
+import {Pair} from "../types/pair";
+import {IOrderbookData, ITradeablePair} from "../core/exchanges/baseExchange";
 
-const pair = "BTCETH";
+const pair: Pair = ["BTC", "USD"];
 
 describe("HitBTC", () => {
 
@@ -41,15 +43,15 @@ describe("HitBTC", () => {
     });
 
     it("Should subscribe to orderbook events", () => {
-        exchange.subscribeOrderbook("BTCUSD");
+        exchange.subscribeOrderbook(pair);
         expect(send.args[0][0]).to.equal("subscribeOrderbook");
-        expect(send.args[0][1]).to.deep.equal({symbol: "BTCUSD"});
+        expect(send.args[0][1]).to.deep.equal({symbol: pair});
     });
 
     it("Should subscribe to candle events", () => {
-        exchange.subscribeCandles("BTCUSD", CandleInterval.FIVE_MINUTES);
+        exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
         expect(send.args[0][0]).to.equal("subscribeCandles");
-        expect(send.args[0][1]).to.deep.equal({period: "M5", symbol: "BTCUSD"});
+        expect(send.args[0][1]).to.deep.equal({period: "M5", symbol: pair});
     });
 
     it("Should authenticate user on exchange", () => {
@@ -67,7 +69,7 @@ describe("HitBTC", () => {
 
         const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
 
-        exchange.onUpdateCandles("BTCUSD", candles, CandleInterval.FIVE_MINUTES, "set");
+        exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, "set");
         expect(set.calledOnce).to.equal(true);
         expect(set.args[0][0][0]).to.deep.include({close: 1, high: 2, low: 0, open: 0, volume: 10});
         expect(set.args[0][0][0]).to.include.all.keys("timestamp");
@@ -79,7 +81,7 @@ describe("HitBTC", () => {
     it("Should emit candle events on an update", () => {
         const emit = spy(exchange, "emit");
         const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
-        exchange.onUpdateCandles("BTCUSD", candles, CandleInterval.FIVE_MINUTES, "set");
+        exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, "set");
 
         expect(emit.calledOnce).to.equal(true);
         expect(emit.args[0][0]).to.equal("app.updateCandles");
@@ -91,9 +93,9 @@ describe("HitBTC", () => {
     it("Should update an in memory orderbook", () => {
         const emit = stub(exchange, "emit");
         const getOrderbook = spy(exchange, "getOrderbook");
-        const ob = {
+        const ob: IOrderbookData = {
             sequence: 1,
-            symbol: "BTCUSD",
+            pair,
             ask: [
                 {price: 0.0015, size: 100},
             ],
@@ -102,8 +104,8 @@ describe("HitBTC", () => {
             ],
         };
 
-        const {symbol: pair, ask, bid} = ob;
-        exchange["currencies"] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
+        const {pair: symbol, ask, bid} = ob;
+        exchange.currencies[pair.join("")] = {id: pair, quantityIncrement: 10, tickSize: 0.000001};
 
         exchange.onUpdateOrderbook({...ob, sequence: -1}, "setOrders");
         expect(getOrderbook.called).to.be.equal(false);
@@ -112,7 +114,7 @@ describe("HitBTC", () => {
         expect(getOrderbook.called).to.be.equal(true);
 
         expect(emit.args[0][0]).to.equal("app.updateOrderbook");
-        expect(emit.args[0][1]).to.deep.equal({ask, bid, pair, precision: 6});
+        expect(emit.args[0][1]).to.deep.equal({ask, bid, pair: symbol, precision: 6});
         emit.restore();
         getOrderbook.restore();
     });
@@ -141,7 +143,7 @@ describe("HitBTC", () => {
         const adjustAllowed = stub(exchange, "isAdjustingOrderAllowed");
         adjustAllowed.returns(true);
 
-        exchange.adjustOrder({symbol: "BTCUSD", id: "123"} as IOrder, 0.002, 0.5);
+        exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
         expect(send.calledOnce).to.equal(true);
         expect(send.args[0][0]).to.equal("cancelReplaceOrder");
         expect(send.args[0][1]).to.include({clientOrderId: "123", price: 0.002, quantity: 0.5, strictValidate: true});
@@ -151,7 +153,7 @@ describe("HitBTC", () => {
     });
 
     it("Should create a new order", () => {
-        const orderId = exchange["createOrder"]("BTCUSD", 10, 1, OrderSide.BUY);
+        const orderId = exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
         expect(send.calledOnce).to.equal(true);
         expect(send.args[0][0]).to.equal("newOrder");
@@ -160,7 +162,7 @@ describe("HitBTC", () => {
             price: 10,
             quantity: 1,
             side: "buy",
-            symbol: "BTCUSD",
+            symbol: pair,
             type: "limit",
         });
     });

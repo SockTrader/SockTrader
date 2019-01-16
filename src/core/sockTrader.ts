@@ -1,14 +1,14 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
+import {Pair} from "../types/pair";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
-import {OrderSide} from "./orderInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
-    pair: string;
+    pair: Pair;
     strategy: IStrategyClass<BaseStrategy>;
 }
 

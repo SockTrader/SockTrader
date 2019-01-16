@@ -8,8 +8,9 @@ import Orderbook from "../core/orderbook";
 import CandleCollection from "../core/candleCollection";
 import {EventEmitter} from "events";
 import moment from "moment";
+import {Pair} from "../types/pair";
 
-const pair = "BTCUSD";
+const pair: Pair = ["BTC", "USD"];
 
 // @ts-ignore
 class MockExchange extends BaseExchange {
@@ -28,7 +29,7 @@ describe("Exchange", () => {
         reportType: ReportType.NEW,
         side: OrderSide.BUY,
         status: OrderStatus.NEW,
-        symbol: "BTCUSD",
+        pair: pair,
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
         type: OrderType.LIMIT,
         updatedAt: moment(),
@@ -42,7 +43,7 @@ describe("Exchange", () => {
         reportType: ReportType.NEW,
         side: OrderSide.BUY,
         status: OrderStatus.NEW,
-        symbol: pair,
+        pair: pair,
         timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
         type: OrderType.LIMIT,
         updatedAt: moment(),
@@ -63,14 +64,14 @@ describe("Exchange", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.buy(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
-        expect(createOrder.args[0]).to.deep.equal(["BTCUSD", 1, 10, "buy"]);
+        expect(createOrder.args[0]).to.deep.equal([["BTC", "USD"], 1, 10, "buy"]);
     });
 
     it("Should create a sell order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.sell(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
-        expect(createOrder.args[0]).to.deep.equal(["BTCUSD", 1, 10, "sell"]);
+        expect(createOrder.args[0]).to.deep.equal([["BTC", "USD"], 1, 10, "sell"]);
     });
 
     it("Should put an order into progress when creating an order", () => {
@@ -190,16 +191,18 @@ describe("Exchange", () => {
     });
 
     it("Should get singleton exchange orderbook", () => {
+        const symbol = pair.join("");
+
         // No configuration given
         expect(() => exc.getOrderbook(pair)).to.throw("No configuration found for pair: \"BTCUSD\"");
 
-        exc["currencies"] = [{id: pair, quantityIncrement: 10, tickSize: 0.000001}];
+        exc.currencies[symbol] = {id: pair, quantityIncrement: 10, tickSize: 0.000001};
 
         // Returns a new empty orderbook
         const orderbook = exc.getOrderbook(pair);
         expect(orderbook).to.deep.equal({pair, precision: 6, ask: [], bid: []});
         expect(orderbook).to.be.an.instanceof(Orderbook);
-        expect(exc["orderbooks"][pair]).to.equal(orderbook);
+        expect(exc["orderbooks"][symbol]).to.equal(orderbook);
 
         expect(orderbook).to.not.equal(new Orderbook(pair, 6));
 

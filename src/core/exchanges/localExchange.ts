@@ -1,3 +1,4 @@
+import {Pair} from "../../types/pair";
 import {ICandle} from "../candleCollection";
 import CandleLoader from "../candleLoader";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
@@ -34,9 +35,10 @@ export default class LocalExchange extends BaseExchange {
             throw new Error("Current candle undefined. Emit candles before adjusting an order.");
         }
 
+        this.setOrderInProgress(order.id);
         const newOrder: IOrder = {
             ...order,
-            id: this.generateOrderId(order.symbol),
+            id: this.generateOrderId(order.pair),
             reportType: ReportType.REPLACED,
             updatedAt: this.currentCandle.timestamp,
             type: OrderType.LIMIT,
@@ -59,7 +61,7 @@ export default class LocalExchange extends BaseExchange {
     /**
      * Sends new order to exchange
      */
-    createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
         if (!this.currentCandle) {
             throw new Error("Current candle undefined. Emit candles before creating an order.");
         }
@@ -76,7 +78,7 @@ export default class LocalExchange extends BaseExchange {
             type: OrderType.LIMIT,
             reportType: ReportType.NEW,
             side,
-            symbol: pair,
+            pair,
             quantity: qty,
             price,
         };
@@ -106,8 +108,10 @@ export default class LocalExchange extends BaseExchange {
 
     loadCurrencies = (): void => undefined;
 
+    // noinspection JSUnusedGlobalSymbols
     onUpdateCandles = (): void => undefined;
 
+    // noinspection JSUnusedGlobalSymbols
     onUpdateOrderbook = (): void => undefined;
 
     processOpenOrders(candle: ICandle): void {
@@ -118,12 +122,12 @@ export default class LocalExchange extends BaseExchange {
             }
 
             const order = {...oo, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-            if (oo.side === OrderSide.BUY && candle.low < oo.price && this.fillBuyOrder(order)) {
+            if (oo.side === OrderSide.BUY && candle.low < oo.price && this.isBuyAllowed(order)) {
                 this.filledOrders.push(order);
                 return this.onReport(order);
             }
 
-            if (oo.side === OrderSide.SELL && candle.high > oo.price && this.fillSellOrder(order)) {
+            if (oo.side === OrderSide.SELL && candle.high > oo.price && this.isSellAllowed(order)) {
                 this.filledOrders.push(order);
                 return this.onReport(order);
             }
@@ -139,13 +143,7 @@ export default class LocalExchange extends BaseExchange {
 
     subscribeReports = (): void => undefined;
 
-    /**
-     * @TODO verify if logic is correct
-     * Fill buy order if a user has enough quantity of the base asset
-     *
-     * @param order
-     */
-    private fillBuyOrder(order: IOrder): boolean {
+    private isBuyAllowed(order: IOrder): boolean {
         const orders = [...this.openOrders, order];
         const requiredCapital: number = orders.reduce<number>((acc, cur) => {
             return (cur.side === OrderSide.BUY) ? acc + (cur.quantity * cur.price) : acc;
@@ -155,13 +153,7 @@ export default class LocalExchange extends BaseExchange {
         return (this.capital >= requiredCapital);
     }
 
-    /**
-     * @TODO verify if logic is correct
-     * Fill sell order if a user has bought enough quantity of that same asset
-     *
-     * @param order
-     */
-    private fillSellOrder(order: IOrder): boolean {
+    private isSellAllowed(order: IOrder): boolean {
         const qty: number = this.filledOrders.reduce<number>((acc, cur) => {
             if (cur.side === OrderSide.BUY) {
                 acc += cur.quantity;

@@ -1,4 +1,5 @@
 import {EventEmitter} from "events";
+import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../orderInterface";
@@ -11,19 +12,19 @@ export interface IExchange extends EventEmitter {
 
     adjustOrder(order: IOrder, price: number, qty: number): void;
 
-    buy(pair: string, price: number, qty: number): void;
+    buy(pair: Pair, price: number, qty: number): void;
 
     cancelOrder(order: IOrder): void;
 
     connect(connectionString?: string): void;
 
-    createOrder(pair: string, price: number, qty: number, side: OrderSide): string;
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string;
 
     destroy(): void;
 
     getOpenOrders(): IOrder[];
 
-    getOrderbook(pair: string): Orderbook;
+    getOrderbook(pair: Pair): Orderbook;
 
     onCreate(): void;
 
@@ -31,15 +32,15 @@ export interface IExchange extends EventEmitter {
 
     onReport(data: IOrder): void;
 
-    onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
     onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 
-    sell(pair: string, price: number, qty: number): void;
+    sell(pair: Pair, price: number, qty: number): void;
 
-    subscribeCandles(pair: string, interval: ICandleInterval): void;
+    subscribeCandles(pair: Pair, interval: ICandleInterval): void;
 
-    subscribeOrderbook(pair: string): void;
+    subscribeOrderbook(pair: Pair): void;
 
     subscribeReports(): void;
 }

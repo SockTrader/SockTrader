@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
+import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../candleCollection";
 import logger from "../logger";
 import Orderbook from "../orderbook";
@@ -46,7 +47,7 @@ export default class HitBTC extends BaseExchange {
      */
     adjustOrder(order: IOrder, price: number, qty: number): void {
         if (this.isAdjustingOrderAllowed(order, price, qty)) {
-            const newOrderId = this.generateOrderId(order.symbol);
+            const newOrderId = this.generateOrderId(order.pair);
 
             this.send("cancelReplaceOrder", {
                 clientOrderId: order.id,
@@ -73,7 +74,7 @@ export default class HitBTC extends BaseExchange {
     /**
      * Sends new order to exchange
      */
-    createOrder(pair: string, price: number, qty: number, side: OrderSide): string {
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
         const orderId = super.createOrder(pair, price, qty, side);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
@@ -115,7 +116,7 @@ export default class HitBTC extends BaseExchange {
     /**
      * Update candles
      */
-    onUpdateCandles<K extends keyof CandleCollection>(pair: string, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
+    onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
         const candleCollection = this.getCandleCollection(pair, interval, candles => this.emit("app.updateCandles", candles));
         return candleCollection[method](data);
     }
@@ -130,18 +131,18 @@ export default class HitBTC extends BaseExchange {
         }
 
         this.sequence = response.sequence;
-        const orderbook: Orderbook = this.getOrderbook(response.symbol);
+        const orderbook: Orderbook = this.getOrderbook(response.pair);
         orderbook[method](response.ask, response.bid);
 
         this.emit("app.updateOrderbook", orderbook);
     }
 
-    subscribeCandles = (pair: string, interval: ICandleInterval): void => this.send("subscribeCandles", {
+    subscribeCandles = (pair: Pair, interval: ICandleInterval): void => this.send("subscribeCandles", {
         symbol: pair,
         period: interval.code,
     })
 
-    subscribeOrderbook = (pair: string): void => this.send("subscribeOrderbook", {symbol: pair});
+    subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair});
 
     subscribeReports = (): void => this.send("subscribeReports");
 
