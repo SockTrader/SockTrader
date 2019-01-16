@@ -4,6 +4,9 @@ import {IExchange} from "../core/exchanges/exchangeInterface";
 import SockTrader from "../core/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
 import {Pair} from "../types/pair";
+import objectContaining = jasmine.objectContaining;
+import spawnServer from "../core/web/spawnServer";
+import {server} from "websocket";
 
 class ConcreteSockTrader extends SockTrader {
 
@@ -16,16 +19,20 @@ class ConcreteSockTrader extends SockTrader {
     getExchange(): IExchange {
         return this.exchange;
     }
+
+    setWebserver(webServer :any){
+        this.webServer = webServer;
+    }
 }
 
 const hitBTC = new HitBTC("PUB_123", "SEC_123");
-const sockTrader = new ConcreteSockTrader();
-const btcEthPair : Pair = ["BTC", "ETH"];
-const btcCovPair : Pair = ["BTC", "COV"];
+const sockTrader = new ConcreteSockTrader({webServer: false});
+const btcEthPair: Pair = ["BTC", "ETH"];
+const btcCovPair: Pair = ["BTC", "COV"];
 
 
 describe("subscribeToExchangeEvents", () => {
-    test("Should subscribe to orderbook once with 2 configs: same pair, different interval",  () => {
+    test("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -60,7 +67,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval",  () => {
+    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -70,10 +77,10 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
         sockTrader.addExchange(hitBTC);
-        
+
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
-            pair:btcEthPair,
+            pair: btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
@@ -97,7 +104,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval",  () => {
+    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -135,7 +142,7 @@ describe("subscribeToExchangeEvents", () => {
 });
 
 describe("addExchange", () => {
-    test("Should add exchange to socketTrader",  () => {
+    test("Should add exchange to socketTrader", () => {
         sockTrader.addExchange(hitBTC);
         expect(sockTrader.getExchange()).toBe(hitBTC);
     });
@@ -155,9 +162,7 @@ describe("bindExchangeToStrategy", () => {
 });
 
 describe("bindStrategyToExchange", () => {
-    test("Should bind strategy events to exchange", () =>{
-        const mockOn = jest.fn();
-        hitBTC.on = mockOn;
+    test("Should bind strategy events to exchange", () => {
         const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
         const spyOn = jest.spyOn(simpleMovingAverage, "on");
 
@@ -169,13 +174,14 @@ describe("bindStrategyToExchange", () => {
 
 describe("sendToSocketServer", () => {
     test("Should broadcast payload to socket server", () => {
-        const mockOn = jest.fn();
-        hitBTC.on = mockOn;
-        const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
-        const spyOn = jest.spyOn(simpleMovingAverage, "on");
+        const webServer: server = new server();
+        const spyBroadcast = jest.spyOn(webServer, "broadcast");
 
-        sockTrader["bindStrategyToExchange"](simpleMovingAverage);
-        expect(spyOn).toBeCalledWith("app.signal", expect.anything());
-        expect(spyOn).toBeCalledWith("app.adjustOrder", expect.anything());
+        sockTrader.setWebserver(webServer);
+        sockTrader["sendToSocketServer"]("type",  "payload");
+        expect(spyBroadcast).toBeCalledWith("ipc.message", objectContaining({
+            type: "type",
+            payload: "payload"
+        }));
     });
 });
