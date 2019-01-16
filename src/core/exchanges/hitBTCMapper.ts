@@ -1,13 +1,13 @@
 import {EventEmitter} from "events";
 import moment from "moment";
 import {IMessage} from "websocket";
+import {Pair} from "../../types/pair";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
 import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
-import {Pair} from "../../types/pair";
 
 export interface IHitBTCOrderbookResponse {
     jsonrpc: string;

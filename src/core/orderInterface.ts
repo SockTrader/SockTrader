@@ -42,12 +42,12 @@ export interface IOrder {
     createdAt: Moment;
     id: string;
     originalId?: string;
+    pair: Pair;
     price: number;
     quantity: number;
     reportType: ReportType;
     side: OrderSide;
     status: OrderStatus;
-    pair: Pair;
     timeInForce: OrderTimeInForce;
     type: OrderType;
     updatedAt: Moment;
