@@ -1,5 +1,5 @@
 /* tslint:disable */
-import MyStrategy from "../strategies/myStrategy";
+import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 import {IExchange} from "../core/exchanges/exchangeInterface";
 import SockTrader from "../core/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
@@ -25,7 +25,7 @@ const btcCovPair : Pair = ["BTC", "COV"];
 
 
 describe("subscribeToExchangeEvents", () => {
-    test("Should subscribe to orderbook once with 2 configs: same pair, different interval", function () {
+    test("Should subscribe to orderbook once with 2 configs: same pair, different interval",  () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -36,12 +36,12 @@ describe("subscribeToExchangeEvents", () => {
 
         sockTrader.addExchange(hitBTC);
         sockTrader.subscribeToExchangeEvents([{
-            strategy: MyStrategy,
+            strategy: SimpleMovingAverage,
             pair: btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
-                strategy: MyStrategy,
+                strategy: SimpleMovingAverage,
                 pair: btcEthPair,
                 interval: CandleInterval.FOUR_HOURS,
             },
@@ -60,7 +60,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval", function () {
+    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval",  () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -72,12 +72,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.addExchange(hitBTC);
         
         sockTrader.subscribeToExchangeEvents([{
-            strategy: MyStrategy,
+            strategy: SimpleMovingAverage,
             pair:btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
-                strategy: MyStrategy,
+                strategy: SimpleMovingAverage,
                 pair: btcCovPair,
                 interval: CandleInterval.FIVE_MINUTES,
             },
@@ -97,7 +97,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", function () {
+    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval",  () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -109,12 +109,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.addExchange(hitBTC);
 
         sockTrader.subscribeToExchangeEvents([{
-            strategy: MyStrategy,
+            strategy: SimpleMovingAverage,
             pair: btcEthPair,
             interval: CandleInterval.FIVE_MINUTES,
         },
             {
-                strategy: MyStrategy,
+                strategy: SimpleMovingAverage,
                 pair: btcEthPair,
                 interval: CandleInterval.FIVE_MINUTES,
             },
@@ -135,19 +135,19 @@ describe("subscribeToExchangeEvents", () => {
 });
 
 describe("addExchange", () => {
-    test("Should add exchange to socketTrader", function () {
+    test("Should add exchange to socketTrader",  () => {
         sockTrader.addExchange(hitBTC);
         expect(sockTrader.getExchange()).toBe(hitBTC);
     });
 });
 
 describe("bindExchangeToStrategy", () => {
-    test("Should bind exchange events to strategy", function () {
+    test("Should bind exchange events to strategy", () => {
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
 
         sockTrader.addExchange(hitBTC);
-        sockTrader["bindExchangeToStrategy"](new MyStrategy(btcEthPair, hitBTC));
+        sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
         expect(mockOn).toBeCalledWith("app.report", expect.anything());
         expect(mockOn).toBeCalledWith("app.updateOrderbook", expect.anything());
         expect(mockOn).toBeCalledWith("app.updateCandles", expect.anything());
@@ -155,26 +155,26 @@ describe("bindExchangeToStrategy", () => {
 });
 
 describe("bindStrategyToExchange", () => {
-    test("Should bind strategy events to exchange", function () {
+    test("Should bind strategy events to exchange", () =>{
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
-        const myStrategy: MyStrategy = new MyStrategy(btcEthPair, hitBTC);
-        const spyOn = jest.spyOn(myStrategy, "on");
+        const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
+        const spyOn = jest.spyOn(simpleMovingAverage, "on");
 
-        sockTrader["bindStrategyToExchange"](myStrategy);
+        sockTrader["bindStrategyToExchange"](simpleMovingAverage);
         expect(spyOn).toBeCalledWith("app.signal", expect.anything());
         expect(spyOn).toBeCalledWith("app.adjustOrder", expect.anything());
     });
 });
 
 describe("sendToSocketServer", () => {
-    test("Should broadcast payload to socket server", function () {
+    test("Should broadcast payload to socket server", () => {
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
-        const myStrategy: MyStrategy = new MyStrategy(btcEthPair, hitBTC);
-        const spyOn = jest.spyOn(myStrategy, "on");
+        const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
+        const spyOn = jest.spyOn(simpleMovingAverage, "on");
 
-        sockTrader["bindStrategyToExchange"](myStrategy);
+        sockTrader["bindStrategyToExchange"](simpleMovingAverage);
         expect(spyOn).toBeCalledWith("app.signal", expect.anything());
         expect(spyOn).toBeCalledWith("app.adjustOrder", expect.anything());
     });
