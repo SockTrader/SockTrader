@@ -1,6 +1,7 @@
 import {EventEmitter} from "events";
 import moment from "moment";
 import {IMessage} from "websocket";
+import {Pair} from "../../types/pair";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
@@ -122,8 +123,8 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
     }
 
     private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
-        const result = response.result.map(({id, tickSize, quantityIncrement}) => ({
-            id,
+        const result = response.result.map(({id, tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
+            id: [baseCurrency, quoteCurrency] as Pair,
             quantityIncrement: parseFloat(quantityIncrement),
             tickSize: parseFloat(tickSize),
         }));
@@ -146,7 +147,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
                 reportType: report.reportType as ReportType,
                 side: report.side as OrderSide,
                 status: report.status as OrderStatus,
-                symbol: report.symbol,
+                pair: this.exchange.currencies[report.symbol].id,
                 timeInForce: report.timeInForce as OrderTimeInForce,
                 type: report.type as OrderType,
                 updatedAt: moment(report.updatedAt),
@@ -165,14 +166,19 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         });
 
         if (interval !== undefined) {
-            return this.exchange.onUpdateCandles(data.params.symbol, this.mapCandles(data), interval, method);
+            const pair = this.exchange.currencies[data.params.symbol].id;
+            return this.exchange.onUpdateCandles(pair, this.mapCandles(data), interval, method);
         }
 
         logger.debug(`Interval: "${data.params.period}" is not recognized by the system. The exchange callback "onUpdateCandles" was not triggered.`);
     }
 
-    private onUpdateOrderbook(data: IHitBTCOrderbookResponse, method: "addIncrement" | "setOrders"): void {
-        // @TODO map response to internal data structure
-        this.exchange.onUpdateOrderbook(data.params, method);
+    private onUpdateOrderbook({params: ob}: IHitBTCOrderbookResponse, method: "addIncrement" | "setOrders"): void {
+        this.exchange.onUpdateOrderbook({
+            ask: ob.ask,
+            bid: ob.bid,
+            pair: this.exchange.currencies[ob.symbol].id,
+            sequence: ob.sequence,
+        }, method);
     }
 }

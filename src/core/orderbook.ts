@@ -1,6 +1,7 @@
 import {Decimal} from "decimal.js-light";
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
+import {Pair} from "../types/pair";
 
 export enum Operator {
     PLUS = "+",
@@ -34,7 +35,7 @@ export default class Orderbook implements IOrderbook {
     ask: IOrderbookEntry[] = [];
     bid: IOrderbookEntry[] = [];
 
-    constructor(protected pair: string, protected precision = 8) {
+    constructor(protected pair: Pair, protected precision = 8) {
     }
 
     /**

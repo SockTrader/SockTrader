@@ -3,8 +3,9 @@ import {expect} from "chai";
 import {spy} from 'sinon';
 import 'jest';
 import Orderbook, {Operator} from "../core/orderbook";
+import {Pair} from "../types/pair";
 
-const pair = "BTCETH";
+const pair: Pair = ["BTC", "ETH"];
 describe('Orderbook', () => {
     let ob = new Orderbook(pair, 8);
     beforeEach(() => {
