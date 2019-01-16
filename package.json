@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "repository": "cwouter/SockTrader",
   "scripts": {
-    "test": "jest --coverage --ci",
+    "test": "jest --coverage --ci --forceExit",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile && node ./build/index.js\"",
     "compile": "tsc",
     "compile-es5": "tsc --target \"ES5\"",
