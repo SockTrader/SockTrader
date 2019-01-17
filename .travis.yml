@@ -1,9 +1,5 @@
 language: node_js
 
-addons:
-  sonarcloud:
-    organization: "cwouter-github"
-
 node_js:
   - 10
 
@@ -16,4 +12,3 @@ script:
   - cp src/config.ts.dist src/config.ts
   - npm test
   - codecov -f coverage/*.json
-  - sonar-scanner
