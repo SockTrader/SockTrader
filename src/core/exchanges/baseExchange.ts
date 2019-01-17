@@ -2,6 +2,7 @@ import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
+import {Error} from "tslint/lib/error";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
 import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
@@ -31,6 +32,9 @@ export interface IOrderbookData {
     sequence: number;
 }
 
+/**
+ * The BaseExchange resembles common marketplace functionality
+ */
 export default abstract class BaseExchange extends EventEmitter implements IExchange {
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
@@ -65,17 +69,21 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.socketClient.connect(connectionString);
     }
 
-    /**
-     * Send order base function
-     */
     abstract createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
 
     destroy(): void {
         this.removeAllListeners();
     }
 
+    /**
+     * Wraps the emit and notifies if no listeners where found
+     * @param {string | symbol} event to throw
+     * @param args event arguments
+     * @returns {boolean} if listeners where found
+     */
     emit(event: string | symbol, ...args: any[]): boolean {
         const result = super.emit(event, ...args);
+        // TODO create config for all debug statements only to be active in dev
         if (!result && process.env.NODE_ENV === "dev") {
             logger.debug(`No listener found for: "${event.toString()}"`);
         }
@@ -86,8 +94,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Generates orderId based on trading pair, timestamp, increment and random string. With max length 32 characters
      * ex: 15COVETH1531299734778DkXBry9y-sQ
-     * @param pair
-     * @returns {string}
+     * @param pair crypto pair (BTC USD/BTC ETH)
+     * @returns {string} order id
      */
     generateOrderId(pair: Pair): string {
         this.orderIncrement += 1;
@@ -99,7 +107,11 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     /**
-     * Factory function which will manage the candles
+     * Returns candle collection for pair and interval
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {ICandleInterval} interval time interval
+     * @param {(candles: CandleCollection) => void} updateHandler what to do if candle collection updates
+     * @returns {CandleCollection} the candle collection
      */
     getCandleCollection(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
         const key = `${pair}_${interval.code}`;
@@ -112,16 +124,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.candles[key];
     }
 
-    /**
-     * Returns all open orders
-     */
     getOpenOrders = (): IOrder[] => this.openOrders;
 
-    /**
-     * Factory function which will manage the orderbooks
-     * @param pair
-     * @returns {Orderbook}
-     */
     getOrderbook(pair: Pair): Orderbook {
         const ticker = pair.join("");
         if (this.orderbooks[ticker]) {
@@ -142,6 +146,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Verify if the exchange is ready and trigger the "ready" event if ready.
      * Can be called multiple times.. it will trigger the "ready" event only once.
+     * @returns {boolean}
      */
     isReady(): boolean {
         if (this.ready) {
@@ -156,16 +161,20 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
+    /**
+     * Wrapper for the on method to log registration of listeners
+     * @param {string} event the event to register to
+     * @param {(...args: any[]) => void} listener the listeners to bind
+     * @returns {this} exchange
+     */
     on(event: string, listener: (...args: any[]) => void): this {
+        // TODO create config for all debug statements only to be active in dev
         if (process.env.NODE_ENV === "dev") {
             logger.debug(`Listener created for: "${event.toString()}"`);
         }
         return super.on(event, listener);
     }
 
-    /**
-     * Exchange created event. Bootstrap the exchange asynchronously
-     */
     onCreate(): void {
         setInterval(() => {
             this.orderIncrement = 0;
@@ -212,6 +221,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     /**
      * Send request over socket connection
+     * @param {string} method the type of send
+     * @param {object} params the data
      */
     send(method: string, params: object = {}): void {
         const command = {method, params, id: method};
@@ -222,14 +233,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.connection.send(JSON.stringify(command));
     }
 
-    /**
-     * Listen for new candles
-     */
     abstract subscribeCandles(pair: Pair, interval: ICandleInterval): void;
 
-    /**
-     * Listen for orderbook changes
-     */
     abstract subscribeOrderbook(pair: Pair): void;
 
     /**
@@ -238,7 +243,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     abstract subscribeReports(): void;
 
     /**
-     * Add order to internal array
+     * Adds order to local array
+     * @param {IOrder} order the order to add
      */
     protected addOrder(order: IOrder): void {
         this.openOrders.push(order);
@@ -246,9 +252,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     /**
      * Validates if adjusting an existing order on an exchange is allowed
-     * @param order
-     * @param price
-     * @param qty
+     * @param order the order to check
+     * @param price new price
+     * @param qty new quantity
      */
     protected isAdjustingOrderAllowed(order: IOrder, price: number, qty: number): boolean {
         if (this.orderInProgress[order.id]) {
@@ -270,6 +276,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     /**
      * Triggers when the exchange is connected to the websocket API
+     * @param {connection} conn the connection
      */
     protected onConnect(conn: connection): void {
         this.connection = conn;
@@ -278,14 +285,17 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     /**
-     * Remove order from internal array
+     * Remove order from local array
+     * @param {string} orderId of the order to remove
      */
     protected removeOrder(orderId: string): void {
         this.openOrders = this.openOrders.filter(o => o.id !== orderId);
     }
 
     /**
-     * Switch to set the state of an order
+     * Sets the order in progress
+     * @param {string} orderId of the order to set in progress
+     * @param {boolean} state whether the order still has state
      */
     protected setOrderInProgress(orderId: string, state = true): void {
         if (state === false) {

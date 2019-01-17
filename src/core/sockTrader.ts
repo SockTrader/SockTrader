@@ -5,6 +5,7 @@ import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
+import {Error} from "tslint/lib/error";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
@@ -17,8 +18,10 @@ export interface ISockTraderConfig {
 }
 
 /**
- * @class SockTrader
- * @classdesc Main class to start trading with SockTrader
+ * The SockTrader provides common logic for both:
+ * - live trading on an exchange
+ * - dummy strategy testing using back testing on
+ *   a local exchange
  */
 export default abstract class SockTrader {
     protected eventsBound = false;
@@ -29,24 +32,38 @@ export default abstract class SockTrader {
     constructor(protected config: ISockTraderConfig = { webServer: true }) {
         if (this.config.webServer) {
             this.webServer = spawnServer();
-            // console.log("START TRADAAAADIING!");
-            // this.sendToSocketServer("STATUS", "TEST");
             this.webServer.on("START_TRADING", () => this.start());
         }
     }
 
+    /**
+     * Adds a strategy
+     * @param {IStrategyConfig} config strategy configuration
+     * @returns {this}
+     */
     addStrategy(config: IStrategyConfig): this {
         this.strategyConfigurations.push(config);
 
         return this;
     }
 
+    /**
+     * Starts the application
+     * @returns {Promise<void>} promise
+     */
     async start(): Promise<void> {
         if (this.strategyConfigurations.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
     }
 
+    /**
+     * Registers the exchange to listen to api events:
+     * - new candles for a pair/interval combination found in given
+     *   configuration
+     * - orderbook changes of a pair found in given configuration
+     * @param {IStrategyConfig[]} config strategy configuration
+     */
     subscribeToExchangeEvents(config: IStrategyConfig[]): void {
         const exchange = this.exchange;
 
@@ -75,6 +92,13 @@ export default abstract class SockTrader {
     //     }
     // }
 
+    /**
+     * Registers the strategies to listen to exchange events:
+     * - report: order update
+     * - update orderbook: change in orderbook
+     * - update candles: change in candles
+     * @param {BaseStrategy} strategy
+     */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         exchange.on("app.report", report => strategy.notifyOrder(report));
@@ -82,6 +106,12 @@ export default abstract class SockTrader {
         exchange.on("app.updateCandles", candles => strategy.updateCandles(candles));
     }
 
+    /**
+     * Registers the exchange to listen to strategy events:
+     * - signal: buy and sells
+     * - adjust order: adjustment of existing order
+     * @param {BaseStrategy} strategy
+     */
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         // @TODO add cancel order event!
@@ -89,8 +119,8 @@ export default abstract class SockTrader {
         strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 
-    // @TODO this won't work with multiple strategies
     protected bindStrategyToSocketServer(strategy: BaseStrategy) {
+    // @TODO this won't work with multiple strategies
         if (!this.webServer) return;
 
         // @TODO send live/production reports to dashboard
@@ -99,6 +129,11 @@ export default abstract class SockTrader {
         // strategy.on("backtest.adjustOrder", sendAdjustOrder);
     }
 
+    /**
+     * Sends messages to webserver
+     * @param {string} type type of message
+     * @param payload the data
+     */
     protected sendToSocketServer(type: string, payload: any) {
         if (this.webServer) this.webServer.broadcast("ipc.message", {type, payload});
     }

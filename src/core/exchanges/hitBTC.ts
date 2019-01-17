@@ -22,16 +22,31 @@ export const CandleInterval: IIntervalDict = {
     ONE_MONTH: {code: "1M", cron: "00 00 00 00 */1 *"},
 };
 
+/**
+ * The HitBTC class represent the HitBTC exchange
+ * @see https://hitbtc.com/
+ */
 export default class HitBTC extends BaseExchange {
 
     readonly mapper: IResponseMapper = new HitBTCMapper(this);
     private static instance?: HitBTC;
     private sequence = 0;
 
+    /**
+     * Creates a new HitBTC exchange
+     * @param {string} pubKey the public key for connecting
+     * @param {string} secKey the secret key for connecting
+     */
     constructor(private pubKey = "", private secKey = "") {
         super();
     }
 
+    /**
+     * Creates a singleton instance of HitBTC
+     * @param {string} pKey public key
+     * @param {string} sKey secret key
+     * @returns {HitBTC} HitBTC instance
+     */
     static getInstance(pKey = "", sKey = "") {
         if (!HitBTC.instance) {
             HitBTC.instance = new HitBTC(pKey, sKey);
@@ -39,12 +54,6 @@ export default class HitBTC extends BaseExchange {
         return HitBTC.instance;
     }
 
-    /**
-     * Adjusts existing order on exchange
-     * @param order
-     * @param price
-     * @param qty
-     */
     adjustOrder(order: IOrder, price: number, qty: number): void {
         if (this.isAdjustingOrderAllowed(order, price, qty)) {
             const newOrderId = this.generateOrderId(order.pair);
@@ -59,9 +68,6 @@ export default class HitBTC extends BaseExchange {
         }
     }
 
-    /**
-     * Cancel existing order on exchange
-     */
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
         this.send("cancelOrder", {clientOrderId: order.id});
@@ -71,9 +77,6 @@ export default class HitBTC extends BaseExchange {
         super.connect("wss://api.hitbtc.com/api/2/ws");
     }
 
-    /**
-     * Sends new order to exchange
-     */
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         const orderId = this.generateOrderId(pair);
         this.setOrderInProgress(orderId);
@@ -89,17 +92,14 @@ export default class HitBTC extends BaseExchange {
         });
     }
 
-    /**
-     * Shortcut function for receiving tradeable symbols via socket
-     */
     loadCurrencies(): void {
         this.send("getSymbols");
     }
 
     /**
      * Authenticates user on exchange using secure signed nonce
-     * @param publicKey
-     * @param privateKey
+     * @param publicKey the public key
+     * @param privateKey the private key
      */
     login(publicKey: string, privateKey: string): void {
         const nonce: string = nanoid(32);
@@ -113,17 +113,11 @@ export default class HitBTC extends BaseExchange {
         });
     }
 
-    /**
-     * Update candles
-     */
     onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
         const candleCollection = this.getCandleCollection(pair, interval, candles => this.emit("app.updateCandles", candles));
         return candleCollection[method](data);
     }
 
-    /**
-     * Update internal order book for a trading pair
-     */
     onUpdateOrderbook<K extends keyof Orderbook>(response: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void {
         if (response.sequence <= this.sequence) {
             logger.info(`Sequence dropped: ${response.sequence}, last one: ${this.sequence}`);

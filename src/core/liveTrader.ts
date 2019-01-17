@@ -3,11 +3,16 @@ import SockTrader from "./sockTrader";
 import BaseStrategy from "./strategy/baseStrategy";
 
 /**
- * @class LiveTrader
- * @classdesc Main class to start trading with SockTrader
+ * The LiveTrader enables you to run your strategy against
+ * a live environment on an exchange
  */
 export default class LiveTrader extends SockTrader {
 
+    /**
+     * Adds an exchange
+     * @param {IExchange} exchange the exchange to add
+     * @returns {this}
+     */
     addExchange(exchange: IExchange): this {
         this.exchange = exchange;
 

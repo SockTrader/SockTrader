@@ -4,23 +4,33 @@ import localExchange from "./exchanges/localExchange";
 import LocalExchange from "./exchanges/localExchange";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
 import BaseStrategy from "./strategy/baseStrategy";
+import {Error} from "tslint/lib/error";
 
 /**
- * @class BackTester
- * @classdesc Main class to start trading with SockTrader
+ * The BackTester enables you to test your strategy against a fake dummy exchange
+ * and optimize to the point of content
  */
 export default class BackTester extends SockTrader {
 
     private candleLoader?: CandleLoader;
 
+    /**
+     * Creates a new BackTester
+     * @param {ISockTraderConfig} config
+     */
     constructor(config: ISockTraderConfig = {webServer: true}) {
         super(config);
 
-        // @TODO replace with local exchange!
         this.exchange = localExchange.getInstance();
-        // this.exchange.emit("backtest.candles", []);
     }
 
+    /**
+     * Sets the loader responisble for loading local file data into
+     * an in memory candle collection
+     * @param {string} path the path to the file containing candles
+     * @param {Parser} parser the parser for transforming the data
+     * @returns {this}
+     */
     setCandleLoader(path: string, parser?: Parser): this {
         this.candleLoader = new CandleLoader(path, parser);
 

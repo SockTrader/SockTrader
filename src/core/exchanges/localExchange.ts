@@ -1,3 +1,4 @@
+import {Error} from "tslint/lib/error";
 import {Pair} from "../../types/pair";
 import {ICandle} from "../candleCollection";
 import CandleLoader from "../candleLoader";
@@ -8,6 +9,10 @@ export interface IAssetMap {
     [key: string]: number;
 }
 
+/**
+ * The LocalExchange resembles a local dummy marketplace for
+ * strategy testing
+ */
 export default class LocalExchange extends BaseExchange {
 
     private static instance?: LocalExchange;
@@ -17,6 +22,9 @@ export default class LocalExchange extends BaseExchange {
     private currentCandle?: ICandle;
     private filledOrders: IOrder[] = [];
 
+    /**
+     * Creates a new LocalExchange
+     */
     constructor() {
         super();
 
@@ -24,6 +32,10 @@ export default class LocalExchange extends BaseExchange {
         this.on("app.report", (order: IOrder) => this.updateAssets(order));
     }
 
+    /**
+     * Returns singleton instance of local exchange
+     * @returns {LocalExchange} the new local exchange
+     */
     static getInstance() {
         if (!LocalExchange.instance) {
             LocalExchange.instance = new LocalExchange();
@@ -31,12 +43,6 @@ export default class LocalExchange extends BaseExchange {
         return LocalExchange.instance;
     }
 
-    /**
-     * Adjusts existing order on exchange
-     * @param order
-     * @param price
-     * @param qty
-     */
     adjustOrder(order: IOrder, price: number, qty: number): void {
         if (!this.currentCandle) {
             throw new Error("Current candle undefined. Emit candles before adjusting an order.");
@@ -60,9 +66,6 @@ export default class LocalExchange extends BaseExchange {
         this.onReport(newOrder);
     }
 
-    /**
-     * Cancel existing order on exchange
-     */
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
 
@@ -74,9 +77,6 @@ export default class LocalExchange extends BaseExchange {
         this.onReport(canceledOrder);
     }
 
-    /**
-     * Sends new order to exchange
-     */
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         if (!this.currentCandle) {
             throw new Error("Current candle undefined. Emit candles before creating an order.");
@@ -106,6 +106,12 @@ export default class LocalExchange extends BaseExchange {
         this.onReport(order);
     }
 
+    /**
+     * Emits a collection of candles from a local file as if they were
+     * sent from a real exchange
+     * @param {CandleLoader} loader
+     * @returns {Promise<void>} promise
+     */
     async emitCandles(loader: CandleLoader) {
         const candles = (await loader.parse()).toArray();
         const normCandles: ICandle[] = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp))
@@ -133,6 +139,10 @@ export default class LocalExchange extends BaseExchange {
     // noinspection JSUnusedGlobalSymbols
     onUpdateOrderbook = (): void => undefined;
 
+    /**
+     * Checks if open order can be filled on each price update
+     * @param {ICandle} candle the current candle
+     */
     processOpenOrders(candle: ICandle): void {
         const openOrders: IOrder[] = [];
         this.openOrders.forEach(oo => {
@@ -162,16 +172,34 @@ export default class LocalExchange extends BaseExchange {
 
     subscribeReports = (): void => undefined;
 
+    /**
+     * Calculates total price of order
+     * @param {IOrder} order the order
+     * @returns {number} total price
+     */
     private getOrderPrice(order: IOrder) {
         return order.price * order.quantity;
     }
 
+    /**
+     * Checks if funds are sufficient for a buy
+     * @param {IOrder} order the order to verify
+     * @param {IOrder} oldOrder
+     * @returns {boolean} is buy allowed
+     */
     private isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
         const orderPrice: number = this.getOrderPrice(order);
 
         return this.assets[order.pair[1]] > orderPrice;
     }
 
+    /**
+     * Checks if current quantity of currency in possession
+     * if sufficient for given sell order
+     * @param {IOrder} order the order to verify
+     * @param {IOrder} oldOrder
+     * @returns {boolean} is sell allowed
+     */
     private isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
         const orderPrice: number = this.getOrderPrice(order);
         const oldOrderPrice = (oldOrder) ? this.getOrderPrice(oldOrder) : 0;
@@ -180,6 +208,11 @@ export default class LocalExchange extends BaseExchange {
     }
 
     // @TODO test and verify logic..
+    /**
+     * Updates the assets on the exchange for given new order
+     * @param {IOrder} order new order
+     * @param {IOrder} oldOrder old order
+     */
     private updateAssets(order: IOrder, oldOrder?: IOrder) {
         const [target, source] = order.pair;
 

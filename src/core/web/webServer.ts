@@ -10,6 +10,9 @@ ipc.config.id = "webserver";
 ipc.config.retry = 1000;
 ipc.config.silent = false;
 
+/**
+ * The WebServer communicates with the dashboard for trading visualizations
+ */
 export default class WebServer {
     private static PORT = config.webServer.port;
     private client?: connection;
@@ -17,6 +20,9 @@ export default class WebServer {
 
     private server: WebSocketServer;
 
+    /**
+     * Creates a new webserver
+     */
     constructor() {
         this.httpServer = http.createServer((request, response) => {
             console.log((new Date()) + " Received request for " + request.url);
@@ -28,6 +34,12 @@ export default class WebServer {
         this.connectIPC();
     }
 
+    /**
+     * Wraps the data with correct type and stringifies json
+     * for transit
+     * @param data the data to use
+     * @returns {IMessage} the wrapped data as a message
+     */
     createWebMessage = (data: any): IMessage => ({
         type: "utf8",
         utf8Data: JSON.stringify(data),
@@ -66,6 +78,9 @@ export default class WebServer {
         });
     }
 
+    /**
+     * Webserver listens to messages from socketTrader
+     */
     private connectIPC() {
         ipc.connectTo("server", () => {
             ipc.of.server.on("connect", () => {
@@ -82,8 +97,8 @@ export default class WebServer {
     }
 
     /**
-     * Receives events coming from the trading bot.
-     * -> forward incoming events to the WebSocketServer.
+     * Receives events coming from the trading bot
+     * -> forward incoming events to the WebSocketServer
      */
     private ipcReceive() {
         ipc.of.server.on("ipc.message", ({type, payload}: { payload: any, type: string }) => {

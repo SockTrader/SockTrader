@@ -14,7 +14,7 @@ const recurValidator = (validator: Validator) => {
 };
 
 /**
- * Validates a positive crossover of listA and listB
+ * Validates a positive crossover of lineA and lineB
  *
  * VALID SCENARIOS:
  *       o             o
@@ -29,17 +29,21 @@ const recurValidator = (validator: Validator) => {
  * ----o--o--o------o--o--o----
  *   /        \
  *  o          o
+ *
+ * @param {number[]} lineA line to check if it crosses over
+ * @param {number[]} lineB line to check if is goes under
+ * @returns {boolean} lineA crosses over lineB
  */
-export function crossUp(listA: number[], listB: number[]): boolean {
+export function crossUp(lineA: number[], lineB: number[]): boolean {
     const validate = recurValidator(((a, b) => a < b));
 
-    return ((listA.length < 2 || listB.length < 2) || (listA[0] <= listB[0]))
+    return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] <= lineB[0]))
         ? false
-        : validate(listA, listB, 1);
+        : validate(lineA, lineB, 1);
 }
 
 /**
- * Validates a negative crossover of listA and listB
+ * Validates a negative crossover of lineA and lineB
  *
  * VALID SCENARIOS:
  *  o       o
@@ -54,11 +58,15 @@ export function crossUp(listA: number[], listB: number[]): boolean {
  * ----o--o--o------o--o--o----
  *   /        \
  *  o          o
+ *
+ * @param {number[]} lineA line to check if is goes under
+ * @param {number[]} lineB line to check if it crosses over
+ * @returns {boolean} lineA goes under lineB
  */
-export function crossDown(listA: number[], listB: number[]): boolean {
+export function crossDown(lineA: number[], lineB: number[]): boolean {
     const validate = recurValidator(((a, b) => a > b));
 
-    return ((listA.length < 2 || listB.length < 2) || (listA[0] >= listB[0]))
+    return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] >= lineB[0]))
         ? false
-        : validate(listA, listB, 1);
+        : validate(lineA, lineB, 1);
 }
