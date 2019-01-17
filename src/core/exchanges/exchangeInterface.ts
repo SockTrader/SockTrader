@@ -18,7 +18,7 @@ export interface IExchange extends EventEmitter {
 
     connect(connectionString?: string): void;
 
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string;
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
 
     destroy(): void;
 

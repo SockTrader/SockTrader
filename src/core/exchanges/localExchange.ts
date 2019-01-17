@@ -11,9 +11,9 @@ export interface IAssetMap {
 export default class LocalExchange extends BaseExchange {
 
     private static instance?: LocalExchange;
-    private assets: IAssetMap = {
+    private assets: IAssetMap = new Proxy<IAssetMap>({
         USD: 100000,
-    };
+    }, {get: (target, p: PropertyKey): any => p in target ? target[p.toString()] : 0});
     private currentCandle?: ICandle;
     private filledOrders: IOrder[] = [];
 
@@ -42,7 +42,6 @@ export default class LocalExchange extends BaseExchange {
             throw new Error("Current candle undefined. Emit candles before adjusting an order.");
         }
 
-        this.setOrderInProgress(order.id);
         const newOrder: IOrder = {
             ...order,
             id: this.generateOrderId(order.pair),
@@ -54,6 +53,10 @@ export default class LocalExchange extends BaseExchange {
             price,
         };
 
+        const isAllowed = newOrder.side === OrderSide.BUY ? this.isBuyAllowed.bind(this) : this.isSellAllowed.bind(this);
+        if (!isAllowed(newOrder, order)) return;
+
+        this.setOrderInProgress(order.id);
         this.onReport(newOrder);
     }
 
@@ -74,14 +77,14 @@ export default class LocalExchange extends BaseExchange {
     /**
      * Sends new order to exchange
      */
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         if (!this.currentCandle) {
             throw new Error("Current candle undefined. Emit candles before creating an order.");
         }
 
-        const orderId = super.createOrder(pair, price, qty, side);
-
+        const orderId = this.generateOrderId(pair);
         const candleTime = this.currentCandle.timestamp;
+
         const order: IOrder = {
             createdAt: candleTime,
             updatedAt: candleTime,
@@ -96,8 +99,11 @@ export default class LocalExchange extends BaseExchange {
             price,
         };
 
+        const isAllowed = order.side === OrderSide.BUY ? this.isBuyAllowed.bind(this) : this.isSellAllowed.bind(this);
+        if (!isAllowed(order)) return;
+
+        this.setOrderInProgress(orderId);
         this.onReport(order);
-        return orderId;
     }
 
     async emitCandles(loader: CandleLoader) {
@@ -135,12 +141,12 @@ export default class LocalExchange extends BaseExchange {
             }
 
             const order = {...oo, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-            if (oo.side === OrderSide.BUY && candle.low < oo.price && this.isBuyAllowed(order)) {
+            if (oo.side === OrderSide.BUY && candle.low < oo.price) {
                 this.filledOrders.push(order);
                 return this.onReport(order);
             }
 
-            if (oo.side === OrderSide.SELL && candle.high > oo.price && this.isSellAllowed(order)) {
+            if (oo.side === OrderSide.SELL && candle.high > oo.price) {
                 this.filledOrders.push(order);
                 return this.onReport(order);
             }
@@ -156,42 +162,49 @@ export default class LocalExchange extends BaseExchange {
 
     subscribeReports = (): void => undefined;
 
-    private getOrderPrice(price: number, qty: number) {
-        return price * qty;
+    private getOrderPrice(order: IOrder) {
+        return order.price * order.quantity;
     }
 
-    private isBuyAllowed(order: IOrder): boolean {
-        const pair: Pair = order.pair;
-        const orderPrice: number = this.getOrderPrice(order.price, order.quantity);
+    private isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+        const orderPrice: number = this.getOrderPrice(order);
 
-        return this.assets[pair[1]] > orderPrice;
+        return this.assets[order.pair[1]] > orderPrice;
     }
 
-    private isSellAllowed(order: IOrder): boolean {
-        const pair: Pair = order.pair;
-        const orderPrice: number = this.getOrderPrice(order.price, order.quantity);
+    private isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+        const orderPrice: number = this.getOrderPrice(order);
+        const oldOrderPrice = (oldOrder) ? this.getOrderPrice(oldOrder) : 0;
 
-        return this.assets[pair[0]] > orderPrice;
+        return this.assets[order.pair[0]] > order.quantity;
     }
 
+    // @TODO test and verify logic..
     private updateAssets(order: IOrder, oldOrder?: IOrder) {
-        let [target, source] = order.pair;
+        const [target, source] = order.pair;
 
-        if (order.side === OrderSide.SELL) {
-            target = order.pair[1];
-            source = order.pair[0];
-        }
+        // if (order.side === OrderSide.SELL) {
+        //     target = order.pair[1];
+        //     source = order.pair[0];
+        // }
 
         if (ReportType.REPLACED === order.reportType && oldOrder) {
-            this.assets[source] += this.getOrderPrice(oldOrder.price, oldOrder.quantity);
-            this.assets[source] -= this.getOrderPrice(order.price, order.quantity);
+            // @TODO ..
         } else if (ReportType.NEW === order.reportType) {
-            this.assets[source] -= this.getOrderPrice(order.price, order.quantity);
+            if (order.side === OrderSide.BUY) {
+                this.assets[source] -= this.getOrderPrice(order);
+            } else {
+                this.assets[target] -= order.quantity;
+            }
         } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
-            this.assets[target] += this.getOrderPrice(order.price, order.quantity);
+            if (order.side === OrderSide.BUY) {
+                this.assets[target] += order.quantity;
+            } else {
+                this.assets[source] += this.getOrderPrice(order);
+            }
             console.log(this.assets);
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.assets[source] += this.getOrderPrice(order.price, order.quantity);
+            this.assets[source] += this.getOrderPrice(order);
         }
     }
 }

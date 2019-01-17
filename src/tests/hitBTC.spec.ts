@@ -9,7 +9,7 @@ import CandleCollection, {ICandle} from "../core/candleCollection";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
 import {Pair} from "../types/pair";
-import {IOrderbookData, ITradeablePair} from "../core/exchanges/baseExchange";
+import {IOrderbookData} from "../core/exchanges/baseExchange";
 
 const pair: Pair = ["BTC", "USD"];
 
