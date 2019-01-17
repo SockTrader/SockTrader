@@ -52,8 +52,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract adjustOrder(order: IOrder, price: number, qty: number): void;
 
-    buy(pair: Pair, price: number, qty: number): string {
-        return this.createOrder(pair, price, qty, OrderSide.BUY);
+    buy(pair: Pair, price: number, qty: number): void {
+        this.createOrder(pair, price, qty, OrderSide.BUY);
     }
 
     abstract cancelOrder(order: IOrder): void;
@@ -68,11 +68,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Send order base function
      */
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
-        const orderId = this.generateOrderId(pair);
-        this.setOrderInProgress(orderId);
-        return orderId;
-    }
+    abstract createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
 
     destroy(): void {
         this.removeAllListeners();
@@ -210,8 +206,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 
-    sell(pair: Pair, price: number, qty: number): string {
-        return this.createOrder(pair, price, qty, OrderSide.SELL);
+    sell(pair: Pair, price: number, qty: number): void {
+        this.createOrder(pair, price, qty, OrderSide.SELL);
     }
 
     /**

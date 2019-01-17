@@ -74,8 +74,9 @@ export default class HitBTC extends BaseExchange {
     /**
      * Sends new order to exchange
      */
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): string {
-        const orderId = super.createOrder(pair, price, qty, side);
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
+        const orderId = this.generateOrderId(pair);
+        this.setOrderInProgress(orderId);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
         this.send("newOrder", {
@@ -86,7 +87,6 @@ export default class HitBTC extends BaseExchange {
             symbol: pair,
             type: "limit",
         });
-        return orderId;
     }
 
     /**

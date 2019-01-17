@@ -48,7 +48,7 @@ export default class BackTester extends SockTrader {
             this.eventsBound = true;
         }
 
-        (this.exchange as LocalExchange).emitCandles(this.candleLoader);
+        await (this.exchange as LocalExchange).emitCandles(this.candleLoader);
     }
 
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
@@ -60,12 +60,12 @@ export default class BackTester extends SockTrader {
         if (!this.webServer) return;
 
         // @TODO validate if a strategy is a backtest strategy or not??
-        strategy.on("backtest.report", (order: any) => {
+        this.exchange.on("app.report", (order: any) => {
             console.log("report");
             this.sendToSocketServer("REPORT", order);
         });
 
-        strategy.on("backtest.candles", (candles: any) => {
+        this.exchange.on("app.updateCandles", (candles: any) => {
             // const result = candles.map((r: ICandle) => {
             //     return {
             //         h: r.high,
