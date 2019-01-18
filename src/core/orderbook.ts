@@ -30,6 +30,11 @@ export interface IOrderbook {
  * @class OrderbookBase
  * @classdesc Order book to be used within an exchange class
  */
+
+/**
+ * The Orderbook resembles the orders currently active on
+ * and exchange
+ */
 export default class Orderbook implements IOrderbook {
 
     ask: IOrderbookEntry[] = [];
@@ -40,9 +45,9 @@ export default class Orderbook implements IOrderbook {
 
     /**
      * Calculate bid/ask spread in %
-     * @param {number} bid
-     * @param {number} ask
-     * @returns {number}
+     * @param {number} bid price bid
+     * @param {number} ask price asked
+     * @returns {number} percentage spread bid/ask
      */
     static getBidAskSpreadPerc(bid: number, ask: number): number {
         const increase: Decimal = new Decimal(ask).minus(bid);
@@ -51,8 +56,9 @@ export default class Orderbook implements IOrderbook {
 
     /**
      * Add increment to internal order book properties
-     * @param {IOrderbookEntry[]} ask
-     * @param {IOrderbookEntry[]} bid
+     * sort the orders by value
+     * @param {IOrderbookEntry[]} ask the price asked
+     * @param {IOrderbookEntry[]} bid the price bid
      */
     addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void {
         this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"]);

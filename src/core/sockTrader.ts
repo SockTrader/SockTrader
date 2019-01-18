@@ -1,11 +1,11 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
+import {Error} from "tslint/lib/error";
 import {Pair} from "../types/pair";
 import {ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
-import {Error} from "tslint/lib/error";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;

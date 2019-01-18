@@ -1,10 +1,10 @@
+import {Error} from "tslint/lib/error";
 import CandleLoader, {Parser} from "./candleLoader";
 import {IExchange} from "./exchanges/exchangeInterface";
 import localExchange from "./exchanges/localExchange";
 import LocalExchange from "./exchanges/localExchange";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
 import BaseStrategy from "./strategy/baseStrategy";
-import {Error} from "tslint/lib/error";
 
 /**
  * The BackTester enables you to test your strategy against a fake dummy exchange
@@ -25,7 +25,7 @@ export default class BackTester extends SockTrader {
     }
 
     /**
-     * Sets the loader responisble for loading local file data into
+     * Sets the loader responsible for loading local file data into
      * an in memory candle collection
      * @param {string} path the path to the file containing candles
      * @param {Parser} parser the parser for transforming the data

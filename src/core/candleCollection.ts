@@ -25,13 +25,19 @@ export interface IIntervalDict {
 
 /**
  * Contains OHLCV history data for a trading pair.
- * The collection will automatically fill holes when initial and new data is pushed.
- * The collection can automatically generate values if no new values were pushed during a time interval.
+ * The collection will automatically fill holes when initial and new data is pushed
+ * The collection can automatically generate values if no new values were pushed during a time interval
  */
 export default class CandleCollection extends EventEmitter {
     private candles: ICandle[] = [];
     private cronjob: CronJob;
 
+    /**
+     * Creates a new CandleCollection
+     * @param {ICandleInterval} interval the interval between the candles
+     * @param {boolean} generateCandles if should generate candles when nothing is received
+     * @param {number} retentionPeriod how long to keep candles
+     */
     constructor(private interval: ICandleInterval, generateCandles = true, private retentionPeriod = 0) {
         super();
 
@@ -63,6 +69,7 @@ export default class CandleCollection extends EventEmitter {
 
     /**
      * Update or insert newly received candles
+     * @param {ICandle[]} candles candles to add
      */
     update(candles: ICandle[]): void {
         let needsSort = false;
@@ -96,13 +103,19 @@ export default class CandleCollection extends EventEmitter {
 
     /**
      * Validates if a candle occurs on a certain timestamp
+     * @param {ICandle} candle the candle
+     * @param {moment.Moment} timestamp the time
+     * @returns {boolean} occurs on given time
      */
     private candleEqualsTimestamp(candle: ICandle, timestamp: Moment): boolean {
         return candle.timestamp.isSameOrAfter(timestamp, "minute");
     }
 
     /**
-     * Fill gaps in candle list until now, based on a cron expression.
+     * Fill gaps in candle list until now, based on a cron expression
+     * @param {ICandle[]} candles candle collection to fill
+     * @param interval interval for which to fill
+     * @returns {ICandle[]} the filled collection
      */
     private fillCandleGaps(candles: ICandle[], interval: any): ICandle[] {
         candles = this.sort(candles);
@@ -141,7 +154,11 @@ export default class CandleCollection extends EventEmitter {
     }
 
     /**
-     * Returns a function which will either return a new candle or recycle a previous candle.
+     * Returns a function which will either return a new candle or recycle a previous candle
+     * This function should be executed on every timer tick so that even though no values
+     * changed, the candle collection receives a 'new' candle
+     * @param {ICandle[]} candle collection
+     * @returns {(interval: moment.Moment) => ICandle} candle generator
      */
     private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
         let position = 0;
@@ -160,6 +177,10 @@ export default class CandleCollection extends EventEmitter {
 
     /**
      * Copy candle based on the close value of a different candle
+     * for indicating an interval without price change
+     * @param {number} close the close
+     * @param {moment.Moment} timestamp the timestamp
+     * @returns {ICandle} copied candle
      */
     private getRecycledCandle = ({close}: ICandle, timestamp: Moment): ICandle => ({
         open: close,
@@ -172,6 +193,7 @@ export default class CandleCollection extends EventEmitter {
 
     /**
      * Removes candles outside the retention period
+     * @param {ICandle[]} candles the candle collection
      */
     private removeRetentionOverflow(candles: ICandle[]): void {
         if (this.retentionPeriod > 0 && candles.length > this.retentionPeriod) {
