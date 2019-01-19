@@ -57,11 +57,11 @@ import {lowercase, numbers, uppercase} from &quot;nanoid-dictionary&quot;;
 import generate from &quot;nanoid/generate&quot;;
 import {Error} from &quot;tslint/lib/error&quot;;
 import {client as WebSocketClient, connection, IMessage} from &quot;websocket&quot;;
-import {Pair} from &quot;../../types/pair&quot;;
 import CandleCollection, {ICandle, ICandleInterval} from &quot;../candleCollection&quot;;
 import logger from &quot;../logger&quot;;
 import Orderbook, {IOrderbookEntry} from &quot;../orderbook&quot;;
 import {IOrder, OrderSide, OrderStatus, ReportType} from &quot;../orderInterface&quot;;
+import {Pair} from &quot;../types/pair&quot;;
 import {IExchange} from &quot;./exchangeInterface&quot;;
 
 export interface IResponseMapper {

@@ -56,10 +56,8 @@ import SimpleMovingAverage from &quot;../strategies/simpleMovingAverage&quot;;
 import {IExchange} from &quot;../core/exchanges/exchangeInterface&quot;;
 import SockTrader from &quot;../core/sockTrader&quot;;
 import {CandleInterval, default as HitBTC} from &quot;../core/exchanges/hitBTC&quot;;
-import {Pair} from &quot;../types/pair&quot;;
+import {Pair} from &quot;../core/types/pair&quot;;
 import objectContaining = jasmine.objectContaining;
-import spawnServer from &quot;../core/web/spawnServer&quot;;
-import {server} from &quot;websocket&quot;;
 
 class ConcreteSockTrader extends SockTrader {
 
@@ -71,10 +69,6 @@ class ConcreteSockTrader extends SockTrader {
 
     getExchange(): IExchange {
         return this.exchange;
-    }
-
-    setWebserver(webServer :any){
-        this.webServer = webServer;
     }
 }
 
@@ -227,12 +221,12 @@ describe(&quot;bindStrategyToExchange&quot;, () =&gt; {
 
 describe(&quot;sendToWebServer&quot;, () =&gt; {
     test(&quot;Should broadcast payload to socket server&quot;, () =&gt; {
-        const webServer: server = new server();
-        const spyBroadcast = jest.spyOn(webServer, &quot;broadcast&quot;);
+        const childSend = jest.fn();
 
-        sockTrader.setWebserver(webServer);
+        // @ts-ignore
+        sockTrader[&quot;webServer&quot;] = {send: childSend};
         sockTrader[&quot;sendToWebServer&quot;](&quot;type&quot;,  &quot;payload&quot;);
-        expect(spyBroadcast).toBeCalledWith(&quot;ipc.message&quot;, objectContaining({
+        expect(childSend).toBeCalledWith(objectContaining({
             type: &quot;type&quot;,
             payload: &quot;payload&quot;
         }));

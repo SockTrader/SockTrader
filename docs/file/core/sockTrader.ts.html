@@ -54,12 +54,12 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {ChildProcess} from &quot;child_process&quot;;
 import uniqBy from &quot;lodash.uniqby&quot;;
 import uniqWith from &quot;lodash.uniqwith&quot;;
-import {Pair} from &quot;../types/pair&quot;;
 import {ICandle, ICandleInterval} from &quot;./candleCollection&quot;;
 import {IExchange} from &quot;./exchanges/exchangeInterface&quot;;
 import {IOrderbook} from &quot;./orderbook&quot;;
 import {IOrder} from &quot;./orderInterface&quot;;
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from &quot;./strategy/baseStrategy&quot;;
+import {Pair} from &quot;./types/pair&quot;;
 import spawnServer from &quot;./web/spawnServer&quot;;
 
 export interface IStrategyConfig {

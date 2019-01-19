@@ -1,14 +1,15 @@
-<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/cwouter/SockTrader/master/docs/SockTraderLogo.png" alt="SockTrader logo" /></p>
+<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/SockTraderLogo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
 
 <p align="center">
   <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a>
-  <a href="https://codecov.io/gh/cwouter/SockTrader"><img src="https://codecov.io/gh/cwouter/SockTrader/branch/master/graph/badge.svg" alt="Coverage"></a>
-  <a href="https://travis-ci.org/cwouter/SockTrader"><img src="https://travis-ci.org/cwouter/SockTrader.svg?branch=master" alt="Build status"></a>
-  <a href="https://codeclimate.com/github/cwouter/SockTrader/maintainability"><img src="https://api.codeclimate.com/v1/badges/4ff5f03cd3df6fe8f776/maintainability" alt="Maintainability"></a>
-  <a href="https://david-dm.org/cwouter/SockTrader"><img src="https://david-dm.org/cwouter/SockTrader.svg" alt="Dependencies"></a>
+  <a href="https://codecov.io/gh/SockTrader/SockTrader"><img src="https://codecov.io/gh/SockTrader/SockTrader/branch/master/graph/badge.svg" /></a>
+  <a href="https://travis-ci.org/SockTrader/SockTrader"><img src="https://travis-ci.org/SockTrader/SockTrader.svg?branch=master" alt="Build status"></a>
+  <a href="https://codeclimate.com/github/SockTrader/SockTrader/maintainability"><img src="https://api.codeclimate.com/v1/badges/19589f9237d31ca9dcf6/maintainability" /></a>
+  <a href="https://david-dm.org/SockTrader/SockTrader"><img src="https://david-dm.org/SockTrader/SockTrader.svg" alt="Dependencies"></a>
+  <a href="https://github.com/SockTrader/SockTrader"><img src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/badge.svg" alt="Documentation"></a>
 </p>
 
 <p align="center"><b>🚧 Project is currently under development! 🚧</b></p>
@@ -27,7 +28,7 @@
 
 Clone project
 ```bash
-git clone https://github.com/cwouter/SockTrader
+git clone https://github.com/SockTrader/SockTrader
 ```
 
 Install dependencies

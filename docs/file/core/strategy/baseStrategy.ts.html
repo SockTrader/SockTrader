@@ -53,11 +53,11 @@
 <div class="content" data-ice="content"><h1 data-ice="title">core/strategy/baseStrategy.ts</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {EventEmitter} from &quot;events&quot;;
 import {Error} from &quot;tslint/lib/error&quot;;
-import {Pair} from &quot;../../types/pair&quot;;
 import {ICandle} from &quot;../candleCollection&quot;;
 import {IExchange} from &quot;../exchanges/exchangeInterface&quot;;
 import {IOrderbook} from &quot;../orderbook&quot;;
 import {IOrder, OrderSide} from &quot;../orderInterface&quot;;
+import {Pair} from &quot;../types/pair&quot;;
 
 export interface IStrategyClass&lt;T&gt; {
     new(pair: Pair, exchange: IExchange): T;

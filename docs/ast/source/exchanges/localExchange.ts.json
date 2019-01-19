@@ -381,7 +381,7 @@
         "trailingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 15\n ",
+            "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 14\n ",
             "start": 144,
             "end": 262,
             "loc": {
@@ -578,7 +578,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 18\n         * @type\n         * {IAssetMap}\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 17\n         * @type\n         * {IAssetMap}\n         ",
                           "start": 417,
                           "end": 537,
                           "loc": {
@@ -1075,7 +1075,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 18\n         * @type\n         * {IAssetMap}\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 17\n         * @type\n         * {IAssetMap}\n         ",
                           "start": 417,
                           "end": 537,
                           "loc": {
@@ -1093,7 +1093,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 22\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 21\n         ",
                           "start": 681,
                           "end": 761,
                           "loc": {
@@ -1209,7 +1209,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 22\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 21\n         ",
                           "start": 681,
                           "end": 761,
                           "loc": {
@@ -1227,7 +1227,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 132\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 131\n         ",
                           "start": 802,
                           "end": 883,
                           "loc": {
@@ -1364,7 +1364,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 132\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 131\n         ",
                           "start": 802,
                           "end": 883,
                           "loc": {
@@ -1382,7 +1382,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 135\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 134\n         ",
                           "start": 939,
                           "end": 1020,
                           "loc": {
@@ -1535,7 +1535,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 135\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 134\n         ",
                           "start": 939,
                           "end": 1020,
                           "loc": {
@@ -1569,7 +1569,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 138\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 137\n         ",
                           "start": 1123,
                           "end": 1204,
                           "loc": {
@@ -1722,7 +1722,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 138\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 137\n         ",
                           "start": 1123,
                           "end": 1204,
                           "loc": {
@@ -1756,7 +1756,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 167\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 166\n         ",
                           "start": 1309,
                           "end": 1390,
                           "loc": {
@@ -1893,7 +1893,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 167\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 166\n         ",
                           "start": 1309,
                           "end": 1390,
                           "loc": {
@@ -1911,7 +1911,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 169\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 168\n         ",
                           "start": 1448,
                           "end": 1529,
                           "loc": {
@@ -2048,7 +2048,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 169\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 168\n         ",
                           "start": 1448,
                           "end": 1529,
                           "loc": {
@@ -2066,7 +2066,7 @@
                       "trailingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 171\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 170\n         ",
                           "start": 1589,
                           "end": 1670,
                           "loc": {
@@ -2203,7 +2203,7 @@
                       "leadingComments": [
                         {
                           "type": "CommentBlock",
-                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 171\n         ",
+                          "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 170\n         ",
                           "start": 1589,
                           "end": 1670,
                           "loc": {
@@ -2720,7 +2720,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 38\n     ",
+                    "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 37\n     ",
                     "start": 1898,
                     "end": 2003,
                     "loc": {
@@ -3080,7 +3080,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 38\n     ",
+                    "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 37\n     ",
                     "start": 1898,
                     "end": 2003,
                     "loc": {
@@ -3098,7 +3098,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 45\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 44\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
                     "start": 2187,
                     "end": 2353,
                     "loc": {
@@ -4880,7 +4880,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 45\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 44\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
                     "start": 2187,
                     "end": 2353,
                     "loc": {
@@ -4898,7 +4898,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 68\n     * @param\n     * {IOrder} order\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 67\n     * @param\n     * {IOrder} order\n     ",
                     "start": 3126,
                     "end": 3222,
                     "loc": {
@@ -5405,7 +5405,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 68\n     * @param\n     * {IOrder} order\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 67\n     * @param\n     * {IOrder} order\n     ",
                     "start": 3126,
                     "end": 3222,
                     "loc": {
@@ -5423,7 +5423,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 79\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 78\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
                     "start": 3449,
                     "end": 3650,
                     "loc": {
@@ -7488,7 +7488,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 79\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 78\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
                     "start": 3449,
                     "end": 3650,
                     "loc": {
@@ -7506,7 +7506,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 114\n     * @param\n     * {undefined} candles\n     ",
+                    "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 113\n     * @param\n     * {undefined} candles\n     ",
                     "start": 4580,
                     "end": 4779,
                     "loc": {
@@ -8590,7 +8590,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 114\n     * @param\n     * {undefined} candles\n     ",
+                    "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 113\n     * @param\n     * {undefined} candles\n     ",
                     "start": 4580,
                     "end": 4779,
                     "loc": {
@@ -8608,7 +8608,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 127\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 126\n     * @return\n     * {boolean}\n     ",
                     "start": 5230,
                     "end": 5323,
                     "loc": {
@@ -8817,7 +8817,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 127\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 126\n     * @return\n     * {boolean}\n     ",
                     "start": 5230,
                     "end": 5323,
                     "loc": {
@@ -8835,7 +8835,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 144\n     * @param\n     * {ICandle} candle\n     ",
+                    "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 143\n     * @param\n     * {ICandle} candle\n     ",
                     "start": 5399,
                     "end": 5554,
                     "loc": {
@@ -10949,7 +10949,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 144\n     * @param\n     * {ICandle} candle\n     ",
+                    "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 143\n     * @param\n     * {ICandle} candle\n     ",
                     "start": 5399,
                     "end": 5554,
                     "loc": {
@@ -10967,7 +10967,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 178\n     * @param\n     * {IOrder} order\n     ",
+                    "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 177\n     * @param\n     * {IOrder} order\n     ",
                     "start": 6354,
                     "end": 6483,
                     "loc": {
@@ -11194,7 +11194,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 178\n     * @param\n     * {IOrder} order\n     ",
+                    "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 177\n     * @param\n     * {IOrder} order\n     ",
                     "start": 6354,
                     "end": 6483,
                     "loc": {
@@ -11212,7 +11212,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 188\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 187\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
                     "start": 6566,
                     "end": 6775,
                     "loc": {
@@ -11655,7 +11655,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 188\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 187\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
                     "start": 6566,
                     "end": 6775,
                     "loc": {
@@ -11673,7 +11673,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 201\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 200\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
                     "start": 6932,
                     "end": 7195,
                     "loc": {
@@ -12337,7 +12337,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 201\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+                    "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 200\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
                     "start": 6932,
                     "end": 7195,
                     "loc": {
@@ -12355,7 +12355,7 @@
                 "trailingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 214\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
+                    "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 213\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
                     "start": 7434,
                     "end": 7625,
                     "loc": {
@@ -15110,7 +15110,7 @@
                 "leadingComments": [
                   {
                     "type": "CommentBlock",
-                    "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 214\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
+                    "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 213\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
                     "start": 7434,
                     "end": 7625,
                     "loc": {
@@ -15147,7 +15147,7 @@
           "leadingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 15\n ",
+              "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 14\n ",
               "start": 144,
               "end": 262,
               "loc": {
@@ -15167,7 +15167,7 @@
         "leadingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 15\n ",
+            "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 14\n ",
             "start": 144,
             "end": 262,
             "loc": {
@@ -15189,7 +15189,7 @@
   "comments": [
     {
       "type": "CommentBlock",
-      "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 15\n ",
+      "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 14\n ",
       "start": 144,
       "end": 262,
       "loc": {
@@ -15221,7 +15221,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 18\n         * @type\n         * {IAssetMap}\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 17\n         * @type\n         * {IAssetMap}\n         ",
       "start": 417,
       "end": 537,
       "loc": {
@@ -15237,7 +15237,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 22\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 21\n         ",
       "start": 681,
       "end": 761,
       "loc": {
@@ -15253,7 +15253,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 132\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 131\n         ",
       "start": 802,
       "end": 883,
       "loc": {
@@ -15269,7 +15269,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 135\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 134\n         ",
       "start": 939,
       "end": 1020,
       "loc": {
@@ -15301,7 +15301,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 138\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 137\n         ",
       "start": 1123,
       "end": 1204,
       "loc": {
@@ -15333,7 +15333,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 167\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 166\n         ",
       "start": 1309,
       "end": 1390,
       "loc": {
@@ -15349,7 +15349,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 169\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 168\n         ",
       "start": 1448,
       "end": 1529,
       "loc": {
@@ -15365,7 +15365,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 171\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 170\n         ",
       "start": 1589,
       "end": 1670,
       "loc": {
@@ -15381,7 +15381,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 38\n     ",
+      "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 37\n     ",
       "start": 1898,
       "end": 2003,
       "loc": {
@@ -15397,7 +15397,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 45\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 44\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
       "start": 2187,
       "end": 2353,
       "loc": {
@@ -15413,7 +15413,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 68\n     * @param\n     * {IOrder} order\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 67\n     * @param\n     * {IOrder} order\n     ",
       "start": 3126,
       "end": 3222,
       "loc": {
@@ -15429,7 +15429,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 79\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 78\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
       "start": 3449,
       "end": 3650,
       "loc": {
@@ -15445,7 +15445,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 114\n     * @param\n     * {undefined} candles\n     ",
+      "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 113\n     * @param\n     * {undefined} candles\n     ",
       "start": 4580,
       "end": 4779,
       "loc": {
@@ -15461,7 +15461,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 127\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 126\n     * @return\n     * {boolean}\n     ",
       "start": 5230,
       "end": 5323,
       "loc": {
@@ -15477,7 +15477,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 144\n     * @param\n     * {ICandle} candle\n     ",
+      "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 143\n     * @param\n     * {ICandle} candle\n     ",
       "start": 5399,
       "end": 5554,
       "loc": {
@@ -15509,7 +15509,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 178\n     * @param\n     * {IOrder} order\n     ",
+      "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 177\n     * @param\n     * {IOrder} order\n     ",
       "start": 6354,
       "end": 6483,
       "loc": {
@@ -15525,7 +15525,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 188\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 187\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
       "start": 6566,
       "end": 6775,
       "loc": {
@@ -15541,7 +15541,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 201\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 200\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
       "start": 6932,
       "end": 7195,
       "loc": {
@@ -15557,7 +15557,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 214\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
+      "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 213\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
       "start": 7434,
       "end": 7625,
       "loc": {
@@ -16195,7 +16195,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 15\n ",
+      "value": "*\n * @desc\n * The LocalExchange resembles a local dummy marketplace for\n * strategy testing\n * @lineNumber\n * 14\n ",
       "start": 144,
       "end": 262,
       "loc": {
@@ -16621,7 +16621,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 18\n         * @type\n         * {IAssetMap}\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 17\n         * @type\n         * {IAssetMap}\n         ",
       "start": 417,
       "end": 537,
       "loc": {
@@ -17676,7 +17676,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 22\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 21\n         ",
       "start": 681,
       "end": 761,
       "loc": {
@@ -17877,7 +17877,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 132\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 131\n         ",
       "start": 802,
       "end": 883,
       "loc": {
@@ -18128,7 +18128,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 135\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 134\n         ",
       "start": 939,
       "end": 1020,
       "loc": {
@@ -18395,7 +18395,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 138\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 137\n         ",
       "start": 1123,
       "end": 1204,
       "loc": {
@@ -18662,7 +18662,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 167\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 166\n         ",
       "start": 1309,
       "end": 1390,
       "loc": {
@@ -18913,7 +18913,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 169\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 168\n         ",
       "start": 1448,
       "end": 1529,
       "loc": {
@@ -19164,7 +19164,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 171\n         ",
+      "value": "*\n         * @desc\n         *\n         * @lineNumber\n         * 170\n         ",
       "start": 1589,
       "end": 1670,
       "loc": {
@@ -20453,7 +20453,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 38\n     ",
+      "value": "*\n     * @desc\n     * Returns singleton instance of local exchange\n     * @lineNumber\n     * 37\n     ",
       "start": 1898,
       "end": 2003,
       "loc": {
@@ -21221,7 +21221,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 45\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 44\n     * @param\n     * {IOrder} order\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     ",
       "start": 2187,
       "end": 2353,
       "loc": {
@@ -24759,7 +24759,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 68\n     * @param\n     * {IOrder} order\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 67\n     * @param\n     * {IOrder} order\n     ",
       "start": 3126,
       "end": 3222,
       "loc": {
@@ -25734,7 +25734,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 79\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 78\n     * @param\n     * {Pair} pair\n     * @param\n     * {number} price\n     * @param\n     * {number} qty\n     * @param\n     * {OrderSide} side\n     ",
       "start": 3449,
       "end": 3650,
       "loc": {
@@ -29720,7 +29720,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 114\n     * @param\n     * {undefined} candles\n     ",
+      "value": "*\n     * @desc\n     * Emits a collection of candles from a local file as if they were\n     * sent from a real exchange\n     * @lineNumber\n     * 113\n     * @param\n     * {undefined} candles\n     ",
       "start": 4580,
       "end": 4779,
       "loc": {
@@ -32023,7 +32023,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 127\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     *\n     * @lineNumber\n     * 126\n     * @return\n     * {boolean}\n     ",
       "start": 5230,
       "end": 5323,
       "loc": {
@@ -32430,7 +32430,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 144\n     * @param\n     * {ICandle} candle\n     ",
+      "value": "*\n     * @desc\n     * Checks if open order can be filled on each price update\n     * @lineNumber\n     * 143\n     * @param\n     * {ICandle} candle\n     ",
       "start": 5399,
       "end": 5554,
       "loc": {
@@ -36467,7 +36467,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 178\n     * @param\n     * {IOrder} order\n     ",
+      "value": "*\n     * @desc\n     * Calculates total price of order\n     * @lineNumber\n     * 177\n     * @param\n     * {IOrder} order\n     ",
       "start": 6354,
       "end": 6483,
       "loc": {
@@ -36872,7 +36872,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 188\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     * Checks if funds are sufficient for a buy\n     * @lineNumber\n     * 187\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
       "start": 6566,
       "end": 6775,
       "loc": {
@@ -37751,7 +37751,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 201\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
+      "value": "*\n     * @desc\n     * Checks if current quantity of currency in possession\n     * if sufficient for given sell order\n     * @lineNumber\n     * 200\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     * @return\n     * {boolean}\n     ",
       "start": 6932,
       "end": 7195,
       "loc": {
@@ -39100,7 +39100,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 214\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
+      "value": "*\n     * @desc\n     * Updates the assets on the exchange for given new order\n     * @lineNumber\n     * 213\n     * @param\n     * {IOrder} order\n     * @param\n     * {IOrder} oldOrder\n     ",
       "start": 7434,
       "end": 7625,
       "loc": {

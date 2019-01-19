@@ -60,9 +60,9 @@ import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType}
 import Orderbook from &quot;../core/orderbook&quot;;
 import CandleCollection from &quot;../core/candleCollection&quot;;
 import moment from &quot;moment&quot;;
-import {Pair} from &quot;../types/pair&quot;;
+import {Pair} from &quot;../core/types/pair&quot;;
 import {EventEmitter} from &quot;events&quot;;
-import generate = require(&quot;nanoid/generate&quot;);
+// import generate from &quot;nanoid/generate&quot;;
 
 const pair: Pair = [&quot;BTC&quot;, &quot;USD&quot;];
 
@@ -108,12 +108,8 @@ beforeEach(() =&gt; {
     exc = new MockExchange();
 });
 
-
-jest.mock(&quot;nanoid/generate&quot;);
-
 describe(&quot;generateOrderId&quot;, () =&gt; {
     test(&quot;Should generate a random order id&quot;, () =&gt; {
-        generate.mockResolvedValue(12345435345345);
         const orderId = exc[&quot;generateOrderId&quot;](pair);
         expect(orderId).to.be.a(&quot;string&quot;);
         expect(orderId).to.have.lengthOf(32);
@@ -122,7 +118,7 @@ describe(&quot;generateOrderId&quot;, () =&gt; {
 
 describe(&quot;createOrder&quot;, () =&gt; {
     test(&quot;Should create a buy order&quot;, () =&gt; {
-        const createOrder = spy(exc, &quot;createOrder&quot; as any);
+        const createOrder = spy(exc, &quot;createOrder&quot;);
         exc.buy(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
         expect(createOrder.args[0]).to.deep.equal([[&quot;BTC&quot;, &quot;USD&quot;], 1, 10, &quot;buy&quot;]);

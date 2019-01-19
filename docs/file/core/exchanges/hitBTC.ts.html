@@ -54,11 +54,11 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import crypto from &quot;crypto&quot;;
 import nanoid from &quot;nanoid&quot;;
 import {connection, IMessage} from &quot;websocket&quot;;
-import {Pair} from &quot;../../types/pair&quot;;
 import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from &quot;../candleCollection&quot;;
 import logger from &quot;../logger&quot;;
 import Orderbook from &quot;../orderbook&quot;;
 import {IOrder, OrderSide} from &quot;../orderInterface&quot;;
+import {Pair} from &quot;../types/pair&quot;;
 import BaseExchange, {IOrderbookData, IResponseMapper} from &quot;./baseExchange&quot;;
 import HitBTCMapper from &quot;./hitBTCMapper&quot;;
 

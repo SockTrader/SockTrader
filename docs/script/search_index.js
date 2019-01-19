@@ -337,73 +337,73 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber145",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber133",
     "addExchange",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber146",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber134",
     "addExchange Should add exchange to socketTrader",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber162",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber161",
     "addOrder",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber163",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber162",
     "addOrder Should store all open orders",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber151",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber139",
     "bindExchangeToStrategy",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber152",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber140",
     "bindExchangeToStrategy Should bind exchange events to strategy",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber162",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber150",
     "bindStrategyToExchange",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber163",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber151",
     "bindStrategyToExchange Should bind strategy events to exchange",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber130",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber129",
     "connect",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber131",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber130",
     "connect Should connect via a websocket connection string",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber149",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber148",
     "connection",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber150",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber149",
     "connection Should send messages over a socket connection",
     "test"
   ],
@@ -1735,43 +1735,43 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber63",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber62",
     "createOrder",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber64",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber63",
     "createOrder Should create a buy order",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber70",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber69",
     "createOrder Should create a sell order",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber77",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber76",
     "createOrder Should put an order into progress when creating an order",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber140",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber139",
     "destroy",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber141",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber140",
     "destroy Should remove all event listeners once the exchange is destroyed",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber171",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber170",
     "generateOrderId",
     "test"
   ],
@@ -1789,103 +1789,103 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber172",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber171",
     "generateOrderId Should generate new order id's",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber93",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber92",
     "getCandleCollection",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber94",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber93",
     "getCandleCollection Should return a cached candle collection for a trading pair",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber186",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber185",
     "getOrderbook",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber187",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber186",
     "getOrderbook Should get singleton exchange orderbook",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber177",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber176",
     "isAdjustingOrderAllowed",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber178",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber177",
     "isAdjustingOrderAllowed Should verify if an order can be adjusted",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber105",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber104",
     "onReport",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber106",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber105",
     "onReport Should track all order changes",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber171",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber159",
     "sendToWebServer",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber172",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber160",
     "sendToWebServer Should broadcast payload to socket server",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber84",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber83",
     "setOrderInProgress",
     "test"
   ],
   [
     "",
-    "test-file/tests/baseExchange.spec.ts.html#lineNumber85",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber84",
     "setOrderInProgress Should put an order in/out of progress",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber53",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber41",
     "subscribeToExchangeEvents",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber54",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber42",
     "subscribeToExchangeEvents Should subscribe to orderbook once with 2 configs: same pair, different interval",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber84",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber72",
     "subscribeToExchangeEvents Should subscribe to orderbook twice with 2 configs: different pair, same interval",
     "test"
   ],
   [
     "",
-    "test-file/tests/sockTrader.spec.ts.html#lineNumber115",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber103",
     "subscribeToExchangeEvents Should subscribe to orderbook/candles once with 2 configs: same pair, same interval",
     "test"
   ],
