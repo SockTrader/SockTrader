@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/core/backTester.ts | socktrader</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="socktrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/cwouter/SockTrader"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core">core</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-analyzers">core/analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-exchanges">core/exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-strategy">core/strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossDown">crossDown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossUp">crossUp</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-web">core/web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategies">strategies</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/myStrategy.ts~MyStrategy.html">MyStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html">SimpleMovingAverage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html">TopOfOrderbook</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/core/backTester.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import fs from &quot;fs&quot;;
+import mkdirp from &quot;mkdirp&quot;;
+import {lowercase, numbers, uppercase} from &quot;nanoid-dictionary&quot;;
+import generate from &quot;nanoid/generate&quot;;
+import path from &quot;path&quot;;
+import rimraf from &quot;rimraf&quot;;
+import util from &quot;util&quot;;
+import {ICandle} from &quot;./candleCollection&quot;;
+import CandleLoader, {Parser} from &quot;./candleLoader&quot;;
+import localExchange from &quot;./exchanges/localExchange&quot;;
+import LocalExchange from &quot;./exchanges/localExchange&quot;;
+import {IOrder} from &quot;./orderInterface&quot;;
+import SockTrader, {ISockTraderConfig} from &quot;./sockTrader&quot;;
+
+/**
+ * The BackTester enables you to test your strategy against a fake dummy exchange
+ * and optimize to the point of content
+ * @class BackTester
+ */
+export default class BackTester extends SockTrader {
+
+    private static CACHE_FOLDER = path.resolve(&quot;.sockTrader&quot;);
+    private candleLoader?: CandleLoader;
+
+    /**
+     * Creates a new BackTester
+     * @param {ISockTraderConfig} config
+     */
+    constructor(config: ISockTraderConfig = {webServer: true}) {
+        super(config);
+
+        this.exchange = localExchange.getInstance();
+    }
+
+    /**
+     * Sets the loader responsible for loading local file data into
+     * an in memory candle collection
+     * @param {string} inputPath the path to the file containing candles
+     * @param {Parser} parser the parser for transforming the data
+     * @returns {this}
+     */
+    setCandleLoader(inputPath: string, parser?: Parser): this {
+        this.candleLoader = new CandleLoader(inputPath, parser);
+
+        return this;
+    }
+
+    async start(): Promise&lt;void&gt; {
+        await super.start();
+
+        if (!this.candleLoader) {
+            throw new Error(&quot;No candle loader defined.&quot;);
+        }
+
+        if (!this.eventsBound) {
+            this.subscribeToExchangeEvents(this.strategyConfigurations);
+
+            this.strategyConfigurations.forEach(c =&gt; {
+                const strategy = new c.strategy(c.pair, this.exchange);
+                this.bindStrategyToExchange(strategy);
+                this.bindExchangeToStrategy(strategy);
+                this.bindExchangeToSocketServer();
+            });
+
+            this.eventsBound = true;
+        }
+
+        const candles: ICandle[] = (await this.candleLoader.parse()).toArray();
+        if (this.webServer) {
+            await BackTester.createCache();
+            await BackTester.clearCache();
+            await this.writeCandleCache(candles);
+        }
+
+        await (this.exchange as LocalExchange).emitCandles(candles);
+    }
+
+    private static async clearCache(): Promise&lt;void&gt; {
+        const rmrf = util.promisify(rimraf);
+        await rmrf(`${BackTester.CACHE_FOLDER}/*`);
+    }
+
+    private static async createCache(): Promise&lt;void&gt; {
+        const mkdir = util.promisify(mkdirp);
+        await mkdir(BackTester.CACHE_FOLDER);
+    }
+
+    private bindExchangeToSocketServer() {
+        this.exchange.on(&quot;app.report&quot;, (order: IOrder) =&gt; this.sendToWebServer(&quot;REPORT&quot;, order));
+    }
+
+    private writeCandleCache(candles: ICandle[]): Promise&lt;string&gt; {
+        return new Promise((resolve, reject) =&gt; {
+            const fileName = generate(`${lowercase}${uppercase}${numbers}`, 6);
+            const cacheFile = path.resolve(BackTester.CACHE_FOLDER, `${fileName}.json`);
+
+            const response = JSON.stringify({type: &quot;CANDLES&quot;, payload: {pair: &quot;&quot;, candles}});
+            fs.writeFile(cacheFile, response, err =&gt; {
+                if (err) return reject(err);
+
+                this.sendToWebServer(&quot;CANDLE_FILE&quot;, cacheFile);
+                resolve(cacheFile);
+            });
+        });
+
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
