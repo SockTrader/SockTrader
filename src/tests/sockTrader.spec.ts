@@ -5,7 +5,6 @@ import SockTrader from "../core/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
 import {Pair} from "../core/types/pair";
 import objectContaining = jasmine.objectContaining;
-import {server} from "websocket";
 
 class ConcreteSockTrader extends SockTrader {
 
@@ -17,10 +16,6 @@ class ConcreteSockTrader extends SockTrader {
 
     getExchange(): IExchange {
         return this.exchange;
-    }
-
-    setWebserver(webServer :any){
-        this.webServer = webServer;
     }
 }
 
@@ -173,12 +168,12 @@ describe("bindStrategyToExchange", () => {
 
 describe("sendToWebServer", () => {
     test("Should broadcast payload to socket server", () => {
-        const webServer: server = new server();
-        const spyBroadcast = jest.spyOn(webServer, "broadcast");
+        const childSend = jest.fn();
 
-        sockTrader.setWebserver(webServer);
+        // @ts-ignore
+        sockTrader["webServer"] = {send: childSend};
         sockTrader["sendToWebServer"]("type",  "payload");
-        expect(spyBroadcast).toBeCalledWith("ipc.message", objectContaining({
+        expect(childSend).toBeCalledWith(objectContaining({
             type: "type",
             payload: "payload"
         }));
