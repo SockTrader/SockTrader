@@ -2,11 +2,10 @@ import {sma as SMA} from "technicalindicators";
 import {ICandle} from "../core/candleCollection";
 import {IExchange} from "../core/exchanges/exchangeInterface";
 import logger from "../core/logger";
-import Orderbook from "../core/orderbook";
 import {IOrder, OrderStatus} from "../core/orderInterface";
 import BaseStrategy from "../core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../core/strategy/utils";
-import {Pair} from "../types/pair";
+import {Pair} from "../core/types/pair";
 
 /**
  * Strategy using simple moving average

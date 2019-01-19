@@ -3,9 +3,8 @@ import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 import {IExchange} from "../core/exchanges/exchangeInterface";
 import SockTrader from "../core/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
-import {Pair} from "../types/pair";
+import {Pair} from "../core/types/pair";
 import objectContaining = jasmine.objectContaining;
-import spawnServer from "../core/web/spawnServer";
 import {server} from "websocket";
 
 class ConcreteSockTrader extends SockTrader {

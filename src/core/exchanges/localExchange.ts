@@ -1,7 +1,6 @@
-import {Pair} from "../../types/pair";
 import {ICandle} from "../candleCollection";
-import CandleLoader from "../candleLoader";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
+import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
 
 export interface IAssetMap {

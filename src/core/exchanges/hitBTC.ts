@@ -1,11 +1,11 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
-import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../candleCollection";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../orderInterface";
+import {Pair} from "../types/pair";
 import BaseExchange, {IOrderbookData, IResponseMapper} from "./baseExchange";
 import HitBTCMapper from "./hitBTCMapper";
 

@@ -2,11 +2,11 @@ import {EventEmitter} from "events";
 import moment from "moment";
 import {Error} from "tslint/lib/error";
 import {IMessage} from "websocket";
-import {Pair} from "../../types/pair";
 import {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
+import {Pair} from "../types/pair";
 import BaseExchange, {IResponseMapper} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 

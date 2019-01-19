@@ -8,7 +8,7 @@ import HitBTC, {CandleInterval} from "../core/exchanges/hitBTC";
 import CandleCollection, {ICandle} from "../core/candleCollection";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
-import {Pair} from "../types/pair";
+import {Pair} from "../core/types/pair";
 import {IOrderbookData} from "../core/exchanges/baseExchange";
 
 const pair: Pair = ["BTC", "USD"];

@@ -4,7 +4,7 @@ import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import {Error} from "tslint/lib/error";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
-import {Pair} from "../../types/pair";
+import {Pair} from "../types/pair";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import logger from "../logger";
 import Orderbook, {IOrderbookEntry} from "../orderbook";

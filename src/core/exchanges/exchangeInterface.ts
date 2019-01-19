@@ -1,8 +1,8 @@
 import {EventEmitter} from "events";
-import {Pair} from "../../types/pair";
 import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../orderInterface";
+import {Pair} from "../types/pair";
 import {IOrderbookData, ITradeablePair} from "./baseExchange";
 
 /**

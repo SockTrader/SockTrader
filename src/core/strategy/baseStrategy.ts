@@ -1,10 +1,10 @@
 import {EventEmitter} from "events";
 import {Error} from "tslint/lib/error";
-import {Pair} from "../../types/pair";
 import {ICandle} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IOrder, OrderSide} from "../orderInterface";
+import {Pair} from "../types/pair";
 
 export interface IStrategyClass<T> {
     new(pair: Pair, exchange: IExchange): T;
