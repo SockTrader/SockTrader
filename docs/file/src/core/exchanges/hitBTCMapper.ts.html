@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/core/exchanges/hitBTCMapper.ts | socktrader</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="socktrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/cwouter/SockTrader"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core">core</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-analyzers">core/analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-exchanges">core/exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-strategy">core/strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossDown">crossDown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossUp">crossUp</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-web">core/web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategies">strategies</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/myStrategy.ts~MyStrategy.html">MyStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html">SimpleMovingAverage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html">TopOfOrderbook</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/core/exchanges/hitBTCMapper.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {EventEmitter} from &quot;events&quot;;
+import moment from &quot;moment&quot;;
+import {Error} from &quot;tslint/lib/error&quot;;
+import {IMessage} from &quot;websocket&quot;;
+import {Pair} from &quot;../../types/pair&quot;;
+import {ICandle, ICandleInterval} from &quot;../candleCollection&quot;;
+import logger from &quot;../logger&quot;;
+import {IOrderbookEntry} from &quot;../orderbook&quot;;
+import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from &quot;../orderInterface&quot;;
+import BaseExchange, {IResponseMapper} from &quot;./baseExchange&quot;;
+import {CandleInterval} from &quot;./hitBTC&quot;;
+
+export interface IHitBTCOrderbookResponse {
+    jsonrpc: string;
+    method: string;
+    params: {
+        ask: IOrderbookEntry[],
+        bid: IOrderbookEntry[],
+        sequence: number,
+        symbol: string,
+    };
+}
+
+interface IHitBTCCandlesResponse {
+    jsonrpc: string;
+    method: string;
+    params: {
+        data: Array&lt;{
+            close: string;
+            max: string;
+            min: string;
+            open: string;
+            timestamp: string;
+            volume: string;
+            volumeQuote: string;
+        }&gt;;
+        period: string;
+        symbol: string;
+    };
+}
+
+interface IHitBTCAuthenticateResponse {
+    id: string;
+    jsonrpc: string;
+    result: boolean;
+}
+
+interface IHitBTCGetSymbolsResponse {
+    id: string;
+    jsonrpc: string;
+    result: Array&lt;{
+        baseCurrency: string;
+        feeCurrency: string;
+        id: string;
+        provideLiquidityRate: string;
+        quantityIncrement: string;
+        quoteCurrency: string;
+        takeLiquidityRate: string;
+        tickSize: string;
+    }&gt;;
+}
+
+interface IHitBTCReportResponse {
+    jsonrpc: string;
+    method: string;
+    params: Array&lt;{
+        clientOrderId: string;
+        createdAt: string;
+        cumQuantity: string;
+        id: string;
+        originalRequestClientOrderId?: string;
+        postOnly: boolean;
+        price: string;
+        quantity: string;
+        reportType: string;
+        side: string;
+        status: string;
+        symbol: string;
+        timeInForce: string;
+        type: string;
+        updatedAt: string;
+    }&gt;;
+}
+
+/**
+ * The HitBTCMapper maps incoming api events and wraps them with additional checks/logic
+ */
+export default class HitBTCMapper extends EventEmitter implements IResponseMapper {
+
+    /**
+     * Create a new HitBTCMapper
+     * @param {BaseExchange} exchange the exchange to map events from
+     */
+    constructor(private exchange: BaseExchange) {
+        super();
+
+        // Listen for all events that onReceive will be throwing..
+        this.on(&quot;api.snapshotCandles&quot;, data =&gt; this.onUpdateCandles(data, &quot;set&quot;));
+        this.on(&quot;api.updateCandles&quot;, data =&gt; this.onUpdateCandles(data, &quot;update&quot;));
+        this.on(&quot;api.snapshotOrderbook&quot;, data =&gt; this.onUpdateOrderbook(data, &quot;setOrders&quot;));
+        this.on(&quot;api.updateOrderbook&quot;, data =&gt; this.onUpdateOrderbook(data, &quot;addIncrement&quot;));
+        this.on(&quot;api.report&quot;, data =&gt; this.onReport(data));
+        this.on(&quot;api.login&quot;, data =&gt; this.onLogin(data));
+        this.on(&quot;api.getSymbols&quot;, data =&gt; this.onGetSymbols(data)); // @TODO fix!
+    }
+
+    /**
+     * Removes HitBTCMapper listeners
+     */
+    destroy(): void {
+        this.removeAllListeners();
+    }
+
+    /**
+     * Emits received message as api event
+     * @param {IMessage} msg
+     */
+    onReceive(msg: IMessage): void {
+        if (msg.type !== &quot;utf8&quot;) {
+            throw new Error(&quot;Response is not UTF8!&quot;);
+        }
+
+        if (msg.utf8Data) {
+            const d = JSON.parse(msg.utf8Data);
+            this.emit(`api.${d.method || d.id}`, d);
+        }
+    }
+
+    /**
+     * Maps HitBTC data to candle collection
+     * @param {IHitBTCCandlesResponse} data the date from hitBTC
+     * @returns {ICandle[]} the candle collection
+     */
+    private mapCandles(data: IHitBTCCandlesResponse): ICandle[] {
+        return data.params.data.map&lt;ICandle&gt;(candle =&gt; ({
+            close: parseFloat(candle.close),
+            high: parseFloat(candle.max),
+            low: parseFloat(candle.min),
+            open: parseFloat(candle.open),
+            timestamp: moment(candle.timestamp).second(0).millisecond(0),
+            volume: parseFloat(candle.volumeQuote),
+        }));
+    }
+
+    /**
+     * Wraps the returning symbols (allowed pairs)
+     * @param {IHitBTCGetSymbolsResponse} response
+     */
+    private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
+        const result = response.result.map(({id, tickSize, quantityIncrement, baseCurrency, quoteCurrency}) =&gt; ({
+            id: [baseCurrency, quoteCurrency] as Pair,
+            quantityIncrement: parseFloat(quantityIncrement),
+            tickSize: parseFloat(tickSize),
+        }));
+        this.exchange.onCurrenciesLoaded(result);
+    }
+
+    /**
+     * Wraps login callback
+     * @param {IHitBTCAuthenticateResponse} data
+     */
+    private onLogin(data: IHitBTCAuthenticateResponse): void {
+        this.exchange.isAuthenticated = data.result;
+        this.exchange.isReady();
+    }
+
+    /**
+     * Wraps incoming report (order updates)
+     * @param {IHitBTCReportResponse} data report data
+     */
+    private onReport(data: IHitBTCReportResponse): void {
+        data.params.forEach(report =&gt; {
+            this.exchange.onReport({
+                id: report.clientOrderId,
+                originalId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
+                createdAt: moment(report.createdAt),
+                price: parseFloat(report.price),
+                quantity: parseFloat(report.quantity),
+                reportType: report.reportType as ReportType,
+                side: report.side as OrderSide,
+                status: report.status as OrderStatus,
+                pair: this.exchange.currencies[report.symbol].id,
+                timeInForce: report.timeInForce as OrderTimeInForce,
+                type: report.type as OrderType,
+                updatedAt: moment(report.updatedAt),
+            });
+        });
+    }
+
+    /**
+     * Wraps incoming updated candles
+     * @param {IHitBTCCandlesResponse} data the candles
+     * @param {&quot;set&quot; | &quot;update&quot;} method overwrite or update
+     */
+    private onUpdateCandles(data: IHitBTCCandlesResponse, method: &quot;set&quot; | &quot;update&quot;) {
+        let interval: ICandleInterval | undefined;
+        Object.keys(CandleInterval).some(key =&gt; {
+            if (CandleInterval[key].code === data.params.period) {
+                interval = CandleInterval[key];
+                return true;
+            }
+            return false;
+        });
+
+        if (interval !== undefined) {
+            const pair = this.exchange.currencies[data.params.symbol].id;
+            return this.exchange.onUpdateCandles(pair, this.mapCandles(data), interval, method);
+        }
+
+        logger.debug(`Interval: &quot;${data.params.period}&quot; is not recognized by the system. The exchange callback &quot;onUpdateCandles&quot; was not triggered.`);
+    }
+
+    /**
+     * Wraps incoming orderbook
+     * @param {{ask: IOrderbookEntry[]; bid: IOrderbookEntry[]; sequence: number; symbol: string}} ob the orderbook
+     * @param {&quot;addIncrement&quot; | &quot;setOrders&quot;} method update or overwrite
+     */
+    private onUpdateOrderbook({params: ob}: IHitBTCOrderbookResponse, method: &quot;addIncrement&quot; | &quot;setOrders&quot;): void {
+        this.exchange.onUpdateOrderbook({
+            ask: ob.ask,
+            bid: ob.bid,
+            pair: this.exchange.currencies[ob.symbol].id,
+            sequence: ob.sequence,
+        }, method);
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

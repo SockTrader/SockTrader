@@ -1,0 +1,247 @@
+{
+  "coverage": "70.91%",
+  "expectCount": 251,
+  "actualCount": 178,
+  "files": {
+    "src/backtest.ts": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/core/analyzers/capitalAnalyzer.ts": {
+      "expectCount": 5,
+      "actualCount": 4,
+      "undocumentLines": [
+        15
+      ]
+    },
+    "src/core/backTester.ts": {
+      "expectCount": 11,
+      "actualCount": 8,
+      "undocumentLines": [
+        25,
+        39,
+        63
+      ]
+    },
+    "src/core/candleCollection.ts": {
+      "expectCount": 16,
+      "actualCount": 13,
+      "undocumentLines": [
+        24,
+        25,
+        56
+      ]
+    },
+    "src/core/candleLoader.ts": {
+      "expectCount": 6,
+      "actualCount": 3,
+      "undocumentLines": [
+        10,
+        11,
+        12
+      ]
+    },
+    "src/core/exchanges/baseExchange.ts": {
+      "expectCount": 33,
+      "actualCount": 31,
+      "undocumentLines": [
+        18,
+        389
+      ]
+    },
+    "src/core/exchanges/hitBTC.ts": {
+      "expectCount": 20,
+      "actualCount": 17,
+      "undocumentLines": [
+        6,
+        32,
+        33
+      ]
+    },
+    "src/core/exchanges/hitBTCMapper.ts": {
+      "expectCount": 11,
+      "actualCount": 10,
+      "undocumentLines": [
+        19
+      ]
+    },
+    "src/core/exchanges/localExchange.ts": {
+      "expectCount": 23,
+      "actualCount": 21,
+      "undocumentLines": [
+        195,
+        237
+      ]
+    },
+    "src/core/liveTrader.ts": {
+      "expectCount": 6,
+      "actualCount": 4,
+      "undocumentLines": [
+        19,
+        43
+      ]
+    },
+    "src/core/logger.ts": {
+      "expectCount": 10,
+      "actualCount": 0,
+      "undocumentLines": [
+        3,
+        4,
+        9,
+        10,
+        11,
+        17,
+        18,
+        22,
+        26,
+        30
+      ]
+    },
+    "src/core/orderbook.ts": {
+      "expectCount": 13,
+      "actualCount": 10,
+      "undocumentLines": [
+        26,
+        27,
+        28
+      ]
+    },
+    "src/core/sockTrader.ts": {
+      "expectCount": 12,
+      "actualCount": 9,
+      "undocumentLines": [
+        14,
+        15,
+        31
+      ]
+    },
+    "src/core/strategy/baseStrategy.ts": {
+      "expectCount": 10,
+      "actualCount": 7,
+      "undocumentLines": [
+        11,
+        13,
+        14
+      ]
+    },
+    "src/core/strategy/utils.ts": {
+      "expectCount": 3,
+      "actualCount": 2,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "src/core/web/spawnServer.ts": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        5,
+        6
+      ]
+    },
+    "src/core/web/webServer.ts": {
+      "expectCount": 10,
+      "actualCount": 6,
+      "undocumentLines": [
+        19,
+        24,
+        44,
+        120
+      ]
+    },
+    "src/core/web/whitelist.ts": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        2
+      ]
+    },
+    "src/index.ts": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        7,
+        8
+      ]
+    },
+    "src/strategies/myStrategy.ts": {
+      "expectCount": 5,
+      "actualCount": 4,
+      "undocumentLines": [
+        13
+      ]
+    },
+    "src/strategies/simpleMovingAverage.ts": {
+      "expectCount": 5,
+      "actualCount": 4,
+      "undocumentLines": [
+        15
+      ]
+    },
+    "src/strategies/topOfOrderBook.ts": {
+      "expectCount": 21,
+      "actualCount": 18,
+      "undocumentLines": [
+        13,
+        15,
+        16
+      ]
+    },
+    "src/tests/baseExchange.spec.ts": {
+      "expectCount": 6,
+      "actualCount": 1,
+      "undocumentLines": [
+        11,
+        20,
+        24,
+        25,
+        38
+      ]
+    },
+    "src/tests/baseStrategy.spec.ts": {
+      "expectCount": 3,
+      "actualCount": 1,
+      "undocumentLines": [
+        16,
+        17
+      ]
+    },
+    "src/tests/candleCollection.spec.ts": {
+      "expectCount": 3,
+      "actualCount": 0,
+      "undocumentLines": [
+        7,
+        8,
+        9
+      ]
+    },
+    "src/tests/hitBTC.spec.ts": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        10
+      ]
+    },
+    "src/tests/orderbook.spec.ts": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        6
+      ]
+    },
+    "src/tests/sockTrader.spec.ts": {
+      "expectCount": 11,
+      "actualCount": 4,
+      "undocumentLines": [
+        5,
+        23,
+        46,
+        49,
+        50,
+        51,
+        52
+      ]
+    }
+  }
+}

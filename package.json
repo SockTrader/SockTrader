@@ -52,6 +52,12 @@
     "destination": "./docs",
     "plugins": [
       {
+        "name": "esdoc-typescript-plugin",
+        "option": {
+          "enable": true
+        }
+      },
+      {
         "name": "esdoc-standard-plugin"
       },
       {
@@ -111,6 +117,7 @@
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-node": "^1.0.3",
     "esdoc-standard-plugin": "^1.0.0",
+    "esdoc-typescript-plugin": "^1.0.1",
     "jest": "^23.6.0",
     "pre-commit": "^1.2.2",
     "sinon": "^7.1.1",
