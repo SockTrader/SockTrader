@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Websocket based trading bot for cryptocurrencies",
   "main": "src/index.ts",
-  "repository": "cwouter/SockTrader",
+  "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
     "test": "jest --coverage --ci --forceExit",
     "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run compile && node ./build/index.js\"",
@@ -48,7 +48,7 @@
     "delay": "2500"
   },
   "esdoc": {
-    "source": "./src",
+    "source": "./src/core",
     "destination": "./docs",
     "plugins": [
       {
@@ -58,7 +58,22 @@
         }
       },
       {
-        "name": "esdoc-standard-plugin"
+        "name": "esdoc-standard-plugin",
+        "option": {
+          "brand": {
+            "logo": "./docs/SockTraderLogo.png",
+            "title": "SockTrader",
+            "description": "Websocket based trading bot for cryptocurrencies",
+            "repository": "https://github.com/SockTrader/SockTrader",
+            "site": "https://socktrader.github.io/SockTrader/"
+          },
+          "test": {
+            "source": "./src/tests",
+            "interfaces": ["describe", "it", "context", "suite", "test"],
+            "includes": ["(spec|Spec|test|Test)\\.ts$"],
+            "excludes": ["\\.config\\.ts$"]
+          }
+        }
       },
       {
         "name": "esdoc-node"

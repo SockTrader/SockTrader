@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl">
-  <title data-ice="title">Reference | socktrader</title>
+  <title data-ice="title">Reference | SockTrader</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="socktrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
+<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="SockTrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
-  <a href="./">Home</a>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.png" style="width:34px;"></a>
   
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
-  
+  <a href="test.html" data-ice="testLink">Test</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -24,31 +24,28 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-<a style="position:relative; top:3px;" href="https://github.com/cwouter/SockTrader"><img width="20px" src="./image/github.png"></a></header>
+<a style="position:relative; top:3px;" href="https://github.com/SockTrader/SockTrader"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core">core</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-analyzers">core/analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-exchanges">core/exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#analyzers">analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#exchanges">exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-strategy">core/strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategy">strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossDown">crossDown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossUp">crossUp</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#core-web">core/web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#web">web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategies">strategies</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/myStrategy.ts~MyStrategy.html">MyStrategy</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html">SimpleMovingAverage</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html">TopOfOrderbook</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -59,7 +56,7 @@
   <div>
     
   <div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="core">core</h2>
+      
       <div data-ice="dirSummary"><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
   <tbody>
@@ -78,7 +75,7 @@
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/backTester.ts~BackTester.html">BackTester</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/backTester.ts~BackTester.html">BackTester</a></span></span>
         </p>
       </div>
       <div>
@@ -108,7 +105,7 @@ and optimize to the point of content</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span>
         </p>
       </div>
       <div>
@@ -137,7 +134,7 @@ and optimize to the point of content</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span>
         </p>
       </div>
       <div>
@@ -167,7 +164,7 @@ in data for in memory processing</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span>
         </p>
       </div>
       <div>
@@ -197,7 +194,7 @@ a live environment on an exchange</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span>
         </p>
       </div>
       <div>
@@ -225,7 +222,7 @@ a live environment on an exchange</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span>
         </p>
       </div>
       <div>
@@ -250,7 +247,7 @@ a local exchange</li>
 </div>
     </div>
 <div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="core-analyzers">core/analyzers</h2>
+      <h2 data-ice="dirPath" id="analyzers">analyzers</h2>
       <div data-ice="dirSummary"><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
   <tbody>
@@ -269,7 +266,7 @@ a local exchange</li>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span>
         </p>
       </div>
       <div>
@@ -290,7 +287,7 @@ your strategy placed</p>
 </div>
     </div>
 <div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="core-exchanges">core/exchanges</h2>
+      <h2 data-ice="dirPath" id="exchanges">exchanges</h2>
       <div data-ice="dirSummary"><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
   <tbody>
@@ -309,7 +306,7 @@ your strategy placed</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span>
         </p>
       </div>
       <div>
@@ -338,7 +335,7 @@ your strategy placed</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span>
         </p>
       </div>
       <div>
@@ -367,7 +364,7 @@ your strategy placed</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span>
         </p>
       </div>
       <div>
@@ -396,7 +393,7 @@ your strategy placed</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span>
         </p>
       </div>
       <div>
@@ -445,7 +442,7 @@ strategy testing</p>
 </div>
     </div>
 <div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="core-strategy">core/strategy</h2>
+      <h2 data-ice="dirPath" id="strategy">strategy</h2>
       <div data-ice="dirSummary"><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
   <tbody>
@@ -464,7 +461,7 @@ strategy testing</p>
           <span data-ice="kind-icon" class="kind-class">C</span>
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span>
+          <span class="code" data-ice="name"><span><a href="class/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span>
         </p>
       </div>
       <div>
@@ -542,7 +539,7 @@ strategy testing</p>
 </div>
     </div>
 <div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="core-web">core/web</h2>
+      <h2 data-ice="dirPath" id="web">web</h2>
       <div data-ice="dirSummary"><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
   <tbody>
@@ -607,113 +604,14 @@ strategy testing</p>
 </table>
 </div>
     </div>
-<div data-ice="dirSummaryWrap">
-      <h2 data-ice="dirPath" id="strategies">strategies</h2>
-      <div data-ice="dirSummary"><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">summary</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          <span data-ice="kind-icon" class="kind-class">C</span>
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/strategies/myStrategy.ts~MyStrategy.html">MyStrategy</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          <span data-ice="kind-icon" class="kind-class">C</span>
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html">SimpleMovingAverage</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Strategy using simple moving average
-This serves as a demo strategy and is on its own too simplistic
-for productional use</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          <span data-ice="kind-icon" class="kind-class">C</span>
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html">TopOfOrderbook</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-    </div>
 </div>
 
   <div class="identifier-dir-tree" data-ice="dirTreeWrap">
     <div class="identifier-dir-tree-header">Directories</div>
-    <div class="identifier-dir-tree-content" data-ice="dirTree"><div style="padding-left: 0em"><a href="#core">core</a></div>
-<div style="padding-left: 1em"><a href="#core-analyzers">analyzers</a></div>
-<div style="padding-left: 1em"><a href="#core-exchanges">exchanges</a></div>
-<div style="padding-left: 1em"><a href="#core-strategy">strategy</a></div>
-<div style="padding-left: 1em"><a href="#core-web">web</a></div>
-<div style="padding-left: 0em"><a href="#strategies">strategies</a></div></div>
+    <div class="identifier-dir-tree-content" data-ice="dirTree"><div style="padding-left: 0em"><a href="#analyzers">analyzers</a></div>
+<div style="padding-left: 0em"><a href="#exchanges">exchanges</a></div>
+<div style="padding-left: 0em"><a href="#strategy">strategy</a></div>
+<div style="padding-left: 0em"><a href="#web">web</a></div></div>
   </div>
 </div>
 </div>

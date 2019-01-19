@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../">
-  <title data-ice="title">Variable | SockTrader</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">core/exchanges/exchangeInterface.ts | SockTrader</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -50,159 +50,143 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">Variable</h1>
-<div data-ice="summaries"><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Static Public Summary</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-<div data-ice="details"><h2 data-ice="title">Static Public </h2>
+<div class="content" data-ice="content"><h1 data-ice="title">core/exchanges/exchangeInterface.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {EventEmitter} from &quot;events&quot;;
+import {Pair} from &quot;../../types/pair&quot;;
+import CandleCollection, {ICandle, ICandleInterval} from &quot;../candleCollection&quot;;
+import Orderbook from &quot;../orderbook&quot;;
+import {IOrder, OrderSide} from &quot;../orderInterface&quot;;
+import {IOrderbookData, ITradeablePair} from &quot;./baseExchange&quot;;
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-CandleInterval">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">CandleInterval</span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">source</a></span></span>
-    </span>
-  </h3>
+/**
+ * The IExchange represents a marketplace to buy and sell
+ * cryptocurrencies
+ */
+export interface IExchange extends EventEmitter {
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {CandleInterval} from &apos;<span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">socktrader/core/exchanges/hitBTC.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
+    isAuthenticated: boolean;
+    isCurrenciesLoaded: boolean;
 
-  
+    /**
+     * Adjusts existing order on exchange
+     * @param order the order to adjust
+     * @param price the new price
+     * @param qty the new quantity
+     */
+    adjustOrder(order: IOrder, price: number, qty: number): void;
 
-  <div data-ice="properties">
-</div>
+    /**
+     * Signals a buy to the exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price at which to buy/sell
+     * @param {number} qty quantity to buy/sell
+     */
+    buy(pair: Pair, price: number, qty: number): void;
 
-  
+    /**
+     * Cancel existing order on exchange
+     * @param {IOrder} order to cancel
+     */
+    cancelOrder(order: IOrder): void;
 
-  
+    /**
+     * Connects to the exchange with given connection properties
+     * @param {string} connectionString web socket url to connect to
+     */
+    connect(connectionString?: string): void;
 
-  
+    /**
+     * Places an order on the exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price at which to buy/sell
+     * @param {number} qty quantity to buy/sell
+     * @param {OrderSide} side buy or sell
+     * @returns {string} order id
+     */
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
 
-  
+    /**
+     * Removes the exchanges from the running application
+     * i.e. removes the event listeners
+     */
+    destroy(): void;
 
-  
+    /**
+     * Gets all orders that have not yet been filled
+     * @returns {IOrder[]}
+     */
+    getOpenOrders(): IOrder[];
 
-  
+    /**
+     * Gets all (of everyone) open buy and sell order for a given pair on the
+     * exchange
+     * @param pair crypto pair (BTC USD/BTC ETH)
+     * @returns {Orderbook} open buys and sells for pair
+     */
+    getOrderbook(pair: Pair): Orderbook;
 
-  
+    /**
+     * Fires when exchange is created
+     */
+    onCreate(): void;
 
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-actions">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">actions</span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/web/whitelist.ts.html#lineNumber2">source</a></span></span>
-    </span>
-  </h3>
+    /**
+     * Registers all tradeable currencies on exchange
+     * @param {ITradeablePair[]} currencies
+     */
+    onCurrenciesLoaded(currencies: ITradeablePair[]): void;
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {actions} from &apos;<span><a href="file/core/web/whitelist.ts.html#lineNumber2">socktrader/core/web/whitelist.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
+    /**
+     * Updates the local order when exchange sends updated information
+     * @param {IOrder} order the order to update
+     */
+    onReport(order: IOrder): void;
 
-  
+    /**
+     * Updates local candle collection with collection from exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {ICandle[]} candles updated candles
+     * @param {ICandleInterval} interval candle interval
+     * @param {Extract&lt;K extends keyof CandleCollection, &quot;set&quot; | &quot;update&quot;&gt;} method whether to update or overwrite
+     */
+    onUpdateCandles&lt;K extends keyof CandleCollection&gt;(pair: Pair, candles: ICandle[], interval: ICandleInterval, method: Extract&lt;K, &quot;set&quot; | &quot;update&quot;&gt;): void;
 
-  <div data-ice="properties">
-</div>
+    /**
+     * Updates local order collection with collection from exchange
+     * @param {IOrderbookData} orderBook the orders
+     * @param {Extract&lt;K extends keyof Orderbook, &quot;setOrders&quot; | &quot;addIncrement&quot;&gt;} method whether to update or overwrite
+     */
+    onUpdateOrderbook&lt;K extends keyof Orderbook&gt;(orderBook: IOrderbookData, method: Extract&lt;K, &quot;setOrders&quot; | &quot;addIncrement&quot;&gt;): void;
 
-  
+    /**
+     * Sends a sell signal to the exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price at which to sell
+     * @param {number} qty to buy
+     */
+    sell(pair: Pair, price: number, qty: number): void;
 
-  
+    /**
+     * Registers to a candle collection for a given pair/interval
+     * e.g. BTC/ETH every 5 minutes
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {ICandleInterval} interval time interval
+     */
+    subscribeCandles(pair: Pair, interval: ICandleInterval): void;
 
-  
+    /**
+     * Registers to order book for given pair
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     */
+    subscribeOrderbook(pair: Pair): void;
 
-  
+    /**
+     * Registers to order updates
+     */
+    subscribeReports(): void;
+}
+</code></pre>
 
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 </div>
 
 <footer class="footer">
