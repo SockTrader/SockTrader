@@ -1,9 +1,16 @@
+import fs from "fs";
+import mkdirp from "mkdirp";
+import {lowercase, numbers, uppercase} from "nanoid-dictionary";
+import generate from "nanoid/generate";
+import path from "path";
+import rimraf from "rimraf";
+import util from "util";
+import {ICandle} from "./candleCollection";
 import CandleLoader, {Parser} from "./candleLoader";
-import {IExchange} from "./exchanges/exchangeInterface";
 import localExchange from "./exchanges/localExchange";
 import LocalExchange from "./exchanges/localExchange";
+import {IOrder} from "./orderInterface";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
-import BaseStrategy from "./strategy/baseStrategy";
 
 /**
  * @class BackTester
@@ -11,18 +18,17 @@ import BaseStrategy from "./strategy/baseStrategy";
  */
 export default class BackTester extends SockTrader {
 
+    private static CACHE_FOLDER = path.resolve(".sockTrader");
     private candleLoader?: CandleLoader;
 
     constructor(config: ISockTraderConfig = {webServer: true}) {
         super(config);
 
-        // @TODO replace with local exchange!
         this.exchange = localExchange.getInstance();
-        // this.exchange.emit("backtest.candles", []);
     }
 
-    setCandleLoader(path: string, parser?: Parser): this {
-        this.candleLoader = new CandleLoader(path, parser);
+    setCandleLoader(inputPath: string, parser?: Parser): this {
+        this.candleLoader = new CandleLoader(inputPath, parser);
 
         return this;
     }
@@ -40,64 +46,50 @@ export default class BackTester extends SockTrader {
             this.strategyConfigurations.forEach(c => {
                 const strategy = new c.strategy(c.pair, this.exchange);
                 this.bindStrategyToExchange(strategy);
-                this.bindExchangeToStrategy(strategy); // @TODO verify
+                this.bindExchangeToStrategy(strategy);
                 this.bindExchangeToSocketServer();
-                this.bindStrategyToSocketServer(strategy);
             });
 
             this.eventsBound = true;
         }
 
-        await (this.exchange as LocalExchange).emitCandles(this.candleLoader);
+        const candles: ICandle[] = (await this.candleLoader.parse()).toArray();
+        if (this.webServer) {
+            await BackTester.createCache();
+            await BackTester.clearCache();
+            await this.writeCandleCache(candles);
+        }
+
+        await (this.exchange as LocalExchange).emitCandles(candles);
     }
 
-    protected bindExchangeToStrategy(strategy: BaseStrategy): void {
-        super.bindExchangeToStrategy(strategy);
+    private static async clearCache(): Promise<void> {
+        const rmrf = util.promisify(rimraf);
+        await rmrf(`${BackTester.CACHE_FOLDER}/*`);
     }
 
-    // @TODO this won't work with multiple strategies
-    protected bindStrategyToSocketServer(strategy: BaseStrategy) {
-        if (!this.webServer) return;
+    private static async createCache(): Promise<void> {
+        const mkdir = util.promisify(mkdirp);
+        await mkdir(BackTester.CACHE_FOLDER);
+    }
 
-        // @TODO validate if a strategy is a backtest strategy or not??
-        this.exchange.on("app.report", (order: any) => {
-            console.log("report");
-            this.sendToSocketServer("REPORT", order);
+    private bindExchangeToSocketServer() {
+        this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
+    }
+
+    private writeCandleCache(candles: ICandle[]): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const fileName = generate(`${lowercase}${uppercase}${numbers}`, 6);
+            const cacheFile = path.resolve(BackTester.CACHE_FOLDER, `${fileName}.json`);
+
+            const response = JSON.stringify({type: "CANDLES", payload: {pair: "", candles}});
+            fs.writeFile(cacheFile, response, err => {
+                if (err) return reject(err);
+
+                this.sendToWebServer("CANDLE_FILE", cacheFile);
+                resolve(cacheFile);
+            });
         });
 
-        this.exchange.on("app.updateCandles", (candles: any) => {
-            // const result = candles.map((r: ICandle) => {
-            //     return {
-            //         h: r.high,
-            //         l: r.low,
-            //         c: r.close,
-            //         o: r.open,
-            //         v: r.volume,
-            //         t: r.timestamp.toString(),
-            //     };
-            // });
-
-            let i;
-            let j;
-            let temparray: any;
-            const chunk = 10;
-            for (i = 0, j = candles.length; i < j; i += chunk) {
-                temparray = candles.slice(i, i + chunk);
-                this.sendToSocketServer("CANDLES", temparray);
-                // setImmediate(() => this.sendToSocketServer("CANDLES", temparray));
-            }
-
-            // console.log(temparray);
-            // throw new Error("qkdzlkjd");
-            //
-            // temparray.forEach((c: any) => {
-            //     console.log(c.length);
-            // });
-        });
-
-        // @TODO send live/production reports to dashboard
-        // strategy.on("app.signal", sendSignal);
-        // strategy.on("app.adjustOrder", sendAdjustOrder);
-        // strategy.on("backtest.adjustOrder", sendAdjustOrder);
     }
 }

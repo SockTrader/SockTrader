@@ -1,37 +1,27 @@
 import fs from "fs";
 import http, {Server} from "http";
-import ipc from "node-ipc";
 import process from "process";
-import {connection, IMessage, server as WebSocketServer} from "websocket";
+import {connection, IMessage, request, server as WebSocketServer} from "websocket";
 import config from "../../config";
 import {actions} from "./whitelist";
 
-ipc.config.id = "webserver";
-ipc.config.retry = 1000;
-ipc.config.silent = false;
-
-export default class WebServer {
-    private static PORT = config.webServer.port;
+class WebServer {
+    static PORT = config.webServer.port;
     private client?: connection;
     private readonly httpServer: Server;
 
     private server: WebSocketServer;
 
     constructor() {
-        this.httpServer = http.createServer((request, response) => {
-            console.log((new Date()) + " Received request for " + request.url);
-            response.writeHead(404);
-            response.end();
+        this.ipcReceive();
+        this.httpServer = http.createServer((req, resp) => {
+            console.log((new Date()) + " Received request for " + req.url);
+            resp.writeHead(404);
+            resp.end();
         });
 
         this.server = new WebSocketServer({httpServer: this.httpServer});
-        this.connectIPC();
     }
-
-    createWebMessage = (data: any): IMessage => ({
-        type: "utf8",
-        utf8Data: JSON.stringify(data),
-    })
 
     /**
      * Initializes the WebSocketServer.
@@ -39,16 +29,19 @@ export default class WebServer {
      * -> accepts requests coming from a certain frontend.
      */
     start() {
-        this.httpServer.listen(WebServer.PORT, () => console.log(`WebServer ready on: ${WebServer.PORT}`));
+        this.httpServer.listen(WebServer.PORT, () => {
+            console.log(`WebServer listening on port: ${WebServer.PORT}`);
+            this.ipcSend({type: "READY"});
+        });
 
-        this.server.on("request", request => {
+        this.server.on("request", (req: request) => {
             // @TODO validate request, request.reject() if not valid
 
             if (this.client) {
                 return console.error("Max 1 client allowed!");
             }
 
-            this.client = request.accept("echo-protocol", request.origin);
+            this.client = req.accept("echo-protocol", req.origin);
 
             console.log((new Date()) + " Connection accepted.");
             this.client.on("message", ({type, utf8Data}: IMessage) => {
@@ -56,7 +49,8 @@ export default class WebServer {
                     return console.error("Incoming message is not correct");
                 }
 
-                this.ipcSend(JSON.parse(utf8Data));
+                const msg = JSON.parse(utf8Data);
+                if (actions.indexOf(msg.type) > -1) this.ipcSend(msg);
             });
 
             this.client.on("close", (reasonCode, description) => {
@@ -66,31 +60,27 @@ export default class WebServer {
         });
     }
 
-    private connectIPC() {
-        ipc.connectTo("server", () => {
-            ipc.of.server.on("connect", () => {
-                // ipc.log("IPC Connected to server!");
-                ipc.of.server.emit("STATUS", {payload: "IPC ready"});
-            });
-
-            ipc.of.server.on("disconnect", () => {
-                ipc.log("IPC Disconnected!");
-            });
-
-            this.ipcReceive();
-        });
+    /**
+     * Forward file content to
+     * @param cacheFile
+     */
+    private forwardCacheFile(cacheFile: string) {
+        const fileContent = fs.readFileSync(cacheFile, "utf8");
+        if (this.client) this.client.sendUTF(fileContent);
     }
 
     /**
      * Receives events coming from the trading bot.
-     * -> forward incoming events to the WebSocketServer.
+     * -> push incoming messages to the frontend.
      */
     private ipcReceive() {
-        ipc.of.server.on("ipc.message", ({type, payload}: { payload: any, type: string }) => {
-            ipc.log("WebServer server received a message!", type);
-
+        process.on("message", ({type, payload}) => {
             if (!type) {
                 throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+            }
+
+            if (type === "CANDLE_FILE") {
+                return this.forwardCacheFile(payload);
             }
 
             // Send data if a client is connected.
@@ -99,17 +89,15 @@ export default class WebServer {
     }
 
     /**
-     * Notify trading bot about things that are going on in the WebSocketServer.
+     * Notify trading bot about things that are going on in the frontend.
      * -> forward requests coming from a web frontend
      * -> notify when the server is initialized, new open connection, a closed connection, etc..
      * -> only allow whitelisted actions
      *
-     * @param message
+     * @param msg
      */
-    private ipcSend({type, payload}: { payload: any, type: string }) {
-        if (actions.indexOf(type) > -1 && process.send !== undefined) {
-            ipc.of.server.emit(type, payload);
-        }
+    private ipcSend(msg: any) {
+        if (process.send !== undefined) process.send(msg);
     }
 }
 

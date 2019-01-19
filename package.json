@@ -17,9 +17,12 @@
     "preset": "ts-jest",
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "<rootDir>/build/", "<rootDir>/node_modules/"
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/"
     ],
-    "collectCoverageFrom": ["src/**/*.{ts}"],
+    "collectCoverageFrom": [
+      "src/**/*.{ts}"
+    ],
     "globals": {
       "ts-jest": {
         "diagnostics": false
@@ -73,11 +76,13 @@
     "lodash.sortby": "^4.7.0",
     "lodash.uniqby": "^4.7.0",
     "lodash.uniqwith": "^4.5.0",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
     "moment": "^2.22.2",
     "nanoid": "^2.0.0",
     "nanoid-dictionary": "^2.0.0",
-    "node-ipc": "^9.1.1",
     "numeral": "^2.0.6",
+    "rimraf": "^2.6.3",
     "technicalindicators": "^2.0.5",
     "typescript": "^3.1.6",
     "websocket": "^1.0.28",
@@ -91,11 +96,12 @@
     "@types/lodash.sortby": "^4.7.4",
     "@types/lodash.uniqby": "^4.7.4",
     "@types/lodash.uniqwith": "^4.5.4",
+    "@types/minimist": "^1.2.0",
     "@types/mkdirp": "^0.5.2",
     "@types/nanoid": "^1.2.0",
     "@types/node": "^10.12.15",
-    "@types/node-ipc": "^9.1.1",
     "@types/numeral": "0.0.25",
+    "@types/rimraf": "^2.0.2",
     "@types/sinon": "^7.0.2",
     "@types/websocket": "0.0.40",
     "chai": "^4.2.0",

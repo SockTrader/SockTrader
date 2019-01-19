@@ -1,1 +1,1 @@
-export const actions = ["STATUS", "START_TRADING"];
+export const actions = ["READY", "START_TRADING"];

@@ -106,8 +106,7 @@ export default class LocalExchange extends BaseExchange {
         this.onReport(order);
     }
 
-    async emitCandles(loader: CandleLoader) {
-        const candles = (await loader.parse()).toArray();
+    async emitCandles(candles: ICandle[]) {
         const normCandles: ICandle[] = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp))
             ? candles.reverse()
             : candles;

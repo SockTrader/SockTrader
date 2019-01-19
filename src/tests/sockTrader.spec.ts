@@ -172,13 +172,13 @@ describe("bindStrategyToExchange", () => {
     });
 });
 
-describe("sendToSocketServer", () => {
+describe("sendToWebServer", () => {
     test("Should broadcast payload to socket server", () => {
         const webServer: server = new server();
         const spyBroadcast = jest.spyOn(webServer, "broadcast");
 
         sockTrader.setWebserver(webServer);
-        sockTrader["sendToSocketServer"]("type",  "payload");
+        sockTrader["sendToWebServer"]("type",  "payload");
         expect(spyBroadcast).toBeCalledWith("ipc.message", objectContaining({
             type: "type",
             payload: "payload"

@@ -1,10 +1,13 @@
+import {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {Pair} from "../types/pair";
-import {ICandleInterval} from "./candleCollection";
+import {ICandle, ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
+import {IOrder} from "./orderInterface";
+import {IOrderbook} from "./orderbook";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
@@ -24,13 +27,11 @@ export default abstract class SockTrader {
     protected eventsBound = false;
     protected exchange!: IExchange;
     protected strategyConfigurations: IStrategyConfig[] = [];
-    protected webServer?: any;
+    protected webServer?: ChildProcess;
 
-    constructor(protected config: ISockTraderConfig = { webServer: true }) {
+    constructor(protected config: ISockTraderConfig = {webServer: true}) {
         if (this.config.webServer) {
             this.webServer = spawnServer();
-            // console.log("START TRADAAAADIING!");
-            // this.sendToSocketServer("STATUS", "TEST");
             this.webServer.on("START_TRADING", () => this.start());
         }
     }
@@ -89,17 +90,7 @@ export default abstract class SockTrader {
         strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 
-    // @TODO this won't work with multiple strategies
-    protected bindStrategyToSocketServer(strategy: BaseStrategy) {
-        if (!this.webServer) return;
-
-        // @TODO send live/production reports to dashboard
-        // strategy.on("app.signal", sendSignal);
-        // strategy.on("app.adjustOrder", sendAdjustOrder);
-        // strategy.on("backtest.adjustOrder", sendAdjustOrder);
-    }
-
-    protected sendToSocketServer(type: string, payload: any) {
-        if (this.webServer) this.webServer.broadcast("ipc.message", {type, payload});
+    protected sendToWebServer(type: string, payload: any) {
+        if (this.webServer) this.webServer.send({type, payload});
     }
 }

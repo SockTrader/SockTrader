@@ -1,41 +1,42 @@
 import {fork} from "child_process";
-import ipc from "node-ipc";
+import minimist from "minimist";
+import process from "process";
 import config from "../../config";
 
+const argv = minimist(process.argv.slice(2));
+
 export default () => {
-
-    // @TODO conditionally add execArgv
-    const childProcess = fork(`${__dirname}/webServer.js`, [], {
-        stdio: "inherit",
-        silent: true,
-        execArgv: [`--inspect=${config.webServer.debugPort}`],
+    const webServer = fork(`${__dirname}/webServer.js`, [], {
+        stdio: ["ipc"],
+        execArgv: argv.debug ? [`--inspect=${config.webServer.debugPort}`] : [],
     });
-    // const childProcess = fork(`${__dirname}/webServer.js`, [], {
-    //     stdio: ["ipc"],
-    //     silent: true,
-    //     stdio: ["inherit"],
-    //     execArgv: [`--inspect=${config.webServer.debugPort}`],
-    // });
 
-    /**
-     * Pipe output of child process to stdout of master process
-     */
-    // childProcess.stdout.pipe(process.stdout);
+    webServer.stdout.pipe(process.stdout);
 
-    childProcess.on("exit", (code, signal) => {
+    webServer.on("exit", (code, signal) => {
         console.log("WebServer script exit: ", {code, signal});
     });
 
-    childProcess.on("error", msg => {
+    webServer.on("error", msg => {
         console.log("WebServer script error: ", msg);
     });
 
-    ipc.config.id = "server";
-    ipc.config.retry = 1500;
-    ipc.config.silent = false;
+    /**
+     * Re-emit incoming messages as separate events
+     * This makes it easier to handle each event separately
+     */
+    webServer.on("message", event => {
+        if (!event.type) {
+            throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+        }
 
-    ipc.serve();
-    ipc.server.start();
+        webServer.emit(event.type, event.payload);
+    });
 
-    return ipc.server;
+    /**
+     * Kill webServer if the main process has stopped working..
+     */
+    process.on("exit", () => webServer.kill());
+
+    return webServer;
 };
