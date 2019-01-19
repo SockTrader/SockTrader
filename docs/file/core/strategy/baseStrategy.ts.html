@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../">
-  <title data-ice="title">Variable | SockTrader</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">core/strategy/baseStrategy.ts | SockTrader</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -50,159 +50,97 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">Variable</h1>
-<div data-ice="summaries"><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Static Public Summary</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-<div data-ice="details"><h2 data-ice="title">Static Public </h2>
+<div class="content" data-ice="content"><h1 data-ice="title">core/strategy/baseStrategy.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {EventEmitter} from &quot;events&quot;;
+import {Error} from &quot;tslint/lib/error&quot;;
+import {Pair} from &quot;../../types/pair&quot;;
+import {ICandle} from &quot;../candleCollection&quot;;
+import {IExchange} from &quot;../exchanges/exchangeInterface&quot;;
+import {IOrderbook} from &quot;../orderbook&quot;;
+import {IOrder, OrderSide} from &quot;../orderInterface&quot;;
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-CandleInterval">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">CandleInterval</span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">source</a></span></span>
-    </span>
-  </h3>
+export interface IStrategyClass&lt;T&gt; {
+    new(pair: Pair, exchange: IExchange): T;
+}
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {CandleInterval} from &apos;<span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">socktrader/core/exchanges/hitBTC.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
+export interface ISignal {
+    price: number;
+    qty: number;
+    side: OrderSide;
+    symbol: Pair;
+}
 
-  
+export interface IAdjustSignal {
+    order: IOrder;
+    price: number;
+    qty: number;
+}
 
-  <div data-ice="properties">
-</div>
+/**
+ * The BaseStrategy holds common logic for your strategies to use
+ */
+export default abstract class BaseStrategy extends EventEmitter {
 
-  
+    protected constructor(public pair: Pair, public exchange: IExchange) {
+        super();
+    }
 
-  
+    /**
+     * Called when exchange confirms and order
+     * @param {IOrder} order the order
+     */
+    notifyOrder(order: IOrder): void {
+        throw new Error(&quot;Implement method: notifyOrder&quot;);
+    }
 
-  
+    /**
+     * Called on each new candle from exchange
+     * @param {ICandle[]} candles the new candles
+     */
+    updateCandles(candles: ICandle[]): void {
+        throw new Error(&quot;Implement method: updateCandles&quot;);
+    }
 
-  
+    /**
+     * Called on orderbook update from exchange
+     * @param {IOrderbook} orderBook the new orderbook
+     */
+    updateOrderbook(orderBook: IOrderbook): void {
+        throw new Error(&quot;Implement method: updateOrderbook&quot;);
+    }
 
-  
+    /**
+     * Fires a adjust existing order event to exchange
+     * @param {IOrder} order the order to adjust
+     * @param {number} price the new price
+     * @param {number} qty the new quantity
+     */
+    protected adjust(order: IOrder, price: number, qty: number): void {
+        this.emit(&quot;app.adjustOrder&quot;, {order, price, qty} as IAdjustSignal);
+    }
 
-  
+    /**
+     * Fires a buy event to exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price the price a which to buy
+     * @param {number} qty the quantity to buy
+     */
+    protected buy(pair: Pair, price: number, qty: number): void {
+        this.emit(&quot;app.signal&quot;, {symbol: pair, price, qty, side: OrderSide.BUY} as ISignal);
+    }
 
-  
+    /**
+     * Fires a sell event to exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price the price a which to sell
+     * @param {number} qty the quantity to sell
+     */
+    protected sell(pair: Pair, price: number, qty: number): void {
+        this.emit(&quot;app.signal&quot;, {symbol: pair, price, qty, side: OrderSide.SELL} as ISignal);
+    }
+}
+</code></pre>
 
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-actions">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">actions</span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/web/whitelist.ts.html#lineNumber2">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {actions} from &apos;<span><a href="file/core/web/whitelist.ts.html#lineNumber2">socktrader/core/web/whitelist.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 </div>
 
 <footer class="footer">

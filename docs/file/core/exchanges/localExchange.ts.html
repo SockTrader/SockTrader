@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">core/exchanges/localExchange.ts | SockTrader</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="SockTrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.png" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/SockTrader/SockTrader"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#analyzers">analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#exchanges">exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategy">strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossDown">crossDown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossUp">crossUp</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#web">web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">core/exchanges/localExchange.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {Pair} from &quot;../../types/pair&quot;;
+import {ICandle} from &quot;../candleCollection&quot;;
+import CandleLoader from &quot;../candleLoader&quot;;
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from &quot;../orderInterface&quot;;
+import BaseExchange from &quot;./baseExchange&quot;;
+
+export interface IAssetMap {
+    [key: string]: number;
+}
+
+/**
+ * The LocalExchange resembles a local dummy marketplace for
+ * strategy testing
+ */
+export default class LocalExchange extends BaseExchange {
+
+    private static instance?: LocalExchange;
+    private assets: IAssetMap = new Proxy&lt;IAssetMap&gt;({
+        USD: 100000,
+    }, {get: (target, p: PropertyKey): any =&gt; p in target ? target[p.toString()] : 0});
+    private currentCandle?: ICandle;
+    private filledOrders: IOrder[] = [];
+
+    /**
+     * Creates a new LocalExchange
+     */
+    constructor() {
+        super();
+
+        this.prependListener(&quot;app.updateCandles&quot;, (candles: ICandle[]) =&gt; this.processOpenOrders(candles[0]));
+        this.on(&quot;app.report&quot;, (order: IOrder) =&gt; this.updateAssets(order));
+    }
+
+    /**
+     * Returns singleton instance of local exchange
+     * @returns {LocalExchange} the new local exchange
+     */
+    static getInstance() {
+        if (!LocalExchange.instance) {
+            LocalExchange.instance = new LocalExchange();
+        }
+        return LocalExchange.instance;
+    }
+
+    adjustOrder(order: IOrder, price: number, qty: number): void {
+        if (!this.currentCandle) {
+            throw new Error(&quot;Current candle undefined. Emit candles before adjusting an order.&quot;);
+        }
+
+        const newOrder: IOrder = {
+            ...order,
+            id: this.generateOrderId(order.pair),
+            reportType: ReportType.REPLACED,
+            updatedAt: this.currentCandle.timestamp,
+            type: OrderType.LIMIT,
+            originalId: order.id,
+            quantity: qty,
+            price,
+        };
+
+        const isAllowed = newOrder.side === OrderSide.BUY ? this.isBuyAllowed.bind(this) : this.isSellAllowed.bind(this);
+        if (!isAllowed(newOrder, order)) return;
+
+        this.setOrderInProgress(order.id);
+        this.onReport(newOrder);
+    }
+
+    cancelOrder(order: IOrder): void {
+        this.setOrderInProgress(order.id);
+
+        const canceledOrder: IOrder = {
+            ...order,
+            reportType: ReportType.CANCELED,
+        };
+
+        this.onReport(canceledOrder);
+    }
+
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
+        if (!this.currentCandle) {
+            throw new Error(&quot;Current candle undefined. Emit candles before creating an order.&quot;);
+        }
+
+        const orderId = this.generateOrderId(pair);
+        const candleTime = this.currentCandle.timestamp;
+
+        const order: IOrder = {
+            createdAt: candleTime,
+            updatedAt: candleTime,
+            status: OrderStatus.NEW,
+            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+            id: orderId,
+            type: OrderType.LIMIT,
+            reportType: ReportType.NEW,
+            side,
+            pair,
+            quantity: qty,
+            price,
+        };
+
+        const isAllowed = order.side === OrderSide.BUY ? this.isBuyAllowed.bind(this) : this.isSellAllowed.bind(this);
+        if (!isAllowed(order)) return;
+
+        this.setOrderInProgress(orderId);
+        this.onReport(order);
+    }
+
+    /**
+     * Emits a collection of candles from a local file as if they were
+     * sent from a real exchange
+     * @param {ICandle[]} candles
+     * @returns {Promise&lt;void&gt;} promise
+     */
+    async emitCandles(candles: ICandle[]) {
+        const normCandles: ICandle[] = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp))
+            ? candles.reverse()
+            : candles;
+
+        normCandles.reduce&lt;ICandle[]&gt;((acc, val, idx) =&gt; {
+            const processedCandles = [val, ...acc];
+            this.currentCandle = val;
+            this.emit(&quot;app.updateCandles&quot;, processedCandles);
+            return processedCandles;
+        }, []);
+    }
+
+    isReady(): boolean {
+        this.emit(&quot;ready&quot;);
+        return true;
+    }
+
+    loadCurrencies = (): void =&gt; undefined;
+
+    // noinspection JSUnusedGlobalSymbols
+    onUpdateCandles = (): void =&gt; undefined;
+
+    // noinspection JSUnusedGlobalSymbols
+    onUpdateOrderbook = (): void =&gt; undefined;
+
+    /**
+     * Checks if open order can be filled on each price update
+     * @param {ICandle} candle the current candle
+     */
+    processOpenOrders(candle: ICandle): void {
+        const openOrders: IOrder[] = [];
+        this.openOrders.forEach(oo =&gt; {
+            if (oo.createdAt.isAfter(candle.timestamp)) {
+                return openOrders.push(oo); // Candle should be newer than order!
+            }
+
+            const order = {...oo, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
+            if (oo.side === OrderSide.BUY &amp;&amp; candle.low &lt; oo.price) {
+                this.filledOrders.push(order);
+                return this.onReport(order);
+            }
+
+            if (oo.side === OrderSide.SELL &amp;&amp; candle.high &gt; oo.price) {
+                this.filledOrders.push(order);
+                return this.onReport(order);
+            }
+
+            openOrders.push(oo);
+        });
+        this.openOrders = openOrders;
+    }
+
+    subscribeCandles = (): void =&gt; undefined;
+
+    subscribeOrderbook = (): void =&gt; undefined;
+
+    subscribeReports = (): void =&gt; undefined;
+
+    /**
+     * Calculates total price of order
+     * @param {IOrder} order the order
+     * @returns {number} total price
+     */
+    private getOrderPrice(order: IOrder) {
+        return order.price * order.quantity;
+    }
+
+    /**
+     * Checks if funds are sufficient for a buy
+     * @param {IOrder} order the order to verify
+     * @param {IOrder} oldOrder
+     * @returns {boolean} is buy allowed
+     */
+    private isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+        const orderPrice: number = this.getOrderPrice(order);
+
+        return this.assets[order.pair[1]] &gt; orderPrice;
+    }
+
+    /**
+     * Checks if current quantity of currency in possession
+     * if sufficient for given sell order
+     * @param {IOrder} order the order to verify
+     * @param {IOrder} oldOrder
+     * @returns {boolean} is sell allowed
+     */
+    private isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+        const orderPrice: number = this.getOrderPrice(order);
+        const oldOrderPrice = (oldOrder) ? this.getOrderPrice(oldOrder) : 0;
+
+        return this.assets[order.pair[0]] &gt; order.quantity;
+    }
+
+    // @TODO test and verify logic..
+    /**
+     * Updates the assets on the exchange for given new order
+     * @param {IOrder} order new order
+     * @param {IOrder} oldOrder old order
+     */
+    private updateAssets(order: IOrder, oldOrder?: IOrder) {
+        const [target, source] = order.pair;
+
+        // if (order.side === OrderSide.SELL) {
+        //     target = order.pair[1];
+        //     source = order.pair[0];
+        // }
+
+        if (ReportType.REPLACED === order.reportType &amp;&amp; oldOrder) {
+            // @TODO ..
+        } else if (ReportType.NEW === order.reportType) {
+            if (order.side === OrderSide.BUY) {
+                this.assets[source] -= this.getOrderPrice(order);
+            } else {
+                this.assets[target] -= order.quantity;
+            }
+        } else if (ReportType.TRADE === order.reportType &amp;&amp; OrderStatus.FILLED === order.status) {
+            if (order.side === OrderSide.BUY) {
+                this.assets[target] += order.quantity;
+            } else {
+                this.assets[source] += this.getOrderPrice(order);
+            }
+            console.log(this.assets);
+        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) &gt; -1) {
+            this.assets[source] += this.getOrderPrice(order);
+        }
+    }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

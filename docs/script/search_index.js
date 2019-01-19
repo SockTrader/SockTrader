@@ -1,1694 +1,1934 @@
 window.esdocSearchIndex = [
   [
-    "socktrader/src/core/backtester.ts~backtester",
-    "class/src/core/backTester.ts~BackTester.html",
-    "<span>BackTester</span> <span class=\"search-result-import-path\">socktrader/src/core/backTester.ts</span>",
+    "socktrader/core/backtester.ts~backtester",
+    "class/core/backTester.ts~BackTester.html",
+    "<span>BackTester</span> <span class=\"search-result-import-path\">socktrader/core/backTester.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/exchanges/baseexchange.ts~baseexchange",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html",
-    "<span>BaseExchange</span> <span class=\"search-result-import-path\">socktrader/src/core/exchanges/baseExchange.ts</span>",
+    "socktrader/core/exchanges/baseexchange.ts~baseexchange",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html",
+    "<span>BaseExchange</span> <span class=\"search-result-import-path\">socktrader/core/exchanges/baseExchange.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/strategy/basestrategy.ts~basestrategy",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html",
-    "<span>BaseStrategy</span> <span class=\"search-result-import-path\">socktrader/src/core/strategy/baseStrategy.ts</span>",
+    "socktrader/core/strategy/basestrategy.ts~basestrategy",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html",
+    "<span>BaseStrategy</span> <span class=\"search-result-import-path\">socktrader/core/strategy/baseStrategy.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/candlecollection.ts~candlecollection",
-    "class/src/core/candleCollection.ts~CandleCollection.html",
-    "<span>CandleCollection</span> <span class=\"search-result-import-path\">socktrader/src/core/candleCollection.ts</span>",
+    "socktrader/core/candlecollection.ts~candlecollection",
+    "class/core/candleCollection.ts~CandleCollection.html",
+    "<span>CandleCollection</span> <span class=\"search-result-import-path\">socktrader/core/candleCollection.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/exchanges/hitbtc.ts~candleinterval",
+    "socktrader/core/exchanges/hitbtc.ts~candleinterval",
     "variable/index.html#static-variable-CandleInterval",
-    "<span>CandleInterval</span> <span class=\"search-result-import-path\">socktrader/src/core/exchanges/hitBTC.ts</span>",
+    "<span>CandleInterval</span> <span class=\"search-result-import-path\">socktrader/core/exchanges/hitBTC.ts</span>",
     "variable"
   ],
   [
-    "socktrader/src/core/candleloader.ts~candleloader",
-    "class/src/core/candleLoader.ts~CandleLoader.html",
-    "<span>CandleLoader</span> <span class=\"search-result-import-path\">socktrader/src/core/candleLoader.ts</span>",
+    "socktrader/core/candleloader.ts~candleloader",
+    "class/core/candleLoader.ts~CandleLoader.html",
+    "<span>CandleLoader</span> <span class=\"search-result-import-path\">socktrader/core/candleLoader.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/analyzers/capitalanalyzer.ts~capitalanalyzer",
-    "class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html",
-    "<span>CapitalAnalyzer</span> <span class=\"search-result-import-path\">socktrader/src/core/analyzers/capitalAnalyzer.ts</span>",
+    "socktrader/core/analyzers/capitalanalyzer.ts~capitalanalyzer",
+    "class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html",
+    "<span>CapitalAnalyzer</span> <span class=\"search-result-import-path\">socktrader/core/analyzers/capitalAnalyzer.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/exchanges/hitbtc.ts~hitbtc",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html",
-    "<span>HitBTC</span> <span class=\"search-result-import-path\">socktrader/src/core/exchanges/hitBTC.ts</span>",
+    "socktrader/core/exchanges/hitbtc.ts~hitbtc",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html",
+    "<span>HitBTC</span> <span class=\"search-result-import-path\">socktrader/core/exchanges/hitBTC.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/exchanges/hitbtcmapper.ts~hitbtcmapper",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html",
-    "<span>HitBTCMapper</span> <span class=\"search-result-import-path\">socktrader/src/core/exchanges/hitBTCMapper.ts</span>",
+    "socktrader/core/exchanges/hitbtcmapper.ts~hitbtcmapper",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html",
+    "<span>HitBTCMapper</span> <span class=\"search-result-import-path\">socktrader/core/exchanges/hitBTCMapper.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/livetrader.ts~livetrader",
-    "class/src/core/liveTrader.ts~LiveTrader.html",
-    "<span>LiveTrader</span> <span class=\"search-result-import-path\">socktrader/src/core/liveTrader.ts</span>",
+    "socktrader/core/livetrader.ts~livetrader",
+    "class/core/liveTrader.ts~LiveTrader.html",
+    "<span>LiveTrader</span> <span class=\"search-result-import-path\">socktrader/core/liveTrader.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/exchanges/localexchange.ts~localexchange",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html",
-    "<span>LocalExchange</span> <span class=\"search-result-import-path\">socktrader/src/core/exchanges/localExchange.ts</span>",
+    "socktrader/core/exchanges/localexchange.ts~localexchange",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html",
+    "<span>LocalExchange</span> <span class=\"search-result-import-path\">socktrader/core/exchanges/localExchange.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/strategies/mystrategy.ts~mystrategy",
-    "class/src/strategies/myStrategy.ts~MyStrategy.html",
-    "<span>MyStrategy</span> <span class=\"search-result-import-path\">socktrader/src/strategies/myStrategy.ts</span>",
+    "socktrader/core/orderbook.ts~orderbook",
+    "class/core/orderbook.ts~Orderbook.html",
+    "<span>Orderbook</span> <span class=\"search-result-import-path\">socktrader/core/orderbook.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/core/orderbook.ts~orderbook",
-    "class/src/core/orderbook.ts~Orderbook.html",
-    "<span>Orderbook</span> <span class=\"search-result-import-path\">socktrader/src/core/orderbook.ts</span>",
+    "socktrader/core/socktrader.ts~socktrader",
+    "class/core/sockTrader.ts~SockTrader.html",
+    "<span>SockTrader</span> <span class=\"search-result-import-path\">socktrader/core/sockTrader.ts</span>",
     "class"
   ],
   [
-    "socktrader/src/strategies/simplemovingaverage.ts~simplemovingaverage",
-    "class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html",
-    "<span>SimpleMovingAverage</span> <span class=\"search-result-import-path\">socktrader/src/strategies/simpleMovingAverage.ts</span>",
-    "class"
-  ],
-  [
-    "socktrader/src/core/socktrader.ts~socktrader",
-    "class/src/core/sockTrader.ts~SockTrader.html",
-    "<span>SockTrader</span> <span class=\"search-result-import-path\">socktrader/src/core/sockTrader.ts</span>",
-    "class"
-  ],
-  [
-    "socktrader/src/strategies/topoforderbook.ts~topoforderbook",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html",
-    "<span>TopOfOrderbook</span> <span class=\"search-result-import-path\">socktrader/src/strategies/topOfOrderBook.ts</span>",
-    "class"
-  ],
-  [
-    "socktrader/src/core/web/whitelist.ts~actions",
+    "socktrader/core/web/whitelist.ts~actions",
     "variable/index.html#static-variable-actions",
-    "<span>actions</span> <span class=\"search-result-import-path\">socktrader/src/core/web/whitelist.ts</span>",
+    "<span>actions</span> <span class=\"search-result-import-path\">socktrader/core/web/whitelist.ts</span>",
     "variable"
   ],
   [
-    "socktrader/src/core/strategy/utils.ts~crossdown",
+    "socktrader/core/strategy/utils.ts~crossdown",
     "function/index.html#static-function-crossDown",
-    "<span>crossDown</span> <span class=\"search-result-import-path\">socktrader/src/core/strategy/utils.ts</span>",
+    "<span>crossDown</span> <span class=\"search-result-import-path\">socktrader/core/strategy/utils.ts</span>",
     "function"
   ],
   [
-    "socktrader/src/core/strategy/utils.ts~crossup",
+    "socktrader/core/strategy/utils.ts~crossup",
     "function/index.html#static-function-crossUp",
-    "<span>crossUp</span> <span class=\"search-result-import-path\">socktrader/src/core/strategy/utils.ts</span>",
+    "<span>crossUp</span> <span class=\"search-result-import-path\">socktrader/core/strategy/utils.ts</span>",
     "function"
   ],
   [
-    "socktrader/src/core/web/spawnserver.ts~spawnserver",
+    "socktrader/core/web/spawnserver.ts~spawnserver",
     "function/index.html#static-function-spawnServer",
-    "<span>spawnServer</span> <span class=\"search-result-import-path\">socktrader/src/core/web/spawnServer.ts</span>",
+    "<span>spawnServer</span> <span class=\"search-result-import-path\">socktrader/core/web/spawnServer.ts</span>",
     "function"
   ],
   [
-    "src/.external-ecmascript.js~array",
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber18",
+    "BaseStrategy",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber34",
+    "BaseStrategy Should emit adjustOrder event",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber46",
+    "BaseStrategy Should emit buy signal",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber57",
+    "BaseStrategy Should emit sell signal",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber25",
+    "BaseStrategy Should throw when notifyOrder is not implemented",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber28",
+    "BaseStrategy Should throw when updateCandles is not implemented",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseStrategy.spec.ts.html#lineNumber31",
+    "BaseStrategy Should throw when updateOrderbook is not implemented",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber13",
+    "CandleCollection",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber62",
+    "CandleCollection Should automatically generate new candles",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber27",
+    "CandleCollection Should fill all candle gaps until last interval occurrence before current time",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber47",
+    "CandleCollection Should fill all candle gaps until retention period is met",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber114",
+    "CandleCollection Should remove oldest candle when retention period is met",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber14",
+    "CandleCollection Should sort all candles, with the latest candle first and the last candle last",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/candleCollection.spec.ts.html#lineNumber89",
+    "CandleCollection Should update the collection",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber11",
+    "HitBTC",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber110",
+    "HitBTC Should adjust existing orders",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber43",
+    "HitBTC Should authenticate user on exchange",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber100",
+    "HitBTC Should cancel an order",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber150",
+    "HitBTC Should connect",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber121",
+    "HitBTC Should create a new order",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber62",
+    "HitBTC Should emit candle events on an update",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber134",
+    "HitBTC Should initialize when exchange is connected",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber95",
+    "HitBTC Should load currency configuration from the exchange",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber38",
+    "HitBTC Should subscribe to candle events",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber33",
+    "HitBTC Should subscribe to orderbook events",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber29",
+    "HitBTC Should subscribe to report events",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber21",
+    "HitBTC Should trigger the onCreate lifecycle event",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber49",
+    "HitBTC Should update a candle collection for a trading pair",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/hitBTC.spec.ts.html#lineNumber71",
+    "HitBTC Should update an in memory orderbook",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber7",
+    "Orderbook",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber63",
+    "Orderbook Should be updatable with an increment",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber57",
+    "Orderbook Should return a subset of the orderbook",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber45",
+    "Orderbook Should set sorted orders in orderbook",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber30",
+    "Orderbook calculate bid and ask spread",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber35",
+    "Orderbook calculate satoshi difference between two numbers",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/orderbook.spec.ts.html#lineNumber21",
+    "Orderbook calculate the adjusted price",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/utils.spec.ts.html#lineNumber5",
+    "Strategy utilities",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/utils.spec.ts.html#lineNumber15",
+    "Strategy utilities Should find a negative crossover",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/utils.spec.ts.html#lineNumber6",
+    "Strategy utilities Should find a positive crossover",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber145",
+    "addExchange",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber146",
+    "addExchange Should add exchange to socketTrader",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber162",
+    "addOrder",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber163",
+    "addOrder Should store all open orders",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber151",
+    "bindExchangeToStrategy",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber152",
+    "bindExchangeToStrategy Should bind exchange events to strategy",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber162",
+    "bindStrategyToExchange",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber163",
+    "bindStrategyToExchange Should bind strategy events to exchange",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber130",
+    "connect",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber131",
+    "connect Should connect via a websocket connection string",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber149",
+    "connection",
+    "test"
+  ],
+  [
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber150",
+    "connection Should send messages over a socket connection",
+    "test"
+  ],
+  [
+    "core/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
-    "src/.external-ecmascript.js~Array",
+    "core/.external-ecmascript.js~Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~arraybuffer",
+    "core/.external-ecmascript.js~arraybuffer",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
-    "src/.external-ecmascript.js~ArrayBuffer",
+    "core/.external-ecmascript.js~ArrayBuffer",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~boolean",
+    "core/.external-ecmascript.js~boolean",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
-    "src/.external-ecmascript.js~Boolean",
+    "core/.external-ecmascript.js~Boolean",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~dataview",
+    "core/.external-ecmascript.js~dataview",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
-    "src/.external-ecmascript.js~DataView",
+    "core/.external-ecmascript.js~DataView",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~date",
+    "core/.external-ecmascript.js~date",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
-    "src/.external-ecmascript.js~Date",
+    "core/.external-ecmascript.js~Date",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~error",
+    "core/.external-ecmascript.js~error",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
-    "src/.external-ecmascript.js~Error",
+    "core/.external-ecmascript.js~Error",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~evalerror",
+    "core/.external-ecmascript.js~evalerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
-    "src/.external-ecmascript.js~EvalError",
+    "core/.external-ecmascript.js~EvalError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~float32array",
+    "core/.external-ecmascript.js~float32array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
-    "src/.external-ecmascript.js~Float32Array",
+    "core/.external-ecmascript.js~Float32Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~float64array",
+    "core/.external-ecmascript.js~float64array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
-    "src/.external-ecmascript.js~Float64Array",
+    "core/.external-ecmascript.js~Float64Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~function",
+    "core/.external-ecmascript.js~function",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
-    "src/.external-ecmascript.js~Function",
+    "core/.external-ecmascript.js~Function",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~generator",
+    "core/.external-ecmascript.js~generator",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
-    "src/.external-ecmascript.js~Generator",
+    "core/.external-ecmascript.js~Generator",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~generatorfunction",
+    "core/.external-ecmascript.js~generatorfunction",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
-    "src/.external-ecmascript.js~GeneratorFunction",
+    "core/.external-ecmascript.js~GeneratorFunction",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~infinity",
+    "core/.external-ecmascript.js~infinity",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
-    "src/.external-ecmascript.js~Infinity",
+    "core/.external-ecmascript.js~Infinity",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~int16array",
+    "core/.external-ecmascript.js~int16array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
-    "src/.external-ecmascript.js~Int16Array",
+    "core/.external-ecmascript.js~Int16Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~int32array",
+    "core/.external-ecmascript.js~int32array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
-    "src/.external-ecmascript.js~Int32Array",
+    "core/.external-ecmascript.js~Int32Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~int8array",
+    "core/.external-ecmascript.js~int8array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
-    "src/.external-ecmascript.js~Int8Array",
+    "core/.external-ecmascript.js~Int8Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~internalerror",
+    "core/.external-ecmascript.js~internalerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
-    "src/.external-ecmascript.js~InternalError",
+    "core/.external-ecmascript.js~InternalError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~json",
+    "core/.external-ecmascript.js~json",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
-    "src/.external-ecmascript.js~JSON",
+    "core/.external-ecmascript.js~JSON",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~map",
+    "core/.external-ecmascript.js~map",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
-    "src/.external-ecmascript.js~Map",
+    "core/.external-ecmascript.js~Map",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~nan",
+    "core/.external-ecmascript.js~nan",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
-    "src/.external-ecmascript.js~NaN",
+    "core/.external-ecmascript.js~NaN",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~number",
+    "core/.external-ecmascript.js~number",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-    "src/.external-ecmascript.js~Number",
+    "core/.external-ecmascript.js~Number",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~object",
+    "core/.external-ecmascript.js~object",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
-    "src/.external-ecmascript.js~Object",
+    "core/.external-ecmascript.js~Object",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~promise",
+    "core/.external-ecmascript.js~promise",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
-    "src/.external-ecmascript.js~Promise",
+    "core/.external-ecmascript.js~Promise",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~proxy",
+    "core/.external-ecmascript.js~proxy",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
-    "src/.external-ecmascript.js~Proxy",
+    "core/.external-ecmascript.js~Proxy",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~rangeerror",
+    "core/.external-ecmascript.js~rangeerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
-    "src/.external-ecmascript.js~RangeError",
+    "core/.external-ecmascript.js~RangeError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~referenceerror",
+    "core/.external-ecmascript.js~referenceerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
-    "src/.external-ecmascript.js~ReferenceError",
+    "core/.external-ecmascript.js~ReferenceError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~reflect",
+    "core/.external-ecmascript.js~reflect",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
-    "src/.external-ecmascript.js~Reflect",
+    "core/.external-ecmascript.js~Reflect",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~regexp",
+    "core/.external-ecmascript.js~regexp",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
-    "src/.external-ecmascript.js~RegExp",
+    "core/.external-ecmascript.js~RegExp",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~set",
+    "core/.external-ecmascript.js~set",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
-    "src/.external-ecmascript.js~Set",
+    "core/.external-ecmascript.js~Set",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~string",
+    "core/.external-ecmascript.js~string",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-    "src/.external-ecmascript.js~String",
+    "core/.external-ecmascript.js~String",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~symbol",
+    "core/.external-ecmascript.js~symbol",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
-    "src/.external-ecmascript.js~Symbol",
+    "core/.external-ecmascript.js~Symbol",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~syntaxerror",
+    "core/.external-ecmascript.js~syntaxerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
-    "src/.external-ecmascript.js~SyntaxError",
+    "core/.external-ecmascript.js~SyntaxError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~typeerror",
+    "core/.external-ecmascript.js~typeerror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
-    "src/.external-ecmascript.js~TypeError",
+    "core/.external-ecmascript.js~TypeError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~urierror",
+    "core/.external-ecmascript.js~urierror",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
-    "src/.external-ecmascript.js~URIError",
+    "core/.external-ecmascript.js~URIError",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~uint16array",
+    "core/.external-ecmascript.js~uint16array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
-    "src/.external-ecmascript.js~Uint16Array",
+    "core/.external-ecmascript.js~Uint16Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~uint32array",
+    "core/.external-ecmascript.js~uint32array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
-    "src/.external-ecmascript.js~Uint32Array",
+    "core/.external-ecmascript.js~Uint32Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~uint8array",
+    "core/.external-ecmascript.js~uint8array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
-    "src/.external-ecmascript.js~Uint8Array",
+    "core/.external-ecmascript.js~Uint8Array",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~uint8clampedarray",
+    "core/.external-ecmascript.js~uint8clampedarray",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
-    "src/.external-ecmascript.js~Uint8ClampedArray",
+    "core/.external-ecmascript.js~Uint8ClampedArray",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~weakmap",
+    "core/.external-ecmascript.js~weakmap",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
-    "src/.external-ecmascript.js~WeakMap",
+    "core/.external-ecmascript.js~WeakMap",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~weakset",
+    "core/.external-ecmascript.js~weakset",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
-    "src/.external-ecmascript.js~WeakSet",
+    "core/.external-ecmascript.js~WeakSet",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~boolean",
+    "core/.external-ecmascript.js~boolean",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
-    "src/.external-ecmascript.js~boolean",
+    "core/.external-ecmascript.js~boolean",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~function",
+    "core/.external-ecmascript.js~function",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
-    "src/.external-ecmascript.js~function",
+    "core/.external-ecmascript.js~function",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~null",
+    "core/.external-ecmascript.js~null",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
-    "src/.external-ecmascript.js~null",
+    "core/.external-ecmascript.js~null",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~number",
+    "core/.external-ecmascript.js~number",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
-    "src/.external-ecmascript.js~number",
+    "core/.external-ecmascript.js~number",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~object",
+    "core/.external-ecmascript.js~object",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
-    "src/.external-ecmascript.js~object",
+    "core/.external-ecmascript.js~object",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~string",
+    "core/.external-ecmascript.js~string",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
-    "src/.external-ecmascript.js~string",
+    "core/.external-ecmascript.js~string",
     "external"
   ],
   [
-    "src/.external-ecmascript.js~undefined",
+    "core/.external-ecmascript.js~undefined",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
-    "src/.external-ecmascript.js~undefined",
+    "core/.external-ecmascript.js~undefined",
     "external"
   ],
   [
-    "src/backtest.ts",
-    "file/src/backtest.ts.html",
-    "src/backtest.ts",
+    "core/analyzers/capitalanalyzer.ts",
+    "file/core/analyzers/capitalAnalyzer.ts.html",
+    "core/analyzers/capitalAnalyzer.ts",
     "file"
   ],
   [
-    "src/config.ts",
-    "file/src/config.ts.html",
-    "src/config.ts",
+    "core/analyzers/capitalanalyzer.ts~capitalanalyzer#analyze",
+    "class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-method-analyze",
+    "core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#analyze",
+    "method"
+  ],
+  [
+    "core/analyzers/capitalanalyzer.ts~capitalanalyzer#calcperc",
+    "class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-method-calcPerc",
+    "core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#calcPerc",
+    "method"
+  ],
+  [
+    "core/analyzers/capitalanalyzer.ts~capitalanalyzer#constructor",
+    "class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-constructor-constructor",
+    "core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#constructor",
+    "method"
+  ],
+  [
+    "core/analyzers/capitalanalyzer.ts~capitalanalyzer#startcapital",
+    "class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-member-startCapital",
+    "core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#startCapital",
+    "member"
+  ],
+  [
+    "core/backtester.ts",
+    "file/core/backTester.ts.html",
+    "core/backTester.ts",
     "file"
   ],
   [
-    "src/core/analyzers/capitalanalyzer.ts",
-    "file/src/core/analyzers/capitalAnalyzer.ts.html",
-    "src/core/analyzers/capitalAnalyzer.ts",
+    "core/backtester.ts~backtester#bindexchangetosocketserver",
+    "class/core/backTester.ts~BackTester.html#instance-method-bindExchangeToSocketServer",
+    "core/backTester.ts~BackTester#bindExchangeToSocketServer",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester#candleloader",
+    "class/core/backTester.ts~BackTester.html#instance-member-candleLoader",
+    "core/backTester.ts~BackTester#candleLoader",
+    "member"
+  ],
+  [
+    "core/backtester.ts~backtester#constructor",
+    "class/core/backTester.ts~BackTester.html#instance-constructor-constructor",
+    "core/backTester.ts~BackTester#constructor",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester#eventsbound",
+    "class/core/backTester.ts~BackTester.html#instance-member-eventsBound",
+    "core/backTester.ts~BackTester#eventsBound",
+    "member"
+  ],
+  [
+    "core/backtester.ts~backtester#exchange",
+    "class/core/backTester.ts~BackTester.html#instance-member-exchange",
+    "core/backTester.ts~BackTester#exchange",
+    "member"
+  ],
+  [
+    "core/backtester.ts~backtester#setcandleloader",
+    "class/core/backTester.ts~BackTester.html#instance-method-setCandleLoader",
+    "core/backTester.ts~BackTester#setCandleLoader",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester#start",
+    "class/core/backTester.ts~BackTester.html#instance-method-start",
+    "core/backTester.ts~BackTester#start",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester#writecandlecache",
+    "class/core/backTester.ts~BackTester.html#instance-method-writeCandleCache",
+    "core/backTester.ts~BackTester#writeCandleCache",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester.clearcache",
+    "class/core/backTester.ts~BackTester.html#static-method-clearCache",
+    "core/backTester.ts~BackTester.clearCache",
+    "method"
+  ],
+  [
+    "core/backtester.ts~backtester.createcache",
+    "class/core/backTester.ts~BackTester.html#static-method-createCache",
+    "core/backTester.ts~BackTester.createCache",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts",
+    "file/core/candleCollection.ts.html",
+    "core/candleCollection.ts",
     "file"
   ],
   [
-    "src/core/analyzers/capitalanalyzer.ts~capitalanalyzer#analyze",
-    "class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-method-analyze",
-    "src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#analyze",
+    "core/candlecollection.ts~candlecollection#candleequalstimestamp",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-candleEqualsTimestamp",
+    "core/candleCollection.ts~CandleCollection#candleEqualsTimestamp",
     "method"
   ],
   [
-    "src/core/analyzers/capitalanalyzer.ts~capitalanalyzer#calcperc",
-    "class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-method-calcPerc",
-    "src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#calcPerc",
-    "method"
-  ],
-  [
-    "src/core/analyzers/capitalanalyzer.ts~capitalanalyzer#constructor",
-    "class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-constructor-constructor",
-    "src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#constructor",
-    "method"
-  ],
-  [
-    "src/core/analyzers/capitalanalyzer.ts~capitalanalyzer#startcapital",
-    "class/src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html#instance-member-startCapital",
-    "src/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer#startCapital",
+    "core/candlecollection.ts~candlecollection#candles",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-candles",
+    "core/candleCollection.ts~CandleCollection#candles",
     "member"
   ],
   [
-    "src/core/backtester.ts",
-    "file/src/core/backTester.ts.html",
-    "src/core/backTester.ts",
+    "core/candlecollection.ts~candlecollection#constructor",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-constructor-constructor",
+    "core/candleCollection.ts~CandleCollection#constructor",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#cronjob",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-cronjob",
+    "core/candleCollection.ts~CandleCollection#cronjob",
+    "member"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#fillcandlegaps",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-fillCandleGaps",
+    "core/candleCollection.ts~CandleCollection#fillCandleGaps",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#generatecandles",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-generateCandles",
+    "core/candleCollection.ts~CandleCollection#generateCandles",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#getcandlegenerator",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-getCandleGenerator",
+    "core/candleCollection.ts~CandleCollection#getCandleGenerator",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#getrecycledcandle",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-getRecycledCandle",
+    "core/candleCollection.ts~CandleCollection#getRecycledCandle",
+    "member"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#interval",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-interval",
+    "core/candleCollection.ts~CandleCollection#interval",
+    "member"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#removeretentionoverflow",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-removeRetentionOverflow",
+    "core/candleCollection.ts~CandleCollection#removeRetentionOverflow",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#retentionperiod",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-retentionPeriod",
+    "core/candleCollection.ts~CandleCollection#retentionPeriod",
+    "member"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#set",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-set",
+    "core/candleCollection.ts~CandleCollection#set",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#sort",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-member-sort",
+    "core/candleCollection.ts~CandleCollection#sort",
+    "member"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#stop",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-stop",
+    "core/candleCollection.ts~CandleCollection#stop",
+    "method"
+  ],
+  [
+    "core/candlecollection.ts~candlecollection#update",
+    "class/core/candleCollection.ts~CandleCollection.html#instance-method-update",
+    "core/candleCollection.ts~CandleCollection#update",
+    "method"
+  ],
+  [
+    "core/candleloader.ts",
+    "file/core/candleLoader.ts.html",
+    "core/candleLoader.ts",
     "file"
   ],
   [
-    "src/core/backtester.ts~backtester#bindexchangetosocketserver",
-    "class/src/core/backTester.ts~BackTester.html#instance-method-bindExchangeToSocketServer",
-    "src/core/backTester.ts~BackTester#bindExchangeToSocketServer",
+    "core/candleloader.ts~candleloader#constructor",
+    "class/core/candleLoader.ts~CandleLoader.html#instance-constructor-constructor",
+    "core/candleLoader.ts~CandleLoader#constructor",
     "method"
   ],
   [
-    "src/core/backtester.ts~backtester#candleloader",
-    "class/src/core/backTester.ts~BackTester.html#instance-member-candleLoader",
-    "src/core/backTester.ts~BackTester#candleLoader",
+    "core/candleloader.ts~candleloader#filepath",
+    "class/core/candleLoader.ts~CandleLoader.html#instance-member-filePath",
+    "core/candleLoader.ts~CandleLoader#filePath",
     "member"
   ],
   [
-    "src/core/backtester.ts~backtester#constructor",
-    "class/src/core/backTester.ts~BackTester.html#instance-constructor-constructor",
-    "src/core/backTester.ts~BackTester#constructor",
+    "core/candleloader.ts~candleloader#parse",
+    "class/core/candleLoader.ts~CandleLoader.html#instance-method-parse",
+    "core/candleLoader.ts~CandleLoader#parse",
     "method"
   ],
   [
-    "src/core/backtester.ts~backtester#eventsbound",
-    "class/src/core/backTester.ts~BackTester.html#instance-member-eventsBound",
-    "src/core/backTester.ts~BackTester#eventsBound",
+    "core/candleloader.ts~candleloader#parser",
+    "class/core/candleLoader.ts~CandleLoader.html#instance-member-parser",
+    "core/candleLoader.ts~CandleLoader#parser",
     "member"
   ],
   [
-    "src/core/backtester.ts~backtester#exchange",
-    "class/src/core/backTester.ts~BackTester.html#instance-member-exchange",
-    "src/core/backTester.ts~BackTester#exchange",
-    "member"
-  ],
-  [
-    "src/core/backtester.ts~backtester#setcandleloader",
-    "class/src/core/backTester.ts~BackTester.html#instance-method-setCandleLoader",
-    "src/core/backTester.ts~BackTester#setCandleLoader",
+    "core/candleloader.ts~candleloader.parsefilereader",
+    "class/core/candleLoader.ts~CandleLoader.html#static-method-parseFileReader",
+    "core/candleLoader.ts~CandleLoader.parseFileReader",
     "method"
   ],
   [
-    "src/core/backtester.ts~backtester#start",
-    "class/src/core/backTester.ts~BackTester.html#instance-method-start",
-    "src/core/backTester.ts~BackTester#start",
-    "method"
-  ],
-  [
-    "src/core/backtester.ts~backtester#writecandlecache",
-    "class/src/core/backTester.ts~BackTester.html#instance-method-writeCandleCache",
-    "src/core/backTester.ts~BackTester#writeCandleCache",
-    "method"
-  ],
-  [
-    "src/core/backtester.ts~backtester.clearcache",
-    "class/src/core/backTester.ts~BackTester.html#static-method-clearCache",
-    "src/core/backTester.ts~BackTester.clearCache",
-    "method"
-  ],
-  [
-    "src/core/backtester.ts~backtester.createcache",
-    "class/src/core/backTester.ts~BackTester.html#static-method-createCache",
-    "src/core/backTester.ts~BackTester.createCache",
-    "method"
-  ],
-  [
-    "src/core/candlecollection.ts",
-    "file/src/core/candleCollection.ts.html",
-    "src/core/candleCollection.ts",
+    "core/exchanges/baseexchange.ts",
+    "file/core/exchanges/baseExchange.ts.html",
+    "core/exchanges/baseExchange.ts",
     "file"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#candleequalstimestamp",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-candleEqualsTimestamp",
-    "src/core/candleCollection.ts~CandleCollection#candleEqualsTimestamp",
+    "core/exchanges/baseexchange.ts~baseexchange#addorder",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-addOrder",
+    "core/exchanges/baseExchange.ts~BaseExchange#addOrder",
     "method"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#candles",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-candles",
-    "src/core/candleCollection.ts~CandleCollection#candles",
+    "core/exchanges/baseexchange.ts~baseexchange#buy",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-buy",
+    "core/exchanges/baseExchange.ts~BaseExchange#buy",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#candles",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-candles",
+    "core/exchanges/baseExchange.ts~BaseExchange#candles",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#constructor",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-constructor-constructor",
-    "src/core/candleCollection.ts~CandleCollection#constructor",
+    "core/exchanges/baseexchange.ts~baseexchange#connect",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-connect",
+    "core/exchanges/baseExchange.ts~BaseExchange#connect",
     "method"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#cronjob",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-cronjob",
-    "src/core/candleCollection.ts~CandleCollection#cronjob",
+    "core/exchanges/baseexchange.ts~baseexchange#connection",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-connection",
+    "core/exchanges/baseExchange.ts~BaseExchange#connection",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#fillcandlegaps",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-fillCandleGaps",
-    "src/core/candleCollection.ts~CandleCollection#fillCandleGaps",
+    "core/exchanges/baseexchange.ts~baseexchange#constructor",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-constructor-constructor",
+    "core/exchanges/baseExchange.ts~BaseExchange#constructor",
     "method"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#generatecandles",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-generateCandles",
-    "src/core/candleCollection.ts~CandleCollection#generateCandles",
-    "method"
-  ],
-  [
-    "src/core/candlecollection.ts~candlecollection#getcandlegenerator",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-getCandleGenerator",
-    "src/core/candleCollection.ts~CandleCollection#getCandleGenerator",
-    "method"
-  ],
-  [
-    "src/core/candlecollection.ts~candlecollection#getrecycledcandle",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-getRecycledCandle",
-    "src/core/candleCollection.ts~CandleCollection#getRecycledCandle",
+    "core/exchanges/baseexchange.ts~baseexchange#currencies",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-currencies",
+    "core/exchanges/baseExchange.ts~BaseExchange#currencies",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#interval",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-interval",
-    "src/core/candleCollection.ts~CandleCollection#interval",
+    "core/exchanges/baseexchange.ts~baseexchange#destroy",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-destroy",
+    "core/exchanges/baseExchange.ts~BaseExchange#destroy",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#emit",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-emit",
+    "core/exchanges/baseExchange.ts~BaseExchange#emit",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#generateorderid",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-generateOrderId",
+    "core/exchanges/baseExchange.ts~BaseExchange#generateOrderId",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#getcandlecollection",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-getCandleCollection",
+    "core/exchanges/baseExchange.ts~BaseExchange#getCandleCollection",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#getopenorders",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-getOpenOrders",
+    "core/exchanges/baseExchange.ts~BaseExchange#getOpenOrders",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#removeretentionoverflow",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-removeRetentionOverflow",
-    "src/core/candleCollection.ts~CandleCollection#removeRetentionOverflow",
+    "core/exchanges/baseexchange.ts~baseexchange#getorderbook",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-getOrderbook",
+    "core/exchanges/baseExchange.ts~BaseExchange#getOrderbook",
     "method"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#retentionperiod",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-retentionPeriod",
-    "src/core/candleCollection.ts~CandleCollection#retentionPeriod",
+    "core/exchanges/baseexchange.ts~baseexchange#isadjustingorderallowed",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-isAdjustingOrderAllowed",
+    "core/exchanges/baseExchange.ts~BaseExchange#isAdjustingOrderAllowed",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#isauthenticated",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-isAuthenticated",
+    "core/exchanges/baseExchange.ts~BaseExchange#isAuthenticated",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#set",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-set",
-    "src/core/candleCollection.ts~CandleCollection#set",
-    "method"
-  ],
-  [
-    "src/core/candlecollection.ts~candlecollection#sort",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-member-sort",
-    "src/core/candleCollection.ts~CandleCollection#sort",
+    "core/exchanges/baseexchange.ts~baseexchange#iscurrenciesloaded",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-isCurrenciesLoaded",
+    "core/exchanges/baseExchange.ts~BaseExchange#isCurrenciesLoaded",
     "member"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#stop",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-stop",
-    "src/core/candleCollection.ts~CandleCollection#stop",
+    "core/exchanges/baseexchange.ts~baseexchange#isready",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-isReady",
+    "core/exchanges/baseExchange.ts~BaseExchange#isReady",
     "method"
   ],
   [
-    "src/core/candlecollection.ts~candlecollection#update",
-    "class/src/core/candleCollection.ts~CandleCollection.html#instance-method-update",
-    "src/core/candleCollection.ts~CandleCollection#update",
+    "core/exchanges/baseexchange.ts~baseexchange#on",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-on",
+    "core/exchanges/baseExchange.ts~BaseExchange#on",
     "method"
   ],
   [
-    "src/core/candleloader.ts",
-    "file/src/core/candleLoader.ts.html",
-    "src/core/candleLoader.ts",
+    "core/exchanges/baseexchange.ts~baseexchange#onconnect",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onConnect",
+    "core/exchanges/baseExchange.ts~BaseExchange#onConnect",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#oncreate",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onCreate",
+    "core/exchanges/baseExchange.ts~BaseExchange#onCreate",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#oncurrenciesloaded",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onCurrenciesLoaded",
+    "core/exchanges/baseExchange.ts~BaseExchange#onCurrenciesLoaded",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#onreport",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onReport",
+    "core/exchanges/baseExchange.ts~BaseExchange#onReport",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#openorders",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-openOrders",
+    "core/exchanges/baseExchange.ts~BaseExchange#openOrders",
+    "member"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#orderinprogress",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderInProgress",
+    "core/exchanges/baseExchange.ts~BaseExchange#orderInProgress",
+    "member"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#orderincrement",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderIncrement",
+    "core/exchanges/baseExchange.ts~BaseExchange#orderIncrement",
+    "member"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#orderbooks",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderbooks",
+    "core/exchanges/baseExchange.ts~BaseExchange#orderbooks",
+    "member"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#ready",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-ready",
+    "core/exchanges/baseExchange.ts~BaseExchange#ready",
+    "member"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#removeorder",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-removeOrder",
+    "core/exchanges/baseExchange.ts~BaseExchange#removeOrder",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#sell",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-sell",
+    "core/exchanges/baseExchange.ts~BaseExchange#sell",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#send",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-send",
+    "core/exchanges/baseExchange.ts~BaseExchange#send",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#setorderinprogress",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-setOrderInProgress",
+    "core/exchanges/baseExchange.ts~BaseExchange#setOrderInProgress",
+    "method"
+  ],
+  [
+    "core/exchanges/baseexchange.ts~baseexchange#socketclient",
+    "class/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-socketClient",
+    "core/exchanges/baseExchange.ts~BaseExchange#socketClient",
+    "member"
+  ],
+  [
+    "core/exchanges/exchangeinterface.ts",
+    "file/core/exchanges/exchangeInterface.ts.html",
+    "core/exchanges/exchangeInterface.ts",
     "file"
   ],
   [
-    "src/core/candleloader.ts~candleloader#constructor",
-    "class/src/core/candleLoader.ts~CandleLoader.html#instance-constructor-constructor",
-    "src/core/candleLoader.ts~CandleLoader#constructor",
-    "method"
-  ],
-  [
-    "src/core/candleloader.ts~candleloader#filepath",
-    "class/src/core/candleLoader.ts~CandleLoader.html#instance-member-filePath",
-    "src/core/candleLoader.ts~CandleLoader#filePath",
-    "member"
-  ],
-  [
-    "src/core/candleloader.ts~candleloader#parse",
-    "class/src/core/candleLoader.ts~CandleLoader.html#instance-method-parse",
-    "src/core/candleLoader.ts~CandleLoader#parse",
-    "method"
-  ],
-  [
-    "src/core/candleloader.ts~candleloader#parser",
-    "class/src/core/candleLoader.ts~CandleLoader.html#instance-member-parser",
-    "src/core/candleLoader.ts~CandleLoader#parser",
-    "member"
-  ],
-  [
-    "src/core/candleloader.ts~candleloader.parsefilereader",
-    "class/src/core/candleLoader.ts~CandleLoader.html#static-method-parseFileReader",
-    "src/core/candleLoader.ts~CandleLoader.parseFileReader",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts",
-    "file/src/core/exchanges/baseExchange.ts.html",
-    "src/core/exchanges/baseExchange.ts",
+    "core/exchanges/hitbtc.ts",
+    "file/core/exchanges/hitBTC.ts.html",
+    "core/exchanges/hitBTC.ts",
     "file"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#addorder",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-addOrder",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#addOrder",
+    "core/exchanges/hitbtc.ts~hitbtc#adjustorder",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-adjustOrder",
+    "core/exchanges/hitBTC.ts~HitBTC#adjustOrder",
     "method"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#buy",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-buy",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#buy",
+    "core/exchanges/hitbtc.ts~hitbtc#cancelorder",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-cancelOrder",
+    "core/exchanges/hitBTC.ts~HitBTC#cancelOrder",
     "method"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#candles",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-candles",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#candles",
+    "core/exchanges/hitbtc.ts~hitbtc#connect",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-connect",
+    "core/exchanges/hitBTC.ts~HitBTC#connect",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#constructor",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-constructor-constructor",
+    "core/exchanges/hitBTC.ts~HitBTC#constructor",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#createorder",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-createOrder",
+    "core/exchanges/hitBTC.ts~HitBTC#createOrder",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#loadcurrencies",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-loadCurrencies",
+    "core/exchanges/hitBTC.ts~HitBTC#loadCurrencies",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#login",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-login",
+    "core/exchanges/hitBTC.ts~HitBTC#login",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#mapper",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-mapper",
+    "core/exchanges/hitBTC.ts~HitBTC#mapper",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#connect",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-connect",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#connect",
+    "core/exchanges/hitbtc.ts~hitbtc#onconnect",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onConnect",
+    "core/exchanges/hitBTC.ts~HitBTC#onConnect",
     "method"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#connection",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-connection",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#connection",
+    "core/exchanges/hitbtc.ts~hitbtc#onupdatecandles",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onUpdateCandles",
+    "core/exchanges/hitBTC.ts~HitBTC#onUpdateCandles",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#onupdateorderbook",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onUpdateOrderbook",
+    "core/exchanges/hitBTC.ts~HitBTC#onUpdateOrderbook",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtc.ts~hitbtc#pubkey",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-pubKey",
+    "core/exchanges/hitBTC.ts~HitBTC#pubKey",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#constructor",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-constructor-constructor",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#constructor",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#currencies",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-currencies",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#currencies",
+    "core/exchanges/hitbtc.ts~hitbtc#seckey",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-secKey",
+    "core/exchanges/hitBTC.ts~HitBTC#secKey",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#destroy",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-destroy",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#destroy",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#emit",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-emit",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#emit",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#generateorderid",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-generateOrderId",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#generateOrderId",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#getcandlecollection",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-getCandleCollection",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#getCandleCollection",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#getopenorders",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-getOpenOrders",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#getOpenOrders",
+    "core/exchanges/hitbtc.ts~hitbtc#sequence",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-sequence",
+    "core/exchanges/hitBTC.ts~HitBTC#sequence",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#getorderbook",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-getOrderbook",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#getOrderbook",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#isadjustingorderallowed",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-isAdjustingOrderAllowed",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#isAdjustingOrderAllowed",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#isauthenticated",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-isAuthenticated",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#isAuthenticated",
+    "core/exchanges/hitbtc.ts~hitbtc#subscribecandles",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeCandles",
+    "core/exchanges/hitBTC.ts~HitBTC#subscribeCandles",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#iscurrenciesloaded",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-isCurrenciesLoaded",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#isCurrenciesLoaded",
+    "core/exchanges/hitbtc.ts~hitbtc#subscribeorderbook",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeOrderbook",
+    "core/exchanges/hitBTC.ts~HitBTC#subscribeOrderbook",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#isready",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-isReady",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#isReady",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#on",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-on",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#on",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#onconnect",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onConnect",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#onConnect",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#oncreate",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onCreate",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#onCreate",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#oncurrenciesloaded",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onCurrenciesLoaded",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#onCurrenciesLoaded",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#onreport",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-onReport",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#onReport",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#openorders",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-openOrders",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#openOrders",
+    "core/exchanges/hitbtc.ts~hitbtc#subscribereports",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeReports",
+    "core/exchanges/hitBTC.ts~HitBTC#subscribeReports",
     "member"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#orderinprogress",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderInProgress",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#orderInProgress",
-    "member"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#orderincrement",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderIncrement",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#orderIncrement",
-    "member"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#orderbooks",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-orderbooks",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#orderbooks",
-    "member"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#ready",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-ready",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#ready",
-    "member"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#removeorder",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-removeOrder",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#removeOrder",
+    "core/exchanges/hitbtc.ts~hitbtc.getinstance",
+    "class/core/exchanges/hitBTC.ts~HitBTC.html#static-method-getInstance",
+    "core/exchanges/hitBTC.ts~HitBTC.getInstance",
     "method"
   ],
   [
-    "src/core/exchanges/baseexchange.ts~baseexchange#sell",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-sell",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#sell",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#send",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-send",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#send",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#setorderinprogress",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-method-setOrderInProgress",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#setOrderInProgress",
-    "method"
-  ],
-  [
-    "src/core/exchanges/baseexchange.ts~baseexchange#socketclient",
-    "class/src/core/exchanges/baseExchange.ts~BaseExchange.html#instance-member-socketClient",
-    "src/core/exchanges/baseExchange.ts~BaseExchange#socketClient",
-    "member"
-  ],
-  [
-    "src/core/exchanges/exchangeinterface.ts",
-    "file/src/core/exchanges/exchangeInterface.ts.html",
-    "src/core/exchanges/exchangeInterface.ts",
+    "core/exchanges/hitbtcmapper.ts",
+    "file/core/exchanges/hitBTCMapper.ts.html",
+    "core/exchanges/hitBTCMapper.ts",
     "file"
   ],
   [
-    "src/core/exchanges/hitbtc.ts",
-    "file/src/core/exchanges/hitBTC.ts.html",
-    "src/core/exchanges/hitBTC.ts",
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#constructor",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-constructor-constructor",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#constructor",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#destroy",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-destroy",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#destroy",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#exchange",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-member-exchange",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#exchange",
+    "member"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#mapcandles",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-mapCandles",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#mapCandles",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#ongetsymbols",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onGetSymbols",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onGetSymbols",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#onlogin",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onLogin",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onLogin",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#onreceive",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onReceive",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onReceive",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#onreport",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onReport",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onReport",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#onupdatecandles",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onUpdateCandles",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onUpdateCandles",
+    "method"
+  ],
+  [
+    "core/exchanges/hitbtcmapper.ts~hitbtcmapper#onupdateorderbook",
+    "class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onUpdateOrderbook",
+    "core/exchanges/hitBTCMapper.ts~HitBTCMapper#onUpdateOrderbook",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts",
+    "file/core/exchanges/localExchange.ts.html",
+    "core/exchanges/localExchange.ts",
     "file"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#adjustorder",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-adjustOrder",
-    "src/core/exchanges/hitBTC.ts~HitBTC#adjustOrder",
+    "core/exchanges/localexchange.ts~localexchange#adjustorder",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-adjustOrder",
+    "core/exchanges/localExchange.ts~LocalExchange#adjustOrder",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#cancelorder",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-cancelOrder",
-    "src/core/exchanges/hitBTC.ts~HitBTC#cancelOrder",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#connect",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-connect",
-    "src/core/exchanges/hitBTC.ts~HitBTC#connect",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#constructor",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-constructor-constructor",
-    "src/core/exchanges/hitBTC.ts~HitBTC#constructor",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#createorder",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-createOrder",
-    "src/core/exchanges/hitBTC.ts~HitBTC#createOrder",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#loadcurrencies",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-loadCurrencies",
-    "src/core/exchanges/hitBTC.ts~HitBTC#loadCurrencies",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#login",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-login",
-    "src/core/exchanges/hitBTC.ts~HitBTC#login",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#mapper",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-mapper",
-    "src/core/exchanges/hitBTC.ts~HitBTC#mapper",
+    "core/exchanges/localexchange.ts~localexchange#assets",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-assets",
+    "core/exchanges/localExchange.ts~LocalExchange#assets",
     "member"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#onconnect",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onConnect",
-    "src/core/exchanges/hitBTC.ts~HitBTC#onConnect",
+    "core/exchanges/localexchange.ts~localexchange#cancelorder",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-cancelOrder",
+    "core/exchanges/localExchange.ts~LocalExchange#cancelOrder",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#onupdatecandles",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onUpdateCandles",
-    "src/core/exchanges/hitBTC.ts~HitBTC#onUpdateCandles",
+    "core/exchanges/localexchange.ts~localexchange#constructor",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-constructor-constructor",
+    "core/exchanges/localExchange.ts~LocalExchange#constructor",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#onupdateorderbook",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-method-onUpdateOrderbook",
-    "src/core/exchanges/hitBTC.ts~HitBTC#onUpdateOrderbook",
+    "core/exchanges/localexchange.ts~localexchange#createorder",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-createOrder",
+    "core/exchanges/localExchange.ts~LocalExchange#createOrder",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#pubkey",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-pubKey",
-    "src/core/exchanges/hitBTC.ts~HitBTC#pubKey",
+    "core/exchanges/localexchange.ts~localexchange#currentcandle",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-currentCandle",
+    "core/exchanges/localExchange.ts~LocalExchange#currentCandle",
     "member"
   ],
   [
-    "src/core/exchanges/hitbtc.ts~hitbtc#seckey",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-secKey",
-    "src/core/exchanges/hitBTC.ts~HitBTC#secKey",
-    "member"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#sequence",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-sequence",
-    "src/core/exchanges/hitBTC.ts~HitBTC#sequence",
-    "member"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#subscribecandles",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeCandles",
-    "src/core/exchanges/hitBTC.ts~HitBTC#subscribeCandles",
-    "member"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#subscribeorderbook",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeOrderbook",
-    "src/core/exchanges/hitBTC.ts~HitBTC#subscribeOrderbook",
-    "member"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc#subscribereports",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#instance-member-subscribeReports",
-    "src/core/exchanges/hitBTC.ts~HitBTC#subscribeReports",
-    "member"
-  ],
-  [
-    "src/core/exchanges/hitbtc.ts~hitbtc.getinstance",
-    "class/src/core/exchanges/hitBTC.ts~HitBTC.html#static-method-getInstance",
-    "src/core/exchanges/hitBTC.ts~HitBTC.getInstance",
+    "core/exchanges/localexchange.ts~localexchange#emitcandles",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-emitCandles",
+    "core/exchanges/localExchange.ts~LocalExchange#emitCandles",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts",
-    "file/src/core/exchanges/hitBTCMapper.ts.html",
-    "src/core/exchanges/hitBTCMapper.ts",
+    "core/exchanges/localexchange.ts~localexchange#filledorders",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-filledOrders",
+    "core/exchanges/localExchange.ts~LocalExchange#filledOrders",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#getorderprice",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-getOrderPrice",
+    "core/exchanges/localExchange.ts~LocalExchange#getOrderPrice",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#isbuyallowed",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isBuyAllowed",
+    "core/exchanges/localExchange.ts~LocalExchange#isBuyAllowed",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#isready",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isReady",
+    "core/exchanges/localExchange.ts~LocalExchange#isReady",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#issellallowed",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isSellAllowed",
+    "core/exchanges/localExchange.ts~LocalExchange#isSellAllowed",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#loadcurrencies",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-loadCurrencies",
+    "core/exchanges/localExchange.ts~LocalExchange#loadCurrencies",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#onupdatecandles",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-onUpdateCandles",
+    "core/exchanges/localExchange.ts~LocalExchange#onUpdateCandles",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#onupdateorderbook",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-onUpdateOrderbook",
+    "core/exchanges/localExchange.ts~LocalExchange#onUpdateOrderbook",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#openorders",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-openOrders",
+    "core/exchanges/localExchange.ts~LocalExchange#openOrders",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#processopenorders",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-processOpenOrders",
+    "core/exchanges/localExchange.ts~LocalExchange#processOpenOrders",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#subscribecandles",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeCandles",
+    "core/exchanges/localExchange.ts~LocalExchange#subscribeCandles",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#subscribeorderbook",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeOrderbook",
+    "core/exchanges/localExchange.ts~LocalExchange#subscribeOrderbook",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#subscribereports",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeReports",
+    "core/exchanges/localExchange.ts~LocalExchange#subscribeReports",
+    "member"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange#updateassets",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-updateAssets",
+    "core/exchanges/localExchange.ts~LocalExchange#updateAssets",
+    "method"
+  ],
+  [
+    "core/exchanges/localexchange.ts~localexchange.getinstance",
+    "class/core/exchanges/localExchange.ts~LocalExchange.html#static-method-getInstance",
+    "core/exchanges/localExchange.ts~LocalExchange.getInstance",
+    "method"
+  ],
+  [
+    "core/livetrader.ts",
+    "file/core/liveTrader.ts.html",
+    "core/liveTrader.ts",
     "file"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#constructor",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-constructor-constructor",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#constructor",
+    "core/livetrader.ts~livetrader#addexchange",
+    "class/core/liveTrader.ts~LiveTrader.html#instance-method-addExchange",
+    "core/liveTrader.ts~LiveTrader#addExchange",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#destroy",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-destroy",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#destroy",
+    "core/livetrader.ts~livetrader#bindexchangetosocketserver",
+    "class/core/liveTrader.ts~LiveTrader.html#instance-method-bindExchangeToSocketServer",
+    "core/liveTrader.ts~LiveTrader#bindExchangeToSocketServer",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#exchange",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-member-exchange",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#exchange",
+    "core/livetrader.ts~livetrader#eventsbound",
+    "class/core/liveTrader.ts~LiveTrader.html#instance-member-eventsBound",
+    "core/liveTrader.ts~LiveTrader#eventsBound",
     "member"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#mapcandles",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-mapCandles",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#mapCandles",
+    "core/livetrader.ts~livetrader#exchange",
+    "class/core/liveTrader.ts~LiveTrader.html#instance-member-exchange",
+    "core/liveTrader.ts~LiveTrader#exchange",
+    "member"
+  ],
+  [
+    "core/livetrader.ts~livetrader#start",
+    "class/core/liveTrader.ts~LiveTrader.html#instance-method-start",
+    "core/liveTrader.ts~LiveTrader#start",
     "method"
   ],
   [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#ongetsymbols",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onGetSymbols",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onGetSymbols",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#onlogin",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onLogin",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onLogin",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#onreceive",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onReceive",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onReceive",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#onreport",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onReport",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onReport",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#onupdatecandles",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onUpdateCandles",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onUpdateCandles",
-    "method"
-  ],
-  [
-    "src/core/exchanges/hitbtcmapper.ts~hitbtcmapper#onupdateorderbook",
-    "class/src/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html#instance-method-onUpdateOrderbook",
-    "src/core/exchanges/hitBTCMapper.ts~HitBTCMapper#onUpdateOrderbook",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts",
-    "file/src/core/exchanges/localExchange.ts.html",
-    "src/core/exchanges/localExchange.ts",
+    "core/logger.ts",
+    "file/core/logger.ts.html",
+    "core/logger.ts",
     "file"
   ],
   [
-    "src/core/exchanges/localexchange.ts~localexchange#adjustorder",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-adjustOrder",
-    "src/core/exchanges/localExchange.ts~LocalExchange#adjustOrder",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#assets",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-assets",
-    "src/core/exchanges/localExchange.ts~LocalExchange#assets",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#cancelorder",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-cancelOrder",
-    "src/core/exchanges/localExchange.ts~LocalExchange#cancelOrder",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#constructor",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-constructor-constructor",
-    "src/core/exchanges/localExchange.ts~LocalExchange#constructor",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#createorder",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-createOrder",
-    "src/core/exchanges/localExchange.ts~LocalExchange#createOrder",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#currentcandle",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-currentCandle",
-    "src/core/exchanges/localExchange.ts~LocalExchange#currentCandle",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#emitcandles",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-emitCandles",
-    "src/core/exchanges/localExchange.ts~LocalExchange#emitCandles",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#filledorders",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-filledOrders",
-    "src/core/exchanges/localExchange.ts~LocalExchange#filledOrders",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#getorderprice",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-getOrderPrice",
-    "src/core/exchanges/localExchange.ts~LocalExchange#getOrderPrice",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#isbuyallowed",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isBuyAllowed",
-    "src/core/exchanges/localExchange.ts~LocalExchange#isBuyAllowed",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#isready",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isReady",
-    "src/core/exchanges/localExchange.ts~LocalExchange#isReady",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#issellallowed",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-isSellAllowed",
-    "src/core/exchanges/localExchange.ts~LocalExchange#isSellAllowed",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#loadcurrencies",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-loadCurrencies",
-    "src/core/exchanges/localExchange.ts~LocalExchange#loadCurrencies",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#onupdatecandles",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-onUpdateCandles",
-    "src/core/exchanges/localExchange.ts~LocalExchange#onUpdateCandles",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#onupdateorderbook",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-onUpdateOrderbook",
-    "src/core/exchanges/localExchange.ts~LocalExchange#onUpdateOrderbook",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#openorders",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-openOrders",
-    "src/core/exchanges/localExchange.ts~LocalExchange#openOrders",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#processopenorders",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-processOpenOrders",
-    "src/core/exchanges/localExchange.ts~LocalExchange#processOpenOrders",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#subscribecandles",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeCandles",
-    "src/core/exchanges/localExchange.ts~LocalExchange#subscribeCandles",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#subscribeorderbook",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeOrderbook",
-    "src/core/exchanges/localExchange.ts~LocalExchange#subscribeOrderbook",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#subscribereports",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-member-subscribeReports",
-    "src/core/exchanges/localExchange.ts~LocalExchange#subscribeReports",
-    "member"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange#updateassets",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#instance-method-updateAssets",
-    "src/core/exchanges/localExchange.ts~LocalExchange#updateAssets",
-    "method"
-  ],
-  [
-    "src/core/exchanges/localexchange.ts~localexchange.getinstance",
-    "class/src/core/exchanges/localExchange.ts~LocalExchange.html#static-method-getInstance",
-    "src/core/exchanges/localExchange.ts~LocalExchange.getInstance",
-    "method"
-  ],
-  [
-    "src/core/livetrader.ts",
-    "file/src/core/liveTrader.ts.html",
-    "src/core/liveTrader.ts",
+    "core/orderinterface.ts",
+    "file/core/orderInterface.ts.html",
+    "core/orderInterface.ts",
     "file"
   ],
   [
-    "src/core/livetrader.ts~livetrader#addexchange",
-    "class/src/core/liveTrader.ts~LiveTrader.html#instance-method-addExchange",
-    "src/core/liveTrader.ts~LiveTrader#addExchange",
+    "core/orderbook.ts",
+    "file/core/orderbook.ts.html",
+    "core/orderbook.ts",
+    "file"
+  ],
+  [
+    "core/orderbook.ts~orderbook#addincrement",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-addIncrement",
+    "core/orderbook.ts~Orderbook#addIncrement",
     "method"
   ],
   [
-    "src/core/livetrader.ts~livetrader#bindexchangetosocketserver",
-    "class/src/core/liveTrader.ts~LiveTrader.html#instance-method-bindExchangeToSocketServer",
-    "src/core/liveTrader.ts~LiveTrader#bindExchangeToSocketServer",
+    "core/orderbook.ts~orderbook#applyincrement",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-applyIncrement",
+    "core/orderbook.ts~Orderbook#applyIncrement",
     "method"
   ],
   [
-    "src/core/livetrader.ts~livetrader#eventsbound",
-    "class/src/core/liveTrader.ts~LiveTrader.html#instance-member-eventsBound",
-    "src/core/liveTrader.ts~LiveTrader#eventsBound",
+    "core/orderbook.ts~orderbook#ask",
+    "class/core/orderbook.ts~Orderbook.html#instance-member-ask",
+    "core/orderbook.ts~Orderbook#ask",
     "member"
   ],
   [
-    "src/core/livetrader.ts~livetrader#exchange",
-    "class/src/core/liveTrader.ts~LiveTrader.html#instance-member-exchange",
-    "src/core/liveTrader.ts~LiveTrader#exchange",
+    "core/orderbook.ts~orderbook#bid",
+    "class/core/orderbook.ts~Orderbook.html#instance-member-bid",
+    "core/orderbook.ts~Orderbook#bid",
     "member"
   ],
   [
-    "src/core/livetrader.ts~livetrader#start",
-    "class/src/core/liveTrader.ts~LiveTrader.html#instance-method-start",
-    "src/core/liveTrader.ts~LiveTrader#start",
+    "core/orderbook.ts~orderbook#constructor",
+    "class/core/orderbook.ts~Orderbook.html#instance-constructor-constructor",
+    "core/orderbook.ts~Orderbook#constructor",
     "method"
   ],
   [
-    "src/core/logger.ts",
-    "file/src/core/logger.ts.html",
-    "src/core/logger.ts",
-    "file"
-  ],
-  [
-    "src/core/orderinterface.ts",
-    "file/src/core/orderInterface.ts.html",
-    "src/core/orderInterface.ts",
-    "file"
-  ],
-  [
-    "src/core/orderbook.ts",
-    "file/src/core/orderbook.ts.html",
-    "src/core/orderbook.ts",
-    "file"
-  ],
-  [
-    "src/core/orderbook.ts~orderbook#addincrement",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-addIncrement",
-    "src/core/orderbook.ts~Orderbook#addIncrement",
+    "core/orderbook.ts~orderbook#getadjustedprice",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-getAdjustedPrice",
+    "core/orderbook.ts~Orderbook#getAdjustedPrice",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#applyincrement",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-applyIncrement",
-    "src/core/orderbook.ts~Orderbook#applyIncrement",
+    "core/orderbook.ts~orderbook#getentries",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-getEntries",
+    "core/orderbook.ts~Orderbook#getEntries",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#ask",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-member-ask",
-    "src/core/orderbook.ts~Orderbook#ask",
+    "core/orderbook.ts~orderbook#getsatdiff",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-getSatDiff",
+    "core/orderbook.ts~Orderbook#getSatDiff",
+    "method"
+  ],
+  [
+    "core/orderbook.ts~orderbook#pair",
+    "class/core/orderbook.ts~Orderbook.html#instance-member-pair",
+    "core/orderbook.ts~Orderbook#pair",
     "member"
   ],
   [
-    "src/core/orderbook.ts~orderbook#bid",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-member-bid",
-    "src/core/orderbook.ts~Orderbook#bid",
+    "core/orderbook.ts~orderbook#precision",
+    "class/core/orderbook.ts~Orderbook.html#instance-member-precision",
+    "core/orderbook.ts~Orderbook#precision",
     "member"
   ],
   [
-    "src/core/orderbook.ts~orderbook#constructor",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-constructor-constructor",
-    "src/core/orderbook.ts~Orderbook#constructor",
+    "core/orderbook.ts~orderbook#setorders",
+    "class/core/orderbook.ts~Orderbook.html#instance-method-setOrders",
+    "core/orderbook.ts~Orderbook#setOrders",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#getadjustedprice",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-getAdjustedPrice",
-    "src/core/orderbook.ts~Orderbook#getAdjustedPrice",
+    "core/orderbook.ts~orderbook.getbidaskspreadperc",
+    "class/core/orderbook.ts~Orderbook.html#static-method-getBidAskSpreadPerc",
+    "core/orderbook.ts~Orderbook.getBidAskSpreadPerc",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#getentries",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-getEntries",
-    "src/core/orderbook.ts~Orderbook#getEntries",
+    "core/socktrader.ts",
+    "file/core/sockTrader.ts.html",
+    "core/sockTrader.ts",
+    "file"
+  ],
+  [
+    "core/socktrader.ts~socktrader#addstrategy",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-addStrategy",
+    "core/sockTrader.ts~SockTrader#addStrategy",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#getsatdiff",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-getSatDiff",
-    "src/core/orderbook.ts~Orderbook#getSatDiff",
+    "core/socktrader.ts~socktrader#bindexchangetostrategy",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-bindExchangeToStrategy",
+    "core/sockTrader.ts~SockTrader#bindExchangeToStrategy",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook#pair",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-member-pair",
-    "src/core/orderbook.ts~Orderbook#pair",
+    "core/socktrader.ts~socktrader#bindstrategytoexchange",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-bindStrategyToExchange",
+    "core/sockTrader.ts~SockTrader#bindStrategyToExchange",
+    "method"
+  ],
+  [
+    "core/socktrader.ts~socktrader#config",
+    "class/core/sockTrader.ts~SockTrader.html#instance-member-config",
+    "core/sockTrader.ts~SockTrader#config",
     "member"
   ],
   [
-    "src/core/orderbook.ts~orderbook#precision",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-member-precision",
-    "src/core/orderbook.ts~Orderbook#precision",
+    "core/socktrader.ts~socktrader#constructor",
+    "class/core/sockTrader.ts~SockTrader.html#instance-constructor-constructor",
+    "core/sockTrader.ts~SockTrader#constructor",
+    "method"
+  ],
+  [
+    "core/socktrader.ts~socktrader#eventsbound",
+    "class/core/sockTrader.ts~SockTrader.html#instance-member-eventsBound",
+    "core/sockTrader.ts~SockTrader#eventsBound",
     "member"
   ],
   [
-    "src/core/orderbook.ts~orderbook#setorders",
-    "class/src/core/orderbook.ts~Orderbook.html#instance-method-setOrders",
-    "src/core/orderbook.ts~Orderbook#setOrders",
+    "core/socktrader.ts~socktrader#sendtowebserver",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-sendToWebServer",
+    "core/sockTrader.ts~SockTrader#sendToWebServer",
     "method"
   ],
   [
-    "src/core/orderbook.ts~orderbook.getbidaskspreadperc",
-    "class/src/core/orderbook.ts~Orderbook.html#static-method-getBidAskSpreadPerc",
-    "src/core/orderbook.ts~Orderbook.getBidAskSpreadPerc",
+    "core/socktrader.ts~socktrader#start",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-start",
+    "core/sockTrader.ts~SockTrader#start",
     "method"
   ],
   [
-    "src/core/socktrader.ts",
-    "file/src/core/sockTrader.ts.html",
-    "src/core/sockTrader.ts",
-    "file"
-  ],
-  [
-    "src/core/socktrader.ts~socktrader#addstrategy",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-addStrategy",
-    "src/core/sockTrader.ts~SockTrader#addStrategy",
-    "method"
-  ],
-  [
-    "src/core/socktrader.ts~socktrader#bindexchangetostrategy",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-bindExchangeToStrategy",
-    "src/core/sockTrader.ts~SockTrader#bindExchangeToStrategy",
-    "method"
-  ],
-  [
-    "src/core/socktrader.ts~socktrader#bindstrategytoexchange",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-bindStrategyToExchange",
-    "src/core/sockTrader.ts~SockTrader#bindStrategyToExchange",
-    "method"
-  ],
-  [
-    "src/core/socktrader.ts~socktrader#config",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-member-config",
-    "src/core/sockTrader.ts~SockTrader#config",
+    "core/socktrader.ts~socktrader#strategyconfigurations",
+    "class/core/sockTrader.ts~SockTrader.html#instance-member-strategyConfigurations",
+    "core/sockTrader.ts~SockTrader#strategyConfigurations",
     "member"
   ],
   [
-    "src/core/socktrader.ts~socktrader#constructor",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-constructor-constructor",
-    "src/core/sockTrader.ts~SockTrader#constructor",
+    "core/socktrader.ts~socktrader#subscribetoexchangeevents",
+    "class/core/sockTrader.ts~SockTrader.html#instance-method-subscribeToExchangeEvents",
+    "core/sockTrader.ts~SockTrader#subscribeToExchangeEvents",
     "method"
   ],
   [
-    "src/core/socktrader.ts~socktrader#eventsbound",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-member-eventsBound",
-    "src/core/sockTrader.ts~SockTrader#eventsBound",
+    "core/socktrader.ts~socktrader#webserver",
+    "class/core/sockTrader.ts~SockTrader.html#instance-member-webServer",
+    "core/sockTrader.ts~SockTrader#webServer",
     "member"
   ],
   [
-    "src/core/socktrader.ts~socktrader#sendtowebserver",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-sendToWebServer",
-    "src/core/sockTrader.ts~SockTrader#sendToWebServer",
+    "core/strategy/basestrategy.ts",
+    "file/core/strategy/baseStrategy.ts.html",
+    "core/strategy/baseStrategy.ts",
+    "file"
+  ],
+  [
+    "core/strategy/basestrategy.ts~basestrategy#adjust",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-adjust",
+    "core/strategy/baseStrategy.ts~BaseStrategy#adjust",
     "method"
   ],
   [
-    "src/core/socktrader.ts~socktrader#start",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-start",
-    "src/core/sockTrader.ts~SockTrader#start",
+    "core/strategy/basestrategy.ts~basestrategy#buy",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-buy",
+    "core/strategy/baseStrategy.ts~BaseStrategy#buy",
     "method"
   ],
   [
-    "src/core/socktrader.ts~socktrader#strategyconfigurations",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-member-strategyConfigurations",
-    "src/core/sockTrader.ts~SockTrader#strategyConfigurations",
+    "core/strategy/basestrategy.ts~basestrategy#constructor",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-constructor-constructor",
+    "core/strategy/baseStrategy.ts~BaseStrategy#constructor",
+    "method"
+  ],
+  [
+    "core/strategy/basestrategy.ts~basestrategy#exchange",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-member-exchange",
+    "core/strategy/baseStrategy.ts~BaseStrategy#exchange",
     "member"
   ],
   [
-    "src/core/socktrader.ts~socktrader#subscribetoexchangeevents",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-method-subscribeToExchangeEvents",
-    "src/core/sockTrader.ts~SockTrader#subscribeToExchangeEvents",
+    "core/strategy/basestrategy.ts~basestrategy#notifyorder",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-notifyOrder",
+    "core/strategy/baseStrategy.ts~BaseStrategy#notifyOrder",
     "method"
   ],
   [
-    "src/core/socktrader.ts~socktrader#webserver",
-    "class/src/core/sockTrader.ts~SockTrader.html#instance-member-webServer",
-    "src/core/sockTrader.ts~SockTrader#webServer",
+    "core/strategy/basestrategy.ts~basestrategy#pair",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-member-pair",
+    "core/strategy/baseStrategy.ts~BaseStrategy#pair",
     "member"
   ],
   [
-    "src/core/strategy/basestrategy.ts",
-    "file/src/core/strategy/baseStrategy.ts.html",
-    "src/core/strategy/baseStrategy.ts",
+    "core/strategy/basestrategy.ts~basestrategy#sell",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-sell",
+    "core/strategy/baseStrategy.ts~BaseStrategy#sell",
+    "method"
+  ],
+  [
+    "core/strategy/basestrategy.ts~basestrategy#updatecandles",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-updateCandles",
+    "core/strategy/baseStrategy.ts~BaseStrategy#updateCandles",
+    "method"
+  ],
+  [
+    "core/strategy/basestrategy.ts~basestrategy#updateorderbook",
+    "class/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-updateOrderbook",
+    "core/strategy/baseStrategy.ts~BaseStrategy#updateOrderbook",
+    "method"
+  ],
+  [
+    "core/strategy/utils.ts",
+    "file/core/strategy/utils.ts.html",
+    "core/strategy/utils.ts",
     "file"
   ],
   [
-    "src/core/strategy/basestrategy.ts~basestrategy#adjust",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-adjust",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#adjust",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#buy",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-buy",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#buy",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#constructor",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-constructor-constructor",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#constructor",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#exchange",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-member-exchange",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#exchange",
-    "member"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#notifyorder",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-notifyOrder",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#notifyOrder",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#pair",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-member-pair",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#pair",
-    "member"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#sell",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-sell",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#sell",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#updatecandles",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-updateCandles",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#updateCandles",
-    "method"
-  ],
-  [
-    "src/core/strategy/basestrategy.ts~basestrategy#updateorderbook",
-    "class/src/core/strategy/baseStrategy.ts~BaseStrategy.html#instance-method-updateOrderbook",
-    "src/core/strategy/baseStrategy.ts~BaseStrategy#updateOrderbook",
-    "method"
-  ],
-  [
-    "src/core/strategy/utils.ts",
-    "file/src/core/strategy/utils.ts.html",
-    "src/core/strategy/utils.ts",
+    "core/types/nanoiddictionary.d.ts",
+    "file/core/types/nanoidDictionary.d.ts.html",
+    "core/types/nanoidDictionary.d.ts",
     "file"
   ],
   [
-    "src/core/web/spawnserver.ts",
-    "file/src/core/web/spawnServer.ts.html",
-    "src/core/web/spawnServer.ts",
+    "core/types/pair.ts",
+    "file/core/types/pair.ts.html",
+    "core/types/pair.ts",
     "file"
   ],
   [
-    "src/core/web/webserver.ts",
-    "file/src/core/web/webServer.ts.html",
-    "src/core/web/webServer.ts",
+    "core/web/spawnserver.ts",
+    "file/core/web/spawnServer.ts.html",
+    "core/web/spawnServer.ts",
     "file"
   ],
   [
-    "src/core/web/whitelist.ts",
-    "file/src/core/web/whitelist.ts.html",
-    "src/core/web/whitelist.ts",
+    "core/web/webserver.ts",
+    "file/core/web/webServer.ts.html",
+    "core/web/webServer.ts",
     "file"
   ],
   [
-    "src/index.ts",
-    "file/src/index.ts.html",
-    "src/index.ts",
+    "core/web/whitelist.ts",
+    "file/core/web/whitelist.ts.html",
+    "core/web/whitelist.ts",
     "file"
   ],
   [
-    "src/strategies/mystrategy.ts",
-    "file/src/strategies/myStrategy.ts.html",
-    "src/strategies/myStrategy.ts",
-    "file"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber63",
+    "createOrder",
+    "test"
   ],
   [
-    "src/strategies/mystrategy.ts~mystrategy#constructor",
-    "class/src/strategies/myStrategy.ts~MyStrategy.html#instance-constructor-constructor",
-    "src/strategies/myStrategy.ts~MyStrategy#constructor",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber64",
+    "createOrder Should create a buy order",
+    "test"
   ],
   [
-    "src/strategies/mystrategy.ts~mystrategy#notifyorder",
-    "class/src/strategies/myStrategy.ts~MyStrategy.html#instance-method-notifyOrder",
-    "src/strategies/myStrategy.ts~MyStrategy#notifyOrder",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber70",
+    "createOrder Should create a sell order",
+    "test"
   ],
   [
-    "src/strategies/mystrategy.ts~mystrategy#updatecandles",
-    "class/src/strategies/myStrategy.ts~MyStrategy.html#instance-method-updateCandles",
-    "src/strategies/myStrategy.ts~MyStrategy#updateCandles",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber77",
+    "createOrder Should put an order into progress when creating an order",
+    "test"
   ],
   [
-    "src/strategies/mystrategy.ts~mystrategy#updateorderbook",
-    "class/src/strategies/myStrategy.ts~MyStrategy.html#instance-method-updateOrderbook",
-    "src/strategies/myStrategy.ts~MyStrategy#updateOrderbook",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber140",
+    "destroy",
+    "test"
   ],
   [
-    "src/strategies/simplemovingaverage.ts",
-    "file/src/strategies/simpleMovingAverage.ts.html",
-    "src/strategies/simpleMovingAverage.ts",
-    "file"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber141",
+    "destroy Should remove all event listeners once the exchange is destroyed",
+    "test"
   ],
   [
-    "src/strategies/simplemovingaverage.ts~simplemovingaverage#constructor",
-    "class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html#instance-constructor-constructor",
-    "src/strategies/simpleMovingAverage.ts~SimpleMovingAverage#constructor",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber171",
+    "generateOrderId",
+    "test"
   ],
   [
-    "src/strategies/simplemovingaverage.ts~simplemovingaverage#i",
-    "class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html#instance-member-i",
-    "src/strategies/simpleMovingAverage.ts~SimpleMovingAverage#i",
-    "member"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber55",
+    "generateOrderId",
+    "test"
   ],
   [
-    "src/strategies/simplemovingaverage.ts~simplemovingaverage#notifyorder",
-    "class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html#instance-method-notifyOrder",
-    "src/strategies/simpleMovingAverage.ts~SimpleMovingAverage#notifyOrder",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber56",
+    "generateOrderId Should generate a random order id",
+    "test"
   ],
   [
-    "src/strategies/simplemovingaverage.ts~simplemovingaverage#updatecandles",
-    "class/src/strategies/simpleMovingAverage.ts~SimpleMovingAverage.html#instance-method-updateCandles",
-    "src/strategies/simpleMovingAverage.ts~SimpleMovingAverage#updateCandles",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber172",
+    "generateOrderId Should generate new order id's",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts",
-    "file/src/strategies/topOfOrderBook.ts.html",
-    "src/strategies/topOfOrderBook.ts",
-    "file"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber93",
+    "getCandleCollection",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#adjposition",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-adjPosition",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#adjPosition",
-    "member"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber94",
+    "getCandleCollection Should return a cached candle collection for a trading pair",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#adjust",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-adjust",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#adjust",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber186",
+    "getOrderbook",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#adjustorder",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-adjustOrder",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#adjustOrder",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber187",
+    "getOrderbook Should get singleton exchange orderbook",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#allow",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-allow",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#allow",
-    "member"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber177",
+    "isAdjustingOrderAllowed",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#boughtprice",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-boughtPrice",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#boughtPrice",
-    "member"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber178",
+    "isAdjustingOrderAllowed Should verify if an order can be adjusted",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#constructor",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-constructor-constructor",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#constructor",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber105",
+    "onReport",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#exchange",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-exchange",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#exchange",
-    "member"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber106",
+    "onReport Should track all order changes",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#lastspread",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-lastSpread",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#lastSpread",
-    "member"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber171",
+    "sendToWebServer",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#limitpriceadjustment",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-limitPriceAdjustment",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#limitPriceAdjustment",
-    "method"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber172",
+    "sendToWebServer Should broadcast payload to socket server",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#logspread",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-logSpread",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#logSpread",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber84",
+    "setOrderInProgress",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#notifyorder",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-notifyOrder",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#notifyOrder",
-    "method"
+    "",
+    "test-file/tests/baseExchange.spec.ts.html#lineNumber85",
+    "setOrderInProgress Should put an order in/out of progress",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#optimizeorder",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-optimizeOrder",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#optimizeOrder",
-    "method"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber53",
+    "subscribeToExchangeEvents",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#pair",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-pair",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#pair",
-    "member"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber54",
+    "subscribeToExchangeEvents Should subscribe to orderbook once with 2 configs: same pair, different interval",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#placeorder",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-placeOrder",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#placeOrder",
-    "method"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber84",
+    "subscribeToExchangeEvents Should subscribe to orderbook twice with 2 configs: different pair, same interval",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#qty",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-member-qty",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#qty",
-    "member"
+    "",
+    "test-file/tests/sockTrader.spec.ts.html#lineNumber115",
+    "subscribeToExchangeEvents Should subscribe to orderbook/candles once with 2 configs: same pair, same interval",
+    "test"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#updatecandles",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-updateCandles",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#updateCandles",
-    "method"
+    "tests/baseexchange.spec.ts",
+    "test-file/tests/baseExchange.spec.ts.html",
+    "tests/baseExchange.spec.ts",
+    "testFile"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook#updateorderbook",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#instance-method-updateOrderbook",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook#updateOrderbook",
-    "method"
+    "tests/basestrategy.spec.ts",
+    "test-file/tests/baseStrategy.spec.ts.html",
+    "tests/baseStrategy.spec.ts",
+    "testFile"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook.getobside",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#static-method-getObSide",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook.getObSide",
-    "method"
+    "tests/candlecollection.spec.ts",
+    "test-file/tests/candleCollection.spec.ts.html",
+    "tests/candleCollection.spec.ts",
+    "testFile"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook.getoperator",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#static-method-getOperator",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook.getOperator",
-    "method"
+    "tests/hitbtc.spec.ts",
+    "test-file/tests/hitBTC.spec.ts.html",
+    "tests/hitBTC.spec.ts",
+    "testFile"
   ],
   [
-    "src/strategies/topoforderbook.ts~topoforderbook.orderisfirst",
-    "class/src/strategies/topOfOrderBook.ts~TopOfOrderbook.html#static-method-orderIsFirst",
-    "src/strategies/topOfOrderBook.ts~TopOfOrderbook.orderIsFirst",
-    "method"
+    "tests/orderbook.spec.ts",
+    "test-file/tests/orderbook.spec.ts.html",
+    "tests/orderbook.spec.ts",
+    "testFile"
   ],
   [
-    "src/tests/baseexchange.spec.ts",
-    "file/src/tests/baseExchange.spec.ts.html",
-    "src/tests/baseExchange.spec.ts",
-    "file"
+    "tests/socktrader.spec.ts",
+    "test-file/tests/sockTrader.spec.ts.html",
+    "tests/sockTrader.spec.ts",
+    "testFile"
   ],
   [
-    "src/tests/basestrategy.spec.ts",
-    "file/src/tests/baseStrategy.spec.ts.html",
-    "src/tests/baseStrategy.spec.ts",
-    "file"
-  ],
-  [
-    "src/tests/candlecollection.spec.ts",
-    "file/src/tests/candleCollection.spec.ts.html",
-    "src/tests/candleCollection.spec.ts",
-    "file"
-  ],
-  [
-    "src/tests/hitbtc.spec.ts",
-    "file/src/tests/hitBTC.spec.ts.html",
-    "src/tests/hitBTC.spec.ts",
-    "file"
-  ],
-  [
-    "src/tests/orderbook.spec.ts",
-    "file/src/tests/orderbook.spec.ts.html",
-    "src/tests/orderbook.spec.ts",
-    "file"
-  ],
-  [
-    "src/tests/socktrader.spec.ts",
-    "file/src/tests/sockTrader.spec.ts.html",
-    "src/tests/sockTrader.spec.ts",
-    "file"
-  ],
-  [
-    "src/tests/utils.spec.ts",
-    "file/src/tests/utils.spec.ts.html",
-    "src/tests/utils.spec.ts",
-    "file"
-  ],
-  [
-    "src/types/nanoiddictionary.d.ts",
-    "file/src/types/nanoidDictionary.d.ts.html",
-    "src/types/nanoidDictionary.d.ts",
-    "file"
-  ],
-  [
-    "src/types/pair.ts",
-    "file/src/types/pair.ts.html",
-    "src/types/pair.ts",
-    "file"
+    "tests/utils.spec.ts",
+    "test-file/tests/utils.spec.ts.html",
+    "tests/utils.spec.ts",
+    "testFile"
   ]
 ]

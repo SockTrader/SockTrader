@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">tests/hitBTC.spec.ts | SockTrader</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Websocket based trading bot for cryptocurrencies"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="SockTrader"><meta property="twitter:description" content="Websocket based trading bot for cryptocurrencies"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./" style="display: flex; align-items: center;"><img src="./image/brand_logo.png" style="width:34px;"></a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/SockTrader/SockTrader"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/backTester.ts~BackTester.html">BackTester</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleCollection.ts~CandleCollection.html">CandleCollection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/candleLoader.ts~CandleLoader.html">CandleLoader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/liveTrader.ts~LiveTrader.html">LiveTrader</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/orderbook.ts~Orderbook.html">Orderbook</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/sockTrader.ts~SockTrader.html">SockTrader</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#analyzers">analyzers</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/analyzers/capitalAnalyzer.ts~CapitalAnalyzer.html">CapitalAnalyzer</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#exchanges">exchanges</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/baseExchange.ts~BaseExchange.html">BaseExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTC.ts~HitBTC.html">HitBTC</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/hitBTCMapper.ts~HitBTCMapper.html">HitBTCMapper</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/exchanges/localExchange.ts~LocalExchange.html">LocalExchange</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#strategy">strategy</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/core/strategy/baseStrategy.ts~BaseStrategy.html">BaseStrategy</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossDown">crossDown</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-crossUp">crossUp</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#web">web</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnServer">spawnServer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">tests/hitBTC.spec.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/* tslint:disable */
+import {expect} from &quot;chai&quot;;
+import &apos;jest&apos;;
+import moment from &quot;moment&quot;;
+import {spy, stub} from &quot;sinon&quot;;
+import {IOrder, OrderSide} from &quot;../core/orderInterface&quot;;
+import HitBTC, {CandleInterval} from &quot;../core/exchanges/hitBTC&quot;;
+import CandleCollection, {ICandle} from &quot;../core/candleCollection&quot;;
+import {connection} from &quot;websocket&quot;;
+import {EventEmitter} from &quot;events&quot;;
+import {Pair} from &quot;../types/pair&quot;;
+import {IOrderbookData} from &quot;../core/exchanges/baseExchange&quot;;
+
+const pair: Pair = [&quot;BTC&quot;, &quot;USD&quot;];
+
+describe(&quot;HitBTC&quot;, () =&gt; {
+
+    let exchange = new HitBTC(&quot;PUB_123&quot;, &quot;SEC_123&quot;);
+    let send = null;
+
+    beforeEach(() =&gt; {
+        exchange = new HitBTC(&quot;PUB_123&quot;, &quot;SEC_123&quot;);
+        send = stub(exchange, &quot;send&quot;);
+    });
+
+    afterEach(() =&gt; {
+        send.restore();
+    });
+
+    it(&quot;Should trigger the onCreate lifecycle event&quot;, () =&gt; {
+        const onCreate = spy(HitBTC.prototype, &quot;onCreate&quot;);
+        HitBTC.getInstance();
+        HitBTC.getInstance();
+
+        expect(onCreate.calledOnce).to.equal(true);
+        expect(onCreate.args[0]).to.deep.equal([]);
+        onCreate.restore();
+    });
+
+    it(&quot;Should subscribe to report events&quot;, () =&gt; {
+        exchange.subscribeReports();
+        expect(send.args[0][0]).to.equal(&quot;subscribeReports&quot;);
+    });
+
+    it(&quot;Should subscribe to orderbook events&quot;, () =&gt; {
+        exchange.subscribeOrderbook(pair);
+        expect(send.args[0][0]).to.equal(&quot;subscribeOrderbook&quot;);
+        expect(send.args[0][1]).to.deep.equal({symbol: pair});
+    });
+
+    it(&quot;Should subscribe to candle events&quot;, () =&gt; {
+        exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
+        expect(send.args[0][0]).to.equal(&quot;subscribeCandles&quot;);
+        expect(send.args[0][1]).to.deep.equal({period: &quot;M5&quot;, symbol: pair});
+    });
+
+    it(&quot;Should authenticate user on exchange&quot;, () =&gt; {
+        exchange.login(&quot;PUB_123&quot;, &quot;PRIV_123&quot;);
+        expect(send.args[0][0]).to.equal(&quot;login&quot;);
+        expect(send.args[0][1]).to.include({&quot;algo&quot;: &quot;HS256&quot;, &quot;pKey&quot;: &quot;PUB_123&quot;});
+        expect(send.args[0][1]).to.include.all.keys(&quot;signature&quot;, &quot;nonce&quot;);
+    });
+
+    it(&quot;Should update a candle collection for a trading pair&quot;, () =&gt; {
+        const getCollection = stub(exchange, &quot;getCandleCollection&quot;);
+        const collection = new CandleCollection(CandleInterval.FIVE_MINUTES);
+        const set = spy(collection, &quot;set&quot;);
+        getCollection.returns(collection);
+
+        const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
+
+        exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, &quot;set&quot;);
+        expect(set.calledOnce).to.equal(true);
+        expect(set.args[0][0][0]).to.deep.include({close: 1, high: 2, low: 0, open: 0, volume: 10});
+        expect(set.args[0][0][0]).to.include.all.keys(&quot;timestamp&quot;);
+
+        set.restore();
+        getCollection.restore();
+    });
+
+    it(&quot;Should emit candle events on an update&quot;, () =&gt; {
+        const emit = spy(exchange, &quot;emit&quot;);
+        const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
+        exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, &quot;set&quot;);
+
+        expect(emit.calledOnce).to.equal(true);
+        expect(emit.args[0][0]).to.equal(&quot;app.updateCandles&quot;);
+        expect(emit.args[0][1]).to.deep.equal(candles);
+
+        emit.restore();
+    });
+
+    it(&quot;Should update an in memory orderbook&quot;, () =&gt; {
+        const emit = stub(exchange, &quot;emit&quot;);
+        const getOrderbook = spy(exchange, &quot;getOrderbook&quot;);
+        const ob: IOrderbookData = {
+            sequence: 1,
+            pair,
+            ask: [
+                {price: 0.0015, size: 100},
+            ],
+            bid: [
+                {price: 0.001391, size: 40},
+            ],
+        };
+
+        const {pair: symbol, ask, bid} = ob;
+        exchange.currencies[pair.join(&quot;&quot;)] = {id: pair, quantityIncrement: 10, tickSize: 0.000001};
+
+        exchange.onUpdateOrderbook({...ob, sequence: -1}, &quot;setOrders&quot;);
+        expect(getOrderbook.called).to.be.equal(false);
+
+        exchange.onUpdateOrderbook(ob, &quot;setOrders&quot;);
+        expect(getOrderbook.called).to.be.equal(true);
+
+        expect(emit.args[0][0]).to.equal(&quot;app.updateOrderbook&quot;);
+        expect(emit.args[0][1]).to.deep.equal({ask, bid, pair: symbol, precision: 6});
+        emit.restore();
+        getOrderbook.restore();
+    });
+
+    it(&quot;Should load currency configuration from the exchange&quot;, () =&gt; {
+        exchange.loadCurrencies();
+        expect(send.calledOnce).to.equal(true);
+        expect(send.args[0]).to.deep.equal([&quot;getSymbols&quot;]);
+    });
+
+    it(&quot;Should cancel an order&quot;, () =&gt; {
+        // @ts-ignore
+        const setOrderInProgress = stub(exchange, &quot;setOrderInProgress&quot;);
+        exchange.cancelOrder({id: &quot;123&quot;} as IOrder);
+
+        expect(setOrderInProgress.calledOnce).to.equal(true);
+        expect(setOrderInProgress.args[0]).to.deep.equal([&quot;123&quot;]);
+        expect(send.calledOnce).to.equal(true);
+        expect(send.args[0]).to.deep.equal([&quot;cancelOrder&quot;, {clientOrderId: &quot;123&quot;}]);
+
+        setOrderInProgress.restore();
+    });
+
+    it(&quot;Should adjust existing orders&quot;, () =&gt; {
+        // @ts-ignore
+        const adjustAllowed = stub(exchange, &quot;isAdjustingOrderAllowed&quot;);
+        adjustAllowed.returns(true);
+
+        exchange.adjustOrder({pair: pair, id: &quot;123&quot;} as IOrder, 0.002, 0.5);
+        expect(send.calledOnce).to.equal(true);
+        expect(send.args[0][0]).to.equal(&quot;cancelReplaceOrder&quot;);
+        expect(send.args[0][1]).to.include({clientOrderId: &quot;123&quot;, price: 0.002, quantity: 0.5, strictValidate: true});
+        expect(send.args[0][1]).to.include.all.keys(&quot;requestClientId&quot;);
+
+        adjustAllowed.restore();
+    });
+
+    it(&quot;Should create a new order&quot;, () =&gt; {
+        const orderId = exchange[&quot;createOrder&quot;](pair, 10, 1, OrderSide.BUY);
+
+        expect(send.calledOnce).to.equal(true);
+        expect(send.args[0][0]).to.equal(&quot;newOrder&quot;);
+        expect(send.args[0][1].clientOrderId).to.equal(orderId);
+        expect(send.args[0][1]).to.contain({
+            price: 10,
+            quantity: 1,
+            side: &quot;buy&quot;,
+            symbol: pair,
+            type: &quot;limit&quot;,
+        });
+    });
+
+    it(&quot;Should initialize when exchange is connected&quot;, () =&gt; {
+        const loadCurrencies = stub(exchange, &quot;loadCurrencies&quot;);
+        const onReceive = stub(exchange.mapper, &quot;onReceive&quot;);
+        const login = stub(exchange, &quot;login&quot;);
+        const connection = new EventEmitter();
+
+        exchange[&quot;onConnect&quot;](connection as connection);
+
+        expect(loadCurrencies.calledOnce).to.be.equal(true);
+        expect(login.calledOnce).to.be.equal(true);
+        expect(login.args[0]).to.deep.equal([&quot;PUB_123&quot;, &quot;SEC_123&quot;]);
+
+        connection.emit(&quot;message&quot;, JSON.stringify({test: &quot;123&quot;}));
+
+        expect(onReceive.calledOnce).to.be.equal(true);
+        expect(onReceive.args[0][0]).to.equal(JSON.stringify({test: &quot;123&quot;}));
+
+        loadCurrencies.restore();
+        onReceive.restore();
+        login.restore();
+    });
+
+    it(&quot;Should connect&quot;, () =&gt; {
+        // @ts-ignore
+        const connect = stub(exchange.__proto__.__proto__, &quot;connect&quot;);
+
+        exchange.connect();
+        expect(connect.args[0]).to.deep.equal([&apos;wss://api.hitbtc.com/api/2/ws&apos;]);
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

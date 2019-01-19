@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../">
-  <title data-ice="title">Variable | SockTrader</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">core/logger.ts | SockTrader</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -50,159 +50,63 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">Variable</h1>
-<div data-ice="summaries"><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Static Public Summary</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-CandleInterval">CandleInterval</a></span></span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-actions">actions</a></span></span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
-<div data-ice="details"><h2 data-ice="title">Static Public </h2>
+<div class="content" data-ice="content"><h1 data-ice="title">core/logger.ts</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import moment from &quot;moment&quot;;
+import {createLogger, format, transports} from &quot;winston&quot;;
+const defaults = {silent: process.env.NODE_ENV === &quot;test&quot;};
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-CandleInterval">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">CandleInterval</span><span class="code" data-ice="signature">: {&quot;ONE_MINUTE&quot;: <span>*</span>, &quot;THREE_MINUTES&quot;: <span>*</span>, &quot;FIVE_MINUTES&quot;: <span>*</span>, &quot;FIFTEEN_MINUTES&quot;: <span>*</span>, &quot;THIRTY_MINUTES&quot;: <span>*</span>, &quot;ONE_HOUR&quot;: <span>*</span>, &quot;FOUR_HOURS&quot;: <span>*</span>, &quot;ONE_DAY&quot;: <span>*</span>, &quot;SEVEN_DAYS&quot;: <span>*</span>, &quot;ONE_MONTH&quot;: <span>*</span>}</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">source</a></span></span>
-    </span>
-  </h3>
+const stringFormat = format.printf(info =&gt; {
+    const {timestamp, level, message, ...args} = info;
+    const ts = moment(timestamp).format(&quot;YYYY-MM-DD HH:mm:ss&quot;);
+    return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, undefined, 2) : &quot;&quot;}`;
+});
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {CandleInterval} from &apos;<span><a href="file/core/exchanges/hitBTC.ts.html#lineNumber6">socktrader/core/exchanges/hitBTC.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
+const consoleFormat = format.combine(
+    format.colorize(),
+    format.timestamp(),
+    format.align(),
+    stringFormat,
+);
 
-  
+const fileFormat = format.combine(consoleFormat, format.uncolorize());
 
-  <div data-ice="properties">
-</div>
+const getFileTransport = (level: any, file: any) =&gt; new transports.File({
+    ...defaults,
+    filename: `./src/logs/${file}.log`,
+    format: fileFormat,
+    level,
+});
 
-  
+const getConsoleTransport = (level: any) =&gt; new transports.Console({...defaults, format: consoleFormat, level});
 
-  
+const errorLogger = createLogger({
+    levels: {error: 3},
+    transports: [getFileTransport(&quot;error&quot;, &quot;error&quot;), getConsoleTransport(&quot;error&quot;)],
+});
 
-  
+const infoLogger = createLogger({
+    levels: {info: 2},
+    transports: [getFileTransport(&quot;info&quot;, &quot;system&quot;), getConsoleTransport(&quot;info&quot;)],
+});
 
-  
+const debugLogger = createLogger({
+    levels: {debug: 1},
+    transports: [getFileTransport(&quot;debug&quot;, &quot;debug&quot;)],
+});
 
-  
+const inputLogger = createLogger({
+    levels: {input: 0},
+    transports: [getFileTransport(&quot;input&quot;, &quot;input&quot;)],
+});
 
-  
+export default {
+    debug: (msg: string, ...meta: any[]) =&gt; debugLogger.debug(msg, meta),
+    error: (msg: string, ...meta: any[]) =&gt; errorLogger.error(msg, meta),
+    info: (msg: string, ...meta: any[]) =&gt; infoLogger.info(msg, meta),
+    input: (msg: string, ...meta: any[]) =&gt; inputLogger.input(msg, meta),
+};
+</code></pre>
 
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-variable-actions">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">actions</span><span class="code" data-ice="signature">: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/core/web/whitelist.ts.html#lineNumber2">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {actions} from &apos;<span><a href="file/core/web/whitelist.ts.html#lineNumber2">socktrader/core/web/whitelist.ts</a></span>&apos;</code></pre></div>
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 </div>
 
 <footer class="footer">
