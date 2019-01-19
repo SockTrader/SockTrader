@@ -187,7 +187,7 @@ export default class LocalExchange extends BaseExchange {
     private isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
         const orderPrice: number = this.getOrderPrice(order);
 
-        return this.assets[order.pair[1]] > orderPrice;
+        return this.assets[order.pair[1]] >= orderPrice;
     }
 
     /**
@@ -198,10 +198,7 @@ export default class LocalExchange extends BaseExchange {
      * @returns {boolean} is sell allowed
      */
     private isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
-        const orderPrice: number = this.getOrderPrice(order);
-        const oldOrderPrice = (oldOrder) ? this.getOrderPrice(oldOrder) : 0;
-
-        return this.assets[order.pair[0]] > order.quantity;
+        return this.assets[order.pair[0]] >= order.quantity;
     }
 
     // @TODO test and verify logic..
