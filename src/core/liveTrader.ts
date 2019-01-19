@@ -1,6 +1,6 @@
 import {IExchange} from "./exchanges/exchangeInterface";
+import {IOrder} from "./orderInterface";
 import SockTrader from "./sockTrader";
-import BaseStrategy from "./strategy/baseStrategy";
 
 /**
  * @class LiveTrader
@@ -27,9 +27,8 @@ export default class LiveTrader extends SockTrader {
             this.strategyConfigurations.forEach(c => {
                 const strategy = new c.strategy(c.pair, this.exchange);
                 this.bindStrategyToExchange(strategy);
-                this.bindExchangeToStrategy(strategy); // @TODO verify
+                this.bindExchangeToStrategy(strategy);
                 this.bindExchangeToSocketServer();
-                this.bindStrategyToSocketServer(strategy);
             });
 
             this.eventsBound = true;
@@ -40,13 +39,8 @@ export default class LiveTrader extends SockTrader {
         this.exchange.connect();
     }
 
-    // @TODO this won't work with multiple strategies
-    protected bindStrategyToSocketServer(strategy: BaseStrategy) {
-        if (!this.webServer) return;
-
-        // @TODO send live/production reports to dashboard
-        // strategy.on("app.signal", sendSignal);
-        // strategy.on("app.adjustOrder", sendAdjustOrder);
-        // strategy.on("backtest.adjustOrder", sendAdjustOrder);
+    private bindExchangeToSocketServer() {
+        this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
+        this.exchange.on("app.updateCandles", candles => this.sendToWebServer("CANDLE_UPDATE", candles));
     }
 }

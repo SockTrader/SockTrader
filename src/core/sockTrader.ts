@@ -4,10 +4,10 @@ import uniqWith from "lodash.uniqwith";
 import {Pair} from "../types/pair";
 import {ICandle, ICandleInterval} from "./candleCollection";
 import {IExchange} from "./exchanges/exchangeInterface";
+import {IOrderbook} from "./orderbook";
+import {IOrder} from "./orderInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "./strategy/baseStrategy";
 import spawnServer from "./web/spawnServer";
-import {IOrder} from "./orderInterface";
-import {IOrderbook} from "./orderbook";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
@@ -63,24 +63,11 @@ export default abstract class SockTrader {
         uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
     }
 
-    protected bindExchangeToSocketServer() {
-        // @TODO send location of parsed file to webServer instead of candle list
-        // if (this.webServer) {
-        //     exchange.on("app.updateCandles", candles => this.sendToSocketServer("CANDLE_UPDATE", [candles[0]]));
-        // }
-    }
-
-    // private bindExchangeToSocketServer(exchange: IExchange) {
-    //     if (this.webServer) {
-    //         exchange.on("app.updateCandles", candles => this.sendToSocketServer("CANDLE_UPDATE", [candles[0]]));
-    //     }
-    // }
-
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
         const exchange = this.exchange;
-        exchange.on("app.report", report => strategy.notifyOrder(report));
-        exchange.on("app.updateOrderbook", orderbook => strategy.updateOrderbook(orderbook));
-        exchange.on("app.updateCandles", candles => strategy.updateCandles(candles));
+        exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
+        exchange.on("app.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        exchange.on("app.updateCandles", (candles: ICandle[]) => strategy.updateCandles(candles));
     }
 
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
