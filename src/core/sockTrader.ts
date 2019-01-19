@@ -20,8 +20,10 @@ export interface ISockTraderConfig {
 }
 
 /**
- * @class SockTrader
- * @classdesc Main class to start trading with SockTrader
+ * The SockTrader provides common logic for both:
+ * - live trading on an exchange
+ * - dummy strategy testing using back testing on
+ *   a local exchange
  */
 export default abstract class SockTrader {
     protected eventsBound = false;
@@ -36,18 +38,34 @@ export default abstract class SockTrader {
         }
     }
 
+    /**
+     * Adds a strategy
+     * @param {IStrategyConfig} config strategy configuration
+     * @returns {this}
+     */
     addStrategy(config: IStrategyConfig): this {
         this.strategyConfigurations.push(config);
 
         return this;
     }
 
+    /**
+     * Starts the application
+     * @returns {Promise<void>} promise
+     */
     async start(): Promise<void> {
         if (this.strategyConfigurations.length < 1) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
     }
 
+    /**
+     * Registers the exchange to listen to api events:
+     * - new candles for a pair/interval combination found in given
+     *   configuration
+     * - orderbook changes of a pair found in given configuration
+     * @param {IStrategyConfig[]} config strategy configuration
+     */
     subscribeToExchangeEvents(config: IStrategyConfig[]): void {
         const exchange = this.exchange;
 
@@ -63,6 +81,13 @@ export default abstract class SockTrader {
         uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
     }
 
+    /**
+     * Registers the strategies to listen to exchange events:
+     * - report: order update
+     * - update orderbook: change in orderbook
+     * - update candles: change in candles
+     * @param {BaseStrategy} strategy
+     */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
@@ -70,6 +95,12 @@ export default abstract class SockTrader {
         exchange.on("app.updateCandles", (candles: ICandle[]) => strategy.updateCandles(candles));
     }
 
+    /**
+     * Registers the exchange to listen to strategy events:
+     * - signal: buy and sells
+     * - adjust order: adjustment of existing order
+     * @param {BaseStrategy} strategy
+     */
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         // @TODO add cancel order event!
@@ -77,6 +108,11 @@ export default abstract class SockTrader {
         strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 
+    /**
+     * Sends messages to webserver
+     * @param {string} type type of message
+     * @param payload the data
+     */
     protected sendToWebServer(type: string, payload: any) {
         if (this.webServer) this.webServer.send({type, payload});
     }

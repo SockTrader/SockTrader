@@ -1,4 +1,5 @@
 import {EventEmitter} from "events";
+import {Error} from "tslint/lib/error";
 import {Pair} from "../../types/pair";
 import {ICandle} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
@@ -23,23 +24,17 @@ export interface IAdjustSignal {
 }
 
 /**
- * @class BaseStrategy
- * @classdesc Reusable strategy class
+ * The BaseStrategy holds common logic for your strategies to use
  */
 export default abstract class BaseStrategy extends EventEmitter {
 
-    /**
-     * Constructor
-     * @param {string} pair
-     * @param exchange
-     */
     protected constructor(public pair: Pair, public exchange: IExchange) {
         super();
     }
 
     /**
      * Called when exchange confirms and order
-     * @param {IOrder} order
+     * @param {IOrder} order the order
      */
     notifyOrder(order: IOrder): void {
         throw new Error("Implement method: notifyOrder");
@@ -47,25 +42,47 @@ export default abstract class BaseStrategy extends EventEmitter {
 
     /**
      * Called on each new candle from exchange
-     * @param {ICandle[]} candles
+     * @param {ICandle[]} candles the new candles
      */
     updateCandles(candles: ICandle[]): void {
         throw new Error("Implement method: updateCandles");
     }
 
+    /**
+     * Called on orderbook update from exchange
+     * @param {IOrderbook} orderBook the new orderbook
+     */
     updateOrderbook(orderBook: IOrderbook): void {
         throw new Error("Implement method: updateOrderbook");
     }
 
+    /**
+     * Fires a adjust existing order event to exchange
+     * @param {IOrder} order the order to adjust
+     * @param {number} price the new price
+     * @param {number} qty the new quantity
+     */
     protected adjust(order: IOrder, price: number, qty: number): void {
         this.emit("app.adjustOrder", {order, price, qty} as IAdjustSignal);
     }
 
-    protected buy(symbol: Pair, price: number, qty: number): void {
-        this.emit("app.signal", {symbol, price, qty, side: OrderSide.BUY} as ISignal);
+    /**
+     * Fires a buy event to exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price the price a which to buy
+     * @param {number} qty the quantity to buy
+     */
+    protected buy(pair: Pair, price: number, qty: number): void {
+        this.emit("app.signal", {symbol: pair, price, qty, side: OrderSide.BUY} as ISignal);
     }
 
-    protected sell(symbol: Pair, price: number, qty: number): void {
-        this.emit("app.signal", {symbol, price, qty, side: OrderSide.SELL} as ISignal);
+    /**
+     * Fires a sell event to exchange
+     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
+     * @param {number} price the price a which to sell
+     * @param {number} qty the quantity to sell
+     */
+    protected sell(pair: Pair, price: number, qty: number): void {
+        this.emit("app.signal", {symbol: pair, price, qty, side: OrderSide.SELL} as ISignal);
     }
 }

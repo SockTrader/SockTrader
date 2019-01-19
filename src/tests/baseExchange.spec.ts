@@ -1,14 +1,15 @@
 /* tslint:disable */
 import {expect} from "chai";
-import 'jest';
+import "jest";
 import {mock, spy} from "sinon";
 import BaseExchange from "../core/exchanges/baseExchange";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/orderInterface";
 import Orderbook from "../core/orderbook";
 import CandleCollection from "../core/candleCollection";
-import {EventEmitter} from "events";
 import moment from "moment";
 import {Pair} from "../types/pair";
+import {EventEmitter} from "events";
+import generate = require("nanoid/generate");
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -19,55 +20,62 @@ class MockExchange extends BaseExchange {
     }
 }
 
-describe("Exchange", () => {
-    let exc = new MockExchange();
-    const getReport = (): IOrder => ({
-        id: "123",
-        createdAt: moment(),
-        price: 10,
-        quantity: 0.5,
-        reportType: ReportType.NEW,
-        side: OrderSide.BUY,
-        status: OrderStatus.NEW,
-        pair: pair,
-        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.LIMIT,
-        updatedAt: moment(),
-    });
 
-    const getOrder = (): IOrder => ({
-        id: "4559a45057ded19e04d715c4b40f7ddd",
-        createdAt: moment(),
-        price: 0.001263,
-        quantity: 0.02,
-        reportType: ReportType.NEW,
-        side: OrderSide.BUY,
-        status: OrderStatus.NEW,
-        pair: pair,
-        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.LIMIT,
-        updatedAt: moment(),
-    });
+let exc = new MockExchange();
+const getReport = (): IOrder => ({
+    id: "123",
+    createdAt: moment(),
+    price: 10,
+    quantity: 0.5,
+    reportType: ReportType.NEW,
+    side: OrderSide.BUY,
+    status: OrderStatus.NEW,
+    pair: pair,
+    timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+    type: OrderType.LIMIT,
+    updatedAt: moment(),
+});
+
+const getOrder = (): IOrder => ({
+    id: "4559a45057ded19e04d715c4b40f7ddd",
+    createdAt: moment(),
+    price: 0.001263,
+    quantity: 0.02,
+    reportType: ReportType.NEW,
+    side: OrderSide.BUY,
+    status: OrderStatus.NEW,
+    pair: pair,
+    timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
+    type: OrderType.LIMIT,
+    updatedAt: moment(),
+});
 
 
-    beforeEach(() => {
-        exc = new MockExchange();
-    });
+beforeEach(() => {
+    exc = new MockExchange();
+});
 
-    it("Should generate a random order id", () => {
+
+jest.mock("nanoid/generate");
+
+describe("generateOrderId", () => {
+    test("Should generate a random order id", () => {
+        generate.mockResolvedValue(12345435345345);
         const orderId = exc["generateOrderId"](pair);
         expect(orderId).to.be.a("string");
         expect(orderId).to.have.lengthOf(32);
     });
+});
 
-    it("Should create a buy order", () => {
+describe("createOrder", () => {
+    test("Should create a buy order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.buy(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
         expect(createOrder.args[0]).to.deep.equal([["BTC", "USD"], 1, 10, "buy"]);
     });
 
-    it("Should create a sell order", () => {
+    test("Should create a sell order", () => {
         const createOrder = spy(exc, "createOrder" as any);
         exc.sell(pair, 1, 10);
         expect(createOrder.calledOnce).to.eq(true);
@@ -75,22 +83,28 @@ describe("Exchange", () => {
     });
 
     // @TODO fix test, mock generateOrderId
-    it.skip("Should put an order into progress when creating an order", () => {
+    test("Should put an order into progress when creating an order", () => {
         const setOrderInProgress = spy(exc, "setOrderInProgress" as any);
         const orderId = exc["createOrder"](pair, 1, 10, OrderSide.SELL);
         expect(setOrderInProgress.calledOnce).to.eq(true);
         // expect(exc["orderInProgress"][orderId]).to.equal(true);
     });
+});
 
-    it("Should put an order in/out of progress", () => {
+
+describe("setOrderInProgress", () => {
+    test("Should put an order in/out of progress", () => {
         const id = "ORDER_123";
         exc["setOrderInProgress"](id, true);
         expect(exc["orderInProgress"][id]).to.equal(true);
         exc["setOrderInProgress"](id, false);
         expect(exc["orderInProgress"][id]).to.equal(undefined);
     });
+});
 
-    it("Should return a cached candle collection for a trading pair", () => {
+
+describe("getCandleCollection", () => {
+    test("Should return a cached candle collection for a trading pair", () => {
         const interval = {code: "M1", cron: "00 */1 * * * *"};
         const ob = exc.getCandleCollection(pair, interval, () => {
         });
@@ -101,8 +115,11 @@ describe("Exchange", () => {
         });
         expect(ob).to.be.equal(ob2);
     });
+});
 
-    it("Should track all order changes", () => {
+
+describe("onReport", () => {
+    test("Should track all order changes", () => {
         const addOrder = spy(exc, "addOrder" as any);
         const removeOrder = spy(exc, "removeOrder" as any);
         const report = getReport();
@@ -130,8 +147,11 @@ describe("Exchange", () => {
         exc.onReport({...report, reportType: ReportType.SUSPENDED});
         expect(removeOrder.callCount).to.eq(5);
     });
+});
 
-    it("Should connect via a websocket connection string", () => {
+
+describe("connect", () => {
+    test("Should connect via a websocket connection string", () => {
         const spyOn = spy(exc["socketClient"], "on");
         const spyConnect = spy(exc["socketClient"], "connect");
 
@@ -141,8 +161,11 @@ describe("Exchange", () => {
         expect(spyOn.args[1][0]).to.equal("connect");
         expect(spyConnect.args[0]).to.deep.equal(["wss://my.fake.socket"]);
     });
+});
 
-    it("Should remove all event listeners once the exchange is destroyed", () => {
+
+describe("destroy", () => {
+    test("Should remove all event listeners once the exchange is destroyed", () => {
         // This test should prevent memory leaks in an exchange.
         const spyRemoveListeners = spy(exc, "removeAllListeners");
 
@@ -151,8 +174,11 @@ describe("Exchange", () => {
         expect(exc).to.be.an.instanceof(EventEmitter);
         expect(spyRemoveListeners.calledOnce).to.eq(true);
     });
+});
 
-    it("Should send messages over a socket connection", () => {
+
+describe("connection", () => {
+    test("Should send messages over a socket connection", () => {
         expect(() => exc.send("test_method", {param1: "param1", param2: "param2"}))
             .to.throw("First connect to the exchange before sending instructions..");
 
@@ -165,9 +191,12 @@ describe("Exchange", () => {
         exc.send("test", {param1: "1", param2: "2"});
         mockConnection.verify();
     });
+});
 
-    it("Should store all open orders", () => {
-        // const exc = new HitBTC();
+
+describe("addOrder", () => {
+    test("Should store all open orders", () => {
+        // const exc = new HtestBTC();
         const order = getOrder();
 
         expect(exc.getOpenOrders()).to.deep.eq([]);
@@ -175,13 +204,19 @@ describe("Exchange", () => {
         exc["addOrder"](order);
         expect(exc.getOpenOrders()).to.deep.eq([order]);
     });
+});
 
-    it("Should generate new order id's", () => {
+
+describe("generateOrderId", () => {
+    test("Should generate new order id's", () => {
         expect(exc.generateOrderId(pair).length).to.be.equal(32);
         expect(exc.generateOrderId(pair)).to.be.an("string");
     });
+});
 
-    it("Should verify if an order can be adjusted", () => {
+
+describe("isAdjustingOrderAllowed", () => {
+    test("Should verify if an order can be adjusted", () => {
         const order = getOrder();
 
         expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).to.equal(true);
@@ -190,8 +225,11 @@ describe("Exchange", () => {
         exc["orderInProgress"] = {};
         expect(exc["isAdjustingOrderAllowed"](order, 0.001263, 0.02)).to.equal(false);
     });
+});
 
-    it("Should get singleton exchange orderbook", () => {
+
+describe("getOrderbook", () => {
+    test("Should get singleton exchange orderbook", () => {
         const symbol = pair.join("");
 
         // No configuration given

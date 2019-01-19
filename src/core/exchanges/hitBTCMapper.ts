@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
 import moment from "moment";
+import {Error} from "tslint/lib/error";
 import {IMessage} from "websocket";
 import {Pair} from "../../types/pair";
 import {ICandle, ICandleInterval} from "../candleCollection";
@@ -81,8 +82,15 @@ interface IHitBTCReportResponse {
     }>;
 }
 
+/**
+ * The HitBTCMapper maps incoming api events and wraps them with additional checks/logic
+ */
 export default class HitBTCMapper extends EventEmitter implements IResponseMapper {
 
+    /**
+     * Create a new HitBTCMapper
+     * @param {BaseExchange} exchange the exchange to map events from
+     */
     constructor(private exchange: BaseExchange) {
         super();
 
@@ -96,10 +104,17 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         this.on("api.getSymbols", data => this.onGetSymbols(data)); // @TODO fix!
     }
 
+    /**
+     * Removes HitBTCMapper listeners
+     */
     destroy(): void {
         this.removeAllListeners();
     }
 
+    /**
+     * Emits received message as api event
+     * @param {IMessage} msg
+     */
     onReceive(msg: IMessage): void {
         if (msg.type !== "utf8") {
             throw new Error("Response is not UTF8!");
@@ -111,6 +126,11 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         }
     }
 
+    /**
+     * Maps HitBTC data to candle collection
+     * @param {IHitBTCCandlesResponse} data the date from hitBTC
+     * @returns {ICandle[]} the candle collection
+     */
     private mapCandles(data: IHitBTCCandlesResponse): ICandle[] {
         return data.params.data.map<ICandle>(candle => ({
             close: parseFloat(candle.close),
@@ -122,6 +142,10 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         }));
     }
 
+    /**
+     * Wraps the returning symbols (allowed pairs)
+     * @param {IHitBTCGetSymbolsResponse} response
+     */
     private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
         const result = response.result.map(({id, tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
             id: [baseCurrency, quoteCurrency] as Pair,
@@ -131,11 +155,19 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         this.exchange.onCurrenciesLoaded(result);
     }
 
+    /**
+     * Wraps login callback
+     * @param {IHitBTCAuthenticateResponse} data
+     */
     private onLogin(data: IHitBTCAuthenticateResponse): void {
         this.exchange.isAuthenticated = data.result;
         this.exchange.isReady();
     }
 
+    /**
+     * Wraps incoming report (order updates)
+     * @param {IHitBTCReportResponse} data report data
+     */
     private onReport(data: IHitBTCReportResponse): void {
         data.params.forEach(report => {
             this.exchange.onReport({
@@ -155,6 +187,11 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         });
     }
 
+    /**
+     * Wraps incoming updated candles
+     * @param {IHitBTCCandlesResponse} data the candles
+     * @param {"set" | "update"} method overwrite or update
+     */
     private onUpdateCandles(data: IHitBTCCandlesResponse, method: "set" | "update") {
         let interval: ICandleInterval | undefined;
         Object.keys(CandleInterval).some(key => {
@@ -173,6 +210,11 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
         logger.debug(`Interval: "${data.params.period}" is not recognized by the system. The exchange callback "onUpdateCandles" was not triggered.`);
     }
 
+    /**
+     * Wraps incoming orderbook
+     * @param {{ask: IOrderbookEntry[]; bid: IOrderbookEntry[]; sequence: number; symbol: string}} ob the orderbook
+     * @param {"addIncrement" | "setOrders"} method update or overwrite
+     */
     private onUpdateOrderbook({params: ob}: IHitBTCOrderbookResponse, method: "addIncrement" | "setOrders"): void {
         this.exchange.onUpdateOrderbook({
             ask: ob.ask,

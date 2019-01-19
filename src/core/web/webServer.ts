@@ -5,13 +5,19 @@ import {connection, IMessage, request, server as WebSocketServer} from "websocke
 import config from "../../config";
 import {actions} from "./whitelist";
 
+/**
+ * The WebServer communicates with the dashboard for trading visualizations
+ */
 class WebServer {
-    static PORT = config.webServer.port;
+    private static PORT = config.webServer.port;
     private client?: connection;
     private readonly httpServer: Server;
 
     private server: WebSocketServer;
 
+    /**
+     * Creates a new webserver
+     */
     constructor() {
         this.ipcReceive();
         this.httpServer = http.createServer((req, resp) => {
@@ -61,7 +67,7 @@ class WebServer {
     }
 
     /**
-     * Forward file content to
+     * Forward file content to frontend
      * @param cacheFile
      */
     private forwardCacheFile(cacheFile: string) {
@@ -70,8 +76,8 @@ class WebServer {
     }
 
     /**
-     * Receives events coming from the trading bot.
-     * -> push incoming messages to the frontend.
+     * Receives events coming from the trading bot
+     * -> forward incoming events to the WebSocketServer
      */
     private ipcReceive() {
         process.on("message", ({type, payload}) => {

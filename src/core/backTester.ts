@@ -13,20 +13,31 @@ import {IOrder} from "./orderInterface";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
 
 /**
- * @class BackTester
- * @classdesc Main class to start trading with SockTrader
+ * The BackTester enables you to test your strategy against a fake dummy exchange
+ * and optimize to the point of content
  */
 export default class BackTester extends SockTrader {
 
     private static CACHE_FOLDER = path.resolve(".sockTrader");
     private candleLoader?: CandleLoader;
 
+    /**
+     * Creates a new BackTester
+     * @param {ISockTraderConfig} config
+     */
     constructor(config: ISockTraderConfig = {webServer: true}) {
         super(config);
 
         this.exchange = localExchange.getInstance();
     }
 
+    /**
+     * Sets the loader responsible for loading local file data into
+     * an in memory candle collection
+     * @param {string} inputPath the path to the file containing candles
+     * @param {Parser} parser the parser for transforming the data
+     * @returns {this}
+     */
     setCandleLoader(inputPath: string, parser?: Parser): this {
         this.candleLoader = new CandleLoader(inputPath, parser);
 
