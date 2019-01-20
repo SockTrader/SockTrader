@@ -4,6 +4,8 @@ export interface IAssetMap {
     [key: string]: number;
 }
 
+type AssetCalc = (asset: string, priceQty: number) => void;
+
 /**
  * The wallet keeps track of all assets
  * strategy testing
@@ -50,7 +52,6 @@ export default class Wallet {
         });
     }
 
-    // @TODO test and verify logic..
     /**
      * Updates the assets on the exchange for given new order
      * @param {IOrder} order new order
@@ -59,33 +60,32 @@ export default class Wallet {
     updateAssets(order: IOrder, oldOrder?: IOrder) {
         const [target, source] = order.pair;
 
+        const ifBuy = this.createCalculator(order.side, OrderSide.BUY);
+        const ifSell = this.createCalculator(order.side, OrderSide.SELL);
+
         if (ReportType.REPLACED === order.reportType && oldOrder) {
-            if (order.side === OrderSide.BUY) {
-                this.assets[source] += this.getOrderPrice(oldOrder);
-                this.assets[source] -= this.getOrderPrice(order);
-            } else {
-                this.assets[target] += oldOrder.quantity;
-                this.assets[target] -= order.quantity;
-            }
+            ifBuy(source, this.add, this.getOrderPrice(oldOrder));
+            ifBuy(source, this.subtract, this.getOrderPrice(order));
+            ifSell(target, this.add, oldOrder.quantity);
+            ifSell(target, this.subtract, order.quantity);
         } else if (ReportType.NEW === order.reportType) {
-            if (order.side === OrderSide.BUY) {
-                this.assets[source] -= this.getOrderPrice(order);
-            } else {
-                this.assets[target] -= order.quantity;
-            }
+            ifBuy(source, this.subtract, this.getOrderPrice(order));
+            ifSell(target, this.subtract, order.quantity);
         } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
-            if (order.side === OrderSide.SELL) {
-                this.assets[source] += this.getOrderPrice(order);
-            } else {
-                this.assets[target] += order.quantity;
-            }
+            ifBuy(target, this.add, order.quantity);
+            ifSell(source, this.add, this.getOrderPrice(order));
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            if (order.side === OrderSide.BUY) {
-                this.assets[source] += this.getOrderPrice(order);
-            } else {
-                this.assets[target] += order.quantity;
-            }
+            ifBuy(source, this.add, this.getOrderPrice(order));
+            ifSell(target, this.add, order.quantity);
         }
+    }
+
+    private add: AssetCalc = (asset: string, priceQty: number) => this.assets[asset] += priceQty;
+
+    private createCalculator(orderSide: OrderSide, side: OrderSide) {
+        return (asset: string, calc: AssetCalc, priceQty: number) => {
+            if (orderSide === side) calc(asset, priceQty);
+        };
     }
 
     /**
@@ -96,4 +96,6 @@ export default class Wallet {
     private getOrderPrice(order: IOrder) {
         return order.price * order.quantity;
     }
+
+    private subtract: AssetCalc = (asset: string, priceQty: number) => this.assets[asset] -= priceQty;
 }
