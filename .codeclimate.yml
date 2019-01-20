@@ -1,7 +1,18 @@
 plugins:
+    fixme:
+        enabled: true
+
+    nodesecurity:
+        enabled: true
+
     tslint:
         enabled: true
         config: tslint.json
 
 exclude_patterns:
 - "**/*.spec.ts"
+- "**/node_modules"
+- "docs/"
+- "build/"
+- ".sockTrader"
+- ".idea"
