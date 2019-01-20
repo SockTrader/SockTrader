@@ -59,13 +59,14 @@ export default class Wallet {
     updateAssets(order: IOrder, oldOrder?: IOrder) {
         const [target, source] = order.pair;
 
-        // if (order.side === OrderSide.SELL) {
-        //     target = order.pair[1];
-        //     source = order.pair[0];
-        // }
-
         if (ReportType.REPLACED === order.reportType && oldOrder) {
-            // @TODO ..
+            if (order.side === OrderSide.BUY) {
+                this.assets[source] += this.getOrderPrice(oldOrder);
+                this.assets[source] -= this.getOrderPrice(order);
+            } else {
+                this.assets[target] += oldOrder.quantity;
+                this.assets[target] -= order.quantity;
+            }
         } else if (ReportType.NEW === order.reportType) {
             if (order.side === OrderSide.BUY) {
                 this.assets[source] -= this.getOrderPrice(order);
@@ -73,14 +74,17 @@ export default class Wallet {
                 this.assets[target] -= order.quantity;
             }
         } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
-            if (order.side === OrderSide.BUY) {
-                this.assets[target] += order.quantity;
-            } else {
+            if (order.side === OrderSide.SELL) {
                 this.assets[source] += this.getOrderPrice(order);
+            } else {
+                this.assets[target] += order.quantity;
             }
-            console.log(this.assets);
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.assets[source] += this.getOrderPrice(order);
+            if (order.side === OrderSide.BUY) {
+                this.assets[source] += this.getOrderPrice(order);
+            } else {
+                this.assets[target] += order.quantity;
+            }
         }
     }
 
