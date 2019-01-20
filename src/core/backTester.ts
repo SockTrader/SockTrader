@@ -11,6 +11,11 @@ import localExchange from "./exchanges/localExchange";
 import LocalExchange from "./exchanges/localExchange";
 import {IOrder} from "./orderInterface";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
+import Wallet, {IAssetMap} from "./wallet";
+
+export interface IBackTestConfig extends ISockTraderConfig {
+    assets: IAssetMap;
+}
 
 /**
  * The BackTester enables you to test your strategy against a fake dummy exchange
@@ -25,10 +30,11 @@ export default class BackTester extends SockTrader {
      * Creates a new BackTester
      * @param {ISockTraderConfig} config
      */
-    constructor(config: ISockTraderConfig = {webServer: true}) {
+    constructor(config: IBackTestConfig) {
         super(config);
 
-        this.exchange = localExchange.getInstance();
+        const wallet = new Wallet(config.assets);
+        this.exchange = localExchange.getInstance(wallet);
     }
 
     /**
