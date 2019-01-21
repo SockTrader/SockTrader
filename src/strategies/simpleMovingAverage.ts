@@ -1,10 +1,10 @@
-import {IOrder, OrderStatus} from "../core/types/order";
 import {sma as SMA} from "technicalindicators";
 import {ICandle} from "../core/candles/candleCollection";
 import {IExchange} from "../core/exchanges/exchangeInterface";
 import logger from "../core/logger";
 import BaseStrategy from "../core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../core/strategy/utils";
+import {IOrder, OrderStatus} from "../core/types/order";
 import {Pair} from "../core/types/pair";
 
 /**

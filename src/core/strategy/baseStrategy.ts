@@ -1,8 +1,8 @@
 import {EventEmitter} from "events";
 import {Error} from "tslint/lib/error";
 import {ICandle} from "../candles/candleCollection";
-import {IOrderbook} from "../orderbook";
 import {IExchange} from "../exchanges/exchangeInterface";
+import {IOrderbook} from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 
