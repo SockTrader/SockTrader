@@ -1,13 +1,13 @@
 import {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {ICandle, ICandleInterval} from "./candleCollection";
+import {IOrderbook} from "../orderbook";
 import {IExchange} from "../exchanges/exchangeInterface";
-import {IOrderbook} from "../candles/orderbook";
-import {IOrder} from "../types/order";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
+import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
 import spawnServer from "../web/spawnServer";
+import {ICandle, ICandleInterval} from "../candles/candleCollection";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;

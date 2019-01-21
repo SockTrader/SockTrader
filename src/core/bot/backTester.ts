@@ -5,13 +5,13 @@ import generate from "nanoid/generate";
 import path from "path";
 import rimraf from "rimraf";
 import util from "util";
-import {ICandle} from "./candleCollection";
+import Wallet, {IAssetMap} from "../assets/wallet";
 import CandleLoader, {Parser} from "../candles/candleLoader";
 import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
 import {IOrder} from "../types/order";
+import {ICandle} from "../candles/candleCollection";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
-import Wallet, {IAssetMap} from "../assets/wallet";
 
 export interface IBackTestConfig extends ISockTraderConfig {
     assets: IAssetMap;

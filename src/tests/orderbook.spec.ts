@@ -2,7 +2,7 @@
 import {expect} from "chai";
 import {spy} from 'sinon';
 import 'jest';
-import Orderbook, {Operator} from "../core/candles/orderbook";
+import Orderbook, {Operator} from "../core/orderbook";
 import {Pair} from "../core/types/pair";
 
 const pair: Pair = ["BTC", "ETH"];

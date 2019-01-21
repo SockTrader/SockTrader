@@ -4,7 +4,7 @@ import "jest";
 import {mock, spy} from "sinon";
 import BaseExchange from "../core/exchanges/baseExchange";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/types/order";
-import Orderbook from "../core/candles/orderbook";
+import Orderbook from "../core/orderbook";
 import CandleCollection from "../core/candles/candleCollection";
 import moment from "moment";
 import {Pair} from "../core/types/pair";
