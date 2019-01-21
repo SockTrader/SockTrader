@@ -1,4 +1,4 @@
-import {IOrder, OrderSide, OrderStatus, ReportType} from "./orderInterface";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 
 export interface IAssetMap {
     [key: string]: number;

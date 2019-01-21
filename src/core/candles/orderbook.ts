@@ -1,7 +1,7 @@
 import {Decimal} from "decimal.js-light";
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
-import {Pair} from "./types/pair";
+import {Pair} from "../types/pair";
 
 export enum Operator {
     PLUS = "+",

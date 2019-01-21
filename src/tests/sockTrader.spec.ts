@@ -1,7 +1,7 @@
 /* tslint:disable */
 import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 import {IExchange} from "../core/exchanges/exchangeInterface";
-import SockTrader from "../core/sockTrader";
+import SockTrader from "../core/bot/sockTrader";
 import {CandleInterval, default as HitBTC} from "../core/exchanges/hitBTC";
 import {Pair} from "../core/types/pair";
 import objectContaining = jasmine.objectContaining;

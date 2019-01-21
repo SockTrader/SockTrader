@@ -6,12 +6,12 @@ import path from "path";
 import rimraf from "rimraf";
 import util from "util";
 import {ICandle} from "./candleCollection";
-import CandleLoader, {Parser} from "./candleLoader";
-import localExchange from "./exchanges/localExchange";
-import LocalExchange from "./exchanges/localExchange";
-import {IOrder} from "./orderInterface";
+import CandleLoader, {Parser} from "../candles/candleLoader";
+import localExchange from "../exchanges/localExchange";
+import LocalExchange from "../exchanges/localExchange";
+import {IOrder} from "../types/order";
 import SockTrader, {ISockTraderConfig} from "./sockTrader";
-import Wallet, {IAssetMap} from "./wallet";
+import Wallet, {IAssetMap} from "../assets/wallet";
 
 export interface IBackTestConfig extends ISockTraderConfig {
     assets: IAssetMap;

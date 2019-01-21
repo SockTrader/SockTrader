@@ -3,7 +3,7 @@ import {expect} from "chai";
 import 'jest';
 import BaseStrategy from "../core/strategy/baseStrategy";
 import {stub} from "sinon";
-import {IOrder, OrderSide} from "../core/orderInterface";
+import {IOrder, OrderSide} from "../core/types/order";
 
 class MyStrategy extends BaseStrategy {
 }

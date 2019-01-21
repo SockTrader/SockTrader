@@ -1,5 +1,5 @@
 import {Moment} from "moment";
-import {Pair} from "./types/pair";
+import {Pair} from "./pair";
 
 export enum OrderSide {
     BUY = "buy",

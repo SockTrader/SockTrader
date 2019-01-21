@@ -4,10 +4,10 @@ import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import {Error} from "tslint/lib/error";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
-import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
+import CandleCollection, {ICandle, ICandleInterval} from "../candles/candleCollection";
 import logger from "../logger";
-import Orderbook, {IOrderbookEntry} from "../orderbook";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../orderInterface";
+import Orderbook, {IOrderbookEntry} from "../candles/orderbook";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import {IExchange} from "./exchangeInterface";
 

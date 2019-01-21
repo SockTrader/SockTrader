@@ -1,4 +1,4 @@
-import {IOrder, OrderSide, OrderStatus} from "../orderInterface";
+import {IOrder, OrderSide, OrderStatus} from "../types/order";
 
 export interface IAnalyzer {
     analyze(order: IOrder): void;

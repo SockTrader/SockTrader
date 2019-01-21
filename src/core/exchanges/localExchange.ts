@@ -1,7 +1,7 @@
-import {ICandle} from "../candleCollection";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../orderInterface";
+import {ICandle} from "../candles/candleCollection";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import Wallet from "../wallet";
+import Wallet from "../assets/wallet";
 import BaseExchange from "./baseExchange";
 
 /**
