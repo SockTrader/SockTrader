@@ -2,7 +2,7 @@ import fs from "fs";
 import http, {Server} from "http";
 import process from "process";
 import {connection, IMessage, request, server as WebSocketServer} from "websocket";
-import config from "../../config";
+import config from "../../../config";
 import {actions} from "./whitelist";
 
 /**

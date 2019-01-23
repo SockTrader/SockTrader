@@ -1,9 +1,9 @@
 /* tslint:disable */
 import {expect} from "chai";
 import 'jest';
-import BaseStrategy from "../core/strategy/baseStrategy";
+import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {stub} from "sinon";
-import {IOrder, OrderSide} from "../core/types/order";
+import {IOrder, OrderSide} from "../sockTrader/core/types/order";
 
 class MyStrategy extends BaseStrategy {
 }

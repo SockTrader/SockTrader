@@ -2,7 +2,7 @@ import {CronJob} from "cron";
 import parser from "cron-parser";
 import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
-import config from "../../config";
+import config from "../../../config";
 import logger from "../logger";
 
 export interface ICandle {

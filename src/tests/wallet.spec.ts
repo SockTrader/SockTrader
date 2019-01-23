@@ -1,8 +1,8 @@
 /* tslint:disable */
 import "jest";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/types/order";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
 import moment from "moment";
-import Wallet from "../core/assets/wallet";
+import Wallet from "../sockTrader/core/assets/wallet";
 
 let order: IOrder;
 beforeEach(() => {

@@ -2,8 +2,8 @@
 import {expect} from "chai";
 import {spy} from 'sinon';
 import 'jest';
-import Orderbook, {Operator} from "../core/orderbook";
-import {Pair} from "../core/types/pair";
+import Orderbook, {Operator} from "../sockTrader/core/orderbook";
+import {Pair} from "../sockTrader/core/types/pair";
 
 const pair: Pair = ["BTC", "ETH"];
 describe('Orderbook', () => {

@@ -1,6 +1,6 @@
 /* tslint:disable */
 import 'jest';
-import {crossDown, crossUp} from "../core/strategy/utils";
+import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
 import {expect} from "chai";
 
 describe("Strategy utilities", () => {

@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import 'jest';
 import sinon from 'sinon';
 
-import CandleCollection, {ICandle} from "../core/candles/candleCollection";
+import CandleCollection, {ICandle} from "../sockTrader/core/candles/candleCollection";
 import moment, {Moment} from 'moment';
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");

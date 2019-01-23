@@ -2,12 +2,12 @@
 import {expect} from "chai";
 import "jest";
 import {mock, spy} from "sinon";
-import BaseExchange from "../core/exchanges/baseExchange";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/types/order";
-import Orderbook from "../core/orderbook";
-import CandleCollection from "../core/candles/candleCollection";
+import BaseExchange from "../sockTrader/core/exchanges/baseExchange";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
+import Orderbook from "../sockTrader/core/orderbook";
+import CandleCollection from "../sockTrader/core/candles/candleCollection";
 import moment from "moment";
-import {Pair} from "../core/types/pair";
+import {Pair} from "../sockTrader/core/types/pair";
 import {EventEmitter} from "events";
 // import generate from "nanoid/generate";
 

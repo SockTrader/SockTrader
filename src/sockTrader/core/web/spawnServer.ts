@@ -1,7 +1,7 @@
 import {fork} from "child_process";
 import minimist from "minimist";
 import process from "process";
-import config from "../../config";
+import config from "../../../config";
 
 const argv = minimist(process.argv.slice(2));
 
