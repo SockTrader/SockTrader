@@ -14,7 +14,9 @@ src/strategies/*
 src/logs/*
 !src/logs/.gitkeep
 
-node_modules/
+# Data folder to store
+src/data/*
+!src/data/.gitkeep
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -53,9 +55,6 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
-# nyc test coverage
-.nyc_output
-
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build
 
@@ -70,9 +69,6 @@ node_modules/
 
 # Optional REPL history
 .node_repl_history
-
-# Output of 'npm pack'
-*.tgz
 
 # dotenv environment variables file
 .env
