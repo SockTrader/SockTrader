@@ -271,6 +271,6 @@ describe("getOrderbook", () => {
         expect(exc["orderbooks"][symbol]).toEqual(orderbook);
 
         const orderbook2 = exc.getOrderbook(pair);
-        expect(orderbook2).toEqual(orderbook);
+        expect(orderbook2).toBe(orderbook);
     });
 });
