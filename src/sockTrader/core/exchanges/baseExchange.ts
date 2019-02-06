@@ -295,7 +295,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     /**
      * Sets the order in progress
      * @param {string} orderId of the order to set in progress
-     * @param {boolean} state whether the order still has state
+     * @param {boolean} state whether the order should be set in progress or out
      */
     protected setOrderInProgress(orderId: string, state = true): void {
         if (state === false) {

@@ -24,6 +24,7 @@ export interface IBackTestConfig extends ISockTraderConfig {
 export default class BackTester extends SockTrader {
 
     private static CACHE_FOLDER = path.resolve(".sockTrader");
+    // TODO optional but if not present error is thrown
     private candleLoader?: CandleLoader;
 
     /**
