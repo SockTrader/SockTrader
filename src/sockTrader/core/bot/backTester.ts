@@ -1,10 +1,10 @@
 import fs from "fs";
-import mkdirp from "mkdirp";
+// import mkdirp from "mkdirp";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import path from "path";
-import rimraf from "rimraf";
-import util from "util";
+// import rimraf from "rimraf";
+// import util from "util";
 import Wallet, {IAssetMap} from "../assets/wallet";
 import {ICandle} from "../candles/candleCollection";
 import CandleLoader, {Parser} from "../candles/candleLoader";
@@ -38,14 +38,11 @@ export default class BackTester extends SockTrader {
     }
 
     /**
-     * Sets the loader responsible for loading local file data into
-     * an in memory candle collection
-     * @param {string} inputPath the path to the file containing candles
-     * @param {Parser} parser the parser for transforming the data
+     * Sets the loader responsible for loading local file data into an in memory candle collection
      * @returns {this}
      */
-    setCandleLoader(inputPath: string, parser?: Parser): this {
-        this.candleLoader = new CandleLoader(inputPath, parser);
+    setCandleLoader(candleLoader: CandleLoader): this {
+        this.candleLoader = candleLoader;
 
         return this;
     }
@@ -72,23 +69,23 @@ export default class BackTester extends SockTrader {
 
         const candles: ICandle[] = (await this.candleLoader.parse()).toArray();
         if (this.webServer) {
-            await BackTester.createCache();
-            await BackTester.clearCache();
-            await this.writeCandleCache(candles);
+            // await BackTester.createCache();
+            // await BackTester.clearCache();
+            // await this.writeCandleCache(candles);
         }
 
         await (this.exchange as LocalExchange).emitCandles(candles);
     }
 
-    private static async clearCache(): Promise<void> {
-        const rmrf = util.promisify(rimraf);
-        await rmrf(`${BackTester.CACHE_FOLDER}/*`);
-    }
+    // private static async clearCache(): Promise<void> {
+    //     const rmrf = util.promisify(rimraf);
+    //     await rmrf(`${BackTester.CACHE_FOLDER}/*`);
+    // }
 
-    private static async createCache(): Promise<void> {
-        const mkdir = util.promisify(mkdirp);
-        await mkdir(BackTester.CACHE_FOLDER);
-    }
+    // private static async createCache(): Promise<void> {
+    //     const mkdir = util.promisify(mkdirp);
+    //     await mkdir(BackTester.CACHE_FOLDER);
+    // }
 
     private bindExchangeToSocketServer() {
         this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
@@ -107,6 +104,5 @@ export default class BackTester extends SockTrader {
                 resolve(cacheFile);
             });
         });
-
     }
 }
