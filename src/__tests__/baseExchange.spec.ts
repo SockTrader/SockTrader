@@ -1,14 +1,15 @@
 /* tslint:disable */
 import "jest";
-import BaseExchange from "../core/exchanges/baseExchange";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/orderInterface";
-import CandleCollection from "../core/candleCollection";
 import moment from "moment";
-import {Pair} from "../core/types/pair";
 import {EventEmitter} from "events";
 import {connection} from "websocket";
 import {Socket} from "net";
-import Orderbook from "../core/orderbook";
+import {Pair} from "../sockTrader/core/types/pair";
+import BaseExchange from "../sockTrader/core/exchanges/baseExchange";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
+import CandleCollection from "../sockTrader/core/candles/candleCollection";
+import Orderbook from "../sockTrader/core/orderbook";
+import {create} from "domain";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -63,23 +64,25 @@ beforeEach(() => {
 
 describe("buy", () => {
     test("Should create a buy order", () => {
-        const spyCreateOrder = jest.spyOn(exc, "createOrder" as any);
+        const createOrderMock = jest.fn();
+        exc.createOrder = createOrderMock;
         exc.generateOrderId = jest.fn();
 
         exc.buy(pair, 1, 10);
-        expect(spyCreateOrder).toBeCalled();
-        expect(spyCreateOrder).toBeCalledWith(["BTC", "USD"], 1, 10, "buy");
+        expect(createOrderMock).toBeCalled();
+        expect(createOrderMock).toBeCalledWith(["BTC", "USD"], 1, 10, "buy");
     });
 });
 
 describe("sell", () => {
     test("Should create a sell order", () => {
-        const spyCreateOrder = jest.spyOn(exc, "createOrder" as any);
+        const createOrderMock = jest.fn();
+        exc.createOrder = createOrderMock;
         exc.generateOrderId = jest.fn();
 
         exc.sell(pair, 1, 10);
-        expect(spyCreateOrder).toBeCalled();
-        expect(spyCreateOrder).toBeCalledWith(["BTC", "USD"], 1, 10, "sell");
+        expect(createOrderMock).toBeCalled();
+        expect(createOrderMock).toBeCalledWith(["BTC", "USD"], 1, 10, "sell");
     });
 });
 

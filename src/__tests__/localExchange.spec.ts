@@ -1,17 +1,14 @@
 /* tslint:disable */
 import "jest";
 import moment, {Moment} from "moment";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../core/orderInterface";
-import HitBTC, {CandleInterval} from "../core/exchanges/hitBTC";
-import CandleCollection, {ICandle} from "../core/candleCollection";
+import HitBTC, {CandleInterval} from "../sockTrader/core/exchanges/hitBTC";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
-import {Pair} from "../core/types/pair";
-import {IOrderbookData} from "../core/exchanges/baseExchange";
-import Orderbook from "../core/orderbook";
-import LocalExchange from "../core/exchanges/localExchange";
-import Wallet from "../core/wallet";
-import {open} from "inspector";
+import {Pair} from "../sockTrader/core/types/pair";
+import LocalExchange from "../sockTrader/core/exchanges/localExchange";
+import Wallet from "../sockTrader/core/assets/wallet";
+import {ICandle} from "../sockTrader/core/candles/candleCollection";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
 
 const pair: Pair = ["BTC", "USD"];
 
