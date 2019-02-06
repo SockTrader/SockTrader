@@ -1,8 +1,6 @@
 /* tslint:disable */
-import {expect} from "chai";
-import 'jest';
+import "jest";
 import moment from "moment";
-import {spy, stub} from "sinon";
 import {IOrder, OrderSide} from "../core/orderInterface";
 import HitBTC, {CandleInterval} from "../core/exchanges/hitBTC";
 import CandleCollection, {ICandle} from "../core/candleCollection";
@@ -10,89 +8,91 @@ import {connection} from "websocket";
 import {EventEmitter} from "events";
 import {Pair} from "../core/types/pair";
 import {IOrderbookData} from "../core/exchanges/baseExchange";
+import Orderbook from "../core/orderbook";
 
 const pair: Pair = ["BTC", "USD"];
 
-describe("HitBTC", () => {
+let exchange = new HitBTC("PUB_123", "SEC_123");
+let sendMock = jest.fn();
 
-    let exchange = new HitBTC("PUB_123", "SEC_123");
-    let send = null;
+beforeEach(() => {
+    exchange = new HitBTC("PUB_123", "SEC_123");
+    exchange.send = sendMock;
+});
 
-    beforeEach(() => {
-        exchange = new HitBTC("PUB_123", "SEC_123");
-        send = stub(exchange, "send");
-    });
+afterEach(() => {
+    sendMock.mockRestore();
+})
 
-    afterEach(() => {
-        send.restore();
-    });
-
-    it("Should trigger the onCreate lifecycle event", () => {
-        const onCreate = spy(HitBTC.prototype, "onCreate");
+describe("getInstance", () => {
+    test("Should trigger the onCreate lifecycle event", () => {
+        const spyOnCreate = spyOn(HitBTC.prototype, "onCreate");
         HitBTC.getInstance();
         HitBTC.getInstance();
 
-        expect(onCreate.calledOnce).to.equal(true);
-        expect(onCreate.args[0]).to.deep.equal([]);
-        onCreate.restore();
+        expect(spyOnCreate).toBeCalledTimes(1);
     });
+});
 
-    it("Should subscribe to report events", () => {
+describe("subscribeReports", () => {
+    test("Should send out a subscribe to report events", () => {
         exchange.subscribeReports();
-        expect(send.args[0][0]).to.equal("subscribeReports");
+        expect(sendMock).toBeCalledWith("subscribeReports");
     });
+});
 
-    it("Should subscribe to orderbook events", () => {
+describe("subscribeOrderbook", () => {
+    test("Should send out a subscribe to orderbook events", () => {
         exchange.subscribeOrderbook(pair);
-        expect(send.args[0][0]).to.equal("subscribeOrderbook");
-        expect(send.args[0][1]).to.deep.equal({symbol: pair});
+        expect(sendMock).toBeCalledWith("subscribeOrderbook", expect.objectContaining({symbol: pair}));
     });
+});
 
-    it("Should subscribe to candle events", () => {
+describe("subscribeCandles", () => {
+    test("Should send out subscribe to candle events", () => {
         exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
-        expect(send.args[0][0]).to.equal("subscribeCandles");
-        expect(send.args[0][1]).to.deep.equal({period: "M5", symbol: pair});
+        expect(sendMock).toBeCalledWith("subscribeCandles", expect.objectContaining({period: "M5", symbol: pair}));
     });
+});
 
-    it("Should authenticate user on exchange", () => {
+describe("login", () => {
+    test("Should authenticate user on exchange", () => {
         exchange.login("PUB_123", "PRIV_123");
-        expect(send.args[0][0]).to.equal("login");
-        expect(send.args[0][1]).to.include({"algo": "HS256", "pKey": "PUB_123"});
-        expect(send.args[0][1]).to.include.all.keys("signature", "nonce");
+        expect(sendMock).toBeCalledWith("login", expect.objectContaining({"algo": "HS256", "pKey": "PUB_123"}));
+        expect(sendMock.mock.calls[0][1]).toHaveProperty("signature");
+        expect(sendMock.mock.calls[0][1]).toHaveProperty("nonce");
     });
+});
 
-    it("Should update a candle collection for a trading pair", () => {
-        const getCollection = stub(exchange, "getCandleCollection");
+describe("onUpdateCandles", () => {
+    test("Should update a candle collection for a trading pair with method set", () => {
         const collection = new CandleCollection(CandleInterval.FIVE_MINUTES);
-        const set = spy(collection, "set");
-        getCollection.returns(collection);
+        const getCollectionMock = jest.fn().mockImplementation(() => {
+            return collection;
+        });
+
+        exchange.getCandleCollection = getCollectionMock;
+        const set = spyOn(collection, "set");
 
         const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
 
         exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, "set");
-        expect(set.calledOnce).to.equal(true);
-        expect(set.args[0][0][0]).to.deep.include({close: 1, high: 2, low: 0, open: 0, volume: 10});
-        expect(set.args[0][0][0]).to.include.all.keys("timestamp");
-
-        set.restore();
-        getCollection.restore();
+        expect(set).toBeCalled();
     });
+});
 
-    it("Should emit candle events on an update", () => {
-        const emit = spy(exchange, "emit");
-        const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
-        exchange.onUpdateCandles(pair, candles, CandleInterval.FIVE_MINUTES, "set");
+describe("onUpdateOrderbook", () => {
+    test("Should update an in memory orderbook", () => {
+        const emit = jest.fn();
+        exchange.emit = emit;
 
-        expect(emit.calledOnce).to.equal(true);
-        expect(emit.args[0][0]).to.equal("app.updateCandles");
-        expect(emit.args[0][1]).to.deep.equal(candles);
+        const orderbook: Orderbook = new Orderbook(pair, 6);
+        orderbook.setOrders = jest.fn();
+        const getOrderbookMock = jest.fn().mockImplementation(() => {
+            return orderbook;
+        });
+        exchange.getOrderbook = getOrderbookMock;
 
-        emit.restore();
-    });
-
-    it("Should update an in memory orderbook", () => {
-        const emit = stub(exchange, "emit");
-        const getOrderbook = spy(exchange, "getOrderbook");
         const ob: IOrderbookData = {
             sequence: 1,
             pair,
@@ -108,92 +108,98 @@ describe("HitBTC", () => {
         exchange.currencies[pair.join("")] = {id: pair, quantityIncrement: 10, tickSize: 0.000001};
 
         exchange.onUpdateOrderbook({...ob, sequence: -1}, "setOrders");
-        expect(getOrderbook.called).to.be.equal(false);
+        expect(getOrderbookMock).not.toBeCalled();
 
         exchange.onUpdateOrderbook(ob, "setOrders");
-        expect(getOrderbook.called).to.be.equal(true);
-
-        expect(emit.args[0][0]).to.equal("app.updateOrderbook");
-        expect(emit.args[0][1]).to.deep.equal({ask, bid, pair: symbol, precision: 6});
-        emit.restore();
-        getOrderbook.restore();
+        expect(getOrderbookMock).toBeCalled();
+        expect(emit).toBeCalledWith("app.updateOrderbook", expect.objectContaining({pair: symbol, precision: 6}));
     });
+});
 
+describe("loadCurrencies", () => {
     it("Should load currency configuration from the exchange", () => {
         exchange.loadCurrencies();
-        expect(send.calledOnce).to.equal(true);
-        expect(send.args[0]).to.deep.equal(["getSymbols"]);
+        expect(sendMock).toBeCalledWith("getSymbols");
     });
+});
 
+describe("cancelOrder", () => {
     it("Should cancel an order", () => {
-        // @ts-ignore
-        const setOrderInProgress = stub(exchange, "setOrderInProgress");
+        const setOrderInProgressMock = jest.fn();
+        exchange["setOrderInProgress"] = setOrderInProgressMock;
         exchange.cancelOrder({id: "123"} as IOrder);
 
-        expect(setOrderInProgress.calledOnce).to.equal(true);
-        expect(setOrderInProgress.args[0]).to.deep.equal(["123"]);
-        expect(send.calledOnce).to.equal(true);
-        expect(send.args[0]).to.deep.equal(["cancelOrder", {clientOrderId: "123"}]);
-
-        setOrderInProgress.restore();
+        expect(setOrderInProgressMock).toBeCalledWith("123");
+        expect(sendMock).toBeCalledWith("cancelOrder", {clientOrderId: "123"});
     });
+});
 
+describe("adjustOrder", () => {
     it("Should adjust existing orders", () => {
-        // @ts-ignore
-        const adjustAllowed = stub(exchange, "isAdjustingOrderAllowed");
-        adjustAllowed.returns(true);
+        const adjustAllowedMock = jest.fn().mockImplementation(() => {
+            return true;
+        });
+
+        exchange["isAdjustingOrderAllowed"] = adjustAllowedMock;
+        exchange.generateOrderId = jest.fn().mockImplementation(() => {
+            return "neworderid";
+        });
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(send.calledOnce).to.equal(true);
-        expect(send.args[0][0]).to.equal("cancelReplaceOrder");
-        expect(send.args[0][1]).to.include({clientOrderId: "123", price: 0.002, quantity: 0.5, strictValidate: true});
-        expect(send.args[0][1]).to.include.all.keys("requestClientId");
-
-        adjustAllowed.restore();
+        expect(sendMock).toBeCalledWith("cancelReplaceOrder", expect.objectContaining({
+            clientOrderId: "123",
+            price: 0.002,
+            quantity: 0.5,
+            strictValidate: true,
+            requestClientId: "neworderid",
+        }));
     });
+});
 
-    it("Should create a new order", () => {
-        const orderId = exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
+// TODO fix generate method
+// describe("createOrder", () => {
+//     it("Should create a new order", () => {
+//         const orderId = exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
+//
+//         expect(sendMock).toBeCalledWith("newOrder", expect.objectContaining({
+//             price: 10,
+//             quantity: 1,
+//             side: "buy",
+//             symbol: pair,
+//             type: "limit",
+//             clientOrderId: orderId,
+//         }));
+//     });
+// });
 
-        expect(send.calledOnce).to.equal(true);
-        expect(send.args[0][0]).to.equal("newOrder");
-        expect(send.args[0][1].clientOrderId).to.equal(orderId);
-        expect(send.args[0][1]).to.contain({
-            price: 10,
-            quantity: 1,
-            side: "buy",
-            symbol: pair,
-            type: "limit",
-        });
+describe("onConnect", () => {
+    test("Should initialize when exchange is connected", () => {
+        const loadCurrenciesMock = jest.fn();
+        exchange.loadCurrencies = loadCurrenciesMock;
+        const onReceiveMock = jest.fn();
+        const loginMock = jest.fn();
+        exchange.login = loginMock;
+        exchange.mapper.onReceive = onReceiveMock;
+
+        const connectionMock = new EventEmitter();
+        exchange["onConnect"](connectionMock as connection);
+
+        expect(loadCurrenciesMock).toBeCalled();
+        expect(loginMock).toBeCalledWith("PUB_123", "SEC_123");
+
+        connectionMock.emit("message", JSON.stringify({test: "123"}));
+
+        expect(onReceiveMock).toBeCalledWith(JSON.stringify({test: "123"}));
     });
+});
 
-    it("Should initialize when exchange is connected", () => {
-        const loadCurrencies = stub(exchange, "loadCurrencies");
-        const onReceive = stub(exchange.mapper, "onReceive");
-        const login = stub(exchange, "login");
-        const connection = new EventEmitter();
-
-        exchange["onConnect"](connection as connection);
-
-        expect(loadCurrencies.calledOnce).to.be.equal(true);
-        expect(login.calledOnce).to.be.equal(true);
-        expect(login.args[0]).to.deep.equal(["PUB_123", "SEC_123"]);
-
-        connection.emit("message", JSON.stringify({test: "123"}));
-
-        expect(onReceive.calledOnce).to.be.equal(true);
-        expect(onReceive.args[0][0]).to.equal(JSON.stringify({test: "123"}));
-
-        loadCurrencies.restore();
-        onReceive.restore();
-        login.restore();
-    });
-
+describe("connect", () => {
     it("Should connect", () => {
+        const connectMock = jest.fn();
         // @ts-ignore
-        const connect = stub(exchange.__proto__.__proto__, "connect");
+        exchange.__proto__.__proto__.connect = connectMock;
 
         exchange.connect();
-        expect(connect.args[0]).to.deep.equal(['wss://api.hitbtc.com/api/2/ws']);
+        expect(connectMock).toBeCalledWith("wss://api.hitbtc.com/api/2/ws");
     });
 });
