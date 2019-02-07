@@ -156,15 +156,15 @@ describe("emitCandles", () => {
         expect(emitMock).toBeCalledWith("app.updateCandles", expect.arrayContaining([candle1, candle2]));
     });
 
-    test("Should emit newest candles first", () => {
-        const oldMoment = moment();
+    test("Should emit oldest candles first", () => {
+        const oldMoment = moment().subtract(5, "minutes");
         const newMoment = moment();
         const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as ICandle;
         const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as ICandle;
 
         const candles: ICandle[] = [oldCandle, newCandle];
         exchange.emitCandles(candles);
-        expect(emitMock).toHaveBeenNthCalledWith(1, "app.updateCandles", expect.arrayContaining([newCandle]));
+        expect(emitMock).toHaveBeenNthCalledWith(1, "app.updateCandles", expect.arrayContaining([oldCandle]));
         expect(emitMock).toHaveBeenNthCalledWith(2, "app.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
     });
 });

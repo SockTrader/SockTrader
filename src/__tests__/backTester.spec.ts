@@ -6,8 +6,8 @@ import Wallet from "../sockTrader/core/assets/wallet";
 import {CandleInterval} from "../sockTrader/core/exchanges/hitBTC";
 import CandleLoader from "../sockTrader/core/candles/candleLoader";
 import LocalExchange from "../sockTrader/core/exchanges/localExchange";
-import MyStrategy from "../strategies/myStrategy";
 import BackTester from "../sockTrader/core/bot/backTester";
+import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 
 // @ts-ignore
 const backTester = new BackTester({assets: {USD: 10000}});
@@ -21,7 +21,7 @@ const candleLoader: CandleLoader = new CandleLoader("/dir/input/path/file.csv");
 candleLoader.parse = jest.fn().mockReturnValue(fromObject([]));
 backTester.setCandleLoader(candleLoader);
 backTester.addStrategy({
-    strategy: MyStrategy,
+    strategy: SimpleMovingAverage,
     pair: pair,
     interval: CandleInterval.ONE_HOUR,
 });
@@ -61,7 +61,7 @@ describe("start", () => {
 
         await backTester.start();
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
-            strategy: MyStrategy,
+            strategy: SimpleMovingAverage,
             pair: pair,
             interval: CandleInterval.ONE_HOUR,
         }]));
@@ -71,6 +71,7 @@ describe("start", () => {
             pair,
             exchange: localExchange,
         }));
+        expect(backTester["eventsBound"]).toEqual(true);
         expect(bindExchangeToStrategySpy).toBeCalledTimes(1);
         expect(bindExchangeToSocketServer).toBeCalledTimes(1);
     });
