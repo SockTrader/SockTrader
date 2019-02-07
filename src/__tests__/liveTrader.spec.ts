@@ -6,9 +6,9 @@ import Wallet from "../sockTrader/core/assets/wallet";
 import {CandleInterval, default as HitBTC} from "../sockTrader/core/exchanges/hitBTC";
 import CandleLoader from "../sockTrader/core/candles/candleLoader";
 import LocalExchange from "../sockTrader/core/exchanges/localExchange";
-import MyStrategy from "../strategies/myStrategy";
 import BackTester from "../sockTrader/core/bot/backTester";
 import LiveTrader from "../sockTrader/core/bot/liveTrader";
+import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 
 // @ts-ignore
 const liveTrader = new LiveTrader({webServer: false});
@@ -17,7 +17,7 @@ const pair: Pair = ["BTC", "USD"];
 const hitBTC = HitBTC.getInstance();
 liveTrader.addExchange(hitBTC);
 liveTrader.addStrategy({
-    strategy: MyStrategy,
+    strategy: SimpleMovingAverage,
     pair: pair,
     interval: CandleInterval.ONE_HOUR,
 });
@@ -58,7 +58,7 @@ describe("start", () => {
 
         await liveTrader.start();
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
-            strategy: MyStrategy,
+            strategy: SimpleMovingAverage,
             pair: pair,
             interval: CandleInterval.ONE_HOUR,
         }]));
