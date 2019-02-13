@@ -1,7 +1,7 @@
 import boom from "boom";
 import express from "express";
 import * as fs from "fs";
-import {resolve} from "path";
+import {extname, resolve} from "path";
 import {promisify} from "util";
 
 const router = express.Router();
@@ -37,7 +37,7 @@ router.get("/list", (req, res) => {
         const dataFiles: FileListing = [];
 
         files.forEach(file => {
-            if (file.indexOf(ext) > -1) {
+            if (extname(file) === ext) {
                 const fileName = file.replace(ext, "");
                 dataFiles.push({
                     file: fileName,

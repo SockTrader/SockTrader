@@ -3,8 +3,10 @@ import express, {Express, NextFunction, Request, Response} from "express";
 import {Server} from "http";
 
 import path from "path";
-// import socketIO from "socket.io";
+import backtestController from "./controllers/backtest";
 import dataController from "./controllers/data";
+import strategyController from "./controllers/strategy";
+// import socketIO from "socket.io";
 
 const app: Express = express();
 const http = new Server(app);
@@ -12,10 +14,8 @@ const http = new Server(app);
 
 http.listen(80);
 
-app.use(cors(/*{
-    origin: "http://localhost",
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-}*/));
+app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
     const file = path.resolve(__dirname, "../../../src/sockTrader/web/index.html");
@@ -23,6 +23,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/data", dataController);
+app.use("/backtest", backtestController);
+app.use("/strategy", strategyController);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => next(res.status(err.output.statusCode).json(err.output.payload)));
 

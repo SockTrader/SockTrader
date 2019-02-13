@@ -19,7 +19,7 @@ const emitCandlesMock = jest.fn();
 
 const candleLoader: CandleLoader = new CandleLoader("/dir/input/path/file.csv");
 candleLoader.parse = jest.fn().mockReturnValue(fromObject([]));
-backTester.setCandleLoader(candleLoader);
+backTester.setCandlePath(candleLoader);
 backTester.addStrategy({
     strategy: SimpleMovingAverage,
     pair: pair,
@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 
-describe("setCandleLoader", () => {
+describe("setCandlePath", () => {
     test("Should set a new candle loader for given path", () => {
         expect(backTester["candleLoader"]).toEqual(candleLoader);
     });
