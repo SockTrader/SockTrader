@@ -9,7 +9,6 @@
   <a href="https://travis-ci.org/SockTrader/SockTrader"><img src="https://travis-ci.org/SockTrader/SockTrader.svg?branch=master" alt="Build status"></a>
   <a href="https://codeclimate.com/github/SockTrader/SockTrader/maintainability"><img src="https://api.codeclimate.com/v1/badges/19589f9237d31ca9dcf6/maintainability" /></a>
   <a href="https://david-dm.org/SockTrader/SockTrader"><img src="https://david-dm.org/SockTrader/SockTrader.svg" alt="Dependencies"></a>
-  <a href="https://github.com/SockTrader/SockTrader"><img src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/badge.svg" alt="Documentation"></a>
 </p>
 
 <p align="center"><b>🚧 Project is currently under development! 🚧</b></p>
