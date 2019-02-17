@@ -1,12 +1,18 @@
 export default {
-  timezone: "Europe/Brussels",
-  webServer: {
-    debugPort: "50000",
-    port: 8080,
-  },
+    timezone: "Europe/Brussels",
 
-  HitBTC: {
-    publicKey: "my_public_key",
-    secretKey: "my_secret_key",
-  },
+    // @deprecated
+    webServer: {
+        debugPort: "50000",
+        port: 8080,
+    },
+
+    assets: {
+        USD: 10000,
+    },
+
+    HitBTC: {
+        publicKey: "REPLACE_WITH_MY_PUBLIC_KEY",
+        secretKey: "REPLACE_WITH_MY_SECRET_KEY",
+    },
 };

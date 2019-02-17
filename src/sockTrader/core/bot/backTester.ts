@@ -9,6 +9,15 @@ export interface IBackTestConfig extends ISockTraderConfig {
     assets: IAssetMap;
 }
 
+interface InputCandle {
+    close: number;
+    high: number;
+    low: number;
+    open: number;
+    timestamp: string;
+    volume: number;
+}
+
 /**
  * The BackTester enables you to test your strategy against a fake dummy exchange
  * and optimize to the point of content
@@ -18,31 +27,17 @@ export default class BackTester extends SockTrader {
     /**
      * Creates a new BackTester
      * @param {ISockTraderConfig} config
-     * @param candlePath Path to JSON file with candles
+     * @param {InputCandle} inputCandles
      */
-    constructor(config: IBackTestConfig, private candlePath: string) {
+    constructor(config: IBackTestConfig, private inputCandles: InputCandle[]) {
         super(config);
 
         const wallet = new Wallet(config.assets);
         this.exchange = localExchange.getInstance(wallet);
     }
 
-    /**
-     * Sets the loader responsible for loading local file data into an in memory candle collection
-     * @returns {this}
-     */
-    setCandlePath(candlePath: string): this {
-        this.candlePath = candlePath;
-
-        return this;
-    }
-
     async start(): Promise<void> {
         await super.start();
-
-        if (!this.candlePath) {
-            throw new Error("No candle loader defined.");
-        }
 
         if (!this.eventsBound) {
             this.subscribeToExchangeEvents(this.strategyConfigurations);
@@ -57,13 +52,12 @@ export default class BackTester extends SockTrader {
             this.eventsBound = true;
         }
 
-        const candleFile = await import(this.candlePath);
-        const candles = this.hydrateCandles(candleFile.payload.candles);
+        const candles = this.hydrateCandles(this.inputCandles);
 
         await (this.exchange as LocalExchange).emitCandles(candles);
     }
 
-    private hydrateCandles(candles: any): ICandle[] {
+    private hydrateCandles(candles: InputCandle[]): ICandle[] {
         return candles.map((c: any) => ({
             ...c,
             timestamp: moment(c.timestamp),

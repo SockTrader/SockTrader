@@ -33,7 +33,7 @@ export async function normalizeDataFiles(files: string[]): Promise<void> {
             const m = await import(buildPath("data", file));
 
             const candles = await parseCandles(m.default);
-            const result = {type: "CANDLES", payload: {pair: "", candles}};
+            const result = {candles};
             await fs.writeJSON(buildPath("data", `${baseFileName}.json`), result);
         } catch (e) {
             console.error(e);

@@ -21,7 +21,7 @@ router.post("/new", async (req, res, next) => {
     const file = path.resolve(__dirname, BASE_PATH, `data/${rawFile}.json`);
 
     const scriptPath = path.resolve(__dirname, BASE_PATH, "backtest.js");
-    const process: ChildProcess = fork(scriptPath, [`--file=${file}`]);
+    const process: ChildProcess = fork(scriptPath, [`--candles=${file}`]);
 
     res.send({pid: process.pid});
 
