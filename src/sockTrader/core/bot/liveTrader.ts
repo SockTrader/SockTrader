@@ -33,7 +33,7 @@ export default class LiveTrader extends SockTrader {
                 const strategy = new c.strategy(c.pair, this.exchange);
                 this.bindStrategyToExchange(strategy);
                 this.bindExchangeToStrategy(strategy);
-                this.bindExchangeToSocketServer();
+                this.bindExchangeToReporters(this.reporters);
             });
 
             this.eventsBound = true;
@@ -44,8 +44,9 @@ export default class LiveTrader extends SockTrader {
         this.exchange.connect();
     }
 
-    private bindExchangeToSocketServer() {
-        this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
-        this.exchange.on("app.updateCandles", candles => this.sendToWebServer("CANDLE_UPDATE", candles));
-    }
+    // @TODO exchange candles should be forwarded to frontend somehow
+    // private bindExchangeToSocketServer() {
+    //     this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
+    //     this.exchange.on("app.updateCandles", candles => this.sendToWebServer("CANDLE_UPDATE", candles));
+    // }
 }

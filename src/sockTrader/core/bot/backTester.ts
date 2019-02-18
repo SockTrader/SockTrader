@@ -3,9 +3,9 @@ import Wallet, {IAssetMap} from "../assets/wallet";
 import {ICandle} from "../candles/candleCollection";
 import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
-import SockTrader, {ISockTraderConfig} from "./sockTrader";
+import SockTrader from "./sockTrader";
 
-export interface IBackTestConfig extends ISockTraderConfig {
+export interface IBackTestConfig {
     assets: IAssetMap;
 }
 
@@ -26,11 +26,11 @@ export default class BackTester extends SockTrader {
 
     /**
      * Creates a new BackTester
-     * @param {ISockTraderConfig} config
+     * @param {IBackTestConfig} config
      * @param {InputCandle} inputCandles
      */
     constructor(config: IBackTestConfig, private inputCandles: InputCandle[]) {
-        super(config);
+        super();
 
         const wallet = new Wallet(config.assets);
         this.exchange = localExchange.getInstance(wallet);
@@ -46,7 +46,7 @@ export default class BackTester extends SockTrader {
                 const strategy = new c.strategy(c.pair, this.exchange);
                 this.bindStrategyToExchange(strategy);
                 this.bindExchangeToStrategy(strategy);
-                // this.bindExchangeToSocketServer();
+                this.bindExchangeToReporters(this.reporters);
             });
 
             this.eventsBound = true;
@@ -63,8 +63,4 @@ export default class BackTester extends SockTrader {
             timestamp: moment(c.timestamp),
         } as ICandle));
     }
-
-    // private bindExchangeToSocketServer() {
-    //     this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
-    // }
 }

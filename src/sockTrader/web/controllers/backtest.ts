@@ -1,66 +1,39 @@
-import boom from "boom";
 import {ChildProcess, fork} from "child_process";
-import express from "express";
 import path from "path";
-// import * as fs from "fs";
-// import {resolve} from "path";
-// import process from "process";
-// import {promisify} from "util";
-// import config from "../../../config";
+import {Socket} from "socket.io";
 
-const router = express.Router();
 const BASE_PATH = "../../../";
 
-// POST: /backtest/new
-router.post("/new", async (req, res, next) => {
-    if (!req.body.file) {
-        return next(boom.badRequest("'file' argument is not defined"));
-    }
+export default (socket: Socket) => {
+    socket.on("new_backtest", ({candleFile, strategyFile}) => {
 
-    const rawFile = Buffer.from(req.body.file, "base64").toString();
-    const file = path.resolve(__dirname, BASE_PATH, `data/${rawFile}.json`);
+        const candlePath = Buffer.from(candleFile, "base64").toString();
+        const strategyPath = Buffer.from(strategyFile, "base64").toString();
+        const scriptPath = path.resolve(__dirname, BASE_PATH, "backtest.js");
 
-    const scriptPath = path.resolve(__dirname, BASE_PATH, "backtest.js");
-    const process: ChildProcess = fork(scriptPath, [`--candles=${file}`]);
+        const backtestProcess: ChildProcess = fork(scriptPath, [
+            `--candles=${candlePath}`,
+            `--strategy=${strategyPath}`,
+        ], {stdio: ["ipc"]});
 
-    res.send({pid: process.pid});
+        backtestProcess.stdout.pipe(process.stdout);
 
-    // webServer.stdout.pipe(process.stdout);
-    //
-    // webServer.on("exit", (code, signal) => {
-    //     console.log("WebServer script exit: ", {code, signal});
-    // });
-    //
-    // webServer.on("error", msg => {
-    //     console.log("WebServer script error: ", msg);
-    // });
+        backtestProcess.on("message", event => {
+            if (!event.type) {
+                throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+            }
 
-    /**
-     * Re-emit incoming messages as separate events
-     * This makes it easier to handle each event separately
-     */
-    // webServer.on("message", event => {
-    //     if (!event.type) {
-    //         throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
-    //     }
-    //
-    //     webServer.emit(event.type, event.payload);
-    // });
+            socket.emit("backtest_order", event);
+        });
 
-    /**
-     * Kill webServer if the main process has stopped working..
-     */
-    // process.on("exit", () => webServer.kill());
-    //
-    // return webServer;
+        backtestProcess.on("exit", (code, signal) => {
+            console.log("WebServer script exit: ", {code, signal});
+        });
 
-    // res.send(req.body);
-    //
-    // try {
-    //     return next(boom.badImplementation("File is not a valid JSON file"));
-    // } catch (e) {
-    //     return next(boom.badImplementation(e));
-    // }
-});
+        backtestProcess.on("error", msg => {
+            console.log("WebServer script error: ", msg);
+        });
 
-export default router;
+        socket.emit("backtest_start", {processId: process.pid});
+    });
+};

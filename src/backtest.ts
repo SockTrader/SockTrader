@@ -5,6 +5,7 @@ import yargs from "yargs";
 import config from "./config";
 import BackTester from "./sockTrader/core/bot/backTester";
 import {CandleInterval} from "./sockTrader/core/exchanges/hitBTC";
+import IPCReporter from "./sockTrader/core/reporters/IPCReporter";
 
 const argv = yargs
     .usage("Usage: $0 --candles [string] --strategy [string]")
@@ -35,12 +36,14 @@ load().then((dep: any) => {
     const candleFile = dep[1].default;
 
     // @TODO make pair and interval dynamic
-    new BackTester({assets: config.assets}, candleFile.candles)
+    const backtest = new BackTester({assets: config.assets}, candleFile.candles)
         .addStrategy({
             strategy: strategyFile,
             pair: ["BTC", "USD"],
             interval: CandleInterval.ONE_HOUR,
-        })
-        .start()
-        .then(() => console.log("Backtesting finished!"));
+        });
+
+    if (process.send) backtest.addReporter(new IPCReporter());
+
+    backtest.start().then(() => console.log("Backtesting finished!"));
 });

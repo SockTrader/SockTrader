@@ -6,9 +6,9 @@
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
     "test": "jest --coverage --ci --forceExit",
-    "dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/index.js\"",
-    "web": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/sockTrader/web/webServer.js\"",
+    "dev": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
+    "web": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/sockTrader/web/webServer.js\"",
     "build": "tsc",
     "build-es5": "tsc --target \"ES5\"",
     "docs": "esdoc",

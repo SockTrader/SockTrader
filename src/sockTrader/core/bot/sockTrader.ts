@@ -4,19 +4,15 @@ import uniqWith from "lodash.uniqwith";
 import {ICandle, ICandleInterval} from "../candles/candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
+import {IReporter} from "../reporters/reporterInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
 import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
-import spawnServer from "../web/spawnServer";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;
     pair: Pair;
     strategy: IStrategyClass<BaseStrategy>;
-}
-
-export interface ISockTraderConfig {
-    webServer?: boolean;
 }
 
 /**
@@ -28,14 +24,18 @@ export interface ISockTraderConfig {
 export default abstract class SockTrader {
     protected eventsBound = false;
     protected exchange!: IExchange;
+    protected reporters: IReporter[] = [];
     protected strategyConfigurations: IStrategyConfig[] = [];
-    protected webServer?: ChildProcess;
 
-    constructor(protected config: ISockTraderConfig = {webServer: true}) {
-        if (this.config.webServer) {
-            this.webServer = spawnServer();
-            this.webServer.on("START_TRADING", () => this.start());
-        }
+    /**
+     * Adds a reporter
+     * @param {IReporter} reporter strategy reporter
+     * @returns {this}
+     */
+    addReporter(reporter: IReporter): this {
+        this.reporters.push(reporter);
+
+        return this;
     }
 
     /**
@@ -82,6 +82,17 @@ export default abstract class SockTrader {
     }
 
     /**
+     * Registers the reporters to listen to exhange events:
+     * - report: order update
+     * @param {IReporter} reporters
+     */
+    protected bindExchangeToReporters(reporters: IReporter[]): void {
+        this.exchange.on("app.report", (order: IOrder) =>
+            reporters.forEach(r => r.report(order)),
+        );
+    }
+
+    /**
      * Registers the strategies to listen to exchange events:
      * - report: order update
      * - update orderbook: change in orderbook
@@ -106,14 +117,5 @@ export default abstract class SockTrader {
         // @TODO add cancel order event!
         strategy.on("app.signal", ({symbol, price, qty, side}: ISignal) => exchange.createOrder(symbol, price, qty, side));
         strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
-    }
-
-    /**
-     * Sends messages to webserver
-     * @param {string} type type of message
-     * @param payload the data
-     */
-    protected sendToWebServer(type: string, payload: any) {
-        if (this.webServer) this.webServer.send({type, payload});
     }
 }
