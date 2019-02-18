@@ -20,7 +20,7 @@ class ConcreteSockTrader extends SockTrader {
 }
 
 const hitBTC = new HitBTC("PUB_123", "SEC_123");
-const sockTrader = new ConcreteSockTrader({webServer: false});
+const sockTrader = new ConcreteSockTrader();
 const btcEthPair: Pair = ["BTC", "ETH"];
 const btcCovPair: Pair = ["BTC", "COV"];
 
