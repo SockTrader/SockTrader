@@ -54,7 +54,7 @@ describe("start", () => {
 
         const bindStrategyToExchangeSpy = jest.spyOn(liveTrader, "bindStrategyToExchange" as any);
         const bindExchangeToStrategySpy = jest.spyOn(liveTrader, "bindExchangeToStrategy" as any);
-        const bindExchangeToSocketServer = jest.spyOn(liveTrader, "bindExchangeToSocketServer" as any);
+        const bindExchangeToReporters = jest.spyOn(liveTrader, "bindExchangeToReporters" as any);
 
         await liveTrader.start();
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
@@ -69,7 +69,7 @@ describe("start", () => {
         }));
         expect(liveTrader["eventsBound"]).toEqual(true);
         expect(bindExchangeToStrategySpy).toBeCalledTimes(1);
-        expect(bindExchangeToSocketServer).toBeCalledTimes(1);
+        expect(bindExchangeToReporters).toBeCalledTimes(1);
         expect(connectMock).toBeCalledTimes(1);
     });
 });

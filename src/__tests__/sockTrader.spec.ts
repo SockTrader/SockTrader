@@ -165,17 +165,3 @@ describe("bindStrategyToExchange", () => {
         expect(spyOn).toBeCalledWith("app.adjustOrder", expect.anything());
     });
 });
-
-describe("sendToWebServer", () => {
-    test("Should broadcast payload to socket server", () => {
-        const childSend = jest.fn();
-
-        // @ts-ignore
-        sockTrader["webServer"] = {send: childSend};
-        sockTrader["sendToWebServer"]("type",  "payload");
-        expect(childSend).toBeCalledWith(objectContaining({
-            type: "type",
-            payload: "payload"
-        }));
-    });
-});

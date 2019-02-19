@@ -1,10 +1,8 @@
 /* tslint:disable */
 import "jest";
-import {fromObject, IDataFrame} from "data-forge";
 import {Pair} from "../sockTrader/core/types/pair";
 import Wallet from "../sockTrader/core/assets/wallet";
 import {CandleInterval} from "../sockTrader/core/exchanges/hitBTC";
-import CandleLoader from "../sockTrader/core/candles/candleLoader";
 import LocalExchange from "../sockTrader/core/exchanges/localExchange";
 import BackTester from "../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../strategies/simpleMovingAverage";
@@ -17,9 +15,6 @@ const localExchange = LocalExchange.getInstance(wallet);
 backTester["exchange"] = localExchange;
 const emitCandlesMock = jest.fn();
 
-const candleLoader: CandleLoader = new CandleLoader("/dir/input/path/file.csv");
-candleLoader.parse = jest.fn().mockReturnValue(fromObject([]));
-backTester.setCandlePath(candleLoader);
 backTester.addStrategy({
     strategy: SimpleMovingAverage,
     pair: pair,
@@ -35,11 +30,6 @@ afterEach(() => {
 });
 
 
-describe("setCandlePath", () => {
-    test("Should set a new candle loader for given path", () => {
-        expect(backTester["candleLoader"]).toEqual(candleLoader);
-    });
-});
 
 describe("start", () => {
     test("Should throw error with no candle loader", async () => {
