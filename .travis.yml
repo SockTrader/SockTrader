@@ -12,3 +12,6 @@ script:
   - cp src/config.ts.dist src/config.ts
   - npm test
   - codecov -f coverage/*.json
+
+env:
+  - TF_CPP_MIN_LOG_LEVEL=2
