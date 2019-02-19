@@ -39,6 +39,10 @@ export default class BackTester extends SockTrader {
     async start(): Promise<void> {
         await super.start();
 
+        if (!this.inputCandles || this.inputCandles.length === 0) {
+            throw new Error("No candles found as input.");
+        }
+
         if (!this.eventsBound) {
             this.subscribeToExchangeEvents(this.strategyConfigurations);
 
