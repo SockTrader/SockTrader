@@ -7,7 +7,6 @@ import LocalExchange from "../sockTrader/core/exchanges/localExchange";
 import BackTester from "../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../strategies/simpleMovingAverage";
 
-// @ts-ignore
 const backTester = new BackTester({assets: {USD: 10000}}, [{
     "timestamp": "2018-11-15T15:00:00.000Z",
     "high": 5456.74,
