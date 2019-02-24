@@ -100,6 +100,7 @@
   },
   "dependencies": {
     "boom": "^7.3.0",
+    "chokidar": "^2.1.2",
     "cors": "^2.8.5",
     "cron": "^1.6.0",
     "cron-parser": "^2.7.3",
@@ -127,6 +128,7 @@
   "devDependencies": {
     "@types/boom": "^7.2.1",
     "@types/chai": "^4.1.7",
+    "@types/chokidar": "^1.7.5",
     "@types/cors": "^2.8.4",
     "@types/cron": "^1.6.0",
     "@types/express": "^4.16.1",

@@ -1,4 +1,3 @@
-import {ChildProcess} from "child_process";
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import {ICandle, ICandleInterval} from "../candles/candleCollection";
@@ -88,7 +87,7 @@ export default abstract class SockTrader {
      */
     protected bindExchangeToReporters(reporters: IReporter[]): void {
         this.exchange.on("app.report", (order: IOrder) =>
-            reporters.forEach(r => r.report(order)),
+            reporters.forEach(r => r.reportOrder(order)),
         );
     }
 
@@ -100,10 +99,9 @@ export default abstract class SockTrader {
      * @param {BaseStrategy} strategy
      */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
-        const exchange = this.exchange;
-        exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
-        exchange.on("app.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        exchange.on("app.updateCandles", (candles: ICandle[]) => strategy.updateCandles(candles));
+        this.exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
+        this.exchange.on("app.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        this.exchange.on("app.updateCandles", (candles: ICandle[]) => strategy.updateCandles(candles));
     }
 
     /**

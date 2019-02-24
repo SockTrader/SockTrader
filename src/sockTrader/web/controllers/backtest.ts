@@ -23,7 +23,7 @@ export default (socket: Socket) => {
                 throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
             }
 
-            socket.emit("backtest_order", event);
+            socket.emit(event.type, event.payload);
         });
 
         backtestProcess.on("exit", (code, signal) => {

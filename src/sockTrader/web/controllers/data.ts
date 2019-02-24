@@ -15,9 +15,7 @@ type FileListing = Array<{
 
 // GET: /data
 router.get("/", async (req, res, next) => {
-    if (!req.query.file) {
-        return next(boom.badRequest("'file' argument is not defined"));
-    }
+    if (!req.query.file) return next(boom.badRequest("'file' argument is not defined"));
 
     try {
         const file = resolve(__dirname, BASE_PATH, (Buffer.from(req.query.file, "base64")).toString() + ext);

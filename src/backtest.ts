@@ -45,5 +45,5 @@ load().then((dep: any) => {
 
     if (process.send) backtest.addReporter(new IPCReporter());
 
-    backtest.start().then(() => console.log("Backtesting finished!"));
+    backtest.start();
 });

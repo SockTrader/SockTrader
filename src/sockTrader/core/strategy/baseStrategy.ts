@@ -5,9 +5,7 @@ import {IOrderbook} from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 
-export interface IStrategyClass<T> {
-    new(pair: Pair, exchange: IExchange): T;
-}
+export type IStrategyClass<T> = new(pair: Pair, exchange: IExchange) => T;
 
 export interface ISignal {
     price: number;

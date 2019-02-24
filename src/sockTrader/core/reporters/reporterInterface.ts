@@ -1,5 +1,13 @@
 import {IOrder} from "../types/order";
 
+export type BotStatusType = "STARTED" | "FINISHED" | "PROGRESS";
+
+export interface IBotStatus {
+    current?: number;
+    length?: number;
+    type: BotStatusType;
+}
+
 /**
  * The IReporter represents a reporter to track
  * orders made by SockTrader
@@ -7,9 +15,15 @@ import {IOrder} from "../types/order";
 export interface IReporter {
 
     /**
-     * Async order report
+     * Async bot status report method
+     * @param status
+     */
+    reportBotProgress(status: IBotStatus): Promise<void>;
+
+    /**
+     * Async order reportOrder
      * @param order
      */
-    report(order: IOrder): Promise<void>;
+    reportOrder(order: IOrder): Promise<void>;
 
 }

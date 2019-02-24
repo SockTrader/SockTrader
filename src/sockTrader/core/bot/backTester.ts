@@ -3,6 +3,7 @@ import Wallet, {IAssetMap} from "../assets/wallet";
 import {ICandle} from "../candles/candleCollection";
 import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
+import {IBotStatus} from "../reporters/reporterInterface";
 import SockTrader from "./sockTrader";
 
 export interface IBackTestConfig {
@@ -58,7 +59,9 @@ export default class BackTester extends SockTrader {
 
         const candles = this.hydrateCandles(this.inputCandles);
 
+        this.reportProgress({type: "STARTED", length: candles.length});
         await (this.exchange as LocalExchange).emitCandles(candles);
+        this.reportProgress({type: "FINISHED"});
     }
 
     private hydrateCandles(candles: InputCandle[]): ICandle[] {
@@ -66,5 +69,9 @@ export default class BackTester extends SockTrader {
             ...c,
             timestamp: moment(c.timestamp),
         } as ICandle));
+    }
+
+    private reportProgress(status: IBotStatus) {
+        this.reporters.forEach(r => r.reportBotProgress(status));
     }
 }

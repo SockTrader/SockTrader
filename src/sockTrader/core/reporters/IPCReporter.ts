@@ -1,13 +1,18 @@
 import {IOrder} from "../types/order";
-import {IReporter} from "./reporterInterface";
+import {IBotStatus, IReporter} from "./reporterInterface";
 
 export default class IPCReporter implements IReporter {
 
-    async report(order: IOrder): Promise<void> {
-        if (!process.send) {
-            throw new Error("Process is not running as a child process");
-        }
+    async reportBotProgress(status: IBotStatus): Promise<void> {
+        return IPCReporter.send({type: "status_report", payload: status});
+    }
 
-        return process.send(order);
+    async reportOrder(order: IOrder): Promise<void> {
+        return IPCReporter.send({type: "order_report", payload: order});
+    }
+
+    private static send(message: { payload: any, type: string, }): void {
+        if (!process.send) throw new Error("Process is not running as a child process");
+        return process.send(message);
     }
 }

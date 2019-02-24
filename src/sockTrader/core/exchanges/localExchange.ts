@@ -103,11 +103,9 @@ export default class LocalExchange extends BaseExchange {
      * @returns {Promise<void>} promise
      */
     async emitCandles(candles: ICandle[]) {
-        const normCandles: ICandle[] = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp))
-            ? candles.reverse()
-            : candles;
+        const isCandleOrderIncorrect: boolean = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp));
 
-        normCandles.reduce<ICandle[]>((acc, val, idx) => {
+        (isCandleOrderIncorrect ? candles.reverse() : candles).reduce<ICandle[]>((acc, val, idx) => {
             const processedCandles = [val, ...acc];
             this.currentCandle = val;
             this.emit("app.updateCandles", processedCandles);
