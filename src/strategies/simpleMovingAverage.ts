@@ -13,7 +13,6 @@ import {Pair} from "../sockTrader/core/types/pair";
  * for productional use
  */
 export default class SimpleMovingAverage extends BaseStrategy {
-    private i = 0;
 
     constructor(pair: Pair, exchange: IExchange) {
         super(pair, exchange);
@@ -28,27 +27,24 @@ export default class SimpleMovingAverage extends BaseStrategy {
     updateCandles(candles: ICandle[]): void {
         const closeCandles = candles.map(c => c.close);
 
-        const smaValues =  SMA({
-            period : 12,
-            values : closeCandles,
-        });
+        const fastSMA = SMA({period: 12, values: closeCandles});
+        const slowSMA = SMA({period: 24, values: closeCandles});
 
-        const up = crossUp(smaValues as number[], closeCandles as number[]);
-        const down = crossDown(smaValues as number[], closeCandles as number[]);
+        const up = crossUp(fastSMA, slowSMA);
+        const down = crossDown(fastSMA, slowSMA);
 
         if (up) {
             // current simple moving average line crosses price upward => price falls below SMA
             // time to buy!
             logger.info(candles[0].timestamp.format());
-            this.buy(this.pair, candles[0].close, 1);
+            return this.buy(this.pair, candles[0].close, 1);
         }
 
         if (down) {
             // current simple moving average line crosses price downward => prices rises above SMA
             // time to sell!
-            this.i++;
             logger.info(candles[0].timestamp.format());
-            this.sell(this.pair, candles[0].close, 1);
+            return this.sell(this.pair, candles[0].close, 1);
         }
     }
 }

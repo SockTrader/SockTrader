@@ -11,7 +11,7 @@ export default class IPCReporter implements IReporter {
         return IPCReporter.send({type: "order_report", payload: order});
     }
 
-    private static send(message: { payload: any, type: string, }): void {
+    private static send(message: { payload: any, type: string }): void {
         if (!process.send) throw new Error("Process is not running as a child process");
         return process.send(message);
     }
