@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
-    "test": "jest --coverage --ci",
+    "test": "jest --coverage --ci --forceExit",
     "dev": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
     "web": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/sockTrader/web/webServer.js\"",
