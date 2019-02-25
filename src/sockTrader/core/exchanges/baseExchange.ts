@@ -175,9 +175,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     onCreate(): void {
-        setInterval(() => {
-            this.orderIncrement = 0;
-        }, 1000 * 60 * 5); // Reset increment every 5 minutes
+        // onCreate lifecycle event
     }
 
     onCurrenciesLoaded(currencies: ITradeablePair[]): void {
