@@ -6,7 +6,7 @@
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
     "test": "jest --coverage --ci --forceExit",
-    "dev": "npm run build && node ./build/backtest.js",
+    "backtest": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
     "web-dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/sockTrader/web/webServer.js\"",
     "web": "npm run build && concurrently -c \"bgBlue.bold,bgBlack.bold\" -n webserver,compiler \"node ./build/sockTrader/web/webServer.js\" \"tsc -w\"",

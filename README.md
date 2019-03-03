@@ -21,32 +21,24 @@
 - 🌿 Unit tested source code
 - 💎 Strategy testing with LIVE exchange data.
 - 🏡 Backtesting engine with local data.
+- ⚡️ Live reload any strategy in your own frontend
+- 📡 Connect your frontend to the integrated websocket server
 - More features soon..
+
+## Getting started
 
 ## Quick start
 
-Clone project
-```bash
-git clone https://github.com/SockTrader/SockTrader
-```
+1. Clone the repository locally: `git clone https://github.com/SockTrader/SockTrader`
+2. Install dependencies: `cd SockTrader && npm run install`
+3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
+4. Edit `src/config.ts` if needed
+5. [Add normalized candle data to src/data folder](https://github.com/SockTrader/SockTrader#add-normalized-data)
+6. Run bot! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
 
-Install dependencies
-```bash
-npm run install
-```
+## Add normalized data
 
-Run bot!
-```bash
-npm run compile
-```
-
-## Configuration
-
-**HitBTC is the only supported exchange**
-**More exchanges will follow soon..**
-  
-Copy credentials.json.dist to credentials.json and replace publicKey and secretKey with the exchange credentials.
-
+...
 
 ## Your own strategy?
 
