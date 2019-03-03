@@ -1,6 +1,6 @@
 import {IOrder} from "../types/order";
 
-export type BotStatusType = "STARTED" | "FINISHED" | "PROGRESS";
+export type BotStatusType = "started" | "finished" | "progress";
 
 export interface IBotStatus {
     current?: number;

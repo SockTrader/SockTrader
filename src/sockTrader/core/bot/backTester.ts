@@ -59,9 +59,9 @@ export default class BackTester extends SockTrader {
 
         const candles = this.hydrateCandles(this.inputCandles);
 
-        this.reportProgress({type: "STARTED", length: candles.length});
+        this.reportProgress({type: "started", length: candles.length});
         await (this.exchange as LocalExchange).emitCandles(candles);
-        this.reportProgress({type: "FINISHED"});
+        this.reportProgress({type: "finished"});
     }
 
     private hydrateCandles(candles: InputCandle[]): ICandle[] {
