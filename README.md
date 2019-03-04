@@ -1,4 +1,4 @@
-<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/SockTraderLogo.png" alt="SockTrader logo" /></p>
+<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/SockTraderLogo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
@@ -58,7 +58,7 @@ can be triggered by running: `npm run normalize`.
 
 The expected output of a normalizer is a IDataFrame interface from [data-forge](https://www.npmjs.com/package/data-forge).
 Each row in the data frame should respect the following type definition:
-```json
+```
 {
   timestamp: Moment,
   high: number,
@@ -112,6 +112,18 @@ export default new CandleLoader(PATH, parser);
 ## Your own strategy?
 
 Take a look at the given example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
+
+## Whats the purpose of the webserver?
+
+One might think that the webserver is useless since the tradingbot can be controlled using the CLI. But that's not true, because we're
+also developing a custom dashboard that is able to control the tradingbot. With this dashboard we're able to see the trading 
+actions of our strategy happening live on the dashboard as we're programming it.
+
+Unfortunately we're not allowed to make it open source due to license restrictions of the TradingView library that we're using.
+
+In any case, here you have a preview: 
+![SockTraderDashboard](docs/assets/SockTraderDashboard.png)
+ 
 
 ## We need your help!
 We're looking for extra contributors to give this project a well deserved boost.
