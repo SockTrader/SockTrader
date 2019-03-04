@@ -33,12 +33,73 @@
 2. Install dependencies: `cd SockTrader && npm run install`
 3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
 4. Edit `src/config.ts` if needed
-5. [Add normalized candle data to src/data folder](https://github.com/SockTrader/SockTrader#add-normalized-data)
-6. Run bot! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
+5. [Create a candle normalizer in "src/data" folder](https://github.com/SockTrader/SockTrader#normalize-raw-candles)
+6. Run backtest! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
 
-## Add normalized data
+## Normalize raw candles
 
-...
+### Add raw candle data
+
+Download raw candles from a trusted source in json or csv format and copy this file to the `src/data` folder.
+
+### Create candle normalizer
+
+A candle normalizer is a small utility script that is tightly coupled to a raw candle file. It will normalize the candles
+from a raw csv or json file and output them in a generic format in the `build/data` folder. This normalization process
+can be triggered by running: `npm run normalize`.
+
+The expected output of a normalizer is a IDataFrame interface from [data-forge](https://www.npmjs.com/package/data-forge).
+Each row in the data frame should respect the following type definition:
+```json
+{
+  timestamp: Moment,
+  high: number,
+  low: number,
+  open: number,
+  close: number,
+  volume: number,
+}
+```
+
+Redundant properties which are not listed in the type definition above will be ignored by the trading bot.
+If you run into any issue, consider removing them as well by calling `.dropSeries(["REDUNDANT_PROPERTY"])` since we cannot
+guarantee that it will still work in the future. Data-forge and moment are already included as a dependency and they are
+used throughout the SockTrader codebase.
+
+The following example will give you a good idea of how you can create your own candle normalizer. Make sure to put this file
+into the `src/data` folder next to the raw candle files. Preferably with the same name as the candle file but with .ts extension.
+
+Example:
+```typescript
+// src/data/bitstamp_btcusd_1h.ts
+import {IDataFrame} from "data-forge";
+import moment from "moment";
+import path from "path";
+import CandleLoader from "../sockTrader/core/candles/candleLoader";
+
+// Be sure to go back to the src folder, since this script will be executed from the build/data folder!!
+const SRC_PATH = "../../src/data";
+const PATH = path.resolve(__dirname, SRC_PATH, "bitstamp_btcusd_1h.csv");
+
+const parser = (dataFrame: IDataFrame<number, any>): IDataFrame<number, any> => {
+    return dataFrame
+        .dropSeries(["Symbol"]) // Redundant property
+        .renameSeries({
+            "Date": "timestamp",
+            "High": "high",
+            "Low": "low",
+            "Open": "open",
+            "Close": "close",
+            "Volume To": "volume",
+        })
+        .select(row => {
+            row.timestamp = moment(row.timestamp, "YYYY-MM-DD hh-A");
+            return row;
+        })
+};
+
+export default new CandleLoader(PATH, parser);
+```
 
 ## Your own strategy?
 
