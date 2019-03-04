@@ -36,13 +36,21 @@
 5. [Create a candle normalizer in "src/data" folder](https://github.com/SockTrader/SockTrader#normalize-raw-candles)
 6. Run backtest! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
 
+## Available scripts
+
+- `npm run test` run jest test suite
+- `npm run backtest` start backtest scripts
+- `npm run normalize` start normalization process for all normalizers found in `src/data` 
+- `npm run web-dev` start development webserver with nodemon for quick & easy development 
+- `npm run web` start webserver. Can be used for "live reload" using websockets
+
 ## Normalize raw candles
 
 ### Add raw candle data
 
 Download raw candles from a trusted source in json or csv format and copy this file to the `src/data` folder.
 
-### Create candle normalizer
+### Create a candle normalizer
 
 A candle normalizer is a small utility script that is tightly coupled to a raw candle file. It will normalize the candles
 from a raw csv or json file and output them in a generic format in the `build/data` folder. This normalization process
@@ -103,62 +111,14 @@ export default new CandleLoader(PATH, parser);
 
 ## Your own strategy?
 
-First you need to create an entry file `index.ts` to initialize the framework.
-Example:
-```typescript
-#!/usr/bin/env node
-import HitBTC, {CandleInterval} from "./core/exchanges/hitBTC";
-import SockTrader from "./core/sockTrader";
-import MyStrategy from "./strategies/myStrategy";
+Take a look at the given example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
 
-// noinspection TsLint
-const credentials = require("../credentials.json");
-
-const sockTrader = new SockTrader();
-const hitBTC = HitBTC.getInstance(credentials.publicKey, credentials.secretKey);
-
-sockTrader.addExchange(hitBTC);
-sockTrader.addStrategy({
-    strategy: MyStrategy,
-    pair: "BTCUSD",
-    interval: CandleInterval.FIVE_MINUTES,
-    exchange: hitBTC,
-});
-
-// Uncomment if you want to start the bot from the terminal.
-// Otherwise you would need the dashboard to start the application.
-// sockTrader.start();
-```
-
-And secondly create a strategy file: `src/strategies/myStrategy.ts`
-Example:
-```typescript
-import {ICandle} from "../core/candleCollection";
-import Orderbook from "../core/orderbook";
-import BaseStrategy from "../core/strategy";
-
-export default class MyStrategy extends BaseStrategy {
-
-    public notifyOrder(data: any): void {
-        // Will be called when the exchange confirms an order
-    }
-
-    public updateCandles(candleCollection: ICandle[]): void {
-        // Will be called on each new candle
-        this.buy("BTCUSD", 1000, 10);
-        this.sell("BTCUSD", 2000, 10);
-    }
-
-    public updateOrderbook(orderbook: Orderbook): void {
-        // Will be called on each exchange orderbook update
-    }
-}
-```
-
-
-# We need your help!
+## We need your help!
 We're looking for extra contributors to give this project a well deserved boost.
 
+## Contributors
+
+[<img alt="cwouter" src="https://avatars3.githubusercontent.com/u/1439383?v=4&s=117" width="117">](https://github.com/cwouter)[<img alt="thijs-raets" src="https://avatars1.githubusercontent.com/u/1255632?v=4&s=117" width="117">](https://github.com/thijs-raets)
 
 ## DISCLAIMER
     Using a trading bot does not mean guaranteed profit. 
