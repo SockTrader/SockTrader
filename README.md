@@ -15,14 +15,14 @@
 
 ## Features
 
-- 🚀 Realtime super-fast websocket trading
-- 📈 50+ Technical indicators ([docs](https://github.com/anandanand84/technicalindicators))
-- 🌈 Written in typescript!
-- 🌿 Unit tested source code
+- 🚀 Realtime super-fast websocket trading.
+- 📈 50+ Technical indicators. ([docs](https://github.com/anandanand84/technicalindicators))
+- 🌈 Written in TypeScript!
+- 🌿 Unit tested source code.
 - 💎 Strategy testing with LIVE exchange data.
 - 🏡 Backtesting engine with local data.
-- ⚡️ Live reload any strategy in your own frontend
-- 📡 Connect your frontend to the integrated websocket server
+- ⚡️ Live reload any strategy in your own frontend. ([see example](#whats-the-purpose-of-the-webserver))
+- 📡 Connect your frontend to the integrated websocket server. ([see example](#whats-the-purpose-of-the-webserver))
 - More features soon..
 
 ## Getting started
@@ -33,7 +33,7 @@
 2. Install dependencies: `cd SockTrader && npm run install`
 3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
 4. Edit `src/config.ts` if needed
-5. [Create a candle normalizer in "src/data" folder](https://github.com/SockTrader/SockTrader#normalize-raw-candles)
+5. [Create a candle normalizer in "src/data" folder](#normalize-raw-candles)
 6. Run backtest! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
 
 ## Available scripts
@@ -113,7 +113,7 @@ export default new CandleLoader(PATH, parser);
 
 Take a look at the given example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
 
-## Whats the purpose of the webserver?
+## What's the purpose of the webserver?
 
 One might think that the webserver is useless since the tradingbot can be controlled using the CLI. But that's not true, because we're
 also developing a custom dashboard that is able to control the tradingbot. With this dashboard we're able to see the trading 
