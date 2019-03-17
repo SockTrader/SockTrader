@@ -27,8 +27,8 @@ export default class SimpleMovingAverage extends BaseStrategy {
     updateCandles(candles: ICandle[]): void {
         const closeCandles = candles.map(c => c.close);
 
-        const fastSMA = SMA({period: 12, values: closeCandles});
-        const slowSMA = SMA({period: 24, values: closeCandles});
+        const fastSMA = SMA({period: 12, values: closeCandles, reversedInput: true});
+        const slowSMA = SMA({period: 24, values: closeCandles, reversedInput: true});
 
         const up = crossUp(fastSMA, slowSMA);
         const down = crossDown(fastSMA, slowSMA);
