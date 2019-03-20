@@ -1,5 +1,5 @@
 import boom from "boom";
-import express from "express";
+import express, {RequestHandler} from "express";
 import * as fs from "fs";
 import {extname, resolve} from "path";
 import {promisify} from "util";
@@ -13,8 +13,7 @@ type FileListing = Array<{
     id: string,
 }>;
 
-// GET: /data
-router.get("/", async (req, res, next) => {
+export const dataHandler: RequestHandler = async (req, res, next) => {
     if (!req.query.file) return next(boom.badRequest("'file' argument is not defined"));
 
     try {
@@ -27,10 +26,9 @@ router.get("/", async (req, res, next) => {
     } catch (e) {
         return next(boom.badImplementation(e));
     }
-});
+};
 
-// GET: /data/list
-router.get("/list", (req, res) => {
+export const dataListHandler: RequestHandler = (req, res) => {
     fs.readdir(resolve(__dirname, BASE_PATH), (err, files) => {
         const dataFiles: FileListing = [];
 
@@ -46,6 +44,9 @@ router.get("/list", (req, res) => {
 
         res.send(dataFiles);
     });
-});
+};
+
+router.get("/", dataHandler);           // GET: /data
+router.get("/list", dataListHandler);   // GET: /data/list
 
 export default router;

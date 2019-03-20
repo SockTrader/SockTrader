@@ -1,7 +1,7 @@
 /* tslint:disable */
 import "jest";
-import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
-import {IOrder, OrderSide} from "../sockTrader/core/types/order";
+import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
+import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
 
 class MyStrategy extends BaseStrategy {
 }

@@ -1,9 +1,9 @@
 /* tslint:disable */
-import SimpleMovingAverage from "../strategies/simpleMovingAverage";
-import {IExchange} from "../sockTrader/core/exchanges/exchangeInterface";
-import SockTrader from "../sockTrader/core/bot/sockTrader";
-import {CandleInterval, default as HitBTC} from "../sockTrader/core/exchanges/hitBTC";
-import {Pair} from "../sockTrader/core/types/pair";
+import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
+import {IExchange} from "../../sockTrader/core/exchanges/exchangeInterface";
+import SockTrader from "../../sockTrader/core/bot/sockTrader";
+import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
+import {Pair} from "../../sockTrader/core/types/pair";
 import objectContaining = jasmine.objectContaining;
 
 class ConcreteSockTrader extends SockTrader {

@@ -1,14 +1,14 @@
 /* tslint:disable */
 import "jest";
 import {fromObject, IDataFrame} from "data-forge";
-import {Pair} from "../sockTrader/core/types/pair";
-import Wallet from "../sockTrader/core/assets/wallet";
-import {CandleInterval, default as HitBTC} from "../sockTrader/core/exchanges/hitBTC";
-import CandleLoader from "../sockTrader/core/candles/candleLoader";
-import LocalExchange from "../sockTrader/core/exchanges/localExchange";
-import BackTester from "../sockTrader/core/bot/backTester";
-import LiveTrader from "../sockTrader/core/bot/liveTrader";
-import SimpleMovingAverage from "../strategies/simpleMovingAverage";
+import {Pair} from "../../sockTrader/core/types/pair";
+import Wallet from "../../sockTrader/core/assets/wallet";
+import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
+import CandleLoader from "../../sockTrader/core/candles/candleLoader";
+import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
+import BackTester from "../../sockTrader/core/bot/backTester";
+import LiveTrader from "../../sockTrader/core/bot/liveTrader";
+import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 
 // @ts-ignore
 const liveTrader = new LiveTrader({webServer: false});
