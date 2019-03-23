@@ -24,7 +24,7 @@
       "<rootDir>/node_modules/"
     ],
     "collectCoverageFrom": [
-      "src/**/*.{ts}"
+      "src/**/*.ts"
     ],
     "globals": {
       "ts-jest": {

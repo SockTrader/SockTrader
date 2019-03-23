@@ -1,9 +1,6 @@
-// import boom from "boom";
-import express from "express";
+import express, {RequestHandler} from "express";
 import * as fs from "fs";
 import {extname, resolve} from "path";
-
-// import {promisify} from "util";
 
 const router = express.Router();
 const BASE_PATH = "../../../strategies";
@@ -14,8 +11,7 @@ type StrategyListing = Array<{
     strategy: string,
 }>;
 
-// GET: /strategy/list
-router.get("/list", async (req, res, next) => {
+export const strategyListHandler: RequestHandler = async (req, res) => {
     fs.readdir(resolve(__dirname, BASE_PATH), (err, files) => {
         const dataFiles: StrategyListing = [];
 
@@ -31,6 +27,9 @@ router.get("/list", async (req, res, next) => {
 
         res.send(dataFiles);
     });
-});
+};
+
+// GET: /strategy/list
+router.get("/list", strategyListHandler);
 
 export default router;

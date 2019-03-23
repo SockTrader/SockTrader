@@ -4,12 +4,18 @@ import moment from "moment";
 import {EventEmitter} from "events";
 import {connection} from "websocket";
 import {Socket} from "net";
-import {Pair} from "../sockTrader/core/types/pair";
-import BaseExchange from "../sockTrader/core/exchanges/baseExchange";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
-import CandleCollection from "../sockTrader/core/candles/candleCollection";
-import Orderbook from "../sockTrader/core/orderbook";
-import {create} from "domain";
+import {Pair} from "../../sockTrader/core/types/pair";
+import BaseExchange from "../../sockTrader/core/exchanges/baseExchange";
+import {
+    IOrder,
+    OrderSide,
+    OrderStatus,
+    OrderTimeInForce,
+    OrderType,
+    ReportType,
+} from "../../sockTrader/core/types/order";
+import CandleCollection from "../../sockTrader/core/candles/candleCollection";
+import Orderbook from "../../sockTrader/core/orderbook";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -108,7 +114,8 @@ describe("getCandleCollection", () => {
         expect(ob).toBeInstanceOf(CandleCollection);
         expect(ob).not.toBe(new CandleCollection(interval));
 
-        const ob2 = exc.getCandleCollection(pair, interval, () => {});
+        const ob2 = exc.getCandleCollection(pair, interval, () => {
+        });
         expect(ob).toBe(ob2);
     });
 });
@@ -135,10 +142,12 @@ describe("onReport", () => {
         });
         expect(setOrderInProgress).toBeCalledWith("123", false);
         expect(removeOrder).toBeCalledWith("123");
-        expect(addOrder).toBeCalledWith({...report,
+        expect(addOrder).toBeCalledWith({
+            ...report,
             reportType: ReportType.REPLACED,
             originalId: "123",
-            id: "321"});
+            id: "321",
+        });
     });
 
     test("Should remove filled order with report type TRADE", () => {
@@ -183,8 +192,8 @@ describe("connect", () => {
 
         exc.connect("wss://my.fake.socket");
 
-        expect(spyOn).toHaveBeenNthCalledWith(1,"connectFailed", expect.any(Function));
-        expect(spyOn).toHaveBeenNthCalledWith(2,"connect", expect.any(Function));
+        expect(spyOn).toHaveBeenNthCalledWith(1, "connectFailed", expect.any(Function));
+        expect(spyOn).toHaveBeenNthCalledWith(2, "connect", expect.any(Function));
         expect(spyConnect).toBeCalledWith("wss://my.fake.socket");
     });
 });
@@ -204,7 +213,7 @@ describe("destroy", () => {
 describe("send", () => {
     test("Should send messages over a socket connection", () => {
         const mockSend = jest.fn();
-        const mockConnection: connection = new connection(new Socket(),[],"protocl",true,{});
+        const mockConnection: connection = new connection(new Socket(), [], "protocl", true, {});
 
         mockConnection.send = mockSend;
 

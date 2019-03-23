@@ -1,8 +1,6 @@
 import cors from "cors";
 import express, {Express, NextFunction, Request, Response} from "express";
 import {Server} from "http";
-
-import path from "path";
 import socketIO, {Socket} from "socket.io";
 import backtestController from "./controllers/backtest";
 import dataController from "./controllers/data";
@@ -16,11 +14,6 @@ http.listen(80);
 
 app.use(express.json());
 app.use(cors());
-
-app.get("/", (req, res) => {
-    const file = path.resolve(__dirname, "../../../src/sockTrader/web/index.html");
-    res.sendFile(file);
-});
 
 app.use("/data", dataController);
 app.use("/strategy", strategyController);
