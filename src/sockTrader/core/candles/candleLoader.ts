@@ -1,11 +1,8 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
-import {max, Moment} from "moment";
 import {Error} from "tslint/lib/error";
-import {IAssetMap} from "../assets/wallet";
 import {decimals} from "../strategy/utils";
 import {Pair} from "../types/pair";
-import moment = require("moment");
 
 export interface ICandleLoaderConfig {
     decimalSeperator: string;
