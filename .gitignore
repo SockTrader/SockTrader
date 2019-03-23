@@ -16,6 +16,8 @@ src/logs/*
 # Data folder to store
 src/data/*
 !src/data/.gitkeep
+!src/data/bitstamp_btcusd_1h.csv
+!src/data/bitstamp_btcusd_1h.ts
 
 # User-specific stuff
 .idea/**/workspace.xml
