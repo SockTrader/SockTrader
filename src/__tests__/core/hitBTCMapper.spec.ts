@@ -44,3 +44,28 @@ describe("onUpdateCandles", () => {
         expect(arg4).toStrictEqual("update");
     });
 });
+
+describe("onReceive", () => {
+    it("Should re-emit exchange events as API events", async () => {
+        expect.assertions(1);
+
+        const exch = new HitBTC();
+        const mapper = new HitBTCMapper(exch);
+        mapper.on("api.event_method", args => {
+            expect(args).toStrictEqual({
+                id: "event_id",
+                method: "event_method",
+                randomData: [1,2,"random", {}]
+            });
+        });
+
+        mapper.onReceive({
+            type: "utf8",
+            utf8Data: JSON.stringify({
+                method: "event_method",
+                id: "event_id",
+                randomData: [1,2,"random", {}]
+            })
+        });
+    });
+});
