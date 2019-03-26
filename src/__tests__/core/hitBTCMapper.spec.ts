@@ -1,8 +1,8 @@
 /* tslint:disable */
 import "jest";
+import moment from "moment";
 import HitBTCMapper, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCMapper";
 import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
-import moment = require("moment");
 
 describe("onUpdateCandles", () => {
     it("Should map exchange candle update to internal data structure", () => {
@@ -55,7 +55,7 @@ describe("onReceive", () => {
             expect(args).toStrictEqual({
                 id: "event_id",
                 method: "event_method",
-                randomData: [1,2,"random", {}]
+                randomData: [1, 2, "random", {}],
             });
         });
 
@@ -64,8 +64,15 @@ describe("onReceive", () => {
             utf8Data: JSON.stringify({
                 method: "event_method",
                 id: "event_id",
-                randomData: [1,2,"random", {}]
-            })
+                randomData: [1, 2, "random", {}],
+            }),
         });
+    });
+
+    it("Should throw when exchange emits non utf8 data", () => {
+        const exch = new HitBTC();
+        const mapper = new HitBTCMapper(exch);
+
+        expect(() => mapper.onReceive({type: "not_utf8"})).toThrowError("Response is not UTF8!");
     });
 });
