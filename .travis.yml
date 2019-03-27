@@ -12,6 +12,7 @@ script:
   - cp src/config.ts.dist src/config.ts
   - npm test
   - codecov -f coverage/*.json
+  - npm run stryker
 
 env:
   matrix:

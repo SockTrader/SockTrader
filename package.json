@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
+    "stryker": "stryker run",
     "test": "jest --coverage --ci --forceExit",
     "backtest": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
