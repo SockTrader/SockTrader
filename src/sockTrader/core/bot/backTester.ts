@@ -1,4 +1,4 @@
-import moment = require("moment");
+import moment from "moment";
 import Wallet, {IAssetMap} from "../assets/wallet";
 import {ICandle} from "../candles/candleCollection";
 import localExchange from "../exchanges/localExchange";

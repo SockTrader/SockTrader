@@ -30,11 +30,17 @@
 ## Quick start
 
 1. Clone the repository locally: `git clone https://github.com/SockTrader/SockTrader`
-2. Install dependencies: `cd SockTrader && npm run install`
+2. Install dependencies: `cd SockTrader && npm install`
 3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
 4. Edit `src/config.ts` if needed
-5. [Create a candle normalizer in "src/data" folder](#normalize-raw-candles)
-6. Run backtest! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
+5. Transform our candle data (BTC/USD Bitstamp) from `src/data` to a readable format in `build/data`: `npm run normalize`
+6. Run backtest with the normalized candles and the simple moving average strategy! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
+
+## Advanced
+
+Load your own candle data of a trading pair of your interest: [Create a candle normalizer in "src/data" folder](#normalize-raw-candles)
+
+Create your own strategy [Create your own strategy](#your-own-strategy)
 
 ## Available scripts
 

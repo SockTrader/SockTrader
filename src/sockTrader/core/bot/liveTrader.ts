@@ -1,5 +1,4 @@
 import {IExchange} from "../exchanges/exchangeInterface";
-import {IOrder} from "../types/order";
 import SockTrader from "./sockTrader";
 
 /**

@@ -1,6 +1,5 @@
 import {EventEmitter} from "events";
 import moment from "moment";
-import {Error} from "tslint/lib/error";
 import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candles/candleCollection";
 import logger from "../logger";
@@ -21,7 +20,7 @@ export interface IHitBTCOrderbookResponse {
     };
 }
 
-interface IHitBTCCandlesResponse {
+export interface IHitBTCCandlesResponse {
     jsonrpc: string;
     method: string;
     params: {
@@ -39,13 +38,13 @@ interface IHitBTCCandlesResponse {
     };
 }
 
-interface IHitBTCAuthenticateResponse {
+export interface IHitBTCAuthenticateResponse {
     id: string;
     jsonrpc: string;
     result: boolean;
 }
 
-interface IHitBTCGetSymbolsResponse {
+export interface IHitBTCGetSymbolsResponse {
     id: string;
     jsonrpc: string;
     result: Array<{
@@ -60,7 +59,7 @@ interface IHitBTCGetSymbolsResponse {
     }>;
 }
 
-interface IHitBTCReportResponse {
+export interface IHitBTCReportResponse {
     jsonrpc: string;
     method: string;
     params: Array<{
