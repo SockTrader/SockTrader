@@ -2,7 +2,7 @@ module.exports = function(config) {
   config.set({
     mutator: "typescript",
     packageManager: "npm",
-    reporters: ["clear-text", "progress", "dashboard"],
+    reporters: ["progress", "dashboard", "html"],
     testRunner: "jest",
     transpilers: [],
     coverageAnalysis: "off",

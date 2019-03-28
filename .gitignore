@@ -75,3 +75,4 @@ node_modules/
 .env
 .sockTrader
 .stryker-tmp
+reports

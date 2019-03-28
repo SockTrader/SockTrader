@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
-    "stryker": "stryker run",
+    "stryker": "cross-env HAS_JOSH_K_SEAL_OF_APPROVAL=TRUE TRAVIS_REPO_SLUG=SockTrader/SockTrader TRAVIS_PULL_REQUEST=false TRAVIS_BRANCH=master STRYKER_DASHBOARD_API_KEY=Ym35OTa3wbvweirBUU85zQdsFQEOlk2b9aT1vnpJ3dAuloF/6rAyU2x63OGHFyAjEy+WfrNw8vI/21QNXtU9Hg28bUL1KLir50SMgFYFoxxy73BbU3CvYZp13EklfCwwh7HP4hbDr/f8VHRmjijR7kjtGyF0HjYTpeV5n9XuOy+eh7kFor8JDnsnn8dJ5Lx67CEaJtqC2VBGHRC1p4hgmmdwCfF25AlYtCJFKKVG3k9qzYVjF5U6MqVybqBzBQWjY2KBZ4Gg8mAjZl5TCQk5+5KcXblji4cwVy13b5qdHgKnZHyTISPIHJCH4ZDfqSKmYDtouigSWbcC/ZmxW2W+Jo4UiNhaeRGiIbGRzo/aJLa6KTpYki04TyNyh2N+gSWFUTj+LlDuc99BhD1+pRC8pevuLMU5LMfm9t2fLe9x+dtugoAeg7e65crDd1ABn8PZskkVpCAVl5au9H6iZ5w1+kRn9eSCGWJxVGKD6XO80xX6PigLpl3MN0dsFG4CsTL9CO4r6t5H1cLuLS3qchxPZQsyXnQcuyd1ZZkfVb5N21aKC4RC8HnlHvbfciVYClnc1ys0deJS54TWAaxJS1AygPh1nK5xbjujUxjZn7djOt+gQ66gDJmovL6FWeNzGMXDq1gkQhVSbeDT1N/hW2PPSAp2+73vqveihI0PG2ljKKg= stryker run",
     "test": "jest --coverage --ci --forceExit",
     "backtest": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
@@ -133,6 +133,7 @@
   },
   "devDependencies": {
     "@stryker-mutator/core": "^1.1.1",
+    "@stryker-mutator/html-reporter": "^1.1.1",
     "@stryker-mutator/jest-runner": "^1.1.1",
     "@stryker-mutator/typescript": "^1.1.1",
     "@types/boom": "^7.2.1",
