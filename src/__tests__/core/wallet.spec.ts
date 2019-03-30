@@ -66,8 +66,12 @@ describe("isBuyAllowed", () => {
 });
 
 describe("updateAssets", () => {
+    let wallet : Wallet;
+    beforeEach(() => {
+        wallet = new Wallet({USD: 10});
+    });
+
     test("Should reserve assets when creating a new order", () => {
-        const wallet = new Wallet({USD: 10});
         wallet.updateAssets({...order, side: OrderSide.BUY});
         expect(wallet["assets"]).toEqual({USD: 5});
 
@@ -77,7 +81,6 @@ describe("updateAssets", () => {
     });
 
     test("Should apply new asset state when order is filled", () => {
-        const wallet = new Wallet({USD: 10});
         const filledOrder = {...order, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
 
         wallet.updateAssets({...filledOrder, side: OrderSide.BUY});
@@ -89,8 +92,6 @@ describe("updateAssets", () => {
     });
 
     test("Should revert assets when a new order is canceled/expired/suspended", () => {
-        const wallet = new Wallet({USD: 10});
-
         wallet.updateAssets({...order, side: OrderSide.BUY, reportType: ReportType.CANCELED});
         expect(wallet["assets"]).toEqual({USD: 15});
 
@@ -100,13 +101,22 @@ describe("updateAssets", () => {
     });
 
     test("Should update asset amount when buy order is replaced", () => {
-        const wallet = new Wallet({USD: 10});
         const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
         wallet.updateAssets(oldOrder1);
         expect(wallet["assets"]).toEqual({USD: 0});
 
         wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, oldOrder1);
         expect(wallet["assets"]).toEqual({USD: 5});
+    });
+
+    test("Should do nothing when trying to replace and oldOrder which is undefined", () => {
+        const calculator = jest.fn();
+        wallet["createCalculator"] = jest.fn(() => calculator);
+
+        const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
+        wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, undefined);
+
+        expect(calculator).toHaveBeenCalledTimes(0);
     });
 
     test("Should update asset amount when sell order is replaced", () => {

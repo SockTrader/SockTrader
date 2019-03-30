@@ -72,6 +72,7 @@ export default class Wallet {
             ifBuy(source, this.subtract, this.getOrderPrice(order));
             ifSell(target, this.subtract, order.quantity);
         } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+            // @TODO what if order is partially filled?
             ifBuy(target, this.add, order.quantity);
             ifSell(source, this.add, this.getOrderPrice(order));
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
