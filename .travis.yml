@@ -6,6 +6,7 @@ matrix:
   include:
     - node_js: 10
       env: TO_TEST=CORE
+  allow_failures:
     - node_js: 10
       env: TO_TEST=MUTATION
   fast_finish: true
