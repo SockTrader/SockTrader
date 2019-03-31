@@ -1,6 +1,13 @@
 /* tslint:disable */
 import "jest";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../sockTrader/core/types/order";
+import {
+    IOrder,
+    OrderSide,
+    OrderStatus,
+    OrderTimeInForce,
+    OrderType,
+    ReportType,
+} from "../../sockTrader/core/types/order";
 import moment from "moment";
 import Wallet from "../../sockTrader/core/assets/wallet";
 
@@ -24,10 +31,10 @@ beforeEach(() => {
 describe("assets property", () => {
     test("Undefined assets should be 0", () => {
         const wallet = new Wallet({BTC: 1});
-        expect(wallet["assets"]["strange_unknown_coin"]).toBe(0)
-        expect(wallet["assets"]["strange_unknown_coin"]).not.toBe(undefined)
+        expect(wallet["assets"]["strange_unknown_coin"]).toBe(0);
+        expect(wallet["assets"]["strange_unknown_coin"]).not.toBe(undefined);
     });
-})
+});
 
 describe("isSellAllowed", () => {
     test("Should allow sell when enough funds", () => {
@@ -35,7 +42,7 @@ describe("isSellAllowed", () => {
         const allowed1 = wallet.isSellAllowed({...order, side: OrderSide.SELL});
         expect(allowed1).toBe(true);
 
-        wallet.setAssets({BTC: 0.5})
+        wallet.setAssets({BTC: 0.5});
         const allowed2 = wallet.isSellAllowed({...order, side: OrderSide.SELL});
         expect(allowed2).toBe(true);
     });
@@ -66,7 +73,7 @@ describe("isBuyAllowed", () => {
 });
 
 describe("updateAssets", () => {
-    let wallet : Wallet;
+    let wallet: Wallet;
     beforeEach(() => {
         wallet = new Wallet({USD: 10});
     });
@@ -75,7 +82,7 @@ describe("updateAssets", () => {
         wallet.updateAssets({...order, side: OrderSide.BUY});
         expect(wallet["assets"]).toEqual({USD: 5});
 
-        wallet.setAssets({BTC: 10})
+        wallet.setAssets({BTC: 10});
         wallet.updateAssets({...order, side: OrderSide.SELL});
         expect(wallet["assets"]).toEqual({BTC: 9.5});
     });
@@ -86,7 +93,7 @@ describe("updateAssets", () => {
         wallet.updateAssets({...filledOrder, side: OrderSide.BUY});
         expect(wallet["assets"]).toEqual({USD: 10, BTC: 0.5});
 
-        wallet.setAssets({USD: 10})
+        wallet.setAssets({USD: 10});
         wallet.updateAssets({...filledOrder, side: OrderSide.SELL});
         expect(wallet["assets"]).toEqual({USD: 15});
     });
@@ -95,7 +102,7 @@ describe("updateAssets", () => {
         wallet.updateAssets({...order, side: OrderSide.BUY, reportType: ReportType.CANCELED});
         expect(wallet["assets"]).toEqual({USD: 15});
 
-        wallet.setAssets({USD: 10})
+        wallet.setAssets({USD: 10});
         wallet.updateAssets({...order, side: OrderSide.SELL, reportType: ReportType.CANCELED});
         expect(wallet["assets"]).toEqual({USD: 10, BTC: 0.5});
     });
@@ -132,4 +139,4 @@ describe("updateAssets", () => {
         wallet.updateAssets({...oldOrder1, price: 10, reportType: ReportType.REPLACED}, oldOrder2);
         expect(wallet["assets"]).toEqual({BTC: 9});
     });
-})
+});
