@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
+    "stryker": "stryker run",
     "test": "jest --coverage --ci --forceExit",
     "backtest": "npm run build && node ./build/backtest.js",
     "normalize": "npm run build && node ./build/sockTrader/data/normalize.js",
@@ -29,6 +30,10 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/data/",
+      "<rootDir>/src/strategies/"
     ],
     "globals": {
       "ts-jest": {
@@ -111,7 +116,6 @@
     "cron-parser": "^2.7.3",
     "data-forge": "^1.3.3",
     "data-forge-fs": "0.0.4",
-    "data-forge-plot": "^0.1.11",
     "decimal.js-light": "^2.5.0",
     "express": "^4.16.4",
     "fs-extra": "^7.0.1",
@@ -132,6 +136,7 @@
   },
   "devDependencies": {
     "@stryker-mutator/core": "^1.1.1",
+    "@stryker-mutator/html-reporter": "^1.1.1",
     "@stryker-mutator/jest-runner": "^1.1.1",
     "@stryker-mutator/typescript": "^1.1.1",
     "@types/boom": "^7.2.1",

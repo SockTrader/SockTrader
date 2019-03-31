@@ -1,6 +1,13 @@
 /* tslint:disable */
 import "jest";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../sockTrader/core/types/order";
+import {
+    IOrder,
+    OrderSide,
+    OrderStatus,
+    OrderTimeInForce,
+    OrderType,
+    ReportType,
+} from "../../sockTrader/core/types/order";
 import moment from "moment";
 import Wallet from "../../sockTrader/core/assets/wallet";
 
@@ -24,10 +31,10 @@ beforeEach(() => {
 describe("assets property", () => {
     test("Undefined assets should be 0", () => {
         const wallet = new Wallet({BTC: 1});
-        expect(wallet["assets"]["strange_unknown_coin"]).toBe(0)
-        expect(wallet["assets"]["strange_unknown_coin"]).not.toBe(undefined)
+        expect(wallet["assets"]["strange_unknown_coin"]).toBe(0);
+        expect(wallet["assets"]["strange_unknown_coin"]).not.toBe(undefined);
     });
-})
+});
 
 describe("isSellAllowed", () => {
     test("Should allow sell when enough funds", () => {
@@ -35,7 +42,7 @@ describe("isSellAllowed", () => {
         const allowed1 = wallet.isSellAllowed({...order, side: OrderSide.SELL});
         expect(allowed1).toBe(true);
 
-        wallet.setAssets({BTC: 0.5})
+        wallet.setAssets({BTC: 0.5});
         const allowed2 = wallet.isSellAllowed({...order, side: OrderSide.SELL});
         expect(allowed2).toBe(true);
     });
@@ -66,47 +73,76 @@ describe("isBuyAllowed", () => {
 });
 
 describe("updateAssets", () => {
+    let wallet: Wallet;
+    beforeEach(() => {
+        wallet = new Wallet({USD: 10});
+    });
+
     test("Should reserve assets when creating a new order", () => {
-        const wallet = new Wallet({USD: 10});
         wallet.updateAssets({...order, side: OrderSide.BUY});
         expect(wallet["assets"]).toEqual({USD: 5});
 
-        wallet.setAssets({BTC: 10})
+        wallet.setAssets({BTC: 10});
         wallet.updateAssets({...order, side: OrderSide.SELL});
         expect(wallet["assets"]).toEqual({BTC: 9.5});
     });
 
     test("Should apply new asset state when order is filled", () => {
-        const wallet = new Wallet({USD: 10});
         const filledOrder = {...order, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
 
         wallet.updateAssets({...filledOrder, side: OrderSide.BUY});
         expect(wallet["assets"]).toEqual({USD: 10, BTC: 0.5});
 
-        wallet.setAssets({USD: 10})
+        wallet.setAssets({USD: 10});
         wallet.updateAssets({...filledOrder, side: OrderSide.SELL});
         expect(wallet["assets"]).toEqual({USD: 15});
     });
 
     test("Should revert assets when a new order is canceled/expired/suspended", () => {
-        const wallet = new Wallet({USD: 10});
-
         wallet.updateAssets({...order, side: OrderSide.BUY, reportType: ReportType.CANCELED});
         expect(wallet["assets"]).toEqual({USD: 15});
 
-        wallet.setAssets({USD: 10})
+        wallet.setAssets({USD: 10});
         wallet.updateAssets({...order, side: OrderSide.SELL, reportType: ReportType.CANCELED});
         expect(wallet["assets"]).toEqual({USD: 10, BTC: 0.5});
     });
 
     test("Should update asset amount when buy order is replaced", () => {
-        const wallet = new Wallet({USD: 10});
         const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
         wallet.updateAssets(oldOrder1);
         expect(wallet["assets"]).toEqual({USD: 0});
 
         wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, oldOrder1);
         expect(wallet["assets"]).toEqual({USD: 5});
+    });
+
+    test("Should do nothing when order reports are invalid", () => {
+        const mock = jest.fn();
+        wallet["createCalculator"] = jest.fn((): any => mock);
+
+        // a report type can never be INVALID
+        const invalidOrder1 = {...order, reportType: "INVALID"} as any;
+        wallet.updateAssets(invalidOrder1, invalidOrder1);
+
+        // a report of type trade should always be filled or partially-filled
+        const invalidOrder2 = {...order, reportType: "trade", status: "INVALID"} as any;
+        wallet.updateAssets(invalidOrder2, invalidOrder2);
+
+        // a report type can never be INVALID when status is filled
+        const invalidOrder3 = {...order, reportType: "INVALID", status: "filled"} as any;
+        wallet.updateAssets(invalidOrder3, invalidOrder3);
+
+        expect(mock).toHaveBeenCalledTimes(0);
+    });
+
+    test("Should do nothing when trying to replace and oldOrder which is undefined", () => {
+        const calculator = jest.fn();
+        wallet["createCalculator"] = jest.fn(() => calculator);
+
+        const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
+        wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, undefined);
+
+        expect(calculator).toHaveBeenCalledTimes(0);
     });
 
     test("Should update asset amount when sell order is replaced", () => {
@@ -122,4 +158,4 @@ describe("updateAssets", () => {
         wallet.updateAssets({...oldOrder1, price: 10, reportType: ReportType.REPLACED}, oldOrder2);
         expect(wallet["assets"]).toEqual({BTC: 9});
     });
-})
+});
