@@ -116,11 +116,21 @@ describe("updateAssets", () => {
         expect(wallet["assets"]).toEqual({USD: 5});
     });
 
-    test("Should do nothing when report type is invalid", () => {
-        const invalidOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: "INVALID"} as any;
+    test("Should do nothing when order reports are invalid", () => {
         const mock = jest.fn();
         wallet["createCalculator"] = jest.fn((): any => mock);
-        wallet.updateAssets(invalidOrder, invalidOrder);
+
+        // a report type can never be INVALID
+        const invalidOrder1 = {...order, reportType: "INVALID"} as any;
+        wallet.updateAssets(invalidOrder1, invalidOrder1);
+
+        // a report of type trade should always be filled or partially-filled
+        const invalidOrder2 = {...order, reportType: "trade", status: "INVALID"} as any;
+        wallet.updateAssets(invalidOrder2, invalidOrder2);
+
+        // a report type can never be INVALID when status is filled
+        const invalidOrder3 = {...order, reportType: "INVALID", status: "filled"} as any;
+        wallet.updateAssets(invalidOrder3, invalidOrder3);
 
         expect(mock).toHaveBeenCalledTimes(0);
     });
