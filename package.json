@@ -31,6 +31,10 @@
     "collectCoverageFrom": [
       "src/**/*.ts"
     ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/data/",
+      "<rootDir>/src/strategies/"
+    ],
     "globals": {
       "ts-jest": {
         "diagnostics": false
