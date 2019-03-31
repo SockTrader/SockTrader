@@ -12,6 +12,10 @@ module.exports = function(config) {
     ],
     mutate: [
       "src/**/*.ts",
+      "!src/**/__tests__/**/*.ts",
+      "!src/**/__mocks__/**/*.ts",
+      "!src/**/data/**/*.ts",
+      "!src/**/strategies/**/*.ts",
     ],
     symlinkNodeModules: false,
   });
