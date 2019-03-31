@@ -116,6 +116,15 @@ describe("updateAssets", () => {
         expect(wallet["assets"]).toEqual({USD: 5});
     });
 
+    test("Should do nothing when report type is invalid", () => {
+        const invalidOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: "INVALID"} as any;
+        const mock = jest.fn();
+        wallet["createCalculator"] = jest.fn((): any => mock);
+        wallet.updateAssets(invalidOrder, invalidOrder);
+
+        expect(mock).toHaveBeenCalledTimes(0);
+    });
+
     test("Should do nothing when trying to replace and oldOrder which is undefined", () => {
         const calculator = jest.fn();
         wallet["createCalculator"] = jest.fn(() => calculator);
