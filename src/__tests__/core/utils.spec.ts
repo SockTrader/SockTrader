@@ -57,13 +57,3 @@ describe("crossDown with reversed array values", () => {
         expect(crossDown(lineA, lineB)).toEqual(false);
     });
 });
-
-describe("Validate recursively", () => {
-   test("Recursiveness", () => {
-       const validator = jest.fn((a, b) => a > 0 && b > 0);
-       const validate = validateRecursive(validator);
-
-       // expect(validator).toBeCalledTimes(10);
-       expect(validate([1, 1, 1, 1, 1], [1, 1, 1, 1, 1])).toEqual(true);
-   });
-});
