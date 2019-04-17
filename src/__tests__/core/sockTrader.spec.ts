@@ -1,29 +1,19 @@
 /* tslint:disable */
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
-import {IExchange} from "../../sockTrader/core/exchanges/exchangeInterface";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
-import objectContaining = jasmine.objectContaining;
-
-class ConcreteSockTrader extends SockTrader {
-
-    addExchange(exchange: IExchange): this {
-        this.exchange = exchange;
-
-        return this;
-    }
-
-    getExchange(): IExchange {
-        return this.exchange;
-    }
-}
+import {IReporter} from "../../sockTrader/core/reporters/reporterInterface";
+import Mock = jest.Mock;
 
 const hitBTC = new HitBTC("PUB_123", "SEC_123");
+class ConcreteSockTrader extends SockTrader {
+    public exchange = hitBTC;
+}
+
 const sockTrader = new ConcreteSockTrader();
 const btcEthPair: Pair = ["BTC", "ETH"];
 const btcCovPair: Pair = ["BTC", "COV"];
-
 
 describe("subscribeToExchangeEvents", () => {
     test("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
@@ -35,12 +25,13 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
-        sockTrader.addExchange(hitBTC);
-        sockTrader.subscribeToExchangeEvents([{
-            strategy: SimpleMovingAverage,
-            pair: btcEthPair,
-            interval: CandleInterval.FIVE_MINUTES,
-        },
+        // sockTrader.addExchange(hitBTC);
+        sockTrader.subscribeToExchangeEvents([
+            {
+                strategy: SimpleMovingAverage,
+                pair: btcEthPair,
+                interval: CandleInterval.FIVE_MINUTES,
+            },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
@@ -70,7 +61,7 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
-        sockTrader.addExchange(hitBTC);
+        // sockTrader.addExchange(hitBTC);
 
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
@@ -107,7 +98,7 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
-        sockTrader.addExchange(hitBTC);
+        // sockTrader.addExchange(hitBTC);
 
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
@@ -135,11 +126,20 @@ describe("subscribeToExchangeEvents", () => {
 
 });
 
-describe("addExchange", () => {
-    test("Should add exchange to socketTrader", () => {
-        sockTrader.addExchange(hitBTC);
-        expect(sockTrader.getExchange()).toBe(hitBTC);
-    });
+// describe("addExchange", () => {
+//     test("Should add exchange to socketTrader", () => {
+        // sockTrader.addExchange(hitBTC);
+        // expect(sockTrader.getExchange()).toBe(hitBTC);
+    // });
+// });
+
+describe("addReporter", () => {
+    test("Should add reporter to SockTrader instance", () => {
+        const mock = jest.fn();
+        const result = sockTrader.addReporter(mock as any);
+        expect(result).toEqual(sockTrader);
+        expect(sockTrader["reporters"]).toEqual([mock]);
+    })
 });
 
 describe("bindExchangeToStrategy", () => {
@@ -147,11 +147,10 @@ describe("bindExchangeToStrategy", () => {
         const mockOn = jest.fn();
         hitBTC.on = mockOn;
 
-        sockTrader.addExchange(hitBTC);
         sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
-        expect(mockOn).toBeCalledWith("app.report", expect.anything());
-        expect(mockOn).toBeCalledWith("app.updateOrderbook", expect.anything());
-        expect(mockOn).toBeCalledWith("app.updateCandles", expect.anything());
+        expect(mockOn).toBeCalledWith("app.report", expect.any(Function));
+        expect(mockOn).toBeCalledWith("app.updateOrderbook", expect.any(Function));
+        expect(mockOn).toBeCalledWith("app.updateCandles", expect.any(Function));
     });
 });
 
@@ -161,7 +160,7 @@ describe("bindStrategyToExchange", () => {
         const spyOn = jest.spyOn(simpleMovingAverage, "on");
 
         sockTrader["bindStrategyToExchange"](simpleMovingAverage);
-        expect(spyOn).toBeCalledWith("app.signal", expect.anything());
-        expect(spyOn).toBeCalledWith("app.adjustOrder", expect.anything());
+        expect(spyOn).toBeCalledWith("app.signal", expect.any(Function));
+        expect(spyOn).toBeCalledWith("app.adjustOrder", expect.any(Function));
     });
 });
