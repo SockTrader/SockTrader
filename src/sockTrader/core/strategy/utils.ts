@@ -1,16 +1,17 @@
 type Validator = (a: number, b: number) => boolean;
 
-const recurValidator = (validator: Validator) => {
-    const recursiveCheck = (a: number[], b: number[], depth = 0): boolean => {
+export const validateRecursive = (validator: Validator) => {
+    const validate = (a: number[], b: number[], depth = 0): boolean => {
         if (a[depth] === b[depth]) {
             return (a.length < depth + 2 || b.length < depth + 2)
                 ? false
-                : recursiveCheck(a, b, depth + 1);
+                : validate(a, b, depth + 1);
         }
 
         return validator(a[depth], b[depth]);
     };
-    return recursiveCheck;
+
+    return validate;
 };
 
 /**
@@ -35,7 +36,7 @@ const recurValidator = (validator: Validator) => {
  * @returns {boolean} lineA crosses over lineB
  */
 export function crossUp(lineA: number[], lineB: number[]): boolean {
-    const validate = recurValidator(((a, b) => a < b));
+    const validate = validateRecursive(((a, b) => a < b));
 
     return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] <= lineB[0]))
         ? false
@@ -64,7 +65,7 @@ export function crossUp(lineA: number[], lineB: number[]): boolean {
  * @returns {boolean} lineA goes under lineB
  */
 export function crossDown(lineA: number[], lineB: number[]): boolean {
-    const validate = recurValidator(((a, b) => a > b));
+    const validate = validateRecursive(((a, b) => a > b));
 
     return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] >= lineB[0]))
         ? false
