@@ -1,16 +1,18 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
+import moment from "moment";
 import {Error} from "tslint/lib/error";
-import {decimals} from "../strategy/utils";
+import {getDecimals} from "../../data/utils";
 import {Pair} from "../types/pair";
+import {ICandle} from "./candleCollection";
 
 export interface ICandleLoaderConfig {
-    decimalSeperator: string;
+    decimalSeparator?: string;
     name: string;
     symbol: Pair;
 }
 
-export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, any>;
+export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, ICandle>;
 
 /**
  * The CandleLoader parses a file containing candles and returns
@@ -18,7 +20,7 @@ export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, an
  */
 export default class CandleLoader {
 
-    constructor(private filePath: string, public candleLoaderConfig: ICandleLoaderConfig, private parser?: Parser) {
+    constructor(private filePath: string, public candleLoaderConfig: ICandleLoaderConfig, private parser: Parser) {
     }
 
     /**
@@ -40,6 +42,44 @@ export default class CandleLoader {
     }
 
     /**
+     * Determine smallest candle interval of all candles
+     * @param df
+     */
+    determineCandleInterval(df: IDataFrame<number, any>): number {
+        const [interval] = df.aggregate([] as any, (prev, value) => {
+            const [prevInterval, date] = prev;
+
+            let i;
+            if (date !== undefined) {
+                const minutes = moment.duration(date.diff(value.timestamp)).asMinutes();
+                if (!prevInterval || minutes < prevInterval) i = minutes;
+            }
+
+            return [i, value.timestamp];
+        });
+
+        return interval;
+    }
+
+    determinePriceDecimals(df: IDataFrame<number, any>): number {
+        const {decimalSeparator: ds} = this.candleLoaderConfig;
+        const agg = df.aggregate(0, (accum, candle) => Math.max(
+            accum,
+            getDecimals(candle.open, ds),
+            getDecimals(candle.high, ds),
+            getDecimals(candle.low, ds),
+            getDecimals(candle.close, ds),
+        ));
+
+        return Math.pow(10, agg);
+    }
+
+    determineVolumeDecimals(df: IDataFrame<number, any>): number {
+        const {decimalSeparator: ds} = this.candleLoaderConfig;
+        return df.aggregate(0, ((accum, candle) => Math.max(0, getDecimals(candle.volume, ds))));
+    }
+
+    /**
      * Actual parsing of file returning data
      * @returns {Promise<IDataFrame<number, any>>}
      */
@@ -47,41 +87,21 @@ export default class CandleLoader {
         const segs = this.filePath.split(".");
         const ext = segs[segs.length - 1].toLowerCase();
 
-        const dataFrame: IDataFrame<number, any> = await CandleLoader.parseFileReader(readFile(this.filePath), ext);
+        const dataFrame: IDataFrame<number, any> = this.parser(await CandleLoader.parseFileReader(readFile(this.filePath), ext));
 
-        if (this.parser) {
-            const parsedDataFrame = this.parser(dataFrame);
+        const volumeDecimals = this.determineVolumeDecimals(dataFrame);
+        const priceDecimals = this.determinePriceDecimals(dataFrame);
+        const candleInterval = this.determineCandleInterval(dataFrame);
 
-            const volumeSeries = parsedDataFrame.deflate(candle => decimals(candle.volume, this.candleLoaderConfig.decimalSeperator));
-            if (volumeSeries.count() <= 0) {
-                console.log("No volume series found, use renameSeries to flag a column as a volume column");
-            }
-            const volumeDecimals = volumeSeries.max();
+        console.log(volumeDecimals, priceDecimals, candleInterval);
 
-            const priceSeries = parsedDataFrame
-                .deflate(candle =>
-                    Math.max(decimals(candle.open, this.candleLoaderConfig.decimalSeperator),
-                        decimals(candle.close, this.candleLoaderConfig.decimalSeperator),
-                        decimals(candle.high, this.candleLoaderConfig.decimalSeperator),
-                        decimals(candle.low, this.candleLoaderConfig.decimalSeperator)));
-            if (priceSeries.count() <= 0) {
-                console.log("No price series found, use renameSeries to flag a column as a price column (open, close, high, low)");
-            }
+        // @TODO add symbol
+        // symbol: this.candleLoaderConfig.symbol,
 
-            const timestampSeries = parsedDataFrame
-                .deflate(candle => candle.timestamp);
+        // @TODO add name
+        // name: this.candleLoaderConfig.name,
 
-            const pricesDecimals = priceSeries.max();
-            const candles = parsedDataFrame.toArray();
-            const config = {
-                volumeDecimals,
-                priceDecimals: Math.pow(10, pricesDecimals),
-                symbol: this.candleLoaderConfig.symbol,
-                name: this.candleLoaderConfig.name,
-            };
-
-            return {config, candles};
-        }
+        // @TODO return configuration
         return dataFrame.toArray();
     }
 }

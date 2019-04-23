@@ -71,13 +71,3 @@ export function crossDown(lineA: number[], lineB: number[]): boolean {
         ? false
         : validate(lineA, lineB, 1);
 }
-
-/**
- * Calculates the number of decimals for a given number
- * @param {number} n the number
- * @returns {number} number of decimals
- */
-export function decimals(n: number, seperator: string){
-    const d: string = String(n);
-    return d.indexOf(seperator) > -1 ? d.substr(d.indexOf(seperator) + 1).length : 0;
-}

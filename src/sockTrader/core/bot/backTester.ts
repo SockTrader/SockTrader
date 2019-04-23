@@ -10,7 +10,7 @@ export interface IBackTestConfig {
     assets: IAssetMap;
 }
 
-interface InputCandle {
+interface IInputCandle {
     close: number;
     high: number;
     low: number;
@@ -28,9 +28,9 @@ export default class BackTester extends SockTrader {
     /**
      * Creates a new BackTester
      * @param {IBackTestConfig} config
-     * @param {InputCandle} inputCandles
+     * @param {IInputCandle} inputCandles
      */
-    constructor(config: IBackTestConfig, private inputCandles: InputCandle[]) {
+    constructor(config: IBackTestConfig, private inputCandles: IInputCandle[]) {
         super();
 
         const wallet = new Wallet(config.assets);
@@ -64,7 +64,7 @@ export default class BackTester extends SockTrader {
         this.reportProgress({type: "finished"});
     }
 
-    private hydrateCandles(candles: InputCandle[]): ICandle[] {
+    private hydrateCandles(candles: IInputCandle[]): ICandle[] {
         return candles.map((c: any) => ({
             ...c,
             timestamp: moment(c.timestamp),
