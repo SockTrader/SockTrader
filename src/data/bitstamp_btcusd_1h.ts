@@ -8,7 +8,7 @@ const SRC_PATH = "../../src/data";
 const PATH = path.resolve(__dirname, SRC_PATH, "bitstamp_btcusd_1h.csv");
 
 // noinspection JSUnusedGlobalSymbols
-export default new CandleLoader(PATH, {decimalSeparator: ".", symbol: ["BTC", "USD"], name: "Bitcoin"},
+export default new CandleLoader(PATH, {symbol: ["BTC", "USD"], name: "Bitcoin"},
     (dataFrame: IDataFrame<number, any>): IDataFrame<number, ICandle> => {
         return dataFrame
             .dropSeries(["Symbol"])

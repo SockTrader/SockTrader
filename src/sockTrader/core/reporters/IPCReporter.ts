@@ -13,6 +13,6 @@ export default class IPCReporter implements IReporter {
 
     private static send(message: { payload: any, type: string }): void {
         if (!process.send) throw new Error("Process is not running as a child process");
-        return process.send(message);
+        process.send(message);
     }
 }

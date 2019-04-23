@@ -37,7 +37,7 @@ export default class BacktestCreator {
             `--strategy=${options.strategyPath}`,
         ], {stdio: ["ipc"]});
 
-        childProcess.stdout.pipe(process.stdout);
+        if (childProcess.stdout) childProcess.stdout.pipe(process.stdout);
 
         return childProcess;
     }
