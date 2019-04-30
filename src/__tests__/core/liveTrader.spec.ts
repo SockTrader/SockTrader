@@ -4,7 +4,7 @@ import {fromObject, IDataFrame} from "data-forge";
 import {Pair} from "../../sockTrader/core/types/pair";
 import Wallet from "../../sockTrader/core/assets/wallet";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
-import CandleNormalizer from "../../sockTrader/core/candles/candleNormalizer";
+import CandleNormalizer from "../../sockTrader/data/candleNormalizer";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import BackTester from "../../sockTrader/core/bot/backTester";
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";

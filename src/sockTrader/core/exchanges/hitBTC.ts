@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
-import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../candles/candleCollection";
+import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../candleCollection";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";

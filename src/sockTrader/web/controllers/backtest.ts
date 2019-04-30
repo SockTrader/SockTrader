@@ -52,7 +52,7 @@ export default (socket: Socket) => {
 
         spawnProcess({candlePath: candles, strategyPath: strategy});
 
-        if (watch === true) {
+        if (watch) {
             const strategyFilePath = resolvePath([STRATEGIES_FOLDER, strategy + ".js"]);
             console.log("watching: ", strategyFilePath);
 

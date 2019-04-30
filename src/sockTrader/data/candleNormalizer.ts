@@ -2,9 +2,9 @@ import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
 import moment from "moment";
 import {Error} from "tslint/lib/error";
-import {getDecimals} from "../../data/utils";
-import {Pair} from "../types/pair";
-import {ICandle} from "./candleCollection";
+import {getDecimals} from "./utils";
+import {Pair} from "../core/types/pair";
+import {ICandle} from "../core/candleCollection";
 
 export interface ICandleNormalizerConfig {
     decimalSeparator?: string;

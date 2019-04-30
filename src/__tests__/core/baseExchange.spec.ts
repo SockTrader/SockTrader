@@ -14,7 +14,7 @@ import {
     OrderType,
     ReportType,
 } from "../../sockTrader/core/types/order";
-import CandleCollection from "../../sockTrader/core/candles/candleCollection";
+import CandleCollection from "../../sockTrader/core/candleCollection";
 import Orderbook from "../../sockTrader/core/orderbook";
 
 const pair: Pair = ["BTC", "USD"];

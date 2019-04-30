@@ -1,9 +1,9 @@
-import {CronJob} from "cron";
+import {CronJob} from "@types/cron";
 import parser from "cron-parser";
-import {EventEmitter} from "events";
+import {EventEmitter} from "@types/events";
 import moment, {Moment} from "moment";
-import config from "../../../config";
-import logger from "../logger";
+import config from "../../config";
+import logger from "./logger";
 
 export interface ICandle {
     close: number;
