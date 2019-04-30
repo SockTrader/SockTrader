@@ -1,7 +1,6 @@
 /* tslint:disable */
 import "jest";
 import moment from "moment";
-import CandleCollection, {ICandle} from "../../sockTrader/core/candles/candleCollection";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
 import {IOrderbookData} from "../../sockTrader/core/exchanges/baseExchange";
@@ -9,6 +8,7 @@ import Orderbook from "../../sockTrader/core/orderbook";
 import {Pair} from "../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import {IOrder} from "../../sockTrader/core/types/order";
+import CandleCollection, {ICandle} from "../../sockTrader/core/candleCollection";
 
 const pair: Pair = ["BTC", "USD"];
 

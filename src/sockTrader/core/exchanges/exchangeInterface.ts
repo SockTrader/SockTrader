@@ -1,9 +1,9 @@
 import {EventEmitter} from "events";
-import CandleCollection, {ICandle, ICandleInterval} from "../candles/candleCollection";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import {IOrderbookData, ITradeablePair} from "./baseExchange";
+import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
 
 /**
  * The IExchange represents a marketplace to buy and sell

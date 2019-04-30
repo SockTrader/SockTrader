@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import CandleNormalizer from "../core/candles/candleNormalizer";
+import CandleNormalizer from "./candleNormalizer";
 
 const resolver = (root: string) => (folder: string, file = "") => path.resolve(__dirname, root, folder, file);
 const buildPath = resolver("../../../build");

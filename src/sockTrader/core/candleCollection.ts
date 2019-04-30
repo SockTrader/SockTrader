@@ -1,6 +1,6 @@
 import {CronJob} from "@types/cron";
-import parser from "cron-parser";
 import {EventEmitter} from "@types/events";
+import parser from "cron-parser";
 import moment, {Moment} from "moment";
 import config from "../../config";
 import logger from "./logger";

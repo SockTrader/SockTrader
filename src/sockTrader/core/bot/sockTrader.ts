@@ -1,6 +1,6 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {ICandle, ICandleInterval} from "../candles/candleCollection";
+import {ICandle, ICandleInterval} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IReporter} from "../reporters/reporterInterface";
