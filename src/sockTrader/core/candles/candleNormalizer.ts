@@ -6,7 +6,7 @@ import {getDecimals} from "../../data/utils";
 import {Pair} from "../types/pair";
 import {ICandle} from "./candleCollection";
 
-export interface ICandleLoaderConfig {
+export interface ICandleNormalizerConfig {
     decimalSeparator?: string;
     name: string;
     symbol: Pair;
@@ -15,12 +15,12 @@ export interface ICandleLoaderConfig {
 export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, ICandle>;
 
 /**
- * The CandleLoader parses a file containing candles and returns
+ * The CandleNormalizer parses a file containing candles and returns
  * in data for in memory processing
  */
 export default class CandleNormalizer {
 
-    constructor(private filePath: string, public candleLoaderConfig: ICandleLoaderConfig, private parser: Parser) {
+    constructor(private filePath: string, public candleNormalizerConfig: ICandleNormalizerConfig, private parser: Parser) {
     }
 
     /**
@@ -62,7 +62,7 @@ export default class CandleNormalizer {
     }
 
     determinePriceDecimals(df: IDataFrame<number, any>): number {
-        const {decimalSeparator: ds} = this.candleLoaderConfig;
+        const {decimalSeparator: ds} = this.candleNormalizerConfig;
         const agg = df.aggregate(0, (accum, candle) => Math.max(
             accum,
             getDecimals(candle.open, ds),
@@ -75,7 +75,7 @@ export default class CandleNormalizer {
     }
 
     determineVolumeDecimals(df: IDataFrame<number, any>): number {
-        const {decimalSeparator: ds} = this.candleLoaderConfig;
+        const {decimalSeparator: ds} = this.candleNormalizerConfig;
         return df.aggregate(0, ((accum, candle) => Math.max(0, getDecimals(candle.volume, ds))));
     }
 
@@ -96,10 +96,10 @@ export default class CandleNormalizer {
         console.log(volumeDecimals, priceDecimals, candleInterval);
 
         // @TODO add symbol
-        // symbol: this.candleLoaderConfig.symbol,
+        // symbol: this.candleNormalizerConfig.symbol,
 
         // @TODO add name
-        // name: this.candleLoaderConfig.name,
+        // name: this.candleNormalizerConfig.name,
 
         // @TODO return configuration
         return dataFrame.toArray();

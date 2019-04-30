@@ -1,8 +1,8 @@
-import CandleNormalizer from "candleNormalizer.ts";
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
 import {ICandle} from "../sockTrader/core/candles/candleCollection";
+import CandleNormalizer from "../sockTrader/core/candles/candleNormalizer";
 
 const SRC_PATH = "../../src/data";
 const PATH = path.resolve(__dirname, SRC_PATH, "bitstamp_btcusd_1h.csv");
