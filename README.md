@@ -91,7 +91,7 @@ Example:
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
-import CandleLoader from "../sockTrader/core/candles/candleLoader";
+import CandleNormalizer from "../sockTrader/core/candles/candleNormalizer";
 
 // Be sure to go back to the src folder, since this script will be executed from the build/data folder!!
 const SRC_PATH = "../../src/data";
@@ -114,7 +114,7 @@ const parser = (dataFrame: IDataFrame<number, any>): IDataFrame<number, any> => 
         })
 };
 
-export default new CandleLoader(PATH, parser);
+export default new CandleNormalizer(PATH, parser);
 ```
 
 ## Your own strategy?
