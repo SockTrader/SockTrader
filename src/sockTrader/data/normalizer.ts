@@ -1,6 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
-import CandleLoader from "../core/candles/candleLoader";
+import CandleNormalizer from "../core/candles/candleNormalizer";
 
 const resolver = (root: string) => (folder: string, file = "") => path.resolve(__dirname, root, folder, file);
 const buildPath = resolver("../../../build");
@@ -9,7 +9,7 @@ const buildPath = resolver("../../../build");
  * Parse candles from candleLoader into a serializable array
  * @param candleLoader
  */
-const parseCandles = async (candleLoader: CandleLoader): Promise<any> => (await candleLoader.parse());
+const parseCandles = async (candleLoader: CandleNormalizer): Promise<any> => (await candleLoader.parse());
 
 /**
  * Normalize a single file in the "build/data" folder
@@ -30,7 +30,7 @@ export async function normalizeDataFiles(files: string[]): Promise<void> {
 
         try {
             const baseFileName = path.basename(file, ext);
-            const candleLoader: CandleLoader = (await import(buildPath("data", file))).default;
+            const candleLoader: CandleNormalizer = (await import(buildPath("data", file))).default;
             const candles = await parseCandles(candleLoader);
 
             await fs.writeJSON(buildPath("data", `${baseFileName}.json`), candles);

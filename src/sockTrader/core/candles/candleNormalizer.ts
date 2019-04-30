@@ -18,7 +18,7 @@ export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, IC
  * The CandleLoader parses a file containing candles and returns
  * in data for in memory processing
  */
-export default class CandleLoader {
+export default class CandleNormalizer {
 
     constructor(private filePath: string, public candleLoaderConfig: ICandleLoaderConfig, private parser: Parser) {
     }
@@ -87,7 +87,7 @@ export default class CandleLoader {
         const segs = this.filePath.split(".");
         const ext = segs[segs.length - 1].toLowerCase();
 
-        const dataFrame: IDataFrame<number, any> = this.parser(await CandleLoader.parseFileReader(readFile(this.filePath), ext));
+        const dataFrame: IDataFrame<number, any> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
 
         const volumeDecimals = this.determineVolumeDecimals(dataFrame);
         const priceDecimals = this.determinePriceDecimals(dataFrame);

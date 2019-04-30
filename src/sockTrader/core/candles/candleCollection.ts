@@ -157,7 +157,7 @@ export default class CandleCollection extends EventEmitter {
      * Returns a function which will either return a new candle or recycle a previous candle
      * This function should be executed on every timer tick so that even though no values
      * changed, the candle collection receives a 'new' candle
-     * @param {ICandle[]} candle collection
+     * @param {ICandle[]} candles collection
      * @returns {(interval: moment.Moment) => ICandle} candle generator
      */
     private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
