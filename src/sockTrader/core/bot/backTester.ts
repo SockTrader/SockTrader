@@ -1,10 +1,10 @@
 import moment from "moment";
 import Wallet, {IAssetMap} from "../assets/wallet";
+import {ICandle} from "../candleCollection";
 import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";
 import SockTrader from "./sockTrader";
-import {ICandle} from "../candleCollection";
 
 export interface IBackTestConfig {
     assets: IAssetMap;

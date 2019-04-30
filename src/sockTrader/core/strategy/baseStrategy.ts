@@ -1,9 +1,9 @@
 import {EventEmitter} from "events";
+import {ICandle} from "../candleCollection";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
-import {ICandle} from "../candleCollection";
 
 export type IStrategyClass<T> = new(pair: Pair, exchange: IExchange) => T;
 
