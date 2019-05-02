@@ -1,3 +1,5 @@
+import ora from "ora";
 import {normalizeDataFolder} from "./normalizer";
 
-normalizeDataFolder().then(() => console.log("Done!"));
+const spinner = ora("Normalizing data").start();
+normalizeDataFolder().then(() => spinner.succeed("Normalization finished!"));

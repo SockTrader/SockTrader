@@ -127,6 +127,7 @@
     "nanoid": "^2.0.1",
     "nanoid-dictionary": "^2.0.0",
     "numeral": "^2.0.6",
+    "ora": "^3.4.0",
     "socket.io": "^2.2.0",
     "technicalindicators": "^2.0.8",
     "typescript": "^3.4.5",
