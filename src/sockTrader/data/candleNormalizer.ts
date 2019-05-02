@@ -52,7 +52,7 @@ export default class CandleNormalizer {
             let i;
             if (date !== undefined) {
                 const minutes = moment.duration(date.diff(value.timestamp)).asMinutes();
-                if (!prevInterval || minutes < prevInterval) i = minutes;
+                i = (!prevInterval || minutes < prevInterval) ? minutes : prevInterval;
             }
 
             return [i, value.timestamp];
@@ -83,25 +83,19 @@ export default class CandleNormalizer {
      * Actual parsing of file returning data
      * @returns {Promise<IDataFrame<number, any>>}
      */
-    async parse(): Promise<any> {
+    async normalize(): Promise<any> {
         const segs = this.filePath.split(".");
         const ext = segs[segs.length - 1].toLowerCase();
 
         const dataFrame: IDataFrame<number, any> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
 
-        const volumeDecimals = this.determineVolumeDecimals(dataFrame);
-        const priceDecimals = this.determinePriceDecimals(dataFrame);
-        const candleInterval = this.determineCandleInterval(dataFrame);
-
-        console.log(volumeDecimals, priceDecimals, candleInterval);
-
-        // @TODO add symbol
-        // symbol: this.candleNormalizerConfig.symbol,
-
-        // @TODO add name
-        // name: this.candleNormalizerConfig.name,
-
-        // @TODO return configuration
-        return dataFrame.toArray();
+        return {
+            candles: dataFrame.toArray(),
+            name: this.candleNormalizerConfig.name,
+            symbol: this.candleNormalizerConfig.symbol,
+            volumeDecimals: this.determineVolumeDecimals(dataFrame),
+            priceDecimals: this.determinePriceDecimals(dataFrame),
+            candleInterval: this.determineCandleInterval(dataFrame),
+        };
     }
 }

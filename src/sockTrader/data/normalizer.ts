@@ -9,7 +9,7 @@ const buildPath = resolver("../../../build");
  * Parse candles from candleNormalizer into a serializable array
  * @param candleNormalizer
  */
-const parseCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => (await candleNormalizer.parse());
+const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => (await candleNormalizer.normalize());
 
 /**
  * Normalize a single file in the "build/data" folder
@@ -31,9 +31,9 @@ export async function normalizeDataFiles(files: string[]): Promise<void> {
         try {
             const baseFileName = path.basename(file, ext);
             const candleNormalizer: CandleNormalizer = (await import(buildPath("data", file))).default;
-            const candles = await parseCandles(candleNormalizer);
+            const data = await normalizeCandles(candleNormalizer);
 
-            await fs.writeJSON(buildPath("data", `${baseFileName}.json`), candles);
+            await fs.writeJSON(buildPath("data", `${baseFileName}.json`), data);
         } catch (e) {
             console.error(e);
         }
