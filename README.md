@@ -23,9 +23,19 @@
 - 🌿 Unit tested source code.
 - 💎 Strategy testing with LIVE exchange data.
 - 🏡 Backtesting engine with local data.
-- ⚡️ Live reload any strategy in your own frontend. ([see example](#whats-the-purpose-of-the-webserver))
-- 📡 Connect your frontend to the integrated websocket server. ([see example](#whats-the-purpose-of-the-webserver))
+- ⚡️ Test & live reload your strategy in [our online dashboard](https://cryptocointrader.be/)!
 - More features soon..
+
+## Use our online dashboard!
+Any strategy that has been developed in SockTrader can be backtested using our online dashboard. Once you change and save the code 
+of the selected strategy the dashboard should automatically update itself and rerun the backtest.
+
+Try it yourself:
+1. Follow our [Quick Start guide](#quick-start-guide)
+2. Run `npm run web` and leave all settings as default. 
+3. Go to [our online dashboard](https://cryptocointrader.be/) and test your strategies! 
+
+![SockTraderDashboard](docs/assets/dashboard.png)
 
 ## Getting started
 
@@ -118,19 +128,8 @@ export default new CandleNormalizer(PATH, parser);
 ```
 
 ## Your own strategy?
-
-Take a look at the given example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
-
-## What's the purpose of the webserver?
-
-One might think that the webserver is useless since the tradingbot can be controlled using the CLI. But that's not true, because we're
-also developing a custom dashboard that is able to control the tradingbot. With this dashboard we're able to see the trading 
-actions of our strategy happening live on the dashboard as we're programming it.
-
-Unfortunately we're not allowed to make it open source due to license restrictions of the TradingView library that we're using.
-
-In any case, here you have a preview: 
-![SockTraderDashboard](docs/assets/SockTraderDashboard.png)
+Take a look at the gi
+ven example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
  
 
 ## We need your help!

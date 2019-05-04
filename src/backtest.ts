@@ -35,12 +35,11 @@ load().then((dep: any) => {
     const strategyFile = dep[0].default;
     const candleFile = dep[1].default;
 
-    // @TODO make pair and interval dynamic
     const backtest = new BackTester({assets: config.assets}, candleFile.candles)
         .addStrategy({
             strategy: strategyFile,
-            pair: ["BTC", "USD"],
-            interval: CandleInterval.ONE_HOUR,
+            pair: candleFile.symbol,
+            interval: CandleInterval.ONE_HOUR, // @TODO make interval dynamic
         });
 
     if (process.send) backtest.addReporter(new IPCReporter());
