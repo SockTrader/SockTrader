@@ -136,11 +136,11 @@ We're looking for extra contributors to give this project a well deserved boost.
 Don't hesitate to contact us on: [Telegram](https://t.me/SockTrader) or [Gitter](https://gitter.im/SockTrader/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Or you can also support us by:
-1. Donating money for covering the hosting costs
+1. [Donating money](https://www.patreon.com/bePatron?u=19856242) for covering the hosting costs
 2. Pay for advertisements on the SockTrader dashboard
 3. Or sharing interesting knowledge with the community
 
-<a href="https://www.patreon.com/bePatron?u=19856242" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+[Become a Patron!](https://www.patreon.com/bePatron?u=19856242)
 
 ## ROADMAP
 ### v1.0
