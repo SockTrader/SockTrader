@@ -1,10 +1,8 @@
 export default {
     timezone: "Europe/Brussels",
 
-    // @deprecated
     webServer: {
-        debugPort: "50000",
-        port: 8080,
+        port: 3000,
     },
 
     assets: {

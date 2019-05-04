@@ -2,6 +2,7 @@ import cors from "cors";
 import express, {Express, NextFunction, Request, Response} from "express";
 import {Server} from "http";
 import socketIO, {Socket} from "socket.io";
+import config from "../../config";
 import backtestController from "./controllers/backtest";
 import dataController from "./controllers/data";
 import strategyController from "./controllers/strategy";
@@ -10,7 +11,7 @@ const app: Express = express();
 const http = new Server(app);
 const io = socketIO(http);
 
-http.listen(80);
+http.listen(config.webServer.port);
 
 app.use(express.json());
 app.use(cors());
