@@ -31,7 +31,7 @@ Any strategy that has been developed in SockTrader can be backtested using our o
 of the selected strategy the dashboard should automatically update itself and rerun the backtest.
 
 Try it yourself:
-1. Follow our [Quick Start guide](#quick-start-guide)
+1. Follow our [Quick Start guide](#quick-start)
 2. Run `npm run web` and leave all settings as default. 
 3. Go to [our online dashboard](https://cryptocointrader.be/) and test your strategies! 
 
@@ -128,14 +128,42 @@ export default new CandleNormalizer(PATH, parser);
 ```
 
 ## Your own strategy?
-Take a look at the gi
-ven example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
+Take a look at the given example strategy in this repository: [simpleMovingAverage strategy](src/strategies/simpleMovingAverage.ts)
  
 
 ## We need your help!
 We're looking for extra contributors to give this project a well deserved boost.
-
 Don't hesitate to contact us on: [Telegram](https://t.me/SockTrader) or [Gitter](https://gitter.im/SockTrader/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+Or you can also support us by:
+1. Donating money for covering the hosting costs
+2. Pay for advertisements on the SockTrader dashboard
+3. Or sharing interesting knowledge with the community
+
+<a href="https://www.patreon.com/bePatron?u=19856242" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+
+## ROADMAP
+### v1.0
+- Improve communication between dashboard & SockTrader
+- Update and improve live trading
+- Test edge case scenarios (possible rounding issues)
+- Test altcoin trading and improve if needed
+- Add basic backtest analyzers
+- Dashboard internalization
+- Improve dashboard architecture
+- Increase test coverage and test quality
+- Add more and better documentation
+
+### Later on..
+- Improve logging
+- Add extra exchanges
+- Add more advanced backtest analyzers
+- Show status of wallet in dashboard
+- Show status of analyzers in dashboard
+- And so much more..
+
+Let us know if you have great ideas to improve the project!
+Feel free to open a pull request.
 
 ## Contributors
 
