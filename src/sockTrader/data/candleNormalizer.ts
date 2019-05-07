@@ -51,7 +51,7 @@ export default class CandleNormalizer {
 
             let i;
             if (date !== undefined) {
-                const minutes = moment.duration(date.diff(value.timestamp)).asMinutes();
+                const minutes = Math.abs(moment.duration(date.diff(value.timestamp)).asMinutes());
                 i = (!prevInterval || minutes < prevInterval) ? minutes : prevInterval;
             }
 
