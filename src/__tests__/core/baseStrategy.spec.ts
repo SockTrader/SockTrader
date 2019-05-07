@@ -2,12 +2,21 @@
 import "jest";
 import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
 import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
+import {ICandle} from "../../sockTrader/core/candleCollection";
+import {IOrderbook} from "../../sockTrader/core/orderbook";
 
 class MyStrategy extends BaseStrategy {
+    notifyOrder(order: IOrder): void {
+    }
+
+    updateCandles(candles: ICandle[]): void {
+    }
+
+    updateOrderbook(orderBook: IOrderbook): void {
+    }
 }
 
-// @ts-ignore
-const strategy = new MyStrategy();
+const strategy = new MyStrategy(["BTC", "USD"], jest.fn() as any);
 let emitMock = null;
 
 beforeEach(() => {
@@ -19,27 +28,9 @@ afterEach(() => {
     emitMock.mockRestore();
 });
 
-describe("notifyOrder", () => {
-    test("Should throw error when notifyOrder is not implemented", () => {
-        expect(() => strategy.notifyOrder({})).toThrow("Implement method: notifyOrder");
-    });
-});
-
-describe("updateCandles", () => {
-    test("Should throw error when updateCandles is not implemented", () => {
-        expect(() => strategy.updateCandles([])).toThrow("Implement method: updateCandles");
-    });
-});
-
-describe("updateOrderbook", () => {
-    test("Should throw when updateOrderbook is not implemented", () => {
-        expect(() => strategy.updateOrderbook({})).toThrow("Implement method: updateOrderbook");
-    });
-});
-
 describe("adjust", () => {
     test("Should emit adjustOrder event", () => {
-        strategy.adjust({side: OrderSide.BUY} as IOrder, 10, 1);
+        strategy["adjust"]({side: OrderSide.BUY} as IOrder, 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
         expect(emitMock).toBeCalledWith("app.adjustOrder", {
@@ -54,28 +45,28 @@ describe("adjust", () => {
 
 describe("buy", () => {
     it("Should emit buy signal", () => {
-        strategy.buy("BTCUSD", 10, 1);
+        strategy["buy"](["BTC", "USD"], 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
         expect(emitMock).toBeCalledWith("app.signal", {
             price: 10,
             qty: 1,
             side: "buy",
-            symbol: "BTCUSD",
+            symbol: ["BTC", "USD"],
         });
     });
 });
 
 describe("sell", () => {
     test("Should emit sell signal", () => {
-        strategy.sell("BTCUSD", 10, 1);
+        strategy["sell"](["BTC", "USD"], 10, 1);
 
-        expect(emitMock).toBeCalledTimes(1)
+        expect(emitMock).toBeCalledTimes(1);
         expect(emitMock).toBeCalledWith("app.signal", {
             price: 10,
             qty: 1,
             side: "sell",
-            symbol: "BTCUSD",
+            symbol: ["BTC", "USD"],
         });
     });
 });

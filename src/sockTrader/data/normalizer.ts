@@ -9,7 +9,7 @@ const buildPath = resolver("../../../build");
  * Parse candles from candleNormalizer into a serializable array
  * @param candleNormalizer
  */
-const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => (await candleNormalizer.normalize());
+export const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => (await candleNormalizer.normalize());
 
 /**
  * Normalize a single file in the "build/data" folder

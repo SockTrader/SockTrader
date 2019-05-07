@@ -148,9 +148,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @returns {boolean}
      */
     isReady(): boolean {
-        if (this.ready) {
-            return this.ready;
-        }
+        if (this.ready) return this.ready;
 
         if (this.isCurrenciesLoaded && this.isAuthenticated) {
             this.ready = true;

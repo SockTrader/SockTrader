@@ -25,7 +25,7 @@ export interface IAdjustSignal {
  */
 export default abstract class BaseStrategy extends EventEmitter {
 
-    protected constructor(public pair: Pair, public exchange: IExchange) {
+    constructor(public pair: Pair, public exchange: IExchange) {
         super();
     }
 
@@ -33,25 +33,19 @@ export default abstract class BaseStrategy extends EventEmitter {
      * Called when exchange confirms and order
      * @param {IOrder} order the order
      */
-    notifyOrder(order: IOrder): void {
-        throw new Error("Implement method: notifyOrder");
-    }
+    abstract notifyOrder(order: IOrder): void;
 
     /**
      * Called on each new candle from exchange
      * @param {ICandle[]} candles the new candles
      */
-    updateCandles(candles: ICandle[]): void {
-        throw new Error("Implement method: updateCandles");
-    }
+    abstract updateCandles(candles: ICandle[]): void;
 
     /**
      * Called on orderbook update from exchange
      * @param {IOrderbook} orderBook the new orderbook
      */
-    updateOrderbook(orderBook: IOrderbook): void {
-        throw new Error("Implement method: updateOrderbook");
-    }
+    abstract updateOrderbook(orderBook: IOrderbook): void;
 
     /**
      * Fires a adjust existing order event to exchange

@@ -59,15 +59,6 @@ beforeEach(() => {
     exc = new MockExchange();
 });
 
-// TODO fix test
-// describe("generateOrderId", () => {
-//     test("Should generate a random order id", () => {
-//         const orderId = exc["generateOrderId"](pair);
-//         expect(orderId).toBe("string");
-//         expect(orderId).toHaveLength(32);
-//     });
-// });
-
 describe("buy", () => {
     test("Should create a buy order", () => {
         const createOrderMock = jest.fn();
@@ -240,13 +231,14 @@ describe("addOrder", () => {
     });
 });
 
-// TODO fix test
-// describe("generateOrderId", () => {
-//     test("Should generate new order id's", () => {
-//         expect(exc.generateOrderId(pair).length).toBe(32);
-//         expect(exc.generateOrderId(pair)).toBeInstanceOf(String);
-//     });
-// });
+describe("generateOrderId", () => {
+    test("Should generate a random order id", () => {
+        const orderId = exc["generateOrderId"](pair);
+        expect(typeof orderId).toBe("string");
+        expect(orderId).toHaveLength(32);
+        expect(orderId).not.toBe(exc["generateOrderId"](pair));
+    });
+});
 
 describe("isAdjustingOrderAllowed", () => {
     test("Should disallow order in progress to be adjusted", () => {
@@ -284,5 +276,18 @@ describe("getOrderbook", () => {
 
         const orderbook2 = exc.getOrderbook(pair);
         expect(orderbook2).toBe(orderbook);
+    });
+});
+
+describe("onCurrenciesLoaded", () => {
+    test("Should store currency configuration in Exchange", () => {
+        const isReadySpy = jest.spyOn(exc, "isReady" as any);
+
+        expect(exc.currencies).toEqual({});
+        exc.onCurrenciesLoaded([{id: ["BTC", "USD"], quantityIncrement: 10, tickSize: 100}]);
+        expect(exc.currencies).toEqual({ "BTCUSD": { id: ["BTC", "USD"], quantityIncrement: 10, tickSize: 100}});
+        expect(exc.isCurrenciesLoaded).toBe(true);
+
+        expect(isReadySpy).toBeCalledTimes(1);
     });
 });
