@@ -146,7 +146,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
      * @param {IHitBTCGetSymbolsResponse} response
      */
     private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
-        const result = response.result.map(({id, tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
+        const result = response.result.map(({tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
             id: [baseCurrency, quoteCurrency] as Pair,
             quantityIncrement: parseFloat(quantityIncrement),
             tickSize: parseFloat(tickSize),
@@ -178,7 +178,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
                 reportType: report.reportType as ReportType,
                 side: report.side as OrderSide,
                 status: report.status as OrderStatus,
-                pair: this.exchange.currencies[report.symbol].id,
+                pair: this.exchange.currencies[report.symbol].id, // @TODO Currency pair could be undefined in HitBTCMapper
                 timeInForce: report.timeInForce as OrderTimeInForce,
                 type: report.type as OrderType,
                 updatedAt: moment(report.updatedAt),

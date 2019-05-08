@@ -4,10 +4,16 @@ import moment from "moment";
 import HitBTCMapper, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCMapper";
 import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
 
+let exc = new HitBTC();
+let mapper = new HitBTCMapper(exc);
+
+beforeEach(() => {
+    exc = new HitBTC();
+    mapper = new HitBTCMapper(exc);
+});
+
 describe("mapCandles", () => {
     it("Should map exchange candles to internal ICandle array", () => {
-        const exch = new HitBTC();
-        const mapper = new HitBTCMapper(exch);
         const candles = mapper["mapCandles"]({
             method: "", jsonrpc: "",
             params: {
@@ -35,11 +41,9 @@ describe("mapCandles", () => {
 describe("onUpdateCandles", () => {
     it("Should re-emit exchange candle update to internal api event", () => {
         const onUpdateCandles = jest.fn();
-        const exch = new HitBTC();
-        exch.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
-        exch.onUpdateCandles = onUpdateCandles;
+        exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
+        exc.onUpdateCandles = onUpdateCandles;
 
-        const mapper = new HitBTCMapper(exch);
         mapper.emit("api.updateCandles", {
             params: {period: "H1", symbol: "BTCUSD", data: []},
             method: "",
@@ -58,8 +62,6 @@ describe("onReceive", () => {
     it("Should re-emit exchange events as API events", async () => {
         expect.assertions(1);
 
-        const exch = new HitBTC();
-        const mapper = new HitBTCMapper(exch);
         mapper.on("api.event_method", args => {
             expect(args).toStrictEqual({
                 id: "event_id",
@@ -79,17 +81,12 @@ describe("onReceive", () => {
     });
 
     it("Should throw when exchange emits non utf8 data", () => {
-        const exch = new HitBTC();
-        const mapper = new HitBTCMapper(exch);
-
         expect(() => mapper.onReceive({type: "not_utf8"})).toThrowError("Response is not UTF8!");
     });
 });
 
 describe("destroy", () => {
     it("Should clean-up all bound event listeners", async () => {
-        const exch = new HitBTC();
-        const mapper = new HitBTCMapper(exch);
         expect(mapper.eventNames()).toEqual([
             "api.snapshotCandles",
             "api.updateCandles",
@@ -108,13 +105,11 @@ describe("destroy", () => {
 describe("onUpdateOrderbook", () => {
     it("Should trigger an orderbook update on the exchange", () => {
         const onUpdateOrderbook = jest.fn();
-        const exch = new HitBTC();
-        exch.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
-        exch.onUpdateOrderbook = onUpdateOrderbook;
+        exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
+        exc.onUpdateOrderbook = onUpdateOrderbook;
 
-        const mapper = new HitBTCMapper(exch);
         mapper["onUpdateOrderbook"]({
-            jsonrpc: "string",
+            jsonrpc: "2.0",
             method: "string",
             params: {
                 ask: [{price: 10, size: 10}],
@@ -132,5 +127,97 @@ describe("onUpdateOrderbook", () => {
             sequence: 1,
         });
         expect(arg2).toEqual("addIncrement");
+    });
+});
+
+describe("onLogin", () => {
+    it("Should notify exchange when user is authenticated", () => {
+        const isReadySpy = jest.spyOn(exc, "isReady");
+        expect(exc["isAuthenticated"]).toStrictEqual(false);
+
+        mapper["onLogin"]({id: "123", jsonrpc: "2.0", result: false});
+        expect(exc["isAuthenticated"]).toStrictEqual(false);
+
+        mapper["onLogin"]({id: "123", jsonrpc: "2.0", result: true});
+        expect(exc["isAuthenticated"]).toStrictEqual(true);
+        expect(isReadySpy).toBeCalledTimes(2);
+
+    });
+});
+
+describe("onGetSymbols", () => {
+    it("Should load currency configuration for exchange", () => {
+        const currenciesLoadedSpy = jest.spyOn(exc, "onCurrenciesLoaded");
+        mapper["onGetSymbols"]({
+            id: "123",
+            jsonrpc: "2.0",
+            result: [{
+                id: "ETHBTC",
+                baseCurrency: "ETH",
+                quoteCurrency: "BTC",
+                quantityIncrement: "0.001",
+                tickSize: "0.000001",
+                takeLiquidityRate: "0.001",
+                provideLiquidityRate: "-0.0001",
+                feeCurrency: "BTC",
+            }],
+        });
+
+        expect(currenciesLoadedSpy).toHaveBeenLastCalledWith([{
+            "id": ["ETH", "BTC"],
+            "quantityIncrement": 0.001,
+            "tickSize": 0.000001,
+        }]);
+    });
+});
+
+describe("onReport", () => {
+    it("Should load currency configuration for exchange", () => {
+        const excReportSpy = jest.spyOn(exc, "onReport");
+        exc["currencies"] = {
+            "ETHBTC": {
+                id: ["ETH", "BTC"],
+                quantityIncrement: 0.001,
+                tickSize: 0.000001,
+            },
+        };
+
+        mapper["onReport"]({
+            jsonrpc: "2.0",
+            method: "method",
+            params: [{
+                id: "4345613661",
+                clientOrderId: "57d5525562c945448e3cbd559bd068c3",
+                symbol: "ETHBTC",
+                side: "sell",
+                status: "new",
+                type: "limit",
+                timeInForce: "GTC",
+                quantity: "0.013",
+                price: "0.100000",
+                cumQuantity: "0.000",
+                postOnly: false,
+                createdAt: "2017-10-20T12:17:12.245Z",
+                updatedAt: "2017-10-20T12:17:12.245Z",
+                reportType: "status",
+            }],
+        });
+
+        expect(excReportSpy).toBeCalledWith(
+            expect.objectContaining({
+                "createdAt": expect.anything(),
+                "id": "57d5525562c945448e3cbd559bd068c3",
+                "originalId": undefined,
+                "pair": ["ETH", "BTC"],
+                "price": 0.1,
+                "quantity": 0.013,
+                "reportType": "status",
+                "side": "sell",
+                "status": "new",
+                "timeInForce": "GTC",
+                "type": "limit",
+                "updatedAt": expect.anything(),
+            })
+        );
     });
 });
