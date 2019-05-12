@@ -6,6 +6,7 @@ import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
 import {IOrder, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
+import {IOrderbook} from "../sockTrader/core/orderbook";
 
 /**
  * Strategy using simple moving average
@@ -46,5 +47,9 @@ export default class SimpleMovingAverage extends BaseStrategy {
             logger.info(candles[0].timestamp.format());
             return this.sell(this.pair, candles[0].close, 1);
         }
+    }
+
+    updateOrderbook(orderBook: IOrderbook): void {
+        // Ignore method
     }
 }
