@@ -33,7 +33,7 @@ export default (socket: Socket) => {
         const curProcess = creator.create(scriptPath, options);
 
         curProcess.on("message", event => {
-            if (!event.type) throw new Error("Event type is not correct. Expecting: { type: string, payload: any }");
+            if (!event || !event.type) throw new Error("Event is not correct. Expecting: { type: string, payload: any }");
 
             socket.emit(event.type, event.payload);
         });
