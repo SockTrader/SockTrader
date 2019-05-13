@@ -1,0 +1,82 @@
+/* tslint:disable */
+import "jest";
+import CandleNormalizer from "../../sockTrader/data/candleNormalizer";
+import {DataFrame} from "data-forge";
+import moment = require("moment");
+
+function createNormalizer() {
+    return new CandleNormalizer("./coinbase_btcusd_1h.csv", {symbol: ["BTC", "USD"], name: "Bitcoin"}, () => {
+        return new DataFrame();
+    });
+}
+
+let normalizer = createNormalizer();
+beforeEach(() => {
+    normalizer = createNormalizer();
+});
+
+describe("Candle normalizer", () => {
+    test("Should determine smallest interval in a series of timestamps", async () => {
+        const result = normalizer.determineCandleInterval(
+            new DataFrame([
+                {timestamp: moment("2019-05-06T10:00:00.000Z")},
+                {timestamp: moment("2019-05-06T02:00:00.000Z")},
+                {timestamp: moment("2019-05-06T01:00:00.000Z")},
+            ]),
+        );
+
+        expect(result).toEqual(60);
+    });
+
+    test("Should determine price decimals in a series of candles", async () => {
+        const result = normalizer.determinePriceDecimals(
+            new DataFrame([
+                {
+                    "high": 5663.99,
+                    "low": 5639.25,
+                    "open": 5658.11,
+                    "close": 5647.88,
+                },
+                {
+                    "high": 5660,
+                    "low": 5608.04,
+                    "open": 5627.37,
+                    "close": 5658.11,
+                },
+                {
+                    "high": 5638,
+                    "low": 5613.12,
+                    "open": 5621.01,
+                    "close": 5627.3766, // <= number with highest precision
+                },
+            ]),
+        );
+
+        expect(result).toEqual(10000);
+    });
+
+    test("Should determine amount of volume decimals in a series of candles", async () => {
+        const result = normalizer.determineVolumeDecimals(
+            new DataFrame([
+                {volume: 898519.67},
+                {volume: 1487317.62},
+                {volume: 287000.12},
+            ]),
+        );
+
+        expect(result).toEqual(2);
+    });
+
+    // @TODO fix test!
+    test.skip("Should determine amount of volume decimals in a series of candles", async () => {
+        const result = normalizer.determineVolumeDecimals(
+            new DataFrame([
+                {volume: 898519.67},
+                {volume: 1487317.623},
+                {volume: 287000},
+            ]),
+        );
+
+        expect(result).toEqual(3);
+    });
+});
