@@ -1,6 +1,6 @@
 /* tslint:disable */
 import "jest";
-import {dataListHandler} from "../../sockTrader/web/controllers/data";
+import {dataHandler, dataListHandler} from "../../sockTrader/web/controllers/data";
 
 jest.mock("fs");
 
@@ -15,12 +15,27 @@ afterEach(() => {
 
 const mockResponse = () => {
     const res: any = {};
-    res.send = jest.fn().mockReturnValue(res);
+    res.send = jest.fn();
+    res.sendFile = jest.fn();
     return res;
 };
 
-describe("strategy listing", () => {
-    test("Should return list of all strategy files in base64 encoded format", async () => {
+describe("Send candle data of a normalized candle file", () => {
+    test("Should return all data in a normalized candle file", async () => {
+        const isFile = jest.fn(() => true);
+        require("fs").__setStatMock({isFile});
+
+        const res = mockResponse();
+        const req = {query: {file: "Y29pbmJhc2VfYnRjdXNkXzFo"}};
+        await dataHandler(req as any, res, null);
+
+        expect(res.sendFile).toHaveBeenLastCalledWith(expect.stringContaining("coinbase_btcusd_1h.json"));
+    });
+});
+
+describe("List all normalized candle files", () => {
+
+    test("Should return list of all candle files in base64 encoded format", async () => {
         const res = mockResponse();
         await dataListHandler(null, res, null);
 
