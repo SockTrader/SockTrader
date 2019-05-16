@@ -56,27 +56,16 @@ describe("Candle normalizer", () => {
     });
 
     test("Should determine amount of volume decimals in a series of candles", async () => {
-        const result = normalizer.determineVolumeDecimals(
-            new DataFrame([
-                {volume: 898519.67},
-                {volume: 1487317.62},
-                {volume: 287000.12},
-            ]),
-        );
+        expect(normalizer.determineVolumeDecimals(new DataFrame([
+            {volume: 1.60},
+            {volume: 2.62},
+            {volume: 3.12},
+        ]))).toEqual(2);
 
-        expect(result).toEqual(2);
-    });
-
-    // @TODO fix test!
-    test.skip("Should determine amount of volume decimals in a series of candles", async () => {
-        const result = normalizer.determineVolumeDecimals(
-            new DataFrame([
-                {volume: 898519.67},
-                {volume: 1487317.623},
-                {volume: 287000},
-            ]),
-        );
-
-        expect(result).toEqual(3);
+        expect(normalizer.determineVolumeDecimals(new DataFrame([
+            {volume: 0.67},
+            {volume: 10.623},
+            {volume: 20},
+        ]))).toEqual(3);
     });
 });

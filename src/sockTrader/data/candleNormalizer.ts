@@ -76,7 +76,7 @@ export default class CandleNormalizer {
 
     determineVolumeDecimals(df: IDataFrame<number, any>): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
-        return df.aggregate(0, ((accum, candle) => Math.max(0, getDecimals(candle.volume, ds))));
+        return df.aggregate(0, ((accum, candle) => Math.max(accum, getDecimals(candle.volume, ds))));
     }
 
     /**
