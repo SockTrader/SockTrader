@@ -3,7 +3,7 @@ import "jest";
 import CandleNormalizer from "../../sockTrader/data/candleNormalizer";
 import {DataFrame} from "data-forge";
 import {IAsyncFileReader} from "data-forge-fs";
-import moment = require("moment");
+import moment from "moment";
 
 function createNormalizer() {
     return new CandleNormalizer("./coinbase_btcusd_1h.csv", {symbol: ["BTC", "USD"], name: "Bitcoin"}, () => {
