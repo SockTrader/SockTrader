@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'macOS-10.14'
 
 steps:
 - task: NodeTool@0
@@ -17,5 +17,5 @@ steps:
 
 - script: |
     npm install
-    npm test
+    npm run stryker
   displayName: 'npm install and test'
