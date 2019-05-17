@@ -1,7 +1,6 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
 import moment from "moment";
-import {Error} from "tslint/lib/error";
 import {ICandle} from "../core/candleCollection";
 import {Pair} from "../core/types/pair";
 import {getDecimals} from "./utils";

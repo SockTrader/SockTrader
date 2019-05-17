@@ -2,6 +2,7 @@
 import "jest";
 import CandleNormalizer from "../../sockTrader/data/candleNormalizer";
 import {DataFrame} from "data-forge";
+import {IAsyncFileReader} from "data-forge-fs";
 import moment = require("moment");
 
 function createNormalizer() {
@@ -67,5 +68,21 @@ describe("Candle normalizer", () => {
             {volume: 10.623},
             {volume: 20},
         ]))).toEqual(3);
+    });
+
+    test("Should parse a file reader according to the given extension", async () => {
+        const mockFileReader = {
+            parseJSON: jest.fn(() => new Promise((resolve) => resolve(new DataFrame([1, 2, 3])))),
+            parseCSV: jest.fn(() => new Promise((resolve) => resolve(new DataFrame([4, 5, 6])))),
+        } as IAsyncFileReader;
+
+        CandleNormalizer.parseFileReader(mockFileReader, "json");
+        expect(mockFileReader.parseJSON).toBeCalledTimes(1);
+
+        CandleNormalizer.parseFileReader(mockFileReader, "csv");
+        expect(mockFileReader.parseCSV).toHaveBeenLastCalledWith({dynamicTyping: true});
+        expect(mockFileReader.parseCSV).toBeCalledTimes(1);
+
+        expect(CandleNormalizer.parseFileReader(mockFileReader, "exe")).rejects.toThrow("File extension is not valid! Expecting a CSV or JSON file.");
     });
 });
