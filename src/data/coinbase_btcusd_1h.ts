@@ -21,7 +21,7 @@ export default new CandleNormalizer(PATH, {symbol: ["BTC", "USD"], name: "Bitcoi
                 "Volume USD": "volume",
             })
             .select(row => {
-                row.timestamp = moment(row.timestamp, "YYYY-MM-DD hh-A");
+                row.timestamp = moment.utc(row.timestamp, "YYYY-MM-DD hh-A");
                 return row;
             });
     },
