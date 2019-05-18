@@ -86,10 +86,10 @@ export default class CandleNormalizer {
         const segs = this.filePath.split(".");
         const ext = segs[segs.length - 1].toLowerCase();
 
-        const dataFrame: IDataFrame<number, any> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
+        const dataFrame: IDataFrame<number, ICandle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
 
         return {
-            candles: dataFrame.toArray(),
+            candles: dataFrame.orderBy(row => row.timestamp).toArray(),
             name: this.candleNormalizerConfig.name,
             symbol: this.candleNormalizerConfig.symbol,
             volumeDecimals: this.determineVolumeDecimals(dataFrame),
