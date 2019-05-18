@@ -89,7 +89,7 @@ export default class CandleNormalizer {
         const dataFrame: IDataFrame<number, ICandle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
 
         return {
-            candles: dataFrame.orderBy(row => row.timestamp).toArray(),
+            candles: dataFrame.orderByDescending(row => row.timestamp).toArray(),
             name: this.candleNormalizerConfig.name,
             symbol: this.candleNormalizerConfig.symbol,
             volumeDecimals: this.determineVolumeDecimals(dataFrame),
