@@ -6,19 +6,23 @@ import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from ".
 
 describe("IPC Reporter", () => {
     test("Should forward bot progress events via IPC", async () => {
-        const mockSend = IPCReporter["send"] = jest.fn(() => true);
         const reporter = new IPCReporter();
+
+        // @ts-ignore
+        const spy = jest.spyOn(reporter, "send");
         await reporter.reportBotProgress({current: 10, length: 100, type: "progress"});
 
-        expect(mockSend.mock.calls[0]).toEqual([{
+        expect(spy.mock.calls[0]).toEqual([{
             type: "status_report",
             payload: {current: 10, length: 100, type: "progress"},
         }]);
     });
 
     test("Should forward order events via IPC", async () => {
-        const mockSend = IPCReporter["send"] = jest.fn(() => true);
         const reporter = new IPCReporter();
+
+        // @ts-ignore
+        const spy = jest.spyOn(reporter, "send");
         await reporter.reportOrder({
             createdAt: moment(),
             id: "Order123",
@@ -33,7 +37,7 @@ describe("IPC Reporter", () => {
             updatedAt: moment(),
         });
 
-        expect(mockSend).toBeCalledWith(expect.objectContaining({
+        expect(spy).toBeCalledWith(expect.objectContaining({
             type: "order_report",
             payload: {
                 pair: ["BTC", "USD"],
@@ -49,5 +53,16 @@ describe("IPC Reporter", () => {
                 createdAt: expect.any(moment),
             },
         }));
+    });
+
+    test("Should send event via IPC", async () => {
+        const spy = jest.spyOn(process, "send").mockImplementation(() => true);
+        const reporter = new IPCReporter();
+        await reporter["send"]({type: "event_type", payload: "payload"});
+
+        expect(spy.mock.calls[0]).toEqual([{
+            type: "event_type",
+            payload: "payload",
+        }]);
     });
 });
