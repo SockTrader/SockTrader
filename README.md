@@ -149,7 +149,7 @@ Or you can also support us by:
 - Test edge case scenarios (possible rounding issues)
 - Test altcoin trading and improve if needed
 - Add basic backtest analyzers
-- Dashboard internalization
+- Dashboard internationalization
 - Improve dashboard architecture
 - Increase test coverage and test quality
 - Add more and better documentation
