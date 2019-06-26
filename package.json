@@ -115,7 +115,7 @@
     "cron": "^1.7.1",
     "cron-parser": "^2.12.0",
     "data-forge": "^1.7.2",
-    "data-forge-fs": "0.0.6",
+    "data-forge-fs": "0.0.7",
     "decimal.js-light": "^2.5.0",
     "express": "^4.17.1",
     "fs-extra": "^8.0.1",
@@ -129,7 +129,7 @@
     "numeral": "^2.0.6",
     "ora": "^3.4.0",
     "socket.io": "^2.2.0",
-    "technicalindicators": "^2.0.8",
+    "technicalindicators": "^2.0.9",
     "typescript": "^3.5.2",
     "websocket": "^1.0.28",
     "winston": "^3.2.1",
@@ -153,7 +153,7 @@
     "@types/lodash.uniqby": "^4.7.6",
     "@types/lodash.uniqwith": "^4.5.6",
     "@types/nanoid": "^2.0.0",
-    "@types/node": "^12.0.8",
+    "@types/node": "^12.0.10",
     "@types/numeral": "0.0.25",
     "@types/sinon": "^7.0.13",
     "@types/socket.io": "^2.1.2",
@@ -161,7 +161,7 @@
     "@types/yargs": "^13.0.0",
     "chai": "^4.2.0",
     "codecov": "^3.5.0",
-    "concurrently": "^4.1.0",
+    "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
@@ -173,6 +173,6 @@
     "sinon": "^7.3.2",
     "source-map-support": "^0.5.12",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.17.0"
+    "tslint": "^5.18.0"
   }
 }
