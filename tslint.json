@@ -26,6 +26,7 @@
     "space-within-parens": [true, 0],
     "object-literal-shorthand": true,
     "no-irregular-whitespace": true,
+    "member-ordering": false,
     "no-consecutive-blank-lines": true,
     "arrow-return-shorthand": true,
     "no-null-keyword": true,
