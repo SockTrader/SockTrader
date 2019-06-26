@@ -78,6 +78,18 @@ export default class CandleNormalizer {
         return df.aggregate(0, ((accum, candle) => Math.max(accum, getDecimals(candle.volume, ds))));
     }
 
+    validateColumns(df: IDataFrame<number, any>) {
+        const columnNames = df.getColumnNames();
+        const requiredColumns = ["timestamp", "open", "high", "low", "close", "volume"];
+
+        if (columnNames.some(r => requiredColumns.indexOf(r) < 0)) {
+            throw new Error(
+                "Columns of DataFrame are not valid! " +
+                "Expecting: 'open', 'high', 'low', 'close', 'timestamp', 'volume' as valid columns",
+            );
+        }
+    }
+
     /**
      * Actual parsing of file returning data
      * @returns {Promise<IDataFrame<number, any>>}
@@ -87,6 +99,8 @@ export default class CandleNormalizer {
         const ext = segs[segs.length - 1].toLowerCase();
 
         const dataFrame: IDataFrame<number, ICandle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
+
+        this.validateColumns(dataFrame);
 
         return {
             candles: dataFrame.orderByDescending(row => row.timestamp).toArray(),
