@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import path from "path";
+import util from "util";
 import CandleNormalizer from "./candleNormalizer";
 
 const resolver = (root: string) => (folder: string, file = "") => path.resolve(__dirname, root, folder, file);
@@ -24,12 +25,9 @@ export const normalizeDataFile = async (file: string): Promise<void> => await no
  * @param files
  */
 export async function normalizeDataFiles(files: string[]): Promise<void> {
-    files.forEach(async file => {
-        const ext = path.extname(file);
-        if (ext !== ".js") return;
-
+    for (const file of files) {
         try {
-            const baseFileName = path.basename(file, ext);
+            const baseFileName = path.basename(file, path.extname(file));
             const candleNormalizer: CandleNormalizer = (await import(buildPath("data", file))).default;
             const data = await normalizeCandles(candleNormalizer);
 
@@ -37,12 +35,16 @@ export async function normalizeDataFiles(files: string[]): Promise<void> {
         } catch (e) {
             console.error(e);
         }
-    });
+    }
 }
 
 /**
  * Normalizes all the files in the "build/data" folder
  */
 export async function normalizeDataFolder(): Promise<void> {
-    fs.readdir(buildPath("data"), async (err, files) => await normalizeDataFiles(files));
+    const readDir = util.promisify(fs.readdir);
+    const files = await readDir(buildPath("data")) as string[];
+    const jsFiles = files.filter(file => path.extname(file) === ".js");
+
+    return await normalizeDataFiles(jsFiles);
 }
