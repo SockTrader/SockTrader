@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run normalizer" type="NodeJSConfigurationType" path-to-js-file="build/sockTrader/data/normalize.js" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="Run normalizer" type="NodeJSConfigurationType" application-parameters="normalize" path-to-js-file="build/index.js" working-dir="$PROJECT_DIR$">
     <method v="2">
       <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tsconfig.json" />
     </method>
