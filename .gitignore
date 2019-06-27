@@ -1,6 +1,3 @@
-# Application start script
-src/index.ts
-
 # App configuration
 src/config.ts
 
