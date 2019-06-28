@@ -4,12 +4,14 @@ import yargs from "yargs";
 import {backtest} from "./sockTrader/cli/backtest";
 import {listCandles, listStrategies} from "./sockTrader/cli/directoryListing";
 import {normalize} from "./sockTrader/cli/normalize";
+import startWebServer from "./sockTrader/web/webServer";
 
 // tslint:disable-next-line:no-unused-expression
 yargs
     .usage("Usage: $0 <command>")
     .command(["list-strategies", "ls"], "list all available strategies", {}, listStrategies)
     .command(["list-candles", "lcf", "lc"], "list all available strategies", {}, listCandles)
+    .command(["web"], "start websocket server", {}, startWebServer)
     .command(["backtest", "bt"], "test a strategy on historical candle data", {
         candles: {
             alias: "C",
