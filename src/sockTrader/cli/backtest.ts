@@ -4,7 +4,7 @@ import {CandleInterval} from "../core/exchanges/hitBTC";
 import IPCReporter from "../core/reporters/IPCReporter";
 import {loadCandleFile, loadStrategy} from "./util";
 
-export async function backtest(args: any) {
+export async function startBacktest(args: any) {
     const {candles: strategyFilename, strategy: candleFilename} = args;
 
     try {

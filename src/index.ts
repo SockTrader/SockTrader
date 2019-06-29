@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import yargs from "yargs";
-import {backtest} from "./sockTrader/cli/backtest";
+import {startBacktest} from "./sockTrader/cli/backtest";
 import {listCandles, listStrategies} from "./sockTrader/cli/directoryListing";
+import {listExchanges} from "./sockTrader/cli/exchange";
+import {startLiveTrading} from "./sockTrader/cli/liveTrading";
 import {normalize} from "./sockTrader/cli/normalize";
 import startWebServer from "./sockTrader/web/webServer";
 
@@ -10,7 +12,8 @@ import startWebServer from "./sockTrader/web/webServer";
 yargs
     .usage("Usage: $0 <command>")
     .command(["list-strategies", "ls"], "list all available strategies", {}, listStrategies)
-    .command(["list-candles", "lcf", "lc"], "list all available strategies", {}, listCandles)
+    .command(["list-candles", "lcf", "lc"], "list all available candle files", {}, listCandles)
+    .command(["list-exchanges", "le"], "list all available exchanges and its config", {}, listExchanges)
     .command(["web"], "start websocket server", {}, startWebServer)
     .command(["backtest", "bt"], "test a strategy on historical candle data", {
         candles: {
@@ -25,7 +28,7 @@ yargs
             string: true,
             required: true,
         },
-    }, backtest)
+    }, startBacktest)
     .command(["live"], "start trading a strategy on a remote exchange", {
         strategy: {
             alias: "S",
