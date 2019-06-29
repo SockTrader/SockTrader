@@ -38,14 +38,6 @@ export default class LiveTrader extends SockTrader {
             this.eventsBound = true;
         }
 
-        // @TODO cannot connect multiple times to the same exchange
-        // -> start function might be called multiple times by the dashboard?
         this.exchange.connect();
     }
-
-    // @TODO exchange candles should be forwarded to frontend somehow
-    // private bindExchangeToSocketServer() {
-    //     this.exchange.on("app.report", (order: IOrder) => this.sendToWebServer("REPORT", order));
-    //     this.exchange.on("app.updateCandles", candles => this.sendToWebServer("CANDLE_UPDATE", candles));
-    // }
 }

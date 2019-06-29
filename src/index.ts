@@ -36,9 +36,24 @@ yargs
             string: true,
             required: true,
         },
-    }, (args: any) => {
-        // @TODO finish live trading
-    })
+        pair: {
+            alias: "P",
+            describe: "trading pair that will be traded on the exchange",
+            array: true,
+            required: true,
+        },
+        exchange: {
+            alias: "E",
+            describe: "exchange on which we will be trading",
+            string: true,
+            required: true,
+        },
+        force: {
+            alias: "f",
+            describe: "we won't ask for confirmation",
+            boolean: true,
+        },
+    }, startLiveTrading)
     .command(["normalize", "norm", "n"], "prepare static data files for backtesting", {}, normalize)
     .demandCommand(1, "")
     .argv;
