@@ -46,7 +46,7 @@ export async function startLiveTrading(args: any) {
         const liveTrader = new LiveTrader()
             .addStrategy({
                 strategy,
-                pair: ["BTC", "USD"],
+                pair: [tradingPair[0].toUpperCase(), tradingPair[1].toUpperCase()],
                 interval: CandleInterval.ONE_HOUR, // @TODO make interval dynamic
             });
 

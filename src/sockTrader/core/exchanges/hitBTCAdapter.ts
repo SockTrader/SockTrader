@@ -6,7 +6,7 @@ import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IResponseMapper} from "./baseExchange";
+import BaseExchange, {IResponseAdapter} from "./baseExchange";
 import {CandleInterval} from "./hitBTC";
 
 export interface IHitBTCOrderbookResponse {
@@ -82,12 +82,12 @@ export interface IHitBTCReportResponse {
 }
 
 /**
- * The HitBTCMapper maps incoming api events and wraps them with additional checks/logic
+ * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
  */
-export default class HitBTCMapper extends EventEmitter implements IResponseMapper {
+export default class HitBTCAdapter extends EventEmitter implements IResponseAdapter {
 
     /**
-     * Create a new HitBTCMapper
+     * Create a new HitBTCAdapter
      * @param {BaseExchange} exchange the exchange to map events from
      */
     constructor(private exchange: BaseExchange) {
@@ -104,7 +104,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
     }
 
     /**
-     * Removes HitBTCMapper listeners
+     * Removes HitBTCAdapter listeners
      */
     destroy(): void {
         this.removeAllListeners();
@@ -178,7 +178,7 @@ export default class HitBTCMapper extends EventEmitter implements IResponseMappe
                 reportType: report.reportType as ReportType,
                 side: report.side as OrderSide,
                 status: report.status as OrderStatus,
-                pair: this.exchange.currencies[report.symbol].id, // @TODO Currency pair could be undefined in HitBTCMapper
+                pair: this.exchange.currencies[report.symbol].id, // @TODO Currency pair could be undefined in HitBTCAdapter
                 timeInForce: report.timeInForce as OrderTimeInForce,
                 type: report.type as OrderType,
                 updatedAt: moment(report.updatedAt),

@@ -1,20 +1,20 @@
 /* tslint:disable */
 import "jest";
 import moment from "moment";
-import HitBTCMapper, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCMapper";
+import HitBTCAdapter, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
 
 let exc = new HitBTC();
-let mapper = new HitBTCMapper(exc);
+let adapter = new HitBTCAdapter(exc);
 
 beforeEach(() => {
     exc = new HitBTC();
-    mapper = new HitBTCMapper(exc);
+    adapter = new HitBTCAdapter(exc);
 });
 
 describe("mapCandles", () => {
     it("Should map exchange candles to internal ICandle array", () => {
-        const candles = mapper["mapCandles"]({
+        const candles = adapter["mapCandles"]({
             method: "", jsonrpc: "",
             params: {
                 period: "H1", symbol: "BTCUSD",
@@ -44,7 +44,7 @@ describe("onUpdateCandles", () => {
         exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
         exc.onUpdateCandles = onUpdateCandles;
 
-        mapper.emit("api.updateCandles", {
+        adapter.emit("api.updateCandles", {
             params: {period: "H1", symbol: "BTCUSD", data: []},
             method: "",
             jsonrpc: "",
@@ -62,7 +62,7 @@ describe("onReceive", () => {
     it("Should re-emit exchange events as API events", async () => {
         expect.assertions(1);
 
-        mapper.on("api.event_method", args => {
+        adapter.on("api.event_method", args => {
             expect(args).toStrictEqual({
                 id: "event_id",
                 method: "event_method",
@@ -70,7 +70,7 @@ describe("onReceive", () => {
             });
         });
 
-        mapper.onReceive({
+        adapter.onReceive({
             type: "utf8",
             utf8Data: JSON.stringify({
                 method: "event_method",
@@ -81,13 +81,13 @@ describe("onReceive", () => {
     });
 
     it("Should throw when exchange emits non utf8 data", () => {
-        expect(() => mapper.onReceive({type: "not_utf8"})).toThrowError("Response is not UTF8!");
+        expect(() => adapter.onReceive({type: "not_utf8"})).toThrowError("Response is not UTF8!");
     });
 });
 
 describe("destroy", () => {
     it("Should clean-up all bound event listeners", async () => {
-        expect(mapper.eventNames()).toEqual([
+        expect(adapter.eventNames()).toEqual([
             "api.snapshotCandles",
             "api.updateCandles",
             "api.snapshotOrderbook",
@@ -97,8 +97,8 @@ describe("destroy", () => {
             "api.getSymbols",
         ]);
 
-        mapper.destroy();
-        expect(mapper.eventNames()).toEqual([]);
+        adapter.destroy();
+        expect(adapter.eventNames()).toEqual([]);
     });
 });
 
@@ -108,7 +108,7 @@ describe("onUpdateOrderbook", () => {
         exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
         exc.onUpdateOrderbook = onUpdateOrderbook;
 
-        mapper["onUpdateOrderbook"]({
+        adapter["onUpdateOrderbook"]({
             jsonrpc: "2.0",
             method: "string",
             params: {
@@ -135,10 +135,10 @@ describe("onLogin", () => {
         const isReadySpy = jest.spyOn(exc, "isReady");
         expect(exc["isAuthenticated"]).toStrictEqual(false);
 
-        mapper["onLogin"]({id: "123", jsonrpc: "2.0", result: false});
+        adapter["onLogin"]({id: "123", jsonrpc: "2.0", result: false});
         expect(exc["isAuthenticated"]).toStrictEqual(false);
 
-        mapper["onLogin"]({id: "123", jsonrpc: "2.0", result: true});
+        adapter["onLogin"]({id: "123", jsonrpc: "2.0", result: true});
         expect(exc["isAuthenticated"]).toStrictEqual(true);
         expect(isReadySpy).toBeCalledTimes(2);
 
@@ -148,7 +148,7 @@ describe("onLogin", () => {
 describe("onGetSymbols", () => {
     it("Should load currency configuration for exchange", () => {
         const currenciesLoadedSpy = jest.spyOn(exc, "onCurrenciesLoaded");
-        mapper["onGetSymbols"]({
+        adapter["onGetSymbols"]({
             id: "123",
             jsonrpc: "2.0",
             result: [{
@@ -182,7 +182,7 @@ describe("onReport", () => {
             },
         };
 
-        mapper["onReport"]({
+        adapter["onReport"]({
             jsonrpc: "2.0",
             method: "method",
             params: [{

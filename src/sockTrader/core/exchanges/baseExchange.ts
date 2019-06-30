@@ -10,7 +10,7 @@ import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import {IExchange} from "./exchangeInterface";
 
-export interface IResponseMapper {
+export interface IResponseAdapter {
     onReceive(msg: IMessage): void;
 }
 

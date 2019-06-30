@@ -179,7 +179,7 @@ describe("onConnect", () => {
         const onReceiveMock = jest.fn();
         const loginMock = jest.fn();
         exchange.login = loginMock;
-        exchange.mapper.onReceive = onReceiveMock;
+        exchange.adapter.onReceive = onReceiveMock;
 
         const connectionMock = new EventEmitter();
         exchange["onConnect"](connectionMock as connection);

@@ -6,8 +6,8 @@ import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IOrderbookData, IResponseMapper} from "./baseExchange";
-import HitBTCMapper from "./hitBTCMapper";
+import BaseExchange, {IOrderbookData, IResponseAdapter} from "./baseExchange";
+import HitBTCAdapter from "./hitBTCAdapter";
 
 export const CandleInterval: IIntervalDict = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -28,7 +28,7 @@ export const CandleInterval: IIntervalDict = {
  */
 export default class HitBTC extends BaseExchange {
 
-    readonly mapper: IResponseMapper = new HitBTCMapper(this);
+    readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
     private static instance?: HitBTC;
     private sequence = 0;
 
@@ -132,18 +132,18 @@ export default class HitBTC extends BaseExchange {
     }
 
     subscribeCandles = (pair: Pair, interval: ICandleInterval): void => this.send("subscribeCandles", {
-        symbol: pair,
+        symbol: pair.join(""),
         period: interval.code,
     })
 
-    subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair});
+    subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair.join("")});
 
     subscribeReports = (): void => this.send("subscribeReports");
 
     protected onConnect(conn: connection): void {
         super.onConnect(conn);
 
-        conn.on("message", (data: IMessage) => this.mapper.onReceive(data));
+        conn.on("message", (data: IMessage) => this.adapter.onReceive(data));
 
         this.loadCurrencies();
 

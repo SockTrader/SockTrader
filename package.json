@@ -12,9 +12,8 @@
     "web-dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/index.js web\"",
     "web": "npm run build && concurrently -c \"bgBlue.bold,bgBlack.bold\" -n webserver,compiler \"node ./build/index.js web\" \"tsc -w\"",
     "build": "tsc",
-    "build-es5": "tsc --target \"ES5\"",
-    "docs": "esdoc",
     "lint": "tslint --fix --project ./",
+    "socktrader": "npm run build && node ./build/index.js",
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
   "jest": {
@@ -58,55 +57,6 @@
       "logs/*"
     ],
     "delay": "2500"
-  },
-  "esdoc": {
-    "source": "./src/core",
-    "destination": "./docs",
-    "plugins": [
-      {
-        "name": "esdoc-typescript-plugin",
-        "option": {
-          "enable": true
-        }
-      },
-      {
-        "name": "esdoc-standard-plugin",
-        "option": {
-          "brand": {
-            "logo": "./docs/SockTraderLogo.png",
-            "title": "SockTrader",
-            "description": "Websocket based trading bot for cryptocurrencies",
-            "repository": "https://github.com/SockTrader/SockTrader",
-            "site": "https://socktrader.github.io/SockTrader/"
-          },
-          "test": {
-            "source": "./src/tests",
-            "interfaces": [
-              "describe",
-              "it",
-              "context",
-              "suite",
-              "test"
-            ],
-            "includes": [
-              "(spec|Spec|test|Test)\\.ts$"
-            ],
-            "excludes": [
-              "\\.config\\.ts$"
-            ]
-          }
-        }
-      },
-      {
-        "name": "esdoc-node"
-      },
-      {
-        "name": "esdoc-ecmascript-proposal-plugin",
-        "option": {
-          "all": true
-        }
-      }
-    ]
   },
   "dependencies": {
     "boom": "^7.3.0",
@@ -165,11 +115,6 @@
     "codecov": "^3.5.0",
     "concurrently": "^4.1.1",
     "cross-env": "^5.2.0",
-    "esdoc": "^1.1.0",
-    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
-    "esdoc-node": "^1.0.4",
-    "esdoc-standard-plugin": "^1.0.0",
-    "esdoc-typescript-plugin": "^1.0.1",
     "jest": "^24.8.0",
     "pre-commit": "^1.2.2",
     "sinon": "^7.3.2",
