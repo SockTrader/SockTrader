@@ -44,14 +44,14 @@ describe("subscribeReports", () => {
 describe("subscribeOrderbook", () => {
     test("Should send out a subscribe to orderbook events", () => {
         exchange.subscribeOrderbook(pair);
-        expect(sendMock).toBeCalledWith("subscribeOrderbook", expect.objectContaining({symbol: pair}));
+        expect(sendMock).toBeCalledWith("subscribeOrderbook", expect.objectContaining({symbol: "BTCUSD"}));
     });
 });
 
 describe("subscribeCandles", () => {
     test("Should send out subscribe to candle events", () => {
         exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
-        expect(sendMock).toBeCalledWith("subscribeCandles", expect.objectContaining({period: "M5", symbol: pair}));
+        expect(sendMock).toBeCalledWith("subscribeCandles", expect.objectContaining({period: "M5", symbol: "BTCUSD"}));
     });
 });
 
