@@ -7,7 +7,7 @@ import {IOrderbookData} from "../../sockTrader/core/exchanges/baseExchange";
 import Orderbook from "../../sockTrader/core/orderbook";
 import {Pair} from "../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
-import {IOrder} from "../../sockTrader/core/types/order";
+import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
 import CandleCollection, {ICandle} from "../../sockTrader/core/candleCollection";
 
 const pair: Pair = ["BTC", "USD"];
@@ -67,11 +67,7 @@ describe("login", () => {
 describe("onUpdateCandles", () => {
     test("Should update a candle collection for a trading pair with method set", () => {
         const collection = new CandleCollection(CandleInterval.FIVE_MINUTES);
-        const getCollectionMock = jest.fn().mockImplementation(() => {
-            return collection;
-        });
-
-        exchange.getCandleCollection = getCollectionMock;
+        exchange.getCandleCollection = jest.fn(() => collection);
         const set = spyOn(collection, "set");
 
         const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];
@@ -88,9 +84,7 @@ describe("onUpdateOrderbook", () => {
 
         const orderbook: Orderbook = new Orderbook(pair, 6);
         orderbook.setOrders = jest.fn();
-        const getOrderbookMock = jest.fn().mockImplementation(() => {
-            return orderbook;
-        });
+        const getOrderbookMock = jest.fn(() => orderbook);
         exchange.getOrderbook = getOrderbookMock;
 
         const ob: IOrderbookData = {
@@ -136,14 +130,8 @@ describe("cancelOrder", () => {
 
 describe("adjustOrder", () => {
     it("Should adjust existing orders", () => {
-        const adjustAllowedMock = jest.fn().mockImplementation(() => {
-            return true;
-        });
-
-        exchange["isAdjustingOrderAllowed"] = adjustAllowedMock;
-        exchange.generateOrderId = jest.fn().mockImplementation(() => {
-            return "neworderid";
-        });
+        exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
+        exchange.generateOrderId = jest.fn(() => "neworderid");
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
         expect(sendMock).toBeCalledWith("cancelReplaceOrder", expect.objectContaining({
@@ -156,21 +144,21 @@ describe("adjustOrder", () => {
     });
 });
 
-// TODO fix generate method
-// describe("createOrder", () => {
-//     it("Should create a new order", () => {
-//         const orderId = exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
-//
-//         expect(sendMock).toBeCalledWith("newOrder", expect.objectContaining({
-//             price: 10,
-//             quantity: 1,
-//             side: "buy",
-//             symbol: pair,
-//             type: "limit",
-//             clientOrderId: orderId,
-//         }));
-//     });
-// });
+describe("createOrder", () => {
+    it("Should create a new order", () => {
+        exchange.generateOrderId = jest.fn(() => "FAKE_ORDER_ID");
+        exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
+
+        expect(sendMock).toBeCalledWith("newOrder", expect.objectContaining({
+            price: 10,
+            quantity: 1,
+            side: "buy",
+            symbol: pair,
+            type: "limit",
+            clientOrderId: "FAKE_ORDER_ID",
+        }));
+    });
+});
 
 describe("onConnect", () => {
     test("Should initialize when exchange is connected", () => {

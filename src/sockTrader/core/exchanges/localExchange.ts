@@ -165,7 +165,8 @@ export default class LocalExchange extends BaseExchange {
      * @param oldOrder
      */
     private isOrderAllowed(order: IOrder, oldOrder?: IOrder): boolean {
-        const isAllowed = order.side === OrderSide.BUY ? this.wallet.isBuyAllowed : this.wallet.isSellAllowed;
-        return isAllowed.bind(this.wallet)(order, oldOrder);
+        return order.side === OrderSide.BUY
+            ? this.wallet.isBuyAllowed(order, oldOrder)
+            : this.wallet.isSellAllowed(order, oldOrder);
     }
 }

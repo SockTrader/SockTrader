@@ -25,10 +25,7 @@ beforeEach(() => {
     exchange = new LocalExchange(wallet);
     exchange.send = sendMock;
     exchange.emit = emitMock;
-    const adjustAllowedMock = jest.fn().mockImplementation(() => {
-        return true;
-    });
-    exchange["isAdjustingOrderAllowed"] = adjustAllowedMock;
+    exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
 });
 
 afterEach(() => {
@@ -59,24 +56,21 @@ describe("adjustOrder", () => {
         exchange.onReport = onReportMock;
         const timeStamp: Moment = moment();
         exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: timeStamp} as ICandle;
-        const generateOrderIdMock = jest.fn().mockImplementation(() => {
-            return "12345";
-        });
+        const generateOrderIdMock = jest.fn(() => "12345");
         exchange.generateOrderId = generateOrderIdMock;
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
         expect(setOrderInProgressMock).toBeCalledWith("123");
-        expect(onReportMock).toBeCalledWith(expect.objectContaining(
-            {
-                pair: pair,
-                id: "12345",
-                updatedAt: timeStamp,
-                type: OrderType.LIMIT,
-                originalId: "123",
-                quantity: 0.5,
-                price: 0.002,
-                reportType: ReportType.REPLACED,
-            }));
+        expect(onReportMock).toBeCalledWith(expect.objectContaining({
+            pair: pair,
+            id: "12345",
+            updatedAt: timeStamp,
+            type: OrderType.LIMIT,
+            originalId: "123",
+            quantity: 0.5,
+            price: 0.002,
+            reportType: ReportType.REPLACED,
+        }));
         expect(generateOrderIdMock).toBeCalledWith(pair);
 
     });
@@ -99,17 +93,13 @@ describe("createOrder", () => {
     test("Should create a new order", () => {
         const timeStamp: Moment = moment();
         exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: timeStamp} as ICandle;
-        const isOrderAllowedMock = jest.fn().mockImplementation(() => {
-            return true;
-        });
+        const isOrderAllowedMock = jest.fn(() => true);
         exchange["isOrderAllowed"] = isOrderAllowedMock;
         const onReportMock = jest.fn();
         exchange.onReport = onReportMock;
         const setOrderInProgressMock = jest.fn();
         exchange["setOrderInProgress"] = setOrderInProgressMock;
-        const generateOrderIdMock = jest.fn().mockImplementation(() => {
-            return "12345";
-        });
+        const generateOrderIdMock = jest.fn(() => "12345");
         exchange.generateOrderId = generateOrderIdMock;
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
@@ -264,15 +254,22 @@ describe("processOpenOrders", () => {
     });
 });
 
-// TODO fix test isOrderAllowed
-// describe("isOrderAllowed", () => {
-//     test("Should check buy allowed on wallet", () => {
-//         const isBuyAllowedMock = jest.fn();
-//         const bindMock = jest.fn();
-//         isBuyAllowedMock.bind = bindMock;
-//         exchange["wallet"]["isBuyAllowed"] = isBuyAllowedMock;
-//
-//         const actualBuyAllowed = exchange["isOrderAllowed"]({side: OrderSide.BUY} as IOrder);
-//         expect(bindMock).toBeCalledWith(exchange["wallet"]);
-//     });
-// });
+describe("isOrderAllowed", () => {
+    test("Should check buy allowed on wallet", () => {
+        const isBuyAllowedMock = jest.fn(() => false);
+        exchange["wallet"]["isBuyAllowed"] = isBuyAllowedMock;
+
+        const actualBuyAllowed = exchange["isOrderAllowed"]({side: OrderSide.BUY} as IOrder);
+        expect(actualBuyAllowed).toBe(false);
+        expect(isBuyAllowedMock).toBeCalledWith({side: OrderSide.BUY}, undefined);
+    });
+
+    test("Should check sell allowed on wallet", () => {
+        const isSellAllowedMock = jest.fn(() => true);
+        exchange["wallet"]["isSellAllowed"] = isSellAllowedMock;
+
+        const actualBuyAllowed = exchange["isOrderAllowed"]({side: OrderSide.SELL} as IOrder);
+        expect(actualBuyAllowed).toBe(true);
+        expect(isSellAllowedMock).toBeCalledWith({side: OrderSide.SELL}, undefined);
+    });
+});
