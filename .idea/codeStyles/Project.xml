@@ -1,5 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <option name="FORMATTER_TAGS_ENABLED" value="true" />
     <AndroidXmlCodeStyleSettings>
       <option name="USE_CUSTOM_SETTINGS" value="true" />
     </AndroidXmlCodeStyleSettings>
