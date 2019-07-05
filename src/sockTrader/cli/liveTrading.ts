@@ -27,9 +27,9 @@ function createExchangeByName(exchangeName: string): IExchange | undefined {
 }
 
 export async function startLiveTrading(args: any) {
-    const {strategy: strategyFilename, pair: tradingPair, exchange, force} = args;
+    const {strategy, pair, paper, exchange, force} = args;
 
-    if (tradingPair.length !== 2) {
+    if (pair.length !== 2) {
         throw new Error("The 'pair' argument should have exactly 2 values. Ex: --pair BTC USD");
     }
 
@@ -41,12 +41,12 @@ export async function startLiveTrading(args: any) {
     try {
         console.log("Enjoy trading! Hold on while we're preparing for a LIVE trading session.");
 
-        const {default: strategy} = await loadStrategy(strategyFilename);
+        const {default: strategyFile} = await loadStrategy(strategy);
 
-        const liveTrader = new LiveTrader()
+        const liveTrader = new LiveTrader(paper)
             .addStrategy({
-                strategy,
-                pair: [tradingPair[0].toUpperCase(), tradingPair[1].toUpperCase()],
+                strategy: strategyFile,
+                pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],
                 interval: CandleInterval.ONE_HOUR, // @TODO make interval dynamic
             });
 

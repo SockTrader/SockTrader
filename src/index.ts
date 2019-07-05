@@ -53,6 +53,11 @@ yargs
             describe: "we won't ask for confirmation",
             boolean: true,
         },
+        paper: {
+            alias: "pt",
+            describe: "run strategy with live data without spending money",
+            boolean: true,
+        },
     }, startLiveTrading)
     .command(["normalize", "norm", "n"], "prepare static data files for backtesting", {}, normalize)
     .demandCommand(1, "")

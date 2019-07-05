@@ -1,11 +1,17 @@
 import {IExchange} from "../exchanges/exchangeInterface";
+import BaseStrategy, {IAdjustSignal, ISignal} from "../strategy/baseStrategy";
 import SockTrader from "./sockTrader";
+import logger from "../logger";
 
 /**
  * The LiveTrader enables you to run your strategy against
  * a live environment on an exchange
  */
 export default class LiveTrader extends SockTrader {
+
+    constructor(private paperTrading = false) {
+        super();
+    }
 
     /**
      * Adds an exchange
@@ -16,6 +22,13 @@ export default class LiveTrader extends SockTrader {
         this.exchange = exchange;
 
         return this;
+    }
+
+    protected bindStrategyToExchange(strategy: BaseStrategy): void {
+        if (!this.paperTrading) return super.bindStrategyToExchange(strategy);
+
+        strategy.on("app.adjustOrder", (adjustSignal: IAdjustSignal) => logger.info(`[PT] ADJUST: ${adjustSignal}`));
+        strategy.on("app.signal", (signal: ISignal) => logger.info(`[PT] ORDER: ${signal}`));
     }
 
     async start(): Promise<void> {
