@@ -14,7 +14,7 @@ import {
     OrderType,
     ReportType,
 } from "../../sockTrader/core/types/order";
-import CandleCollection from "../../sockTrader/core/candleCollection";
+import CandleManager from "../../sockTrader/core/candles/candleManager";
 import Orderbook from "../../sockTrader/core/orderbook";
 
 const pair: Pair = ["BTC", "USD"];
@@ -97,15 +97,15 @@ describe("setOrderInProgress", () => {
     });
 });
 
-describe("getCandleCollection", () => {
-    test("Should return a cached candle collection for a trading pair", () => {
+describe("getCandleManager", () => {
+    test("Should return a cached candle manager for a trading pair", () => {
         const interval = {code: "D1", cron: "00 00 00 */1 * *"};
-        const ob = exc.getCandleCollection(pair, interval, () => {
+        const ob = exc.getCandleManager(pair, interval, () => {
         });
-        expect(ob).toBeInstanceOf(CandleCollection);
-        expect(ob).not.toBe(new CandleCollection(interval));
+        expect(ob).toBeInstanceOf(CandleManager);
+        expect(ob).not.toBe(new CandleManager(interval));
 
-        const ob2 = exc.getCandleCollection(pair, interval, () => {
+        const ob2 = exc.getCandleManager(pair, interval, () => {
         });
         expect(ob).toBe(ob2);
     });

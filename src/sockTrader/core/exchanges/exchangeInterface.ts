@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
+import CandleManager, {ICandle, ICandleInterval} from "../candles/candleManager";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
@@ -94,9 +94,9 @@ export interface IExchange extends EventEmitter {
      * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
      * @param {ICandle[]} candles updated candles
      * @param {ICandleInterval} interval candle interval
-     * @param {Extract<K extends keyof CandleCollection, "set" | "update">} method whether to update or overwrite
+     * @param {Extract<K extends keyof CandleManager, "set" | "update">} method whether to update or overwrite
      */
-    onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, candles: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    onUpdateCandles<K extends keyof CandleManager>(pair: Pair, candles: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
     /**
      * Updates local order collection with collection from exchange

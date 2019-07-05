@@ -1,7 +1,7 @@
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
-import {ICandle} from "../sockTrader/core/candleCollection";
+import {ICandle} from "../sockTrader/core/candles/candleManager";
 import CandleNormalizer from "../sockTrader/data/candleNormalizer";
 
 const SRC_PATH = "../../src/data";

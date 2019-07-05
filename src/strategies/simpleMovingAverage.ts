@@ -1,5 +1,5 @@
 import {sma as SMA} from "technicalindicators";
-import {ICandle} from "../sockTrader/core/candleCollection";
+import CandleCollection from "../sockTrader/core/candles/candleCollection";
 import {IExchange} from "../sockTrader/core/exchanges/exchangeInterface";
 import logger from "../sockTrader/core/logger";
 import {IOrderbook} from "../sockTrader/core/orderbook";
@@ -15,6 +15,8 @@ import {Pair} from "../sockTrader/core/types/pair";
  */
 export default class SimpleMovingAverage extends BaseStrategy {
 
+    inProgress = false;
+
     constructor(pair: Pair, exchange: IExchange) {
         super(pair, exchange);
     }
@@ -25,8 +27,8 @@ export default class SimpleMovingAverage extends BaseStrategy {
         }
     }
 
-    updateCandles(candles: ICandle[]): void {
-        const closeCandles = candles.map(c => c.close);
+    updateCandles(candles: CandleCollection): void {
+        const closeCandles = candles.close;
 
         const fastSMA = SMA({period: 12, values: closeCandles, reversedInput: true});
         const slowSMA = SMA({period: 24, values: closeCandles, reversedInput: true});
@@ -34,17 +36,15 @@ export default class SimpleMovingAverage extends BaseStrategy {
         const up = crossUp(fastSMA, slowSMA);
         const down = crossDown(fastSMA, slowSMA);
 
-        if (up) {
+        if (up && !this.inProgress) {
             // current simple moving average line crosses price upward => price falls below SMA
-            // time to buy!
-            logger.info(candles[0].timestamp.format());
+            this.inProgress = true;
             return this.buy(this.pair, candles[0].close, 1);
         }
 
-        if (down) {
+        if (down && this.inProgress) {
             // current simple moving average line crosses price downward => prices rises above SMA
-            // time to sell!
-            logger.info(candles[0].timestamp.format());
+            this.inProgress = false;
             return this.sell(this.pair, candles[0].close, 1);
         }
     }

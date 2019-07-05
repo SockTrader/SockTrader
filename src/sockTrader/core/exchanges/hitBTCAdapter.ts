@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
 import moment from "moment";
 import {IMessage} from "websocket";
-import {ICandle, ICandleInterval} from "../candleCollection";
+import {ICandle, ICandleInterval} from "../candles/candleManager";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";

@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
-import CandleCollection, {ICandle, ICandleInterval, IIntervalDict} from "../candleCollection";
+import CandleManager, {ICandle, ICandleInterval, IIntervalDict} from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
@@ -113,9 +113,9 @@ export default class HitBTC extends BaseExchange {
         });
     }
 
-    onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
-        const candleCollection = this.getCandleCollection(pair, interval, candles => this.emit("app.updateCandles", candles));
-        return candleCollection[method](data);
+    onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
+        const candleManager = this.getCandleManager(pair, interval, candles => this.emit("app.updateCandles", candles));
+        return candleManager[method](data);
     }
 
     onUpdateOrderbook<K extends keyof Orderbook>(response: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void {

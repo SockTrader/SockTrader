@@ -30,6 +30,14 @@ describe("crossUp with reversed array values", () => {
     ])("Should return FALSE if line A doesn't fully break through line B", (lineA, lineB) => {
         expect(crossUp(lineA, lineB)).toEqual(false);
     });
+
+    test.each([
+        [[7, 6, 5, 0], [5, 5, 5, 5]],
+        [[7, 6, 0, 10, 0], [5, 5, 5, 5, 5]],
+        [[8, 7, 6, 5, 0, 10, 0], [5, 5, 5, 5, 5, 5, 5]],
+    ])("Should return FALSE if line A didn't break through line B in the last candles", (lineA, lineB) => {
+        expect(crossUp(lineA, lineB)).toEqual(false);
+    });
 });
 
 describe("crossDown with reversed array values", () => {
@@ -45,7 +53,7 @@ describe("crossDown with reversed array values", () => {
         [[10], [5]],
         [[undefined, 5, 10], [5, 5, undefined]],
     ])("Should return FALSE if line A or B is invalid", (lineA, lineB) => {
-        expect(crossUp(lineA, lineB)).toEqual(false);
+        expect(crossDown(lineA, lineB)).toEqual(false);
     });
 
     test.each([
@@ -54,6 +62,14 @@ describe("crossDown with reversed array values", () => {
         [[0, 5, 0], [5, 5, 5]],
         [[0, 5, 5, 5, 0], [5, 5, 5, 5, 5]],
     ])("Should return FALSE if line A doesn't fully break through line B", (lineA, lineB) => {
+        expect(crossDown(lineA, lineB)).toEqual(false);
+    });
+
+    test.each([
+        [[3, 4, 5, 10], [5, 5, 5, 5]],
+        [[3, 4, 10, 0,10], [5, 5, 5, 5, 5]],
+        [[2, 3, 4, 5, 10, 0, 10], [5, 5, 5, 5, 5, 5, 5]],
+    ])("Should return FALSE if line A didn't break through line B in the last candles", (lineA, lineB) => {
         expect(crossDown(lineA, lineB)).toEqual(false);
     });
 });

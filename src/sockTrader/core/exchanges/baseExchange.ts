@@ -3,7 +3,7 @@ import {EventEmitter} from "events";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import {client as WebSocketClient, connection, IMessage} from "websocket";
-import CandleCollection, {ICandle, ICandleInterval} from "../candleCollection";
+import CandleManager, {ICandle, ICandleInterval} from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook, {IOrderbookEntry} from "../orderbook";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
@@ -38,7 +38,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    protected candles: { [key: string]: CandleCollection } = {};
+    protected candles: { [key: string]: CandleManager } = {};
     protected openOrders: IOrder[] = [];
     protected socketClient: WebSocketClient = new WebSocketClient();
     private connection?: connection;
@@ -106,19 +106,19 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     /**
-     * Returns candle collection for pair and interval
+     * Returns candle manager for pair and interval
      * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
      * @param {ICandleInterval} interval time interval
-     * @param {(candles: CandleCollection) => void} updateHandler what to do if candle collection updates
-     * @returns {CandleCollection} the candle collection
+     * @param {(candles: CandleManager) => void} updateHandler what to do if candle collection updates
+     * @returns {CandleManager} the candle collection
      */
-    getCandleCollection(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleCollection) => void): CandleCollection {
+    getCandleManager(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleManager) => void): CandleManager {
         const key = `${pair}_${interval.code}`;
         if (this.candles[key]) {
             return this.candles[key];
         }
 
-        this.candles[key] = new CandleCollection(interval);
+        this.candles[key] = new CandleManager(interval);
         this.candles[key].on("update", updateHandler);
         return this.candles[key];
     }
@@ -206,7 +206,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.emit("app.report", order, oldOrder);
     }
 
-    abstract onUpdateCandles<K extends keyof CandleCollection>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    abstract onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
 
     abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
 

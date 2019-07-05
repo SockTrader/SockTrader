@@ -2,8 +2,8 @@ import {CronJob} from "cron";
 import parser from "cron-parser";
 import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
-import config from "../../config";
-import logger from "./logger";
+import config from "../../../config";
+import logger from "../logger";
 
 export interface ICandle {
     close: number;
@@ -26,12 +26,12 @@ export type IIntervalDict = Record<string, ICandleInterval>;
  * The collection will automatically fill holes when initial and new data is pushed
  * The collection can automatically generate values if no new values were pushed during a time interval
  */
-export default class CandleCollection extends EventEmitter {
+export default class CandleManager extends EventEmitter {
     private candles: ICandle[] = [];
     private cronjob: CronJob;
 
     /**
-     * Creates a new CandleCollection
+     * Creates a new CandleManager
      * @param {ICandleInterval} interval the interval between the candles
      * @param {boolean} generateCandles if should generate candles when nothing is received
      * @param {number} retentionPeriod how long to keep candles
@@ -72,20 +72,15 @@ export default class CandleCollection extends EventEmitter {
     update(candles: ICandle[]): void {
         let needsSort = false;
         candles.forEach(updatedCandle => {
-            const candleUpdated = this.candles.some((candle, idx) => {
-                if (this.candleEqualsTimestamp(candle, updatedCandle.timestamp)) {
-                    this.candles[idx] = updatedCandle;
-                    return true;
-                }
-                return false;
-            });
+            const isCandleReplaced = this.findAndReplaceCandle(updatedCandle);
 
-            if (!candleUpdated) {
-                const l = this.candles.unshift(updatedCandle);
+            if (!isCandleReplaced) {
+                const length = this.candles.unshift(updatedCandle);
                 this.removeRetentionOverflow(this.candles);
 
-                // You need at least 2 candles to sort the list..
-                if (l >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
+                // We might need to re-sort the array in the rare occasion that we've inserted an older candle.
+                // You never know what an exchange might return.
+                if (length >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
                     logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(updatedCandle)}`);
                     needsSort = true;
                 }
@@ -100,7 +95,22 @@ export default class CandleCollection extends EventEmitter {
     }
 
     /**
-     * Validates if a candle occurs on a certain timestamp
+     * Replace candle if it exists in the array
+     * Returns true on a successful replacement
+     * @param newCandle
+     */
+    private findAndReplaceCandle(newCandle: ICandle): boolean {
+        return this.candles.some((candle, idx) => {
+            if (this.candleEqualsTimestamp(candle, newCandle.timestamp)) {
+                this.candles[idx] = newCandle;
+                return true;
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Validates if a candle equals a certain timestamp
      * @param {ICandle} candle the candle
      * @param {moment.Moment} timestamp the time
      * @returns {boolean} occurs on given time

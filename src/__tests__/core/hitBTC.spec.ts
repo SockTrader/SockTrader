@@ -8,7 +8,7 @@ import Orderbook from "../../sockTrader/core/orderbook";
 import {Pair} from "../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import CandleCollection, {ICandle} from "../../sockTrader/core/candleCollection";
+import CandleManager, {ICandle} from "../../sockTrader/core/candles/candleManager";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -65,9 +65,9 @@ describe("login", () => {
 });
 
 describe("onUpdateCandles", () => {
-    test("Should update a candle collection for a trading pair with method set", () => {
-        const collection = new CandleCollection(CandleInterval.FIVE_MINUTES);
-        exchange.getCandleCollection = jest.fn(() => collection);
+    test("Should update a candle manager for a trading pair with method set", () => {
+        const collection = new CandleManager(CandleInterval.FIVE_MINUTES);
+        exchange.getCandleManager = jest.fn(() => collection);
         const set = spyOn(collection, "set");
 
         const candles: ICandle[] = [{close: 1, high: 2, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle];

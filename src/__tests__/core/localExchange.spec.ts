@@ -4,7 +4,7 @@ import moment, {Moment} from "moment";
 import {Pair} from "../../sockTrader/core/types/pair";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import Wallet from "../../sockTrader/core/assets/wallet";
-import {ICandle} from "../../sockTrader/core/candleCollection";
+import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import {
     IOrder,
     OrderSide,

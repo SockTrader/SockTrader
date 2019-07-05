@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
-import {ICandle} from "../candleCollection";
+import CandleCollection from "../candles/candleCollection";
+import {ICandle} from "../candles/candleManager";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
@@ -37,15 +38,25 @@ export default abstract class BaseStrategy extends EventEmitter {
 
     /**
      * Called on each new candle from exchange
-     * @param {ICandle[]} candles the new candles
+     * @param {CandleCollection} candles the new candles
      */
-    abstract updateCandles(candles: ICandle[]): void;
+    abstract updateCandles(candles: CandleCollection): void;
 
     /**
      * Called on orderbook update from exchange
      * @param {IOrderbook} orderBook the new orderbook
      */
     abstract updateOrderbook(orderBook: IOrderbook): void;
+
+    /**
+     * Receives the candles coming from the exchange. It performs some
+     * minor usability improvements to the candle array before triggering
+     * the updateCandles method on the strategy.
+     * @param candles
+     */
+    _onUpdateCandles(candles: ICandle[]): void {
+        this.updateCandles(new CandleCollection(...candles));
+    }
 
     /**
      * Fires a adjust existing order event to exchange

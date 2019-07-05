@@ -1,6 +1,6 @@
 import moment from "moment";
 import Wallet, {IAssetMap} from "../assets/wallet";
-import {ICandle} from "../candleCollection";
+import {ICandle} from "../candles/candleManager";
 import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";

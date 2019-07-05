@@ -1,6 +1,6 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {ICandle, ICandleInterval} from "../candleCollection";
+import {ICandle, ICandleInterval} from "../candles/candleManager";
 import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IReporter} from "../reporters/reporterInterface";
@@ -101,7 +101,7 @@ export default abstract class SockTrader {
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
         this.exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
         this.exchange.on("app.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        this.exchange.on("app.updateCandles", (candles: ICandle[]) => strategy.updateCandles(candles));
+        this.exchange.on("app.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
     }
 
     /**
