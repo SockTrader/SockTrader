@@ -16,14 +16,15 @@
 <p align="center"><b>🚧 Project is currently under development! 🚧</b></p>
 
 ## Features
-
 - 🚀 Realtime super-fast websocket trading.
 - 📈 50+ Technical indicators. ([docs](https://github.com/anandanand84/technicalindicators))
 - 🌈 Written in TypeScript!
 - 🌿 Unit tested source code.
-- 💎 Strategy testing with LIVE exchange data.
+- 🔫 Mutation testing for better testing quality
+- 📝 Paper trading a strategy on LIVE exchange data.
 - 🏡 Backtesting engine with local data.
 - ⚡️ Test & live reload your strategy in [our online dashboard](https://cryptocointrader.be/)!
+- 🚢 Run SockTrader inside a docker container.
 - More features soon..
 
 ## Use our online dashboard!
@@ -41,35 +42,39 @@ Try it yourself:
 
 ## Quick start
 
+### Dockerfile
+1. Clone the repository locally: `git clone https://github.com/SockTrader/SockTrader`
+2. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
+3. (optional) Edit `src/config.ts`
+4. Build docker image: `cd SockTrader && docker build -t socktrader .`
+5. Start container: `docker run socktrader --help`
+
+### Local scripts
 1. Clone the repository locally: `git clone https://github.com/SockTrader/SockTrader`
 2. Install dependencies: `cd SockTrader && npm install`
 3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
-4. Edit `src/config.ts` if needed
+4. (optional) Edit `src/config.ts`
+5. Build project: `npm run build`
+6. Run SockTrader: `node ./build/index.js --help`
 5. Transform our candle data (BTC/USD Bitstamp) from `src/data` to a readable format in `build/data`: `npm run normalize`
 6. Run backtest with the normalized candles and the simple moving average strategy! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
 
-## Advanced
+## Other available scripts
+- `npm run test` run jest test suite
+- `npm run web-dev` start development webserver with nodemon for quick & easy development 
+- `npm run web` start webserver. Can be used for "live reload" using websockets
 
+## Advanced
 Load your own candle data of a trading pair of your interest: [Create a candle normalizer in "src/data" folder](#normalize-raw-candles)
 
 Create your own strategy [Create your own strategy](#your-own-strategy)
 
-## Available scripts
-
-- `npm run test` run jest test suite
-- `npm run backtest` start backtest scripts
-- `npm run normalize` start normalization process for all normalizers found in `src/data` 
-- `npm run web-dev` start development webserver with nodemon for quick & easy development 
-- `npm run web` start webserver. Can be used for "live reload" using websockets
-
 ## Normalize raw candles
 
 ### Add raw candle data
-
 Download raw candles from a trusted source in json or csv format and copy this file to the `src/data` folder.
 
 ### Create a candle normalizer
-
 A candle normalizer is a small utility script that is tightly coupled to a raw candle file. It will normalize the candles
 from a raw csv or json file and output them in a generic format in the `build/data` folder. This normalization process
 can be triggered by running: `npm run normalize`.
@@ -166,7 +171,6 @@ Let us know if you have great ideas to improve the project!
 Feel free to open a pull request.
 
 ## Contributors
-
 [<img alt="cwouter" src="https://avatars3.githubusercontent.com/u/1439383?v=4&s=117" width="117">](https://github.com/cwouter)[<img alt="thijs-raets" src="https://avatars1.githubusercontent.com/u/1255632?v=4&s=117" width="117">](https://github.com/thijs-raets)
 
 ## DISCLAIMER
