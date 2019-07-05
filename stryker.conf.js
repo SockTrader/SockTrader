@@ -6,7 +6,7 @@ module.exports = function(config) {
     transpilers: [],
     coverageAnalysis: "off",
     mutator: { name: "typescript", excludedMutations: ["BooleanSubstitution", "StringLiteral"] },
-    tsconfigFile: "tsconfig.spec.json",
+    tsconfigFile: "tsconfig.json",
     files: [
       "src/**/*.ts",
     ],
