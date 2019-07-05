@@ -98,7 +98,7 @@ describe("onUpdateOrderbook", () => {
             ],
         };
 
-        const {pair: symbol, ask, bid} = ob;
+        const {pair: symbol} = ob;
         exchange.currencies[pair.join("")] = {id: pair, quantityIncrement: 10, tickSize: 0.000001};
 
         exchange.onUpdateOrderbook({...ob, sequence: -1}, "setOrders");

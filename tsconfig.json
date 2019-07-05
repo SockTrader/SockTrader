@@ -3,7 +3,12 @@
     "./src/**/*.ts"
   ],
   "exclude": [
-    "./node_modules"
+    "./node_modules",
+    "./build",
+    "./coverage",
+    "./reports",
+    "**/__mocks__/*",
+    "**/__tests__/*"
   ],
   "compilerOptions": {
     "baseUrl": ".",

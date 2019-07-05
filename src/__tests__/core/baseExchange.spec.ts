@@ -258,8 +258,6 @@ describe("isAdjustingOrderAllowed", () => {
 
 describe("getOrderbook", () => {
     test("Should throw error if no configuration is found for given pair", () => {
-        const symbol = pair.join("");
-
         expect(() => exc.getOrderbook(pair)).toThrow("No configuration found for pair: \"BTCUSD\"");
     });
 
@@ -285,7 +283,7 @@ describe("onCurrenciesLoaded", () => {
 
         expect(exc.currencies).toEqual({});
         exc.onCurrenciesLoaded([{id: ["BTC", "USD"], quantityIncrement: 10, tickSize: 100}]);
-        expect(exc.currencies).toEqual({ "BTCUSD": { id: ["BTC", "USD"], quantityIncrement: 10, tickSize: 100}});
+        expect(exc.currencies).toEqual({"BTCUSD": {id: ["BTC", "USD"], quantityIncrement: 10, tickSize: 100}});
         expect(exc.isCurrenciesLoaded).toBe(true);
 
         expect(isReadySpy).toBeCalledTimes(1);

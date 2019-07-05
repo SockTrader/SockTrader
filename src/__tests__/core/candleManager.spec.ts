@@ -7,7 +7,7 @@ import CandleManager, {ICandle} from "../../sockTrader/core/candles/candleManage
 import moment, {Moment} from "moment";
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");
-const convertTimestamp = (candles) => candles.map(c => ({...c, timestamp: c.timestamp.toArray()}));
+const convertTimestamp = (candles: any) => candles.map((c: any) => ({...c, timestamp: c.timestamp.toArray()}));
 const getTime = (start: Moment, action = "+", minutes = 0): Moment => {
     const method = (action === "+") ? "add" : "subtract";
     return start.clone()[method](minutes, "minutes");
@@ -33,7 +33,7 @@ describe("CandleManager", () => {
 describe("update", () => {
     test("Should remove oldest candle when retention period is met", () => {
         const start = moment().seconds(0).millisecond(0);
-        const results = [];
+        const results: any = [];
 
         // @TODO fix bug when retentionPeriod = 1
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false, 2);
@@ -61,7 +61,7 @@ describe("update", () => {
 
     test("Should update the candle manager", () => {
         const start = moment().seconds(0).millisecond(0);
-        const results = [];
+        const results: any = [];
 
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
         cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
@@ -113,7 +113,7 @@ describe("update", () => {
     test("Should automatically generate new candles", () => {
         const start = moment().seconds(0).millisecond(0);
         const clock = sinon.useFakeTimers(new Date());
-        const results = [];
+        const results: any = [];
 
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, true);
         cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));

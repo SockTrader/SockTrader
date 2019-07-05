@@ -1,17 +1,10 @@
-/* tslint:disable */
-import "jest";
 import {dataHandler, dataListHandler} from "../../sockTrader/web/controllers/data";
 
 jest.mock("fs");
 
 const MOCK_FILES = ["bitstamp_btcusd_1h.json"];
 
-beforeEach(() => {
-    require("fs").__setMockFiles(MOCK_FILES);
-});
-
-afterEach(() => {
-});
+beforeEach(() => require("fs").__setMockFiles(MOCK_FILES));
 
 const mockResponse = () => {
     const res: any = {};
@@ -27,6 +20,8 @@ describe("Send candle data of a normalized candle file", () => {
 
         const res = mockResponse();
         const req = {query: {file: "Y29pbmJhc2VfYnRjdXNkXzFo"}};
+
+        // @ts-ignore
         await dataHandler(req as any, res, null);
 
         expect(res.sendFile).toHaveBeenLastCalledWith(expect.stringContaining("coinbase_btcusd_1h.json"));
@@ -37,6 +32,8 @@ describe("List all normalized candle files", () => {
 
     test("Should return list of all candle files in base64 encoded format", async () => {
         const res = mockResponse();
+
+        // @ts-ignore
         await dataListHandler(null, res, null);
 
         expect(res.send).toBeCalledWith([{

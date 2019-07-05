@@ -3,10 +3,9 @@ import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
-import {IReporter} from "../../sockTrader/core/reporters/reporterInterface";
-import Mock = jest.Mock;
 
 const hitBTC = new HitBTC("PUB_123", "SEC_123");
+
 class ConcreteSockTrader extends SockTrader {
     public exchange = hitBTC;
 }
@@ -128,9 +127,9 @@ describe("subscribeToExchangeEvents", () => {
 
 // describe("addExchange", () => {
 //     test("Should add exchange to socketTrader", () => {
-        // sockTrader.addExchange(hitBTC);
-        // expect(sockTrader.getExchange()).toBe(hitBTC);
-    // });
+// sockTrader.addExchange(hitBTC);
+// expect(sockTrader.getExchange()).toBe(hitBTC);
+// });
 // });
 
 describe("addReporter", () => {
@@ -139,7 +138,7 @@ describe("addReporter", () => {
         const result = sockTrader.addReporter(mock as any);
         expect(result).toEqual(sockTrader);
         expect(sockTrader["reporters"]).toEqual([mock]);
-    })
+    });
 });
 
 describe("bindExchangeToStrategy", () => {

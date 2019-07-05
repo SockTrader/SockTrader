@@ -15,7 +15,7 @@ class MyStrategy extends BaseStrategy {
 }
 
 const strategy = new MyStrategy(["BTC", "USD"], jest.fn() as any);
-let emitMock = null;
+let emitMock: any = null;
 
 beforeEach(() => {
     emitMock = jest.fn();

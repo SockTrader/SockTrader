@@ -3,7 +3,6 @@ import backtestWSEventHandler, {resolvePath} from "../../sockTrader/web/controll
 import backtestCreator from "../../sockTrader/web/backtest/backtestCreator";
 import {EventEmitter} from "events";
 import {Socket} from "socket.io";
-import chokidar from "chokidar";
 
 const processMock = new EventEmitter();
 

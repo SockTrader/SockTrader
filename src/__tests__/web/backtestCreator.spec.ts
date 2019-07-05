@@ -2,7 +2,6 @@
 import "jest";
 import BacktestCreator from "../../sockTrader/web/backtest/backtestCreator";
 import stream from "stream";
-import child_process from "child_process";
 
 jest.mock("child_process");
 
@@ -20,8 +19,10 @@ describe("createProcess", () => {
             {stdio: ["ipc"]},
         ]);
 
-        expect(cp.stdout.pipe).toBeCalledTimes(1);
-        expect(cp.stdout.pipe).toHaveBeenLastCalledWith(expect.any(stream.Writable));
+        // @ts-ignore
+        const pipe = cp.stdout.pipe;
+        expect(pipe).toBeCalledTimes(1);
+        expect(pipe).toHaveBeenLastCalledWith(expect.any(stream.Writable));
     });
 
     test("Should kill previous process", async () => {
