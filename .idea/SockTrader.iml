@@ -7,6 +7,10 @@
       <excludeFolder url="file://$MODULE_DIR$/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
       <excludeFolder url="file://$MODULE_DIR$/src/logs" />
+      <excludePattern pattern="*-lock.json" />
+      <excludePattern pattern="package.json" />
+      <excludePattern pattern="LICENSE" />
+      <excludePattern pattern="README*" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
