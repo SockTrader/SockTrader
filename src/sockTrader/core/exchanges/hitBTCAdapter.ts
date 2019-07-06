@@ -81,10 +81,18 @@ export interface IHitBTCReportResponse {
     }>;
 }
 
+type CandleMethod = (pair: Pair, data: ICandle[], interval: ICandleInterval) => void;
+export type CandleMethods = Record<string, CandleMethod>;
+
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
  */
 export default class HitBTCAdapter extends EventEmitter implements IResponseAdapter {
+
+    candleMethods: CandleMethods = {
+        snapshot: this.exchange.onSnapshotCandles,
+        update: this.exchange.onUpdateCandles,
+    };
 
     /**
      * Create a new HitBTCAdapter
@@ -207,13 +215,17 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
 
     private getPairFromResponse = ({params: {symbol}}: IHitBTCCandlesResponse) => this.exchange.currencies[symbol].id;
 
+    private updateCandlesOnExchange(response: IHitBTCCandlesResponse, method: CandleMethod) {
+        const interval = this.getIntervalFromResponse(response);
+        if (interval) method(this.getPairFromResponse(response), this.mapCandles(response), interval);
+    }
+
     /**
      * Converts candles coming from the HitBTC exchange into a generic data structure
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onSnapshotCandles(response: IHitBTCCandlesResponse) {
-        const interval = this.getIntervalFromResponse(response);
-        if (interval) this.exchange.onSnapshotCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
+        this.updateCandlesOnExchange(response, this.candleMethods.snapshot);
     }
 
     /**
@@ -221,8 +233,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onUpdateCandles(response: IHitBTCCandlesResponse) {
-        const interval = this.getIntervalFromResponse(response);
-        if (interval) this.exchange.onUpdateCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
+        this.updateCandlesOnExchange(response, this.candleMethods.update);
     }
 
     /**
