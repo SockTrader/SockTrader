@@ -1,5 +1,5 @@
 import express, {RequestHandler} from "express";
-import * as fs from "fs";
+import fs from "fs";
 import {extname, resolve} from "path";
 
 const router = express.Router();

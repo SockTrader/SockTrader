@@ -1,15 +1,24 @@
-/* tslint:disable */
-import "jest";
 import moment from "moment";
 import HitBTCAdapter, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
 
-let exc = new HitBTC();
-let adapter = new HitBTCAdapter(exc);
+function createExchange() {
+    const exchange = new HitBTC();
+    exchange.onUpdateOrderbook = jest.fn();
+    exchange.onUpdateCandles = jest.fn();
+    exchange["currencies"] = {
+        "BTCUSD": {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0},
+    };
+
+    return exchange;
+}
+
+let exchange: any = createExchange();
+let adapter: any = new HitBTCAdapter(exchange);
 
 beforeEach(() => {
-    exc = new HitBTC();
-    adapter = new HitBTCAdapter(exc);
+    exchange = createExchange();
+    adapter = new HitBTCAdapter(exchange);
 });
 
 describe("mapCandles", () => {
@@ -40,21 +49,16 @@ describe("mapCandles", () => {
 
 describe("onUpdateCandles", () => {
     it("Should re-emit exchange candle update to internal api event", () => {
-        const onUpdateCandles = jest.fn();
-        exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
-        exc.onUpdateCandles = onUpdateCandles;
-
         adapter.emit("api.updateCandles", {
             params: {period: "H1", symbol: "BTCUSD", data: []},
             method: "",
             jsonrpc: "",
         } as IHitBTCCandlesResponse);
 
-        const [arg1, arg2, arg3, arg4] = onUpdateCandles.mock.calls[0];
+        const [arg1, arg2, arg3] = exchange.onUpdateCandles.mock.calls[0];
         expect(arg1).toStrictEqual(["BTC", "USD"]);
         expect(arg2).toStrictEqual([]);
         expect(arg3).toStrictEqual({code: "H1", cron: "00 00 */1 * * *"});
-        expect(arg4).toStrictEqual("update");
     });
 });
 
@@ -62,7 +66,7 @@ describe("onReceive", () => {
     it("Should re-emit exchange events as API events", async () => {
         expect.assertions(1);
 
-        adapter.on("api.event_method", args => {
+        adapter.on("api.event_method", (args: any) => {
             expect(args).toStrictEqual({
                 id: "event_id",
                 method: "event_method",
@@ -104,10 +108,6 @@ describe("destroy", () => {
 
 describe("onUpdateOrderbook", () => {
     it("Should trigger an orderbook update on the exchange", () => {
-        const onUpdateOrderbook = jest.fn();
-        exc.currencies["BTCUSD"] = {id: ["BTC", "USD"], quantityIncrement: 0, tickSize: 0};
-        exc.onUpdateOrderbook = onUpdateOrderbook;
-
         adapter["onUpdateOrderbook"]({
             jsonrpc: "2.0",
             method: "string",
@@ -117,29 +117,28 @@ describe("onUpdateOrderbook", () => {
                 sequence: 1,
                 symbol: "BTCUSD",
             },
-        }, "addIncrement");
+        });
 
-        const [arg1, arg2] = onUpdateOrderbook.mock.calls[0];
+        const [arg1] = exchange.onUpdateOrderbook.mock.calls[0];
         expect(arg1).toEqual({
             ask: [{price: 10, size: 10}],
             bid: [{price: 10, size: 10}],
             pair: ["BTC", "USD"],
             sequence: 1,
         });
-        expect(arg2).toEqual("addIncrement");
     });
 });
 
 describe("onLogin", () => {
     it("Should notify exchange when user is authenticated", () => {
-        const isReadySpy = jest.spyOn(exc, "isReady");
-        expect(exc["isAuthenticated"]).toStrictEqual(false);
+        const isReadySpy = jest.spyOn(exchange, "isReady");
+        expect(exchange["isAuthenticated"]).toStrictEqual(false);
 
         adapter["onLogin"]({id: "123", jsonrpc: "2.0", result: false});
-        expect(exc["isAuthenticated"]).toStrictEqual(false);
+        expect(exchange["isAuthenticated"]).toStrictEqual(false);
 
         adapter["onLogin"]({id: "123", jsonrpc: "2.0", result: true});
-        expect(exc["isAuthenticated"]).toStrictEqual(true);
+        expect(exchange["isAuthenticated"]).toStrictEqual(true);
         expect(isReadySpy).toBeCalledTimes(2);
 
     });
@@ -147,7 +146,7 @@ describe("onLogin", () => {
 
 describe("onGetSymbols", () => {
     it("Should load currency configuration for exchange", () => {
-        const currenciesLoadedSpy = jest.spyOn(exc, "onCurrenciesLoaded");
+        const currenciesLoadedSpy = jest.spyOn(exchange, "onCurrenciesLoaded");
         adapter["onGetSymbols"]({
             id: "123",
             jsonrpc: "2.0",
@@ -173,8 +172,8 @@ describe("onGetSymbols", () => {
 
 describe("onReport", () => {
     it("Should load currency configuration for exchange", () => {
-        const excReportSpy = jest.spyOn(exc, "onReport");
-        exc["currencies"] = {
+        const excReportSpy = jest.spyOn(exchange, "onReport");
+        exchange["currencies"] = {
             "ETHBTC": {
                 id: ["ETH", "BTC"],
                 quantityIncrement: 0.001,
@@ -217,7 +216,7 @@ describe("onReport", () => {
                 "timeInForce": "GTC",
                 "type": "limit",
                 "updatedAt": expect.anything(),
-            })
+            }),
         );
     });
 });

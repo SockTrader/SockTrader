@@ -206,9 +206,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.emit("core.report", order, oldOrder);
     }
 
-    abstract onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
+    abstract onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
 
-    abstract onUpdateOrderbook<K extends keyof Orderbook>(data: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void;
+    abstract onUpdateOrderbook(data: IOrderbookData): void;
 
     sell(pair: Pair, price: number, qty: number): void {
         this.createOrder(pair, price, qty, OrderSide.SELL);
@@ -293,7 +293,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @param {boolean} state whether the order should be set in progress or out
      */
     protected setOrderInProgress(orderId: string, state = true): void {
-        if (state === false) {
+        if (!state) {
             delete this.orderInProgress[orderId];
         } else {
             this.orderInProgress[orderId] = state;

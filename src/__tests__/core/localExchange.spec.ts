@@ -45,8 +45,7 @@ describe("getInstance", () => {
 
 describe("adjustOrder", () => {
     test("Should throw error with current candle undefined", () => {
-        // @ts-ignore
-        expect(() => exchange.adjustOrder(null, 10, 10))
+        expect(() => exchange.adjustOrder(null as any, 10, 10))
             .toThrow("Current candle undefined. Emit candles before adjusting an order.");
     });
 

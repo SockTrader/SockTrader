@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import {strategyListHandler} from "../../sockTrader/web/controllers/strategy";
 
 jest.mock("fs");
@@ -18,8 +16,7 @@ describe("strategy listing", () => {
     test("Should return list of all strategy files in base64 encoded format", async () => {
         const res = mockResponse();
 
-        // @ts-ignore
-        await strategyListHandler(null, res, null);
+        await strategyListHandler(null as any, res, null as any);
 
         expect(res.send).toBeCalledWith([{
             "id": "c2ltcGxlTW92aW5nQXZlcmFnZQ==",

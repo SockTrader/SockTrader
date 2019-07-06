@@ -8,8 +8,7 @@ describe("IPC Reporter", () => {
     test("Should forward bot progress events via IPC", async () => {
         const reporter = new IPCReporter();
 
-        // @ts-ignore
-        const spy = jest.spyOn(reporter, "send");
+        const spy = jest.spyOn(reporter, "send" as any);
         await reporter.reportBotProgress({current: 10, length: 100, type: "progress"});
 
         expect(spy.mock.calls[0]).toEqual([{
@@ -21,8 +20,7 @@ describe("IPC Reporter", () => {
     test("Should forward order events via IPC", async () => {
         const reporter = new IPCReporter();
 
-        // @ts-ignore
-        const spy = jest.spyOn(reporter, "send");
+        const spy = jest.spyOn(reporter, "send" as any);
         await reporter.reportOrder({
             createdAt: moment(),
             id: "Order123",

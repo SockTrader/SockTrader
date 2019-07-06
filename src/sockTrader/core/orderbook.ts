@@ -1,6 +1,7 @@
 import {Decimal} from "decimal.js-light";
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
+import logger from "./logger";
 import {Pair} from "./types/pair";
 
 export enum Operator {
@@ -19,26 +20,22 @@ export interface IOrderbookEntry {
 }
 
 export interface IOrderbook {
-    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void;
+    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void;
 
     getEntries(side: OrderbookSide, amount: number): IOrderbookEntry[];
 
-    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void;
+    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void;
 }
 
 /**
- * @class OrderbookBase
- * @classdesc Order book to be used within an exchange class
- */
-
-/**
- * The Orderbook resembles the orders currently active on
- * and exchange
+ * The Orderbook contains all the market making orders on the remote exchange.
  */
 export default class Orderbook implements IOrderbook {
 
     ask: IOrderbookEntry[] = [];
     bid: IOrderbookEntry[] = [];
+
+    sequenceId = 0;
 
     constructor(protected pair: Pair, protected precision = 8) {
     }
@@ -59,10 +56,14 @@ export default class Orderbook implements IOrderbook {
      * sort the orders by value
      * @param {IOrderbookEntry[]} ask the price asked
      * @param {IOrderbookEntry[]} bid the price bid
+     * @param sequenceId
      */
-    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void {
-        this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"]);
-        this.bid = reverse(sortBy(this.applyIncrement(this.bid, bid), ["price"]));
+    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void {
+        if (this.isValidSequence(sequenceId)) {
+            this.sequenceId = sequenceId;
+            this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"]);
+            this.bid = reverse(sortBy(this.applyIncrement(this.bid, bid), ["price"]));
+        }
     }
 
     /**
@@ -90,7 +91,7 @@ export default class Orderbook implements IOrderbook {
      * @param {number} amount
      * @returns {IOrderbookEntry[]}
      */
-    getEntries(side: "bid" | "ask", amount = 1): IOrderbookEntry[] {
+    getEntries(side: OrderbookSide, amount = 1): IOrderbookEntry[] {
         return this[side].slice(0, Math.abs(amount));
     }
 
@@ -106,13 +107,30 @@ export default class Orderbook implements IOrderbook {
     }
 
     /**
-     * Immediately set all orders in order book
+     * Validates if the given sequence id is higher than the previous one
+     * @param sequenceId
+     */
+    private isValidSequence(sequenceId: number): boolean {
+        if (sequenceId <= this.sequenceId) {
+            logger.info(`Sequence dropped: ${sequenceId}, last one: ${this.sequenceId}`);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set all orders in order book
      * @param {IOrderbookEntry[]} ask
      * @param {IOrderbookEntry[]} bid
+     * @param sequenceId
      */
-    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[]): void {
-        this.ask = sortBy(ask, ["price"]);
-        this.bid = reverse(sortBy(bid, ["price"]));
+    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void {
+        if (this.isValidSequence(sequenceId)) {
+            this.sequenceId = sequenceId;
+            this.ask = sortBy(ask, ["price"]);
+            this.bid = reverse(sortBy(bid, ["price"]));
+        }
     }
 
     /**

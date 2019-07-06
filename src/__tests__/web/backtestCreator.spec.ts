@@ -19,8 +19,7 @@ describe("createProcess", () => {
             {stdio: ["ipc"]},
         ]);
 
-        // @ts-ignore
-        const pipe = cp.stdout.pipe;
+        const pipe = (cp.stdout as any).pipe;
         expect(pipe).toBeCalledTimes(1);
         expect(pipe).toHaveBeenLastCalledWith(expect.any(stream.Writable));
     });
@@ -40,8 +39,7 @@ describe("createProcess", () => {
         expect(prevProcess.kill).toBeCalledTimes(1);
         expect(prevProcess.kill).toHaveBeenLastCalledWith("SIGKILL");
 
-        // @ts-ignore
-        expect(BacktestCreator["createProcess"].mock.calls[0]).toEqual([
+        (expect(BacktestCreator["createProcess"]) as any).mock.calls[0].toEqual([
             "./DOESNT_EXIST.js",
             {"candlePath": "FAKE_CANDLE_PATH", "strategyPath": "FAKE_STRATEGY_PATH"},
         ]);

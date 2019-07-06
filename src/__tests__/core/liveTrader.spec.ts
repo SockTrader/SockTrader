@@ -5,8 +5,7 @@ import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 
-// @ts-ignore
-const liveTrader = new LiveTrader({webServer: false});
+const liveTrader = new LiveTrader({webServer: false} as any);
 const pair: Pair = ["BTC", "USD"];
 
 const hitBTC = HitBTC.getInstance();

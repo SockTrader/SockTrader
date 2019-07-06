@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
-import CandleManager, {ICandle, ICandleInterval, IIntervalDict} from "../candles/candleManager";
+import {ICandle, ICandleInterval, IIntervalDict} from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
@@ -30,7 +30,6 @@ export default class HitBTC extends BaseExchange {
 
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
     private static instance?: HitBTC;
-    private sequence = 0;
 
     /**
      * Creates a new HitBTC exchange
@@ -113,28 +112,38 @@ export default class HitBTC extends BaseExchange {
         });
     }
 
-    onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
-        const candleManager = this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles));
-        return candleManager[method](data);
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this
+            .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+            .set(data);
     }
 
-    onUpdateOrderbook<K extends keyof Orderbook>(response: IOrderbookData, method: Extract<K, "setOrders" | "addIncrement">): void {
-        if (response.sequence <= this.sequence) {
-            logger.info(`Sequence dropped: ${response.sequence}, last one: ${this.sequence}`);
-            return;
-        }
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+        return this
+            .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+            .update(data);
+    }
 
-        this.sequence = response.sequence;
-        const orderbook: Orderbook = this.getOrderbook(response.pair);
-        orderbook[method](response.ask, response.bid);
+    onSnapshotOrderbook({sequence, ask, bid, pair}: IOrderbookData) {
+        const orderbook: Orderbook = this.getOrderbook(pair);
+        orderbook.setOrders(ask, bid, sequence);
 
         this.emit("core.updateOrderbook", orderbook);
     }
 
-    subscribeCandles = (pair: Pair, interval: ICandleInterval): void => this.send("subscribeCandles", {
-        symbol: pair.join(""),
-        period: interval.code,
-    })
+    onUpdateOrderbook({sequence, ask, bid, pair}: IOrderbookData) {
+        const orderbook: Orderbook = this.getOrderbook(pair);
+        orderbook.addIncrement(ask, bid, sequence);
+
+        this.emit("core.updateOrderbook", orderbook);
+    }
+
+    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+        return this.send("subscribeCandles", {
+            symbol: pair.join(""),
+            period: interval.code,
+        });
+    }
 
     subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair.join("")});
 

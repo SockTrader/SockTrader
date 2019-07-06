@@ -21,8 +21,7 @@ describe("Send candle data of a normalized candle file", () => {
         const res = mockResponse();
         const req = {query: {file: "Y29pbmJhc2VfYnRjdXNkXzFo"}};
 
-        // @ts-ignore
-        await dataHandler(req as any, res, null);
+        await dataHandler(req as any, res, null as any);
 
         expect(res.sendFile).toHaveBeenLastCalledWith(expect.stringContaining("coinbase_btcusd_1h.json"));
     });
@@ -33,8 +32,7 @@ describe("List all normalized candle files", () => {
     test("Should return list of all candle files in base64 encoded format", async () => {
         const res = mockResponse();
 
-        // @ts-ignore
-        await dataListHandler(null, res, null);
+        await dataListHandler(null as any, res, null as any);
 
         expect(res.send).toBeCalledWith([{
             "id": "Yml0c3RhbXBfYnRjdXNkXzFo",

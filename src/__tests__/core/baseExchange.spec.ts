@@ -268,7 +268,7 @@ describe("getOrderbook", () => {
 
         // Returns a new empty orderbook
         const orderbook = exc.getOrderbook(pair);
-        expect(orderbook).toEqual({pair, precision: 6, ask: [], bid: []});
+        expect(orderbook).toEqual({pair, precision: 6, ask: [], bid: [], sequenceId: 0});
         expect(orderbook).toBeInstanceOf(Orderbook);
         expect(exc["orderbooks"][symbol]).toEqual(orderbook);
 

@@ -19,8 +19,7 @@ describe("crossUp with reversed array values", () => {
         [[10], [5]],
         [[undefined, 5, 0], [5, 5, undefined]],
     ])("Should return FALSE if line A or B is invalid", (lineA, lineB) => {
-        // @ts-ignore
-        expect(crossUp(lineA, lineB)).toEqual(false);
+        expect(crossUp(lineA as any, lineB as any)).toEqual(false);
     });
 
     test.each([
@@ -54,8 +53,7 @@ describe("crossDown with reversed array values", () => {
         [[10], [5]],
         [[undefined, 5, 10], [5, 5, undefined]],
     ])("Should return FALSE if line A or B is invalid", (lineA, lineB) => {
-        // @ts-ignore
-        expect(crossDown(lineA, lineB)).toEqual(false);
+        expect(crossDown(lineA as any, lineB as any)).toEqual(false);
     });
 
     test.each([

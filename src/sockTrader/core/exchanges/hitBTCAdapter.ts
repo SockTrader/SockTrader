@@ -6,8 +6,8 @@ import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IResponseAdapter} from "./baseExchange";
-import {CandleInterval} from "./hitBTC";
+import {IOrderbookData, IResponseAdapter} from "./baseExchange";
+import HitBTC, {CandleInterval} from "./hitBTC";
 
 export interface IHitBTCOrderbookResponse {
     jsonrpc: string;
@@ -90,14 +90,14 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Create a new HitBTCAdapter
      * @param {BaseExchange} exchange the exchange to map events from
      */
-    constructor(private exchange: BaseExchange) {
+    constructor(private exchange: HitBTC) {
         super();
 
         // Listen for all events that onReceive will be throwing..
-        this.on("api.snapshotCandles", data => this.onUpdateCandles(data, "set"));
-        this.on("api.updateCandles", data => this.onUpdateCandles(data, "update"));
-        this.on("api.snapshotOrderbook", data => this.onUpdateOrderbook(data, "setOrders"));
-        this.on("api.updateOrderbook", data => this.onUpdateOrderbook(data, "addIncrement"));
+        this.once("api.snapshotCandles", data => this.onSnapshotCandles(data));
+        this.on("api.updateCandles", data => this.onUpdateCandles(data));
+        this.on("api.snapshotOrderbook", data => this.onSnapshotOrderbook(data));
+        this.on("api.updateOrderbook", data => this.onUpdateOrderbook(data));
         this.on("api.report", data => this.onReport(data));
         this.on("api.login", data => this.onLogin(data));
         this.on("api.getSymbols", data => this.onGetSymbols(data)); // @TODO fix!
@@ -187,39 +187,68 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
     }
 
     /**
-     * Wraps incoming updated candles
-     * @param {IHitBTCCandlesResponse} data the candles
-     * @param {"set" | "update"} method overwrite or update
+     * Tries to find a valid ICandleInterval in the response. Undefined will be returned if nothing was found
+     * @param response
      */
-    private onUpdateCandles(data: IHitBTCCandlesResponse, method: "set" | "update") {
+    private getIntervalFromResponse(response: IHitBTCCandlesResponse): ICandleInterval | undefined {
         let interval: ICandleInterval | undefined;
         Object.keys(CandleInterval).some(key => {
-            if (CandleInterval[key].code === data.params.period) {
+            if (CandleInterval[key].code === response.params.period) {
                 interval = CandleInterval[key];
                 return true;
             }
             return false;
         });
 
-        if (interval !== undefined) {
-            const pair = this.exchange.currencies[data.params.symbol].id;
-            return this.exchange.onUpdateCandles(pair, this.mapCandles(data), interval, method);
-        }
+        if (interval === undefined) logger.debug(`Interval: "${response.params.period}" is not recognized by the system.`);
 
-        logger.debug(`Interval: "${data.params.period}" is not recognized by the system. The exchange callback "onUpdateCandles" was not triggered.`);
+        return interval;
+    }
+
+    private getPairFromResponse = ({params: {symbol}}: IHitBTCCandlesResponse) => this.exchange.currencies[symbol].id;
+
+    /**
+     * Converts candles coming from the HitBTC exchange into a generic data structure
+     * @param {IHitBTCCandlesResponse} response the candles
+     */
+    private onSnapshotCandles(response: IHitBTCCandlesResponse) {
+        const interval = this.getIntervalFromResponse(response);
+        if (interval) this.exchange.onSnapshotCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
     }
 
     /**
-     * Wraps incoming orderbook
-     * @param {{ask: IOrderbookEntry[]; bid: IOrderbookEntry[]; sequence: number; symbol: string}} ob the orderbook
-     * @param {"addIncrement" | "setOrders"} method update or overwrite
+     * Converts candles coming from the HitBTC exchange into a generic data structure
+     * @param {IHitBTCCandlesResponse} response the candles
      */
-    private onUpdateOrderbook({params: ob}: IHitBTCOrderbookResponse, method: "addIncrement" | "setOrders"): void {
-        this.exchange.onUpdateOrderbook({
-            ask: ob.ask,
-            bid: ob.bid,
-            pair: this.exchange.currencies[ob.symbol].id,
-            sequence: ob.sequence,
-        }, method);
+    private onUpdateCandles(response: IHitBTCCandlesResponse) {
+        const interval = this.getIntervalFromResponse(response);
+        if (interval) this.exchange.onUpdateCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
+    }
+
+    /**
+     * Converts the response into IOrderbookData
+     * @param ob
+     */
+    private mapOrderbook = ({params: ob}: IHitBTCOrderbookResponse): IOrderbookData => ({
+        ask: ob.ask,
+        bid: ob.bid,
+        pair: this.exchange.currencies[ob.symbol].id,
+        sequence: ob.sequence,
+    });
+
+    /**
+     * Converts the response and forward the result to the HitBTC exchange instance
+     * @param response the orderbook
+     */
+    private onSnapshotOrderbook(response: IHitBTCOrderbookResponse): void {
+        this.exchange.onSnapshotOrderbook(this.mapOrderbook(response));
+    }
+
+    /**
+     * Converts the response and forward the result to the HitBTC exchange instance
+     * @param response the orderbook
+     */
+    private onUpdateOrderbook(response: IHitBTCOrderbookResponse): void {
+        this.exchange.onUpdateOrderbook(this.mapOrderbook(response));
     }
 }
