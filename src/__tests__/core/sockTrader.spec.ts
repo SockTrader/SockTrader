@@ -147,9 +147,9 @@ describe("bindExchangeToStrategy", () => {
         hitBTC.on = mockOn;
 
         sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
-        expect(mockOn).toBeCalledWith("app.report", expect.any(Function));
-        expect(mockOn).toBeCalledWith("app.updateOrderbook", expect.any(Function));
-        expect(mockOn).toBeCalledWith("app.updateCandles", expect.any(Function));
+        expect(mockOn).toBeCalledWith("core.report", expect.any(Function));
+        expect(mockOn).toBeCalledWith("core.updateOrderbook", expect.any(Function));
+        expect(mockOn).toBeCalledWith("core.updateCandles", expect.any(Function));
     });
 });
 
@@ -159,7 +159,7 @@ describe("bindStrategyToExchange", () => {
         const spyOn = jest.spyOn(simpleMovingAverage, "on");
 
         sockTrader["bindStrategyToExchange"](simpleMovingAverage);
-        expect(spyOn).toBeCalledWith("app.signal", expect.any(Function));
-        expect(spyOn).toBeCalledWith("app.adjustOrder", expect.any(Function));
+        expect(spyOn).toBeCalledWith("core.signal", expect.any(Function));
+        expect(spyOn).toBeCalledWith("core.adjustOrder", expect.any(Function));
     });
 });

@@ -86,7 +86,7 @@ export default abstract class SockTrader {
      * @param {IReporter} reporters
      */
     protected bindExchangeToReporters(reporters: IReporter[]): void {
-        this.exchange.on("app.report", (order: IOrder) =>
+        this.exchange.on("core.report", (order: IOrder) =>
             reporters.forEach(r => r.reportOrder(order)),
         );
     }
@@ -99,9 +99,9 @@ export default abstract class SockTrader {
      * @param {BaseStrategy} strategy
      */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
-        this.exchange.on("app.report", (order: IOrder) => strategy.notifyOrder(order));
-        this.exchange.on("app.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        this.exchange.on("app.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
+        this.exchange.on("core.report", (order: IOrder) => strategy.notifyOrder(order));
+        this.exchange.on("core.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        this.exchange.on("core.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
     }
 
     /**
@@ -113,7 +113,7 @@ export default abstract class SockTrader {
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         // @TODO add cancel order event!
-        strategy.on("app.signal", ({symbol, price, qty, side}: ISignal) => exchange.createOrder(symbol, price, qty, side));
-        strategy.on("app.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
+        strategy.on("core.signal", ({symbol, price, qty, side}: ISignal) => exchange.createOrder(symbol, price, qty, side));
+        strategy.on("core.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 }

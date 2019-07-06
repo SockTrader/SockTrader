@@ -20,8 +20,8 @@ export default class LocalExchange extends BaseExchange {
     constructor(private wallet: Wallet) {
         super();
 
-        this.prependListener("app.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));
-        this.on("app.report", (order: IOrder) => this.wallet.updateAssets(order));
+        this.prependListener("core.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));
+        this.on("core.report", (order: IOrder) => this.wallet.updateAssets(order));
     }
 
     /**
@@ -108,7 +108,7 @@ export default class LocalExchange extends BaseExchange {
         (isCandleOrderIncorrect ? candles.reverse() : candles).reduce<ICandle[]>((acc, val, idx) => {
             const processedCandles = [val, ...acc];
             this.currentCandle = val;
-            this.emit("app.updateCandles", processedCandles);
+            this.emit("core.updateCandles", processedCandles);
             return processedCandles;
         }, []);
     }

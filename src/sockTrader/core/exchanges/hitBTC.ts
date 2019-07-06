@@ -114,7 +114,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void {
-        const candleManager = this.getCandleManager(pair, interval, candles => this.emit("app.updateCandles", candles));
+        const candleManager = this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles));
         return candleManager[method](data);
     }
 
@@ -128,7 +128,7 @@ export default class HitBTC extends BaseExchange {
         const orderbook: Orderbook = this.getOrderbook(response.pair);
         orderbook[method](response.ask, response.bid);
 
-        this.emit("app.updateOrderbook", orderbook);
+        this.emit("core.updateOrderbook", orderbook);
     }
 
     subscribeCandles = (pair: Pair, interval: ICandleInterval): void => this.send("subscribeCandles", {

@@ -106,7 +106,7 @@ describe("onUpdateOrderbook", () => {
 
         exchange.onUpdateOrderbook(ob, "setOrders");
         expect(getOrderbookMock).toBeCalled();
-        expect(emit).toBeCalledWith("app.updateOrderbook", expect.objectContaining({pair: symbol, precision: 6}));
+        expect(emit).toBeCalledWith("core.updateOrderbook", expect.objectContaining({pair: symbol, precision: 6}));
     });
 });
 

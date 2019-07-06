@@ -65,7 +65,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param {number} qty the new quantity
      */
     protected adjust(order: IOrder, price: number, qty: number): void {
-        this.emit("app.adjustOrder", {order, price, qty} as IAdjustSignal);
+        this.emit("core.adjustOrder", {order, price, qty} as IAdjustSignal);
     }
 
     /**
@@ -75,7 +75,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param {number} qty the quantity to buy
      */
     protected buy(pair: Pair, price: number, qty: number): void {
-        this.emit("app.signal", {symbol: pair, price, qty, side: OrderSide.BUY} as ISignal);
+        this.emit("core.signal", {symbol: pair, price, qty, side: OrderSide.BUY} as ISignal);
     }
 
     /**
@@ -85,6 +85,6 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param {number} qty the quantity to sell
      */
     protected sell(pair: Pair, price: number, qty: number): void {
-        this.emit("app.signal", {symbol: pair, price, qty, side: OrderSide.SELL} as ISignal);
+        this.emit("core.signal", {symbol: pair, price, qty, side: OrderSide.SELL} as ISignal);
     }
 }

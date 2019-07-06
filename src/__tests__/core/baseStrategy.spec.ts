@@ -31,7 +31,7 @@ describe("adjust", () => {
         strategy["adjust"]({side: OrderSide.BUY} as IOrder, 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
-        expect(emitMock).toBeCalledWith("app.adjustOrder", {
+        expect(emitMock).toBeCalledWith("core.adjustOrder", {
             order: {
                 side: "buy",
             },
@@ -46,7 +46,7 @@ describe("buy", () => {
         strategy["buy"](["BTC", "USD"], 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
-        expect(emitMock).toBeCalledWith("app.signal", {
+        expect(emitMock).toBeCalledWith("core.signal", {
             price: 10,
             qty: 1,
             side: "buy",
@@ -60,7 +60,7 @@ describe("sell", () => {
         strategy["sell"](["BTC", "USD"], 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
-        expect(emitMock).toBeCalledWith("app.signal", {
+        expect(emitMock).toBeCalledWith("core.signal", {
             price: 10,
             qty: 1,
             side: "sell",

@@ -203,7 +203,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             this.removeOrder(orderId); // Order is invalid
         }
 
-        this.emit("app.report", order, oldOrder);
+        this.emit("core.report", order, oldOrder);
     }
 
     abstract onUpdateCandles<K extends keyof CandleManager>(pair: Pair, data: ICandle[], interval: ICandleInterval, method: Extract<K, "set" | "update">): void;
