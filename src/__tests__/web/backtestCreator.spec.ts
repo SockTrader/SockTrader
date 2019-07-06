@@ -39,7 +39,7 @@ describe("createProcess", () => {
         expect(prevProcess.kill).toBeCalledTimes(1);
         expect(prevProcess.kill).toHaveBeenLastCalledWith("SIGKILL");
 
-        (expect(BacktestCreator["createProcess"]) as any).mock.calls[0].toEqual([
+        expect((BacktestCreator["createProcess"] as any).mock.calls[0]).toEqual([
             "./DOESNT_EXIST.js",
             {"candlePath": "FAKE_CANDLE_PATH", "strategyPath": "FAKE_STRATEGY_PATH"},
         ]);

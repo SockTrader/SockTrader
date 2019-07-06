@@ -229,12 +229,14 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Converts the response into IOrderbookData
      * @param ob
      */
-    private mapOrderbook = ({params: ob}: IHitBTCOrderbookResponse): IOrderbookData => ({
-        ask: ob.ask,
-        bid: ob.bid,
-        pair: this.exchange.currencies[ob.symbol].id,
-        sequence: ob.sequence,
-    });
+    private mapOrderbook({params: ob}: IHitBTCOrderbookResponse): IOrderbookData {
+        return {
+            ask: ob.ask,
+            bid: ob.bid,
+            pair: this.exchange.currencies[ob.symbol].id,
+            sequence: ob.sequence,
+        };
+    }
 
     /**
      * Converts the response and forward the result to the HitBTC exchange instance
