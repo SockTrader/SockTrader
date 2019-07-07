@@ -124,18 +124,19 @@ export default class HitBTC extends BaseExchange {
             .update(data);
     }
 
-    onSnapshotOrderbook({sequence, ask, bid, pair}: IOrderbookData) {
+    private updateOrderbook({sequence, ask, bid, pair}: IOrderbookData, replace = false) {
         const orderbook: Orderbook = this.getOrderbook(pair);
-        orderbook.setOrders(ask, bid, sequence);
+        (replace ? orderbook.setOrders : orderbook.addIncrement)(ask, bid, sequence);
 
         this.emit("core.updateOrderbook", orderbook);
     }
 
-    onUpdateOrderbook({sequence, ask, bid, pair}: IOrderbookData) {
-        const orderbook: Orderbook = this.getOrderbook(pair);
-        orderbook.addIncrement(ask, bid, sequence);
+    onSnapshotOrderbook(data: IOrderbookData) {
+        this.updateOrderbook(data, true);
+    }
 
-        this.emit("core.updateOrderbook", orderbook);
+    onUpdateOrderbook(data: IOrderbookData) {
+        this.updateOrderbook(data);
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {

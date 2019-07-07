@@ -82,17 +82,11 @@ export interface IHitBTCReportResponse {
 }
 
 type CandleMethod = (pair: Pair, data: ICandle[], interval: ICandleInterval) => void;
-export type CandleMethods = Record<string, CandleMethod>;
 
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
  */
 export default class HitBTCAdapter extends EventEmitter implements IResponseAdapter {
-
-    candleMethods: CandleMethods = {
-        snapshot: this.exchange.onSnapshotCandles,
-        update: this.exchange.onUpdateCandles,
-    };
 
     /**
      * Create a new HitBTCAdapter
@@ -225,7 +219,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onSnapshotCandles(response: IHitBTCCandlesResponse) {
-        this.updateCandlesOnExchange(response, this.candleMethods.snapshot);
+        this.updateCandlesOnExchange(response, this.exchange.onSnapshotCandles);
     }
 
     /**
@@ -233,7 +227,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onUpdateCandles(response: IHitBTCCandlesResponse) {
-        this.updateCandlesOnExchange(response, this.candleMethods.update);
+        this.updateCandlesOnExchange(response, this.exchange.onUpdateCandles);
     }
 
     /**
