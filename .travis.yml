@@ -1,3 +1,5 @@
+dist: trusty
+
 language: node_js
 
 cache: npm
@@ -18,6 +20,13 @@ script:
   - if [ "$TO_TEST" = "MUTATION" ]; then npm run stryker; fi
   - if [ "$TO_TEST" = "CORE" ]; then npm test; fi
   - if [ "$TO_TEST" = "CORE" ]; then codecov -f coverage/*.json; fi
+  - sonar-scanner
+
+addons:
+  sonarcloud:
+    organization: "cwouter-github"
+    token:
+      secure: UspF5nin3fsUoT0/Ump68U8X7rek2+auYNVhK1RRhtejY9LHHNesCl0aOfofYFEdJ+Z9CYWTdfRydahyRmBxFF8c60A2lS5bYXY+ObOr08p8C36skl5mN9fXOhjK5UzZbKaHJnh/sjNcZYrgwhqJ7BecqkC9xcvy+C7PgI9L+hLuzxO2RGo7uwEwgxcchzTBPiwAjewTq4BoC/++wtfJtBhCDSnrWVa1wjs60LfqNlydk/UyIDzVuIs31cE/U+/s5Vb9V2wFfiynMeePThM9p0uzKGDmZVmco7f6Rr84l3JfUcyvq91TbEJYMGwjClnnrAFSVqk4wq68kFPaPukaKBUqbtPlx2zLEeNni3DoQbqdUgEdLg5BoGWFq5d41V1D82bJGdHG/wQYiBe5C+FsqIDOu6cAVvoWCqbQJ0Od5Xc7Hgb/Jjllc4vhAjWewPzm9hLybrWDsjLrLb3wfqSl/or9NSqNAs4mFCdCx8SBXRmOf0AbaWhPSlnXf3NkGDVfFM+vtqSSLqPD8ptnZXFK9XJlMEEgbwuKZ2OkU3giwsXoNvBB/+7o4iBKz3yLesXqh9LAfQef5YCODZx/bYamV8PqsTuMWH8xtzIDDjRNJ3RXB8CAAKSB0GLLCMr4LwlFWma4U56ujsZGzsEDqQI9/Yi7QX6xpLUsW2eJ1OLPAiI=
 
 env:
   global:
