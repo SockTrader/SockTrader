@@ -10,13 +10,13 @@ const buildPath = resolver("../../../build");
  * Parse candles from candleNormalizer into a serializable array
  * @param candleNormalizer
  */
-export const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => (await candleNormalizer.normalize());
+export const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => candleNormalizer.normalize();
 
 /**
  * Normalize a single file in the "build/data" folder
  * @param file
  */
-export const normalizeDataFile = async (file: string): Promise<void> => await normalizeDataFiles([file]);
+export const normalizeDataFile = async (file: string): Promise<void> => normalizeDataFiles([file]);
 
 /**
  * Import multiple JavaScript files from the "build/data" folder and store
@@ -46,5 +46,5 @@ export async function normalizeDataFolder(): Promise<void> {
     const files = await readDir(buildPath("data")) as string[];
     const jsFiles = files.filter(file => path.extname(file) === ".js");
 
-    return await normalizeDataFiles(jsFiles);
+    return normalizeDataFiles(jsFiles);
 }

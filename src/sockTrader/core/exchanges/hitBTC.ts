@@ -36,7 +36,7 @@ export default class HitBTC extends BaseExchange {
      * @param {string} pubKey the public key for connecting
      * @param {string} secKey the secret key for connecting
      */
-    constructor(private pubKey = "", private secKey = "") {
+    constructor(private readonly pubKey = "", private readonly secKey = "") {
         super();
     }
 

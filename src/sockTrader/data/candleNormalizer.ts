@@ -11,7 +11,7 @@ export interface ICandleNormalizerConfig {
     symbol: Pair;
 }
 
-export type Parser = (candles: IDataFrame<number, any>) => IDataFrame<number, ICandle>;
+export type Parser = (candles: IDataFrame<number>) => IDataFrame<number, ICandle>;
 
 /**
  * The CandleNormalizer parses a file containing candles and returns
@@ -31,9 +31,9 @@ export default class CandleNormalizer {
      * Parses file depending on the extension/type
      * @param {IAsyncFileReader} fileReader the file to read
      * @param {string} extension the extension
-     * @returns {Promise<IDataFrame<number, any>>} promise
+     * @returns {Promise<IDataFrame>} promise
      */
-    static async parseFileReader(fileReader: IAsyncFileReader, extension: string): Promise<IDataFrame<number>> {
+    static async parseFileReader(fileReader: IAsyncFileReader, extension: string): Promise<IDataFrame> {
         if (extension === "json") {
             return fileReader.parseJSON();
         }
@@ -49,7 +49,7 @@ export default class CandleNormalizer {
      * Determine smallest candle interval of all candles
      * @param df
      */
-    determineCandleInterval(df: IDataFrame<number>): number {
+    determineCandleInterval(df: IDataFrame): number {
         const [interval] = df.aggregate([] as any, (prev, value) => {
             const [prevInterval, date] = prev;
 
@@ -65,7 +65,7 @@ export default class CandleNormalizer {
         return interval;
     }
 
-    determinePriceDecimals(df: IDataFrame<number>): number {
+    determinePriceDecimals(df: IDataFrame): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
         const agg = df.aggregate(0, (accum, candle) => Math.max(
             accum,
@@ -78,12 +78,12 @@ export default class CandleNormalizer {
         return Math.pow(10, agg);
     }
 
-    determineVolumeDecimals(df: IDataFrame<number>): number {
+    determineVolumeDecimals(df: IDataFrame): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
         return df.aggregate(0, ((accum, candle) => Math.max(accum, getDecimals(candle.volume, ds))));
     }
 
-    validateColumns(df: IDataFrame<number>) {
+    validateColumns(df: IDataFrame) {
         const columnNames = df.getColumnNames();
         const requiredColumns = ["timestamp", "open", "high", "low", "close", "volume"];
 
@@ -97,7 +97,7 @@ export default class CandleNormalizer {
 
     /**
      * Actual parsing of file returning data
-     * @returns {Promise<IDataFrame<number, any>>}
+     * @returns {Promise<IDataFrame<number>>}
      */
     async normalize(): Promise<any> {
         const segs = this.filePath.split(".");
