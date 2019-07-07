@@ -81,7 +81,9 @@ export default class Wallet {
         }
     }
 
-    private add: AssetCalc = (asset: string, priceQty: number) => this.assets[asset] += priceQty;
+    private add(asset: string, priceQty: number) {
+        return this.assets[asset] += priceQty;
+    }
 
     private createCalculator(orderSide: OrderSide, side: OrderSide) {
         return (asset: string, calc: AssetCalc, priceQty: number) => {
@@ -98,5 +100,7 @@ export default class Wallet {
         return order.price * order.quantity;
     }
 
-    private subtract: AssetCalc = (asset: string, priceQty: number) => this.assets[asset] -= priceQty;
+    private subtract(asset: string, priceQty: number) {
+        return this.assets[asset] -= priceQty;
+    }
 }

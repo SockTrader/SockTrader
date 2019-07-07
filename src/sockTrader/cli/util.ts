@@ -4,17 +4,17 @@ import util from "util";
 
 export async function loadStrategy(strategyFilename: string) {
     const strategyPath = path.resolve(__dirname, "./../../strategies", strategyFilename);
-    return await import(strategyPath);
+    return import(strategyPath);
 }
 
 export async function loadCandleFile(candleFilename: string) {
     const candlePath = path.resolve(__dirname, "./../../data", `${candleFilename}.json`);
-    return await import(candlePath);
+    return import(candlePath);
 }
 
 export async function loadFiles(folder: string) {
     const readdir = util.promisify(fs.readdir);
-    return await readdir(path.resolve(folder));
+    return readdir(path.resolve(folder));
 }
 
 export function getBaseFilenames(files: string[]): string[] {

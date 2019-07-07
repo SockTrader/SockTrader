@@ -9,8 +9,11 @@ import SockTrader from "./sockTrader";
  */
 export default class LiveTrader extends SockTrader {
 
-    constructor(private paperTrading = false) {
+    private readonly paperTrading: boolean;
+
+    constructor(paperTrading = false) {
         super();
+        this.paperTrading = paperTrading;
     }
 
     /**

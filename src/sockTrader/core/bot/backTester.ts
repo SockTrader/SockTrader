@@ -1,7 +1,6 @@
 import moment from "moment";
 import Wallet, {IAssetMap} from "../assets/wallet";
 import {ICandle} from "../candles/candleManager";
-import localExchange from "../exchanges/localExchange";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";
 import SockTrader from "./sockTrader";
@@ -25,16 +24,19 @@ interface IInputCandle {
  */
 export default class BackTester extends SockTrader {
 
+    private readonly inputCandles: IInputCandle[];
+
     /**
      * Creates a new BackTester
      * @param {IBackTestConfig} config
      * @param {IInputCandle} inputCandles
      */
-    constructor(config: IBackTestConfig, private inputCandles: IInputCandle[]) {
+    constructor(config: IBackTestConfig, inputCandles: IInputCandle[]) {
         super();
+        this.inputCandles = inputCandles;
 
         const wallet = new Wallet(config.assets);
-        this.exchange = localExchange.getInstance(wallet);
+        this.exchange = LocalExchange.getInstance(wallet);
     }
 
     async start(): Promise<void> {

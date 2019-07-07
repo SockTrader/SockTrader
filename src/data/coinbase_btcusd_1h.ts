@@ -9,7 +9,7 @@ const PATH = path.resolve(__dirname, SRC_PATH, "coinbase_btcusd_1h.csv");
 
 // noinspection JSUnusedGlobalSymbols
 export default new CandleNormalizer(PATH, {symbol: ["BTC", "USD"], name: "Bitcoin"},
-    (dataFrame: IDataFrame<number, any>): IDataFrame<number, ICandle> => {
+    (dataFrame: IDataFrame<number>): IDataFrame<number, ICandle> => {
         return dataFrame
             .dropSeries(["Symbol", "Volume BTC"])
             .renameSeries({

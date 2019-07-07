@@ -42,9 +42,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     protected openOrders: IOrder[] = [];
     protected socketClient: WebSocketClient = new WebSocketClient();
     private connection?: connection;
-    private orderbooks: { [key: string]: Orderbook } = {};
+    private readonly orderbooks: { [key: string]: Orderbook } = {};
+    private readonly orderInProgress: { [key: string]: boolean } = {};
     private orderIncrement = 0;
-    private orderInProgress: { [key: string]: boolean } = {};
     private ready = false;
 
     protected constructor() {
