@@ -12,13 +12,15 @@ export default class LocalExchange extends BaseExchange {
 
     private static instance?: LocalExchange;
     private currentCandle?: ICandle;
-    private filledOrders: IOrder[] = [];
+    private readonly filledOrders: IOrder[] = [];
+    private readonly wallet: Wallet;
 
     /**
      * Creates a new LocalExchange
      */
-    constructor(private wallet: Wallet) {
+    constructor(wallet: Wallet) {
         super();
+        this.wallet = wallet;
 
         this.prependListener("core.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));
         this.on("core.report", (order: IOrder) => this.wallet.updateAssets(order));
@@ -105,7 +107,7 @@ export default class LocalExchange extends BaseExchange {
     async emitCandles(candles: ICandle[]) {
         const isCandleOrderIncorrect: boolean = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp));
 
-        (isCandleOrderIncorrect ? candles.reverse() : candles).reduce<ICandle[]>((acc, val, idx) => {
+        (isCandleOrderIncorrect ? [...candles].reverse() : candles).reduce<ICandle[]>((acc, val, idx) => {
             const processedCandles = [val, ...acc];
             this.currentCandle = val;
             this.emit("core.updateCandles", processedCandles);

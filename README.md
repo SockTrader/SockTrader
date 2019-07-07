@@ -7,6 +7,7 @@
   <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a>
   <a href="https://codecov.io/gh/SockTrader/SockTrader"><img src="https://codecov.io/gh/SockTrader/SockTrader/branch/master/graph/badge.svg" /></a>
   <a href="https://stryker-mutator.github.io"><img src="https://badge.stryker-mutator.io/github.com/SockTrader/SockTrader/master" /></a>
+  <a href="https://sonarcloud.io/dashboard?id=cwouter_SockTrader"><img src="https://sonarcloud.io/api/project_badges/measure?project=cwouter_SockTrader&metric=sqale_rating" /></a>
   <a href="https://travis-ci.org/SockTrader/SockTrader"><img src="https://travis-ci.org/SockTrader/SockTrader.svg?branch=master" alt="Build status"></a>
   <a href="https://codeclimate.com/github/SockTrader/SockTrader/maintainability"><img src="https://api.codeclimate.com/v1/badges/19589f9237d31ca9dcf6/maintainability" /></a>
   <a href="https://david-dm.org/SockTrader/SockTrader"><img src="https://david-dm.org/SockTrader/SockTrader.svg" alt="Dependencies"></a>

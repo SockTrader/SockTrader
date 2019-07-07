@@ -20,7 +20,7 @@ script:
   - if [ "$TO_TEST" = "MUTATION" ]; then npm run stryker; fi
   - if [ "$TO_TEST" = "CORE" ]; then npm test; fi
   - if [ "$TO_TEST" = "CORE" ]; then codecov -f coverage/*.json; fi
-  - sonar-scanner
+  - if [ "$TO_TEST" = "CORE" ]; then sonar-scanner; fi
 
 addons:
   sonarcloud:

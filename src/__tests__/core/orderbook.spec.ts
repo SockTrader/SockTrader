@@ -1,8 +1,8 @@
 /* tslint:disable */
 import {expect} from "chai";
-import {spy} from 'sinon';
-import 'jest';
-import Orderbook, {Operator} from "../../sockTrader/core/orderbook";
+import {spy} from "sinon";
+import "jest";
+import Orderbook, {Operator, OrderbookSide} from "../../sockTrader/core/orderbook";
 import {Pair} from "../../sockTrader/core/types/pair";
 
 const pair: Pair = ["BTC", "ETH"];
@@ -18,7 +18,7 @@ describe('Orderbook', () => {
             {price: 0.074940, size: 451},
             {price: 0.074944, size: 2000},
             {price: 0.074925, size: 100},
-        ]);
+        ], 1);
     });
 
     it("calculate the adjusted price", () => {
@@ -66,8 +66,8 @@ describe('Orderbook', () => {
     });
 
     it("Should return a subset of the orderbook", () => {
-        const ask = ob.getEntries("ask", 1);
-        const bid = ob.getEntries("bid", 1);
+        const ask = ob.getEntries(OrderbookSide.ASK, 1);
+        const bid = ob.getEntries(OrderbookSide.BID, 1);
         expect(ask).to.deep.equal([{"price": 0.074817, "size": 100}]);
         expect(bid).to.deep.equal([{"price": 0.074944, "size": 2000}]);
     });
@@ -84,7 +84,7 @@ describe('Orderbook', () => {
             {"price": 0.074925, "size": 150},
             {"price": 0.074940, "size": 0},
             {"price": 0.074941, "size": 10},
-        ]);
+        ], 2);
 
         expect(applyIncrement.calledTwice).to.eq(true);
         expect(ob.ask).to.deep.equal([

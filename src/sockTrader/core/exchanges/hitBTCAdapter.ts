@@ -6,7 +6,7 @@ import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import {IOrderbookData, IResponseAdapter} from "./baseExchange";
+import {IOrderbookData, IResponseAdapter, ITradeablePair} from "./baseExchange";
 import HitBTC, {CandleInterval} from "./hitBTC";
 
 export interface IHitBTCOrderbookResponse {
@@ -88,12 +88,15 @@ type CandleMethod = (pair: Pair, data: ICandle[], interval: ICandleInterval) => 
  */
 export default class HitBTCAdapter extends EventEmitter implements IResponseAdapter {
 
+    private readonly exchange: HitBTC;
+
     /**
      * Create a new HitBTCAdapter
      * @param {BaseExchange} exchange the exchange to map events from
      */
-    constructor(private exchange: HitBTC) {
+    constructor(exchange: HitBTC) {
         super();
+        this.exchange = exchange;
 
         // Listen for all events that onReceive will be throwing..
         this.once("api.snapshotCandles", data => this.onSnapshotCandles(data));
@@ -148,8 +151,8 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCGetSymbolsResponse} response
      */
     private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
-        const result = response.result.map(({tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
-            id: [baseCurrency, quoteCurrency] as Pair,
+        const result = response.result.map<ITradeablePair>(({tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
+            id: [baseCurrency, quoteCurrency],
             quantityIncrement: parseFloat(quantityIncrement),
             tickSize: parseFloat(tickSize),
         }));
@@ -207,7 +210,9 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
         return interval;
     }
 
-    private getPairFromResponse = ({params: {symbol}}: IHitBTCCandlesResponse) => this.exchange.currencies[symbol].id;
+    private getPairFromResponse({params: {symbol}}: IHitBTCCandlesResponse) {
+        return this.exchange.currencies[symbol].id;
+    }
 
     private updateCandlesOnExchange(response: IHitBTCCandlesResponse, method: CandleMethod) {
         const interval = this.getIntervalFromResponse(response);

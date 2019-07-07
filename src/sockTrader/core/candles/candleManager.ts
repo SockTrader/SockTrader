@@ -28,7 +28,9 @@ export type IIntervalDict = Record<string, ICandleInterval>;
  */
 export default class CandleManager extends EventEmitter {
     private candles: ICandle[] = [];
-    private cronjob: CronJob;
+    private readonly cronjob: CronJob;
+    private readonly interval: ICandleInterval;
+    private readonly retentionPeriod: number = 0;
 
     /**
      * Creates a new CandleManager
@@ -36,8 +38,10 @@ export default class CandleManager extends EventEmitter {
      * @param {boolean} generateCandles if should generate candles when nothing is received
      * @param {number} retentionPeriod how long to keep candles
      */
-    constructor(private interval: ICandleInterval, generateCandles = true, private retentionPeriod = 0) {
+    constructor(interval: ICandleInterval, generateCandles = true, retentionPeriod = 0) {
         super();
+        this.retentionPeriod = retentionPeriod;
+        this.interval = interval;
 
         const candleGenerator = this.generateCandles.bind(this);
         this.cronjob = new CronJob(interval.cron, candleGenerator, undefined, generateCandles, config.timezone);
@@ -56,7 +60,9 @@ export default class CandleManager extends EventEmitter {
         this.emit("update", this.candles);
     }
 
-    sort = (candles: ICandle[]): ICandle[] => candles.sort((a, b) => b.timestamp.diff(a.timestamp));
+    sort(candles: ICandle[]): ICandle[] {
+        return [...candles].sort((a, b) => b.timestamp.diff(a.timestamp));
+    }
 
     /**
      * Stop automatic candle generator
@@ -190,14 +196,16 @@ export default class CandleManager extends EventEmitter {
      * @param {moment.Moment} timestamp the timestamp
      * @returns {ICandle} copied candle
      */
-    private getRecycledCandle = ({close}: ICandle, timestamp: Moment): ICandle => ({
-        open: close,
-        high: close,
-        low: close,
-        close,
-        volume: 0,
-        timestamp,
-    })
+    private getRecycledCandle({close}: ICandle, timestamp: Moment): ICandle {
+        return {
+            open: close,
+            high: close,
+            low: close,
+            close,
+            volume: 0,
+            timestamp,
+        };
+    }
 
     /**
      * Removes candles outside the retention period
