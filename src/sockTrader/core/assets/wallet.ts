@@ -19,6 +19,8 @@ export default class Wallet {
      */
     constructor(assets: IAssetMap) {
         this.setAssets(assets);
+        this.add = this.add.bind(this);
+        this.subtract = this.subtract.bind(this);
     }
 
     /**
