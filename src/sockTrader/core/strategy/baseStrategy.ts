@@ -31,60 +31,60 @@ export default abstract class BaseStrategy extends EventEmitter {
     }
 
     /**
-     * Called when exchange confirms and order
-     * @param {IOrder} order the order
+     * The strategy will be notified when the state of an order changes.
+     * @param {IOrder} order – the new state of the order
      */
     abstract notifyOrder(order: IOrder): void;
 
     /**
-     * Called on each new candle from exchange
-     * @param {CandleCollection} candles the new candles
+     * Called on each new candle coming from the exchange
+     * @param {CandleCollection} candles – raw exchange candles wrapped in a CandleCollection
      */
     abstract updateCandles(candles: CandleCollection): void;
 
     /**
-     * Called on orderbook update from exchange
-     * @param {IOrderbook} orderBook the new orderbook
+     * Called on orderbook update coming from the exchange
+     * @param {IOrderbook} orderBook – the new state of the orderbook
      */
     abstract updateOrderbook(orderBook: IOrderbook): void;
 
     /**
-     * Receives the candles coming from the exchange. It performs some
-     * minor usability improvements to the candle array before triggering
-     * the updateCandles method on the strategy.
-     * @param candles
+     * Receives the candles coming from the exchange. It wraps the candles in a CandleCollection
+     * so that the resulting strategy has some extra utility methods to manipulate the candles.
+     * @param candles – candles coming from the remote exchange
      */
     _onUpdateCandles(candles: ICandle[]): void {
         this.updateCandles(new CandleCollection(...candles));
     }
 
     /**
-     * Fires a adjust existing order event to exchange
-     * @param {IOrder} order the order to adjust
-     * @param {number} price the new price
-     * @param {number} qty the new quantity
+     * Adjusts an existing order. Either price or quantity can be different.
+     * @param {IOrder} order – the order that you would like to manipulate
+     * @param {number} price – the new price of the order
+     * @param {number} qty – the new quantity of the order
      */
     protected adjust(order: IOrder, price: number, qty: number): void {
         this.emit("core.adjustOrder", {order, price, qty} as IAdjustSignal);
     }
 
     /**
-     * Fires a buy event to exchange
-     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {number} price the price a which to buy
-     * @param {number} qty the quantity to buy
+     * Sends a buy/sell signal to the exchange
      */
-    protected buy(pair: Pair, price: number, qty: number): void {
-        this.emit("core.signal", {symbol: pair, price, qty, side: OrderSide.BUY} as ISignal);
+    protected signal(symbol: Pair, price: number, qty: number, side: OrderSide) {
+        this.emit("core.signal", {symbol, price, qty, side} as ISignal);
     }
 
     /**
-     * Fires a sell event to exchange
-     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {number} price the price a which to sell
-     * @param {number} qty the quantity to sell
+     * Shortcut method to send a buy signal
+     */
+    protected buy(pair: Pair, price: number, qty: number): void {
+        this.signal(pair, price, qty, OrderSide.BUY);
+    }
+
+    /**
+     * Shotcut method to send a sell signal
      */
     protected sell(pair: Pair, price: number, qty: number): void {
-        this.emit("core.signal", {symbol: pair, price, qty, side: OrderSide.SELL} as ISignal);
+        this.signal(pair, price, qty, OrderSide.SELL);
     }
 }
