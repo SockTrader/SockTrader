@@ -5,7 +5,6 @@ import {ICandle, ICandleInterval} from "../candles/candleManager";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
-import {Pair} from "../types/pair";
 import {IOrderbookData, IResponseAdapter, ITradeablePair} from "./baseExchange";
 import HitBTC, {CandleInterval} from "./hitBTC";
 
@@ -80,8 +79,6 @@ export interface IHitBTCReportResponse {
         updatedAt: string;
     }>;
 }
-
-type CandleMethod = (pair: Pair, data: ICandle[], interval: ICandleInterval) => void;
 
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
@@ -214,17 +211,13 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
         return this.exchange.currencies[symbol].id;
     }
 
-    private updateCandlesOnExchange(response: IHitBTCCandlesResponse, method: CandleMethod) {
-        const interval = this.getIntervalFromResponse(response);
-        if (interval) method(this.getPairFromResponse(response), this.mapCandles(response), interval);
-    }
-
     /**
      * Converts candles coming from the HitBTC exchange into a generic data structure
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onSnapshotCandles(response: IHitBTCCandlesResponse) {
-        this.updateCandlesOnExchange(response, this.exchange.onSnapshotCandles);
+        const interval = this.getIntervalFromResponse(response);
+        if (interval) this.exchange.onSnapshotCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
     }
 
     /**
@@ -232,7 +225,8 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCCandlesResponse} response the candles
      */
     private onUpdateCandles(response: IHitBTCCandlesResponse) {
-        this.updateCandlesOnExchange(response, this.exchange.onUpdateCandles);
+        const interval = this.getIntervalFromResponse(response);
+        if (interval) this.exchange.onUpdateCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
     }
 
     /**

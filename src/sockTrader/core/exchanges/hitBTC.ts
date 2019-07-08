@@ -112,31 +112,26 @@ export default class HitBTC extends BaseExchange {
         });
     }
 
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this
-            .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-            .set(data);
-    }
+    onSnapshotCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
+        .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+        .set(data);
 
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        return this
-            .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-            .update(data);
-    }
+    onUpdateCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
+        .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+        .update(data);
 
-    private updateOrderbook({sequence, ask, bid, pair}: IOrderbookData, replace = false) {
+    onSnapshotOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
-        (replace ? orderbook.setOrders : orderbook.addIncrement)(ask, bid, sequence);
+        orderbook.setOrders(ask, bid, sequence);
+
+        this.emit("core.snapshotOrderbook", orderbook);
+    }
+
+    onUpdateOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
+        const orderbook: Orderbook = this.getOrderbook(pair);
+        orderbook.addIncrement(ask, bid, sequence);
 
         this.emit("core.updateOrderbook", orderbook);
-    }
-
-    onSnapshotOrderbook(data: IOrderbookData) {
-        this.updateOrderbook(data, true);
-    }
-
-    onUpdateOrderbook(data: IOrderbookData) {
-        this.updateOrderbook(data);
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {

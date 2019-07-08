@@ -13,7 +13,7 @@
     "no-console": false,
     "max-line-length": false,
     "object-literal-sort-keys": false,
-    "semicolon": [true, "always"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "member-access": [true, "no-public"],
     "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
     "arrow-parens": [true, "ban-single-arg-parens"],

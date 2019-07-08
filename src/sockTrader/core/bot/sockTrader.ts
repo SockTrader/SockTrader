@@ -100,7 +100,9 @@ export default abstract class SockTrader {
      */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
         this.exchange.on("core.report", (order: IOrder) => strategy.notifyOrder(order));
+        this.exchange.on("core.snapshotOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
         this.exchange.on("core.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        this.exchange.on("core.snapshotCandles", (candles: ICandle[]) => strategy._onSnapshotCandles(candles));
         this.exchange.on("core.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
     }
 
