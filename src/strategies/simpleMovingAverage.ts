@@ -1,7 +1,6 @@
 import {sma as SMA} from "technicalindicators";
 import CandleCollection from "../sockTrader/core/candles/candleCollection";
 import {IExchange} from "../sockTrader/core/exchanges/exchangeInterface";
-import logger from "../sockTrader/core/logger";
 import {IOrderbook} from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
@@ -15,7 +14,7 @@ import {Pair} from "../sockTrader/core/types/pair";
  */
 export default class SimpleMovingAverage extends BaseStrategy {
 
-    inProgress = false;
+    hasOrdered = false;
 
     constructor(pair: Pair, exchange: IExchange) {
         super(pair, exchange);
@@ -36,15 +35,15 @@ export default class SimpleMovingAverage extends BaseStrategy {
         const up = crossUp(fastSMA, slowSMA);
         const down = crossDown(fastSMA, slowSMA);
 
-        if (up && !this.inProgress) {
+        if (up && !this.hasOrdered) {
             // current simple moving average line crosses price upward => price falls below SMA
-            this.inProgress = true;
+            this.hasOrdered = true;
             return this.buy(this.pair, candles[0].close, 1);
         }
 
-        if (down && this.inProgress) {
+        if (down && this.hasOrdered) {
             // current simple moving average line crosses price downward => prices rises above SMA
-            this.inProgress = false;
+            this.hasOrdered = false;
             return this.sell(this.pair, candles[0].close, 1);
         }
     }
