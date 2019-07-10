@@ -82,10 +82,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     emit(event: string | symbol, ...args: any[]): boolean {
         const result = super.emit(event, ...args);
-        // TODO create config for all debug statements only to be active in dev
-        if (!result && process.env.NODE_ENV === "dev") {
-            logger.debug(`No listener found for: "${event.toString()}"`);
-        }
+        if (!result) logger.debug(`No listener found for: "${event.toString()}"`);
 
         return result;
     }
@@ -165,10 +162,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      * @returns {this} exchange
      */
     on(event: string, listener: (...args: any[]) => void): this {
-        // TODO create config for all debug statements only to be active in dev
-        if (process.env.NODE_ENV === "dev") {
-            logger.debug(`Listener created for: "${event.toString()}"`);
-        }
+        logger.debug(`Listener created for: "${event.toString()}"`);
         return super.on(event, listener);
     }
 
@@ -275,8 +269,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected onConnect(conn: connection): void {
         this.connection = conn;
-        this.connection.on("error", error => logger.error("Connection Error: " + error.toString()));
-        this.connection.on("close", () => logger.info("Connection Closed"));
+        this.connection.on("error", error => logger.error(`Connection Error: ${error.toString()}`));
+        this.connection.on("close", (code, desc) => logger.info(`Connection closed: ${code} ${desc}`));
     }
 
     /**

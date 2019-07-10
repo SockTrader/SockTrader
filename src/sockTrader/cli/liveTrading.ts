@@ -33,13 +33,13 @@ export async function startLiveTrading(args: any) {
         throw new Error("The 'pair' argument should have exactly 2 values. Ex: --pair BTC USD");
     }
 
-    if (!force) {
+    if (!(force || paper)) {
         const isConfirmed = await askForConfirmation();
         if (!isConfirmed) return console.log("We just saved you a few bucks. No harm is done, thank me later ;-)");
+        console.log("Enjoy trading! Hold on while we're preparing for a LIVE trading session.");
     }
 
     try {
-        console.log("Enjoy trading! Hold on while we're preparing for a LIVE trading session.");
 
         const {default: strategyFile} = await loadStrategy(strategy);
 

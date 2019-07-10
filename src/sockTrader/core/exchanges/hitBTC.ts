@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import {connection, IMessage} from "websocket";
-import {ICandle, ICandleInterval, IIntervalDict} from "../candles/candleManager";
+import {ICandle, ICandleInterval} from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {IOrder, OrderSide} from "../types/order";
@@ -9,7 +9,7 @@ import {Pair} from "../types/pair";
 import BaseExchange, {IOrderbookData, IResponseAdapter} from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
 
-export const CandleInterval: IIntervalDict = {
+export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
     THREE_MINUTES: {code: "M3", cron: "00 */3 * * * *"},
     FIVE_MINUTES: {code: "M5", cron: "00 */5 * * * *"},
