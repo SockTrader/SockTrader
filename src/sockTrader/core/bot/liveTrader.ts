@@ -30,8 +30,8 @@ export default class LiveTrader extends SockTrader {
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         if (!this.paperTrading) return super.bindStrategyToExchange(strategy);
 
-        strategy.on("core.adjustOrder", (adjustSignal: IAdjustSignal) => logger.info(`[PT] ADJUST: ${adjustSignal}`));
-        strategy.on("core.signal", (signal: ISignal) => logger.info(`[PT] ORDER: ${signal}`));
+        strategy.on("core.adjustOrder", (adjustSignal: IAdjustSignal) => logger.info(`[PT] ADJUST: ${JSON.stringify(adjustSignal)}`));
+        strategy.on("core.signal", (signal: ISignal) => logger.info(`[PT] ORDER: ${JSON.stringify(signal)}`));
     }
 
     async start(): Promise<void> {

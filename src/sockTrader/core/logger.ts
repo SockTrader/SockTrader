@@ -47,7 +47,7 @@ const inputLogger = createLogger({
 });
 
 export default {
-    debug: (msg: string, ...meta: any[]) => debugLogger.debug(msg, meta),
+    debug: (msg: string, ...meta: any[]) => process.env.NODE_ENV === "dev" && debugLogger.debug(msg, meta),
     error: (msg: string, ...meta: any[]) => errorLogger.error(msg, meta),
     info: (msg: string, ...meta: any[]) => infoLogger.info(msg, meta),
     input: (msg: string, ...meta: any[]) => inputLogger.input(msg, meta),

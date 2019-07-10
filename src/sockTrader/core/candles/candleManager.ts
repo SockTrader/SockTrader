@@ -19,8 +19,6 @@ export interface ICandleInterval {
     cron: string;
 }
 
-export type IIntervalDict = Record<string, ICandleInterval>;
-
 /**
  * Contains OHLCV history data for a trading pair.
  * The collection will automatically fill holes when initial and new data is pushed
