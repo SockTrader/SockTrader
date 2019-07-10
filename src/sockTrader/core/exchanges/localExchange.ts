@@ -19,7 +19,7 @@ export default class LocalExchange extends BaseExchange {
      * Creates a new LocalExchange
      */
     constructor(wallet: Wallet) {
-        super();
+        super(""); // @TODO refactor this awkward statement..
         this.wallet = wallet;
 
         this.prependListener("core.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));

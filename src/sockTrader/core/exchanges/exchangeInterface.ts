@@ -73,11 +73,6 @@ export interface IExchange extends EventEmitter {
     getOrderbook(pair: Pair): Orderbook;
 
     /**
-     * Fires when exchange is created
-     */
-    onCreate(): void;
-
-    /**
      * Registers all tradeable currencies on exchange
      * @param {ITradeablePair[]} currencies
      */

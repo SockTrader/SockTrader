@@ -244,15 +244,15 @@ describe("isAdjustingOrderAllowed", () => {
     test("Should disallow order in progress to be adjusted", () => {
         const order = getOrder();
 
-        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).toBe(true);
-        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).toBe(false);
+        expect(exc["isAdjustingAllowed"](order, 0.002, 0.02)).toBe(true);
+        expect(exc["isAdjustingAllowed"](order, 0.002, 0.02)).toBe(false);
     });
 
     test("Should disallow order to be adjusted when nothing changed", () => {
         const order = getOrder();
 
         exc["orderInProgress"] = {};
-        expect(exc["isAdjustingOrderAllowed"](order, 0.001263, 0.02)).toBe(false);
+        expect(exc["isAdjustingAllowed"](order, 0.001263, 0.02)).toBe(false);
     });
 });
 

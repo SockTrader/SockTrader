@@ -25,7 +25,7 @@ beforeEach(() => {
     exchange = new LocalExchange(wallet);
     exchange.send = sendMock;
     exchange.emit = emitMock;
-    exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
+    exchange["isAdjustingAllowed"] = jest.fn(() => true);
 });
 
 afterEach(() => {

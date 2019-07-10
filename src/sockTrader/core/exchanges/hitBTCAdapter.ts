@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
 import moment from "moment";
-import {IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candles/candleManager";
+import {Data} from "../connection/webSocket";
 import logger from "../logger";
 import {IOrderbookEntry} from "../orderbook";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
@@ -116,14 +116,10 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Emits received message as api event
      * @param {IMessage} msg
      */
-    onReceive(msg: IMessage): void {
-        if (msg.type !== "utf8") {
-            throw new Error("Response is not UTF8!");
-        }
-
-        if (msg.utf8Data) {
-            const d = JSON.parse(msg.utf8Data);
-            this.emit(`api.${d.method || d.id}`, d);
+    onReceive(msg: Data): void {
+        if (typeof msg === "string") {
+            const data = JSON.parse(msg);
+            this.emit(`api.${data.method || data.id}`, data);
         }
     }
 

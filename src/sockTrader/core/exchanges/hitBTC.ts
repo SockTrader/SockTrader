@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
-import {connection, IMessage} from "websocket";
 import {ICandle, ICandleInterval} from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook from "../orderbook";
@@ -8,6 +7,7 @@ import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange, {IOrderbookData, IResponseAdapter} from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
+import {Data} from "../connection/webSocket";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -28,6 +28,7 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  */
 export default class HitBTC extends BaseExchange {
 
+    readonly pingInterval: number = 40 * 1000;
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
     private static instance?: HitBTC;
 
@@ -37,7 +38,7 @@ export default class HitBTC extends BaseExchange {
      * @param {string} secKey the secret key for connecting
      */
     constructor(private readonly pubKey = "", private readonly secKey = "") {
-        super();
+        super("wss://api.hitbtc.com/api/2/ws");
     }
 
     /**
@@ -54,7 +55,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
-        if (this.isAdjustingOrderAllowed(order, price, qty)) {
+        if (this.isAdjustingAllowed(order, price, qty)) {
             const newOrderId = this.generateOrderId(order.pair);
 
             this.send("cancelReplaceOrder", {
@@ -70,10 +71,6 @@ export default class HitBTC extends BaseExchange {
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
         this.send("cancelOrder", {clientOrderId: order.id});
-    }
-
-    connect() {
-        super.connect("wss://api.hitbtc.com/api/2/ws");
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
@@ -145,11 +142,10 @@ export default class HitBTC extends BaseExchange {
 
     subscribeReports = (): void => this.send("subscribeReports");
 
-    protected onConnect(conn: connection): void {
-        super.onConnect(conn);
+    protected onFirstConnect(): void {
+        super.onFirstConnect();
 
-        conn.on("message", (data: IMessage) => this.adapter.onReceive(data));
-
+        this.getConnection().on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
         if (this.pubKey !== "" && this.secKey !== "") {

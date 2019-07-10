@@ -133,7 +133,7 @@ describe("cancelOrder", () => {
 
 describe("adjustOrder", () => {
     it("Should adjust existing orders", () => {
-        exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
+        exchange["isAdjustingAllowed"] = jest.fn(() => true);
         exchange.generateOrderId = jest.fn(() => "neworderid");
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
