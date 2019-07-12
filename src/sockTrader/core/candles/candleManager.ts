@@ -4,20 +4,8 @@ import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
 import config from "../../../config";
 import logger from "../logger";
-
-export interface ICandle {
-    close: number;
-    high: number;
-    low: number;
-    open: number;
-    timestamp: Moment;
-    volume: number;
-}
-
-export interface ICandleInterval {
-    code: string;
-    cron: string;
-}
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
 
 /**
  * Contains OHLCV history data for a trading pair.

@@ -1,12 +1,12 @@
 import moment from "moment";
 import {connection} from "websocket";
 import {EventEmitter} from "events";
-import {IOrderbookData} from "../../sockTrader/core/exchanges/baseExchange";
 import {Pair} from "../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import Orderbook from "../../sockTrader/core/orderbook";
+import {IOrderbookData} from "../../sockTrader/core/types/IOrderbookData";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
 
 const pair: Pair = ["BTC", "USD"];
 

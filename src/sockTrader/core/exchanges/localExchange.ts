@@ -1,5 +1,5 @@
 import Wallet from "../assets/wallet";
-import {ICandle} from "../candles/candleManager";
+import {ICandle} from "../types/ICandle";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";

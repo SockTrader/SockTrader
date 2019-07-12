@@ -2,34 +2,18 @@ import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
-import CandleManager, {ICandle, ICandleInterval} from "../candles/candleManager";
-import WebSocket, {Data} from "../connection/webSocket";
+import CandleManager from "../candles/candleManager";
+import WebSocket from "../connection/webSocket";
 import logger from "../logger";
-import Orderbook, {IOrderbookEntry} from "../orderbook";
+import Orderbook from "../orderbook";
+import {ICurrencyMap} from "../types/ICurrencyMap";
+import {IExchange} from "../types/IExchange";
+import {IOrderbookData} from "../types/IOrderbookData";
+import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import {IExchange} from "./exchangeInterface";
-
-export interface IResponseAdapter {
-    onReceive(msg: Data): void;
-}
-
-export interface ICurrencyMap {
-    [key: string]: ITradeablePair;
-}
-
-export interface ITradeablePair {
-    id: Pair;
-    quantityIncrement: number;
-    tickSize: number;
-}
-
-export interface IOrderbookData {
-    ask: IOrderbookEntry[];
-    bid: IOrderbookEntry[];
-    pair: Pair;
-    sequence: number;
-}
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
 
 /**
  * The BaseExchange resembles common marketplace functionality

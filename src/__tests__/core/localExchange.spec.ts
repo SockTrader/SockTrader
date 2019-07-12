@@ -4,7 +4,6 @@ import moment, {Moment} from "moment";
 import {Pair} from "../../sockTrader/core/types/pair";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import Wallet from "../../sockTrader/core/assets/wallet";
-import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import {
     IOrder,
     OrderSide,
@@ -13,6 +12,7 @@ import {
     OrderType,
     ReportType,
 } from "../../sockTrader/core/types/order";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
 
 const pair: Pair = ["BTC", "USD"];
 

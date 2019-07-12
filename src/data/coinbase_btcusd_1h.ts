@@ -1,8 +1,8 @@
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
-import {ICandle} from "../sockTrader/core/candles/candleManager";
 import CandleNormalizer from "../sockTrader/data/candleNormalizer";
+import {ICandle} from "../sockTrader/core/types/ICandle";
 
 const SRC_PATH = "../../src/data";
 const PATH = path.resolve(__dirname, SRC_PATH, "coinbase_btcusd_1h.csv");

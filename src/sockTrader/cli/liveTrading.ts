@@ -1,10 +1,10 @@
 import inquirer from "inquirer";
 import LiveTrader from "../core/bot/liveTrader";
 import {exchanges} from "../core/exchanges";
-import {IExchange} from "../core/exchanges/exchangeInterface";
 import {CandleInterval} from "../core/exchanges/hitBTC";
 import config from "./../../config";
 import {loadStrategy} from "./util";
+import {IExchange} from "../core/types/IExchange";
 
 export async function askForConfirmation(): Promise<boolean> {
     const {confirmation} = await inquirer.prompt([{
