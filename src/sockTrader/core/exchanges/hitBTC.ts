@@ -61,19 +61,19 @@ export default class HitBTC extends BaseExchange {
         if (this.isAdjustingAllowed(order, price, qty)) {
             const newOrderId = this.generateOrderId(order.pair);
 
-            this.send("cancelReplaceOrder", {
+            this.send(this.createCommand("cancelReplaceOrder", {
                 clientOrderId: order.id,
                 price,
                 quantity: qty,
                 requestClientId: newOrderId,
                 strictValidate: true,
-            });
+            }));
         }
     }
 
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
-        this.send("cancelOrder", {clientOrderId: order.id});
+        this.send(this.createCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
@@ -81,14 +81,14 @@ export default class HitBTC extends BaseExchange {
         this.setOrderInProgress(orderId);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
-        this.send("newOrder", {
+        this.send(this.createCommand("newOrder", {
             clientOrderId: orderId,
             price,
             quantity: qty,
             side,
             symbol: pair,
             type: "limit",
-        });
+        }));
     }
 
     loadCurrencies(): void {
@@ -104,12 +104,14 @@ export default class HitBTC extends BaseExchange {
         const nonce: string = nanoid(32);
         const signature: string = crypto.createHmac("sha256", privateKey).update(nonce).digest("hex");
 
-        this.send("login", {
+        const command = this.createRestorableCommand("login", {
             algo: "HS256",
             nonce,
             pKey: publicKey,
             signature,
         });
+
+        this.send(command);
     }
 
     onSnapshotCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
@@ -135,15 +137,23 @@ export default class HitBTC extends BaseExchange {
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {
-        return this.send("subscribeCandles", {
+        const command = this.createRestorableCommand("subscribeCandles", {
             symbol: pair.join(""),
             period: interval.code,
         });
+
+        return this.send(command);
     }
 
-    subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair.join("")});
+    subscribeOrderbook = (pair: Pair): void => {
+        const command = this.createRestorableCommand("subscribeOrderbook", {symbol: pair.join("")});
+        this.send(command);
+    };
 
-    subscribeReports = (): void => this.send("subscribeReports");
+    subscribeReports = (): void => {
+        const command = this.createRestorableCommand("subscribeReports");
+        this.send(command);
+    };
 
     protected onFirstConnect(): void {
         super.onFirstConnect();

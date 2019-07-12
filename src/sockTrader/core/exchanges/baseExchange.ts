@@ -15,6 +15,12 @@ import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 
+interface ICommand {
+    method: string;
+    params: object;
+    id: string;
+}
+
 /**
  * The BaseExchange resembles common marketplace functionality
  */
@@ -182,14 +188,28 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.createOrder(pair, price, qty, OrderSide.SELL);
     }
 
+    createCommand(method: string, params: object = {}): ICommand {
+        return {method, params, id: method};
+    }
+
+    /**
+     * The created command will be automatically restored if the exchange loses connection.
+     * @param method
+     * @param params
+     */
+    createRestorableCommand(method: string, params: object = {}): ICommand {
+        const command = this.createCommand(method, params);
+
+        this.getConnection().addRestorable(command);
+        return command;
+    }
+
     /**
      * Send request over socket connection
-     * @param {string} method the type of send
-     * @param {object} params the data
+     * @param command
      */
-    send(method: string, params: object = {}): void {
+    send(command: ICommand): void {
         try {
-            const command = {method, params, id: method};
             this.connection.send(command);
         } catch (e) {
             logger.error(e);

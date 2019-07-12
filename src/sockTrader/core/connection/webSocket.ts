@@ -8,6 +8,8 @@ export default class WebSocket extends EventEmitter {
     private latency = 1000;
     private pingTimeout?: NodeJS.Timeout;
     private connection?: WSWebSocket;
+    private restoreCommands: object[] = [];
+    private isReconnecting = false;
 
     constructor(private readonly connectionString: string, private readonly pingInterval: number) {
         super();
@@ -36,12 +38,14 @@ export default class WebSocket extends EventEmitter {
     }
 
     private reconnect() {
+        this.isReconnecting = true;
         global.setTimeout(() => this.connect(), 500);
     }
 
     private onClose(code: number, reason: string) {
         logger.info(`Connection closed: ${code} ${reason}`);
         this.cleanUp();
+        this.reconnect();
     }
 
     private onError(error: Error) {
@@ -55,11 +59,20 @@ export default class WebSocket extends EventEmitter {
     private onOpen() {
         logger.info(`Connection established!`);
         this.emit("open");
+
+        // Restore state as before the connection was closed
+        if (this.isReconnecting) this.restoreCommands.forEach(command => this.send(command));
+        this.isReconnecting = false;
+
         this.heartbeat();
     }
 
     private onPing() {
         this.heartbeat();
+    }
+
+    addRestorable(command: object = {}) {
+        this.restoreCommands.push(command);
     }
 
     send(command: object = {}) {
@@ -71,11 +84,7 @@ export default class WebSocket extends EventEmitter {
     connect(): void {
         this.connection = new WSWebSocket(this.connectionString, {perMessageDeflate: false});
 
-        this.connection.on("close", (code, reason): void => {
-            this.onClose(code, reason);
-            this.reconnect();
-        });
-
+        this.connection.on("close", (code, reason): void => this.onClose(code, reason));
         this.connection.on("open", () => this.onOpen());
         this.connection.on("ping", () => this.onPing());
         this.connection.on("error", error => this.onError(error));
