@@ -59,7 +59,6 @@ export default class WebSocket extends EventEmitter {
     }
 
     private onPing() {
-        logger.info(`Ping received`);
         this.heartbeat();
     }
 

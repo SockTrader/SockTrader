@@ -89,7 +89,7 @@
     "decimal.js-light": "^2.5.0",
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
-    "inquirer": "^6.4.1",
+    "inquirer": "^6.5.0",
     "lodash.reverse": "^4.0.1",
     "lodash.sortby": "^4.7.0",
     "lodash.uniqby": "^4.7.0",
@@ -108,10 +108,10 @@
     "yargs": "^13.2.4"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "^2.0.1",
-    "@stryker-mutator/html-reporter": "^2.0.1",
-    "@stryker-mutator/jest-runner": "^2.0.1",
-    "@stryker-mutator/typescript": "^2.0.1",
+    "@stryker-mutator/core": "^2.0.2",
+    "@stryker-mutator/html-reporter": "^2.0.2",
+    "@stryker-mutator/jest-runner": "^2.0.2",
+    "@stryker-mutator/typescript": "^2.0.2",
     "chai": "^4.2.0",
     "codecov": "^3.5.0",
     "concurrently": "^4.1.1",
