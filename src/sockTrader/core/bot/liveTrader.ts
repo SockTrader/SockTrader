@@ -1,7 +1,7 @@
 import logger from "../logger";
 import BaseStrategy, {IAdjustSignal, ISignal} from "../strategy/baseStrategy";
-import SockTrader from "./sockTrader";
 import {IExchange} from "../types/IExchange";
+import SockTrader from "./sockTrader";
 
 /**
  * The LiveTrader enables you to run your strategy against

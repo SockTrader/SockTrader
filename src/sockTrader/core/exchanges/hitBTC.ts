@@ -3,14 +3,14 @@ import nanoid from "nanoid";
 import {Data} from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},

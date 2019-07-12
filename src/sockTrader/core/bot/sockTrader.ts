@@ -3,11 +3,11 @@ import uniqWith from "lodash.uniqwith";
 import {IOrderbook} from "../orderbook";
 import {IReporter} from "../reporters/reporterInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
-import {IOrder} from "../types/order";
-import {Pair} from "../types/pair";
-import {IExchange} from "../types/IExchange";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
+import {IExchange} from "../types/IExchange";
+import {IOrder} from "../types/order";
+import {Pair} from "../types/pair";
 
 export interface IStrategyConfig {
     interval: ICandleInterval;

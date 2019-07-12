@@ -7,13 +7,13 @@ import {IHitBTCCandlesResponse} from "../types/exchanges/IHitBTCCandlesResponse"
 import {IHitBTCGetSymbolsResponse} from "../types/exchanges/IHitBTCGetSymbolsResponse";
 import {IHitBTCOrderbookResponse} from "../types/exchanges/IHitBTCOrderbookResponse";
 import {IHitBTCReportResponse} from "../types/exchanges/IHitBTCReportResponse";
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
 import {ITradeablePair} from "../types/ITradeablePair";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import HitBTC, {CandleInterval} from "./hitBTC";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
 
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic

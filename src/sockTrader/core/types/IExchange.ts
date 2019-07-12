@@ -1,11 +1,11 @@
 import {EventEmitter} from "events";
-import {IOrder, OrderSide} from "./order";
-import {Pair} from "./pair";
 import Orderbook from "../orderbook";
-import {ITradeablePair} from "./ITradeablePair";
-import {IOrderbookData} from "./IOrderbookData";
 import {ICandle} from "./ICandle";
 import {ICandleInterval} from "./ICandleInterval";
+import {IOrderbookData} from "./IOrderbookData";
+import {ITradeablePair} from "./ITradeablePair";
+import {IOrder, OrderSide} from "./order";
+import {Pair} from "./pair";
 
 /**
  * The IExchange represents a marketplace to buy and sell

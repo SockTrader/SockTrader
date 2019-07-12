@@ -33,16 +33,6 @@ afterEach(() => {
     emitMock.mockRestore();
 });
 
-describe("getInstance", () => {
-    test("Should trigger the onCreate lifecycle event", () => {
-        const spyOnCreate = spyOn(LocalExchange.prototype, "onCreate");
-        LocalExchange.getInstance(wallet);
-        LocalExchange.getInstance(wallet);
-
-        expect(spyOnCreate).toBeCalledTimes(1);
-    });
-});
-
 describe("adjustOrder", () => {
     test("Should throw error with current candle undefined", () => {
         expect(() => exchange.adjustOrder(null as any, 10, 10))

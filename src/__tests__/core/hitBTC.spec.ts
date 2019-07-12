@@ -22,16 +22,6 @@ beforeEach(() => {
     exchange = createExchange();
 });
 
-describe("getInstance", () => {
-    test("Should trigger the onCreate lifecycle event", () => {
-        const spyOnCreate = spyOn(HitBTC.prototype, "onCreate");
-        HitBTC.getInstance();
-        HitBTC.getInstance();
-
-        expect(spyOnCreate).toBeCalledTimes(1);
-    });
-});
-
 describe("subscribeReports", () => {
     test("Should send out a subscribe to report events", () => {
         exchange.subscribeReports();
