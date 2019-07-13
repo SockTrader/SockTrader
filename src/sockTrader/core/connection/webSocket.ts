@@ -6,12 +6,15 @@ export type Data = WSWebSocket.Data;
 export default class WebSocket extends EventEmitter {
 
     private latency = 1000;
+    private waitForPong = 2000;
     private pingTimeout?: NodeJS.Timeout;
+    private resetTimeout?: NodeJS.Timeout;
     private connection?: WSWebSocket;
     private restoreCommands: object[] = [];
     private isReconnecting = false;
+    private isExpectingPong = false;
 
-    constructor(private readonly connectionString: string, private readonly pingInterval: number) {
+    constructor(private readonly connectionString: string, private readonly timeout: number) {
         super();
     }
 
@@ -20,13 +23,22 @@ export default class WebSocket extends EventEmitter {
      * within a predefined amount of time.
      */
     private heartbeat() {
+        const timeout = this.timeout + this.latency;
         if (this.pingTimeout) global.clearTimeout(this.pingTimeout);
 
         this.pingTimeout = setTimeout(() => {
-            logger.info(`Connection lost with remote exchange.`);
+            logger.info(`No response received from exchange within ${timeout / 1000}s.`);
 
+            if (this.connection) this.connection.ping("is_target_online");
+            this.isExpectingPong = true;
+            this.waitForTermination();
+        }, timeout);
+    }
+
+    private waitForTermination(): void {
+        this.resetTimeout = setTimeout(() => {
             if (this.connection) this.connection.terminate();
-        }, this.pingInterval + this.latency);
+        }, this.waitForPong);
     }
 
     /**
@@ -35,11 +47,12 @@ export default class WebSocket extends EventEmitter {
     private cleanUp() {
         if (this.connection) this.connection.removeAllListeners();
         if (this.pingTimeout) global.clearTimeout(this.pingTimeout);
+        if (this.resetTimeout) global.clearTimeout(this.resetTimeout);
     }
 
     private reconnect() {
         this.isReconnecting = true;
-        global.setTimeout(() => this.connect(), 500);
+        global.setTimeout(() => this.connect(), 10 * 1000);
     }
 
     private onClose(code: number, reason: string) {
@@ -54,6 +67,7 @@ export default class WebSocket extends EventEmitter {
 
     private onMessage(data: WSWebSocket.Data) {
         this.emit("message", data);
+        this.heartbeat();
     }
 
     private onOpen() {
@@ -69,6 +83,16 @@ export default class WebSocket extends EventEmitter {
 
     private onPing() {
         this.heartbeat();
+    }
+
+    private onPong() {
+        logger.info(`Pong received`);
+        if (this.isExpectingPong) {
+            this.heartbeat();
+            if (this.resetTimeout) global.clearTimeout(this.resetTimeout);
+        }
+
+        this.isExpectingPong = false;
     }
 
     addRestorable(command: object = {}) {
@@ -87,6 +111,7 @@ export default class WebSocket extends EventEmitter {
         this.connection.on("close", (code, reason): void => this.onClose(code, reason));
         this.connection.on("open", () => this.onOpen());
         this.connection.on("ping", () => this.onPing());
+        this.connection.on("pong", () => this.onPong());
         this.connection.on("error", error => this.onError(error));
         this.connection.on("message", data => this.onMessage(data));
         this.connection.on("unexpected-response", () => logger.info(`Unexpected response`));

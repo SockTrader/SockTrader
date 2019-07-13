@@ -92,7 +92,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     loadCurrencies(): void {
-        this.send("getSymbols");
+        this.send(this.createCommand("getSymbols"));
     }
 
     /**
