@@ -39,10 +39,9 @@ export interface IExchange extends EventEmitter {
     cancelOrder(order: IOrder): void;
 
     /**
-     * Connects to the exchange with given connection properties
-     * @param {string} connectionString web socket url to connect to
+     * Connects to the remote exchange
      */
-    connect(connectionString?: string): void;
+    connect(): void;
 
     /**
      * Places an order on the exchange

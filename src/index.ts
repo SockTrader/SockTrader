@@ -28,6 +28,12 @@ yargs
             string: true,
             required: true,
         },
+        interval: {
+            alias: "I",
+            describe: "the time period of one bar",
+            string: true,
+            required: true,
+        },
     }, startBacktest)
     .command(["live"], "start trading a strategy on a remote exchange", {
         strategy: {
@@ -36,9 +42,16 @@ yargs
             string: true,
             required: true,
         },
+        interval: {
+            alias: "I",
+            describe: "the time period of one bar",
+            string: true,
+            required: true,
+        },
         pair: {
             alias: "P",
             describe: "trading pair that will be traded on the exchange",
+            nargs: 2,
             array: true,
             required: true,
         },

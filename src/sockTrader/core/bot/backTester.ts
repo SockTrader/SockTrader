@@ -3,7 +3,7 @@ import Wallet, {IAssetMap} from "../assets/wallet";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";
 import {ICandle} from "../types/ICandle";
-import SockTrader from "./sockTrader";
+import SockTrader, {IStrategyConfig} from "./sockTrader";
 
 export interface IBackTestConfig {
     assets: IAssetMap;
@@ -36,7 +36,7 @@ export default class BackTester extends SockTrader {
         this.inputCandles = inputCandles;
 
         const wallet = new Wallet(config.assets);
-        this.exchange = LocalExchange.getInstance(wallet);
+        this.exchange = new LocalExchange(wallet);
     }
 
     async start(): Promise<void> {
@@ -71,6 +71,11 @@ export default class BackTester extends SockTrader {
             ...c,
             timestamp: moment(c.timestamp),
         } as ICandle));
+    }
+
+    subscribeToExchangeEvents(config: IStrategyConfig[]): void {
+        const exchange = this.exchange;
+        exchange.once("ready", () => exchange.subscribeReports());
     }
 
     private reportProgress(status: IBotStatus) {

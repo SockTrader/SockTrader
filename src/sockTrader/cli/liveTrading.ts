@@ -1,10 +1,8 @@
 import inquirer from "inquirer";
 import LiveTrader from "../core/bot/liveTrader";
 import {exchanges} from "../core/exchanges";
-import {CandleInterval} from "../core/exchanges/hitBTC";
 import {IExchange} from "../core/types/IExchange";
-import config from "./../../config";
-import {loadStrategy} from "./util";
+import {getExchangeInterval, loadStrategy} from "./util";
 
 export async function askForConfirmation(): Promise<boolean> {
     const {confirmation} = await inquirer.prompt([{
@@ -16,22 +14,15 @@ export async function askForConfirmation(): Promise<boolean> {
     return confirmation;
 }
 
-function createExchangeByName(exchangeName: string): IExchange | undefined {
-    const exchange = exchanges.find(exch => exch.name.toLowerCase() === exchangeName.toLowerCase());
-    if (!exchange) return undefined;
+function createExchangeByName(exchangeName: string): IExchange {
+    const exchange = exchanges[exchangeName];
+    if (!exchange) throw new Error(`Could not find exchange: ${exchangeName}`);
 
-    const exchangeConfig = config.exchanges.find(exch => exch.name.toLowerCase() === exchangeName.toLowerCase());
-    if (!exchangeConfig) return undefined;
-
-    return new exchange.class(exchangeConfig.publicKey, exchangeConfig.secretKey);
+    return new exchange.class();
 }
 
 export async function startLiveTrading(args: any) {
-    const {strategy, pair, paper, exchange, force} = args;
-
-    if (pair.length !== 2) {
-        throw new Error("The 'pair' argument should have exactly 2 values. Ex: --pair BTC USD");
-    }
+    const {strategy, pair, paper, exchange, interval, force} = args;
 
     if (!(force || paper)) {
         const isConfirmed = await askForConfirmation();
@@ -40,22 +31,15 @@ export async function startLiveTrading(args: any) {
     }
 
     try {
-
         const {default: strategyFile} = await loadStrategy(strategy);
 
         const liveTrader = new LiveTrader(paper)
+            .addExchange(createExchangeByName(exchange))
             .addStrategy({
                 strategy: strategyFile,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],
-                interval: CandleInterval.ONE_HOUR, // @TODO make interval dynamic
+                interval: getExchangeInterval(exchange, interval),
             });
-
-        const exchangeInstance = createExchangeByName(exchange);
-        if (!exchangeInstance) throw new Error(`Could not find exchange: ${exchange}`);
-
-        liveTrader.addExchange(exchangeInstance);
-
-        // if (process.send) liveTrader.addReporter(new IPCReporter());
 
         await liveTrader.start();
     } catch (e) {

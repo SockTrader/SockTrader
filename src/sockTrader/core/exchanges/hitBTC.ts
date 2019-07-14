@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
+import config from "../../../config";
 import {Data} from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
@@ -9,7 +10,7 @@ import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange from "./baseExchange";
+import BaseExchange, {IConfig} from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
@@ -30,31 +31,17 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  * @see https://hitbtc.com/
  */
 export default class HitBTC extends BaseExchange {
-
-    readonly pingInterval: number = 40 * 1000;
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
-    private static instance?: HitBTC;
 
-    /**
-     * Creates a new HitBTC exchange
-     * @param {string} pubKey the public key for connecting
-     * @param {string} secKey the secret key for connecting
-     */
-    constructor(private readonly pubKey = "", private readonly secKey = "") {
-        super("wss://api.hitbtc.com/api/2/ws");
-    }
-
-    /**
-     * Creates a singleton instance of HitBTC
-     * @param {string} pKey public key
-     * @param {string} sKey secret key
-     * @returns {HitBTC} HitBTC instance
-     */
-    static getInstance(pKey = "", sKey = "") {
-        if (!HitBTC.instance) {
-            HitBTC.instance = new HitBTC(pKey, sKey);
-        }
-        return HitBTC.instance;
+    protected getConfig(): IConfig {
+        return {
+            timeout: 40 * 1000,
+            connectionString: "wss://api.hitbtc.com/api/2/ws",
+            auth: {
+                publicKey: config.exchanges.hitbtc.publicKey,
+                secretKey: config.exchanges.hitbtc.secretKey,
+            },
+        };
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
@@ -161,9 +148,10 @@ export default class HitBTC extends BaseExchange {
         this.getConnection().on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
-        if (this.pubKey !== "" && this.secKey !== "") {
+        const {auth} = this.getConfig();
+        if (auth.publicKey !== "" && auth.secretKey !== "") {
             logger.info("Live credentials are used!");
-            this.login(this.pubKey, this.secKey);
+            this.login(auth.publicKey, auth.secretKey);
         }
     }
 }

@@ -21,6 +21,12 @@ interface ICommand {
     id: string;
 }
 
+export interface IConfig {
+    connectionString: string;
+    timeout: number;
+    auth: Record<string, string>;
+}
+
 /**
  * The BaseExchange resembles common marketplace functionality
  */
@@ -28,18 +34,19 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    protected candles: { [key: string]: CandleManager } = {};
     protected openOrders: IOrder[] = [];
+    protected candles: Record<string, CandleManager> = {};
+    private readonly orderbooks: Record<string, Orderbook> = {};
+    private readonly orderInProgress: Record<string, boolean> = {};
     private readonly connection: WebSocket;
-    private readonly orderbooks: { [key: string]: Orderbook } = {};
-    private readonly orderInProgress: { [key: string]: boolean } = {};
     private orderIncrement = 0;
     private ready = false;
 
-    protected constructor(connectionString: string) {
+    constructor() {
         super();
 
-        this.connection = new WebSocket(connectionString, 40 * 1000);
+        const {connectionString, timeout} = this.getConfig();
+        this.connection = new WebSocket(connectionString, timeout);
     }
 
     abstract adjustOrder(order: IOrder, price: number, qty: number): void;
@@ -56,10 +63,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract subscribeOrderbook(pair: Pair): void;
 
-    /**
-     * Listen for actions that are happening on the remote exchange
-     */
     abstract subscribeReports(): void;
+
+    protected abstract getConfig(): IConfig;
 
     /**
      * Load trading pair configuration
@@ -70,7 +76,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.createOrder(pair, price, qty, OrderSide.BUY);
     }
 
-    connect(connectionString: string): void {
+    connect(): void {
         this.connection.on("open", () => this.onConnect());
         this.connection.once("open", () => this.onFirstConnect());
         this.connection.connect();
@@ -78,6 +84,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     destroy(): void {
         this.removeAllListeners();
+        this.connection.removeAllListeners();
     }
 
     /**

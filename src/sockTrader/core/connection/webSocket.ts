@@ -3,6 +3,7 @@ import WSWebSocket from "ws";
 import logger from "../logger";
 
 export type Data = WSWebSocket.Data;
+
 export default class WebSocket extends EventEmitter {
 
     private latency = 1000;
@@ -100,7 +101,7 @@ export default class WebSocket extends EventEmitter {
     }
 
     send(command: object = {}) {
-        if (!this.connection) throw new Error("No connection available.");
+        if (!this.connection) throw new Error(`Could not send: ${JSON.stringify(command)}. No connection available.`);
 
         this.connection.send(JSON.stringify(command));
     }
