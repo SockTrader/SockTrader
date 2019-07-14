@@ -28,12 +28,6 @@ yargs
             string: true,
             required: true,
         },
-        interval: {
-            alias: "I",
-            describe: "the time period of one bar",
-            string: true,
-            required: true,
-        },
     }, startBacktest)
     .command(["live"], "start trading a strategy on a remote exchange", {
         strategy: {

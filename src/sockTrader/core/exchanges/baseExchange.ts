@@ -3,29 +3,17 @@ import {EventEmitter} from "events";
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
 import CandleManager from "../candles/candleManager";
-import WebSocket from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
+import {ICommand, IConnection} from "../types/IConnection";
 import {ICurrencyMap} from "../types/ICurrencyMap";
 import {IExchange} from "../types/IExchange";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-
-interface ICommand {
-    method: string;
-    params: object;
-    id: string;
-}
-
-export interface IConfig {
-    connectionString: string;
-    timeout: number;
-    auth: Record<string, string>;
-}
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -38,15 +26,14 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     protected candles: Record<string, CandleManager> = {};
     private readonly orderbooks: Record<string, Orderbook> = {};
     private readonly orderInProgress: Record<string, boolean> = {};
-    private readonly connection: WebSocket;
+    private readonly connection: IConnection;
     private orderIncrement = 0;
     private ready = false;
 
     constructor() {
         super();
 
-        const {connectionString, timeout} = this.getConfig();
-        this.connection = new WebSocket(connectionString, timeout);
+        this.connection = this.createConnection();
     }
 
     abstract adjustOrder(order: IOrder, price: number, qty: number): void;
@@ -65,7 +52,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     abstract subscribeReports(): void;
 
-    protected abstract getConfig(): IConfig;
+    protected abstract createConnection(): IConnection;
 
     /**
      * Load trading pair configuration
@@ -187,7 +174,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.emit("core.report", order, oldOrder);
     }
 
-    getConnection(): WebSocket {
+    getConnection(): IConnection {
         return this.connection;
     }
 

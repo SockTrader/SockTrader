@@ -11,7 +11,7 @@ const BASE_PATH = "../../../";
 /**
  * Name of entry script
  */
-const BACKTEST_SCRIPT = "backtest.js";
+const BACKTEST_SCRIPT = "index.js";
 
 /**
  * Name of strategies folder

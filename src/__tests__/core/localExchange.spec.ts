@@ -36,7 +36,7 @@ afterEach(() => {
 describe("adjustOrder", () => {
     test("Should throw error with current candle undefined", () => {
         expect(() => exchange.adjustOrder(null as any, 10, 10))
-            .toThrow("Current candle undefined. Emit candles before adjusting an order.");
+            .toThrow("Cannot adjust order. No candles have been emitted.");
     });
 
     test("Should adjust given order", () => {

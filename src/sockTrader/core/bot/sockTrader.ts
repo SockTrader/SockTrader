@@ -10,7 +10,7 @@ import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
 
 export interface IStrategyConfig {
-    interval: ICandleInterval;
+    interval?: ICandleInterval;
     pair: Pair;
     strategy: IStrategyClass<BaseStrategy>;
 }
@@ -78,7 +78,9 @@ export default abstract class SockTrader {
         uniquePairs.forEach(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
 
         const uniquePairInterval = uniqWith<IStrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
-        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
+        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => {
+            if (interval) exchange.subscribeCandles(pair, interval);
+        }));
     }
 
     /**

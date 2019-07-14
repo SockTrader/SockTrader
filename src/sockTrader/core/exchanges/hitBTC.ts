@@ -1,16 +1,17 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import config from "../../../config";
-import {Data} from "../connection/webSocket";
+import WebSocket, {Data} from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
+import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IConfig} from "./baseExchange";
+import BaseExchange from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
@@ -33,15 +34,8 @@ export const CandleInterval: Record<string, ICandleInterval> = {
 export default class HitBTC extends BaseExchange {
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
 
-    protected getConfig(): IConfig {
-        return {
-            timeout: 40 * 1000,
-            connectionString: "wss://api.hitbtc.com/api/2/ws",
-            auth: {
-                publicKey: config.exchanges.hitbtc.publicKey,
-                secretKey: config.exchanges.hitbtc.secretKey,
-            },
-        };
+    protected createConnection(): IConnection {
+        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
@@ -148,7 +142,7 @@ export default class HitBTC extends BaseExchange {
         this.getConnection().on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
-        const {auth} = this.getConfig();
+        const auth = config.exchanges.hitbtc;
         if (auth.publicKey !== "" && auth.secretKey !== "") {
             logger.info("Live credentials are used!");
             this.login(auth.publicKey, auth.secretKey);

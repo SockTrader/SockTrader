@@ -1,8 +1,10 @@
 import Wallet from "../assets/wallet";
+import Local from "../connection/local";
 import {ICandle} from "../types/ICandle";
+import {IConnection} from "../types/IConnection";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IConfig} from "./baseExchange";
+import BaseExchange from "./baseExchange";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
@@ -25,8 +27,8 @@ export default class LocalExchange extends BaseExchange {
         this.on("core.report", (order: IOrder) => this.wallet.updateAssets(order));
     }
 
-    protected getConfig(): IConfig {
-        throw new Error("Method not implemented.");
+    protected createConnection(): IConnection {
+        return new Local();
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {

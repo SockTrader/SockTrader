@@ -1,10 +1,11 @@
 import {EventEmitter} from "events";
 import WSWebSocket from "ws";
 import logger from "../logger";
+import {IConnection} from "../types/IConnection";
 
 export type Data = WSWebSocket.Data;
 
-export default class WebSocket extends EventEmitter {
+export default class WebSocket extends EventEmitter implements IConnection {
 
     private latency = 1000;
     private waitForPong = 2000;
