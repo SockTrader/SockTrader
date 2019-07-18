@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import moment, {Moment} from "moment";
 import {Pair} from "../../sockTrader/core/types/pair";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";

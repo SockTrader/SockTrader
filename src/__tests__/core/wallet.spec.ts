@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import {
     IOrder,
     OrderSide,

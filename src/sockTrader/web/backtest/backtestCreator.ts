@@ -32,7 +32,6 @@ export default class BacktestCreator {
      * @param options
      */
     private static createProcess(scriptPath: string, options: IBacktestOptions): ChildProcess {
-        console.log(options);
         const childProcess: ChildProcess = fork(`${scriptPath}`, [
             "backtest",
             "--candles", options.candlePath,

@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import {Pair} from "../../sockTrader/core/types/pair";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";
@@ -8,7 +6,7 @@ import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 const liveTrader = new LiveTrader({webServer: false} as any);
 const pair: Pair = ["BTC", "USD"];
 
-const hitBTC = HitBTC.getInstance();
+const hitBTC = new HitBTC();
 liveTrader.addExchange(hitBTC);
 liveTrader.addStrategy({
     strategy: SimpleMovingAverage,

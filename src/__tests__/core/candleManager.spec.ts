@@ -1,6 +1,4 @@
-/* tslint:disable */
 import {expect} from "chai";
-import "jest";
 import sinon from "sinon";
 
 import CandleManager from "../../sockTrader/core/candles/candleManager";

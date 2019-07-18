@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import {Pair} from "../../sockTrader/core/types/pair";
 import Wallet from "../../sockTrader/core/assets/wallet";
 import {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
@@ -17,7 +15,7 @@ const backTester = new BackTester({assets: {USD: 10000}}, [{
 }]);
 const pair: Pair = ["BTC", "USD"];
 const wallet = new Wallet({BTC: 1});
-const localExchange = LocalExchange.getInstance(wallet);
+const localExchange = new LocalExchange(wallet);
 backTester["exchange"] = localExchange;
 const emitCandlesMock = jest.fn();
 
