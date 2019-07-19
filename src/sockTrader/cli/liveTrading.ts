@@ -34,7 +34,7 @@ export async function startLiveTrading(args: any) {
         const {default: strategyFile} = await loadStrategy(strategy);
 
         const liveTrader = new LiveTrader(paper)
-            .addExchange(createExchangeByName(exchange))
+            .setExchange(createExchangeByName(exchange))
             .addStrategy({
                 strategy: strategyFile,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],

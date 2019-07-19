@@ -59,7 +59,6 @@ describe("start", () => {
             interval: CandleInterval.ONE_HOUR,
         }]));
 
-
         expect(bindStrategyToExchangeSpy).toHaveBeenCalledWith(expect.objectContaining({
             pair,
             exchange: localExchange,

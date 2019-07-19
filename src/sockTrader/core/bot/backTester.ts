@@ -42,28 +42,25 @@ export default class BackTester extends SockTrader {
     async start(): Promise<void> {
         await super.start();
 
-        if (!this.inputCandles || this.inputCandles.length === 0) {
-            throw new Error("No candles found as input.");
-        }
+        if (!this.inputCandles || this.inputCandles.length === 0) throw new Error("No candles found as input.");
+        if (this.eventsBound) return;
 
-        if (!this.eventsBound) {
-            this.subscribeToExchangeEvents(this.strategyConfigurations);
+        this.subscribeToExchangeEvents(this.strategyConfigurations);
 
-            this.strategyConfigurations.forEach(c => {
-                const strategy = new c.strategy(c.pair, this.exchange);
-                this.bindStrategyToExchange(strategy);
-                this.bindExchangeToStrategy(strategy);
-                this.bindExchangeToReporters(this.reporters);
-            });
-
-            this.eventsBound = true;
-        }
+        this.strategyConfigurations.forEach(c => {
+            const strategy = new c.strategy(c.pair, this.exchange);
+            this.bindStrategyToExchange(strategy);
+            this.bindExchangeToStrategy(strategy);
+            this.bindExchangeToReporters(this.reporters);
+        });
 
         const candles = this.hydrateCandles(this.inputCandles);
 
         this.reportProgress({type: "started", length: candles.length});
         await (this.exchange as LocalExchange).emitCandles(candles);
         this.reportProgress({type: "finished"});
+
+        this.eventsBound = true;
     }
 
     private hydrateCandles(candles: IInputCandle[]): ICandle[] {
