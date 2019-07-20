@@ -14,7 +14,7 @@ export default class BacktestCreator {
      * Only 1 concurrent process allowed
      * Multiple attempts will kill the previous instance
      */
-    process: ChildProcess | undefined;
+    process?: ChildProcess;
 
     create(scriptPath: string, options: IBacktestOptions) {
         if (typeof this.process !== "undefined") {

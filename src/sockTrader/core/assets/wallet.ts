@@ -84,28 +84,41 @@ export default class Wallet {
         return this.assets[asset] -= priceQty;
     }
 
+    /**
+     * Revert asset reservation
+     * @param order
+     */
     private revertAssetReservation(order: IOrder): void {
-        const [target, source] = order.pair;
+        const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(source, this.add, this.getOrderPrice(order));
-        ifSell(target, this.add, order.quantity);
+        ifBuy(base, this.add, this.getOrderPrice(order));
+        ifSell(quote, this.add, order.quantity);
     }
 
+    /**
+     * Reserve assets. This will prevent a trader from spending the same amount twice.
+     * Ofc the exchange would throw an error at some point.
+     * @param order
+     */
     private reserveAsset(order: IOrder): void {
-        const [target, source] = order.pair;
+        const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(source, this.subtract, this.getOrderPrice(order));
-        ifSell(target, this.subtract, order.quantity);
+        ifBuy(base, this.subtract, this.getOrderPrice(order));
+        ifSell(quote, this.subtract, order.quantity);
     }
 
+    /**
+     * Assets will be released on the other side of the trade.
+     * @param order
+     */
     private releaseAsset(order: IOrder): void {
-        const [target, source] = order.pair;
+        const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(target, this.add, order.quantity); // release asset reservation
-        ifSell(source, this.add, this.getOrderPrice(order)); // release asset reservation
+        ifBuy(quote, this.add, order.quantity);
+        ifSell(base, this.add, this.getOrderPrice(order));
     }
 
     /**

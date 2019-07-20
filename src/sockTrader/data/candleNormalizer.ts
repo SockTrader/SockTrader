@@ -11,7 +11,7 @@ export interface ICandleNormalizerConfig {
     symbol: Pair;
 }
 
-export type Parser = (candles: IDataFrame<number>) => IDataFrame<number, ICandle>;
+export type Parser = (candles: IDataFrame) => IDataFrame<number, ICandle>;
 
 /**
  * The CandleNormalizer parses a file containing candles and returns

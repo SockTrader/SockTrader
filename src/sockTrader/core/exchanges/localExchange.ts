@@ -83,19 +83,28 @@ export default class LocalExchange extends BaseExchange {
     }
 
     /**
+     * @TODO We should move sorting into the candle normalizer.
+     * @TODO So that the trading bot can assume to always receive clean data.
+     * @param candles
+     */
+    sortCandles(candles: ICandle[]) {
+        const isCandleListDescending: boolean = (candles[candles.length - 1].timestamp.isAfter(candles[0].timestamp));
+        return !isCandleListDescending ? [...candles].reverse() : candles;
+    }
+
+    /**
      * Emits a collection of candles from a local file as if they were sent from a real exchange
      * @param {ICandle[]} candles
      * @returns {Promise<void>} promise
      */
     async emitCandles(candles: ICandle[]) {
-        const isCandleOrderIncorrect: boolean = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp));
+        const candleList = this.sortCandles(candles);
+        const processedCandles: ICandle[] = [];
 
-        (isCandleOrderIncorrect ? [...candles].reverse() : candles).reduce<ICandle[]>((acc, val) => {
-            const processedCandles = [val, ...acc];
-            this.currentCandle = val;
+        candleList.forEach(value => {
+            processedCandles.unshift(value);
             this.emit("core.updateCandles", processedCandles);
-            return processedCandles;
-        }, []);
+        });
     }
 
     isReady(): boolean {

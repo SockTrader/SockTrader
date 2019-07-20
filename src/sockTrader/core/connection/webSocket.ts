@@ -7,12 +7,12 @@ export type Data = WSWebSocket.Data;
 
 export default class WebSocket extends EventEmitter implements IConnection {
 
-    private latency = 1000;
-    private waitForPong = 2000;
+    private readonly latency = 1000;
+    private readonly waitForPong = 2000;
+    private readonly restoreCommands: object[] = [];
     private pingTimeout?: NodeJS.Timeout;
     private resetTimeout?: NodeJS.Timeout;
     private connection?: WSWebSocket;
-    private restoreCommands: object[] = [];
     private isReconnecting = false;
     private isExpectingPong = false;
 
