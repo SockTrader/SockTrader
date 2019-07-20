@@ -55,45 +55,6 @@ export default class Wallet {
     }
 
     /**
-     * Updates the assets on the exchange for given new order
-     * @param {IOrder} order new order
-     * @param {IOrder} oldOrder old order
-     */
-    updateAssets(order: IOrder, oldOrder?: IOrder) {
-        const [target, source] = order.pair;
-
-        const ifBuy = this.createCalculator(order.side, OrderSide.BUY);
-        const ifSell = this.createCalculator(order.side, OrderSide.SELL);
-
-        if (ReportType.REPLACED === order.reportType && oldOrder) {
-            ifBuy(source, this.add, this.getOrderPrice(oldOrder));
-            ifBuy(source, this.subtract, this.getOrderPrice(order));
-            ifSell(target, this.add, oldOrder.quantity);
-            ifSell(target, this.subtract, order.quantity);
-        } else if (ReportType.NEW === order.reportType) {
-            ifBuy(source, this.subtract, this.getOrderPrice(order));
-            ifSell(target, this.subtract, order.quantity);
-        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
-            // @TODO what if order is partially filled?
-            ifBuy(target, this.add, order.quantity);
-            ifSell(source, this.add, this.getOrderPrice(order));
-        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            ifBuy(source, this.add, this.getOrderPrice(order));
-            ifSell(target, this.add, order.quantity);
-        }
-    }
-
-    private add(asset: string, priceQty: number) {
-        return this.assets[asset] += priceQty;
-    }
-
-    private createCalculator(orderSide: OrderSide, side: OrderSide) {
-        return (asset: string, calc: AssetCalc, priceQty: number) => {
-            if (orderSide === side) calc(asset, priceQty);
-        };
-    }
-
-    /**
      * Calculates total price of order
      * @param {IOrder} order the order
      * @returns {number} total price
@@ -102,7 +63,67 @@ export default class Wallet {
         return order.price * order.quantity;
     }
 
-    private subtract(asset: string, priceQty: number) {
+    private createCalculator(orderSide: OrderSide, side: OrderSide) {
+        return (asset: string, calc: AssetCalc, priceQty: number) => {
+            if (orderSide === side) calc(asset, priceQty);
+        };
+    }
+
+    private createCalculators(order: IOrder) {
+        return {
+            ifBuy: this.createCalculator(order.side, OrderSide.BUY),
+            ifSell: this.createCalculator(order.side, OrderSide.SELL),
+        };
+    }
+
+    private add(asset: string, priceQty: number): number {
+        return this.assets[asset] += priceQty;
+    }
+
+    private subtract(asset: string, priceQty: number): number {
         return this.assets[asset] -= priceQty;
+    }
+
+    private revertAssetReservation(order: IOrder): void {
+        const [target, source] = order.pair;
+        const {ifBuy, ifSell} = this.createCalculators(order);
+
+        ifBuy(source, this.add, this.getOrderPrice(order));
+        ifSell(target, this.add, order.quantity);
+    }
+
+    private reserveAsset(order: IOrder): void {
+        const [target, source] = order.pair;
+        const {ifBuy, ifSell} = this.createCalculators(order);
+
+        ifBuy(source, this.subtract, this.getOrderPrice(order));
+        ifSell(target, this.subtract, order.quantity);
+    }
+
+    private releaseAsset(order: IOrder): void {
+        const [target, source] = order.pair;
+        const {ifBuy, ifSell} = this.createCalculators(order);
+
+        ifBuy(target, this.add, order.quantity); // release asset reservation
+        ifSell(source, this.add, this.getOrderPrice(order)); // release asset reservation
+    }
+
+    /**
+     * Updates the assets on the exchange for given new order
+     * @param {IOrder} order new order
+     * @param {IOrder} oldOrder old order
+     */
+    updateAssets(order: IOrder, oldOrder?: IOrder) {
+        if (ReportType.REPLACED === order.reportType && oldOrder) {
+            this.revertAssetReservation(oldOrder);
+            this.reserveAsset(order);
+        } else if (ReportType.NEW === order.reportType) {
+            this.reserveAsset(order);
+        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+            // @TODO what if order is partially filled?
+            this.releaseAsset(order);
+        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
+            this.revertAssetReservation(order);
+        }
     }
 }
