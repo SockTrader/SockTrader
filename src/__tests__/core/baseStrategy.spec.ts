@@ -1,7 +1,7 @@
 import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
 import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import {IOrderbook} from "../../sockTrader/core/orderbook";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
 
 class MyStrategy extends BaseStrategy {
     notifyOrder(order: IOrder): void {

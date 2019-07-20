@@ -1,17 +1,19 @@
 import moment from "moment";
-import {connection} from "websocket";
 import {EventEmitter} from "events";
-import {IOrderbookData} from "../../sockTrader/core/exchanges/baseExchange";
 import {Pair} from "../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import Orderbook from "../../sockTrader/core/orderbook";
+import {IOrderbookData} from "../../sockTrader/core/types/IOrderbookData";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
+import WebSocket from "../../sockTrader/core/connection/webSocket";
+
+jest.mock("./../../config");
 
 const pair: Pair = ["BTC", "USD"];
 
 function createExchange() {
-    const exchange = new HitBTC("PUB_123", "SEC_123");
+    const exchange = new HitBTC();
     exchange.send = jest.fn();
 
     return exchange;
@@ -22,49 +24,58 @@ beforeEach(() => {
     exchange = createExchange();
 });
 
-describe("getInstance", () => {
-    test("Should trigger the onCreate lifecycle event", () => {
-        const spyOnCreate = spyOn(HitBTC.prototype, "onCreate");
-        HitBTC.getInstance();
-        HitBTC.getInstance();
-
-        expect(spyOnCreate).toBeCalledTimes(1);
-    });
-});
-
 describe("subscribeReports", () => {
     test("Should send out a subscribe to report events", () => {
         exchange.subscribeReports();
-        expect(exchange.send).toBeCalledWith("subscribeReports");
+        expect(exchange.send).toBeCalledWith(expect.objectContaining({
+            id: "subscribeReports",
+            method: "subscribeReports",
+            params: {},
+        }));
     });
 });
 
 describe("subscribeOrderbook", () => {
     test("Should send out a subscribe to orderbook events", () => {
         exchange.subscribeOrderbook(pair);
-        expect(exchange.send).toBeCalledWith("subscribeOrderbook", expect.objectContaining({symbol: "BTCUSD"}));
+        expect(exchange.send).toBeCalledWith(
+            expect.objectContaining({
+                id: "subscribeOrderbook",
+                method: "subscribeOrderbook",
+                params: {symbol: "BTCUSD"},
+            }),
+        );
     });
 });
 
 describe("subscribeCandles", () => {
     test("Should send out subscribe to candle events", () => {
         exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
-        expect(exchange.send).toBeCalledWith("subscribeCandles", expect.objectContaining({
-            period: "M5",
-            symbol: "BTCUSD",
-        }));
+        expect(exchange.send).toBeCalledWith(
+            expect.objectContaining({
+                id: "subscribeCandles",
+                method: "subscribeCandles",
+                params: {period: "M5", symbol: "BTCUSD"},
+            }),
+        );
     });
 });
 
 describe("login", () => {
     test("Should authenticate user on exchange", () => {
         exchange.login("PUB_123", "PRIV_123");
-        expect(exchange.send).toBeCalledWith("login", expect.objectContaining({
-            "algo": "HS256",
-            "pKey": "PUB_123",
-            "signature": expect.any(String),
-            "nonce": expect.any(String),
-        }));
+        expect(exchange.send).toBeCalledWith(
+            expect.objectContaining({
+                id: "login",
+                method: "login",
+                params: {
+                    algo: "HS256",
+                    pKey: "PUB_123",
+                    signature: expect.any(String),
+                    nonce: expect.any(String),
+                },
+            }),
+        );
     });
 });
 
@@ -116,7 +127,11 @@ describe("onUpdateOrderbook", () => {
 describe("loadCurrencies", () => {
     it("Should load currency configuration from the exchange", () => {
         exchange.loadCurrencies();
-        expect(exchange.send).toBeCalledWith("getSymbols");
+        expect(exchange.send).toBeCalledWith(expect.objectContaining({
+            id: "getSymbols",
+            method: "getSymbols",
+            params: {},
+        }));
     });
 });
 
@@ -127,22 +142,32 @@ describe("cancelOrder", () => {
         exchange.cancelOrder({id: "123"} as IOrder);
 
         expect(setOrderInProgressMock).toBeCalledWith("123");
-        expect(exchange.send).toBeCalledWith("cancelOrder", {clientOrderId: "123"});
+        expect(exchange.send).toBeCalledWith(expect.objectContaining({
+            id: "cancelOrder",
+            method: "cancelOrder",
+            params: {
+                clientOrderId: "123",
+            },
+        }));
     });
 });
 
 describe("adjustOrder", () => {
     it("Should adjust existing orders", () => {
-        exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
+        exchange["isAdjustingAllowed"] = jest.fn(() => true);
         exchange.generateOrderId = jest.fn(() => "neworderid");
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(exchange.send).toBeCalledWith("cancelReplaceOrder", expect.objectContaining({
-            clientOrderId: "123",
-            price: 0.002,
-            quantity: 0.5,
-            strictValidate: true,
-            requestClientId: "neworderid",
+        expect(exchange.send).toBeCalledWith(expect.objectContaining({
+            id: "cancelReplaceOrder",
+            method: "cancelReplaceOrder",
+            params: {
+                clientOrderId: "123",
+                price: 0.002,
+                quantity: 0.5,
+                strictValidate: true,
+                requestClientId: "neworderid",
+            },
         }));
     });
 });
@@ -152,13 +177,17 @@ describe("createOrder", () => {
         exchange.generateOrderId = jest.fn(() => "FAKE_ORDER_ID");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
-        expect(exchange.send).toBeCalledWith("newOrder", expect.objectContaining({
-            price: 10,
-            quantity: 1,
-            side: "buy",
-            symbol: pair,
-            type: "limit",
-            clientOrderId: "FAKE_ORDER_ID",
+        expect(exchange.send).toBeCalledWith(expect.objectContaining({
+            id: "newOrder",
+            method: "newOrder",
+            params: {
+                price: 10,
+                quantity: 1,
+                side: "buy",
+                symbol: pair,
+                type: "limit",
+                clientOrderId: "FAKE_ORDER_ID",
+            },
         }));
     });
 });
@@ -169,21 +198,22 @@ describe("onConnect", () => {
         exchange.login = jest.fn();
         exchange.adapter.onReceive = jest.fn();
 
-        const connectionMock = new EventEmitter();
-        exchange["onConnect"](connectionMock as connection);
+        exchange["onFirstConnect"]();
+        // @ts-ignore
+        exchange.getConnection = jest.fn(() => new EventEmitter());
 
         const message = JSON.stringify({test: "123"});
-        connectionMock.emit("message", message);
+        exchange["connection"].emit("message", message);
 
         expect(exchange.adapter.onReceive).toBeCalledWith(message);
         expect(exchange.loadCurrencies).toBeCalledTimes(1);
-        expect(exchange.login).toBeCalledWith("PUB_123", "SEC_123");
+        expect(exchange.login).toBeCalledWith("pub_key", "sec_key");
     });
 });
 
-describe("connect", () => {
-    it("Should connect", () => {
-        exchange.connect();
-        expect(exchange["socketClient"].connect).toBeCalledWith("wss://api.hitbtc.com/api/2/ws");
+describe("createConnection", () => {
+    it("Should create a new websocket connection", () => {
+        const connection = exchange["createConnection"]();
+        expect(connection).toBeInstanceOf(WebSocket)
     });
 });

@@ -1,4 +1,3 @@
-import "jest";
 import backtestWSEventHandler, {resolvePath} from "../../sockTrader/web/controllers/backtest";
 import backtestCreator from "../../sockTrader/web/backtest/backtestCreator";
 import {EventEmitter} from "events";
@@ -47,7 +46,7 @@ describe("Web-based backtest process creator", () => {
     test("Should start a new backtest process when it receives an \"new_backtest\" event", () => {
         startBackTest();
         expect(backtestCreator.prototype.create).toHaveBeenLastCalledWith(
-            expect.stringContaining("src/backtest.js"),
+            expect.stringContaining("src/index.js"),
             {"candlePath": "CANDLES", "strategyPath": "STRATEGY"},
         );
     });

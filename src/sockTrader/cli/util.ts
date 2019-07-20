@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import util from "util";
+import {exchanges} from "../core/exchanges";
+import {ICandleInterval} from "../core/types/ICandleInterval";
 
 export async function loadStrategy(strategyFilename: string) {
     const strategyPath = path.resolve(__dirname, "./../../strategies", strategyFilename);
@@ -21,4 +23,14 @@ export function getBaseFilenames(files: string[]): string[] {
     return files
         .map(f => f.split(".")[0])
         .filter((value, index, self) => self.indexOf(value) === index);
+}
+
+export function getExchangeInterval(exchangeName: string, interval: string): ICandleInterval {
+    const exchangeConfig = exchanges[exchangeName];
+    if (!exchangeConfig) throw new Error(`Could not find exchange: ${exchangeName}`);
+
+    const intervalConfig = exchangeConfig.intervals[interval];
+    if (!intervalConfig) throw new Error(`Could not find interval: ${interval}`);
+
+    return intervalConfig;
 }

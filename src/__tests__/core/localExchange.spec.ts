@@ -1,10 +1,7 @@
-/* tslint:disable */
-import "jest";
 import moment, {Moment} from "moment";
 import {Pair} from "../../sockTrader/core/types/pair";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import Wallet from "../../sockTrader/core/assets/wallet";
-import {ICandle} from "../../sockTrader/core/candles/candleManager";
 import {
     IOrder,
     OrderSide,
@@ -13,6 +10,7 @@ import {
     OrderType,
     ReportType,
 } from "../../sockTrader/core/types/order";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -25,7 +23,7 @@ beforeEach(() => {
     exchange = new LocalExchange(wallet);
     exchange.send = sendMock;
     exchange.emit = emitMock;
-    exchange["isAdjustingOrderAllowed"] = jest.fn(() => true);
+    exchange["isAdjustingAllowed"] = jest.fn(() => true);
 });
 
 afterEach(() => {
@@ -33,20 +31,10 @@ afterEach(() => {
     emitMock.mockRestore();
 });
 
-describe("getInstance", () => {
-    test("Should trigger the onCreate lifecycle event", () => {
-        const spyOnCreate = spyOn(LocalExchange.prototype, "onCreate");
-        LocalExchange.getInstance(wallet);
-        LocalExchange.getInstance(wallet);
-
-        expect(spyOnCreate).toBeCalledTimes(1);
-    });
-});
-
 describe("adjustOrder", () => {
     test("Should throw error with current candle undefined", () => {
         expect(() => exchange.adjustOrder(null as any, 10, 10))
-            .toThrow("Current candle undefined. Emit candles before adjusting an order.");
+            .toThrow("Cannot adjust order. No candles have been emitted.");
     });
 
     test("Should adjust given order", () => {

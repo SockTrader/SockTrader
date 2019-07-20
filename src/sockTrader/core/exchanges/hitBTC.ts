@@ -1,12 +1,17 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
-import {connection, IMessage} from "websocket";
-import {ICandle, ICandleInterval} from "../candles/candleManager";
+import config from "../../../config";
+import WebSocket, {Data} from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
+import {IConnection} from "../types/IConnection";
+import {IOrderbookData} from "../types/IOrderbookData";
+import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
-import BaseExchange, {IOrderbookData, IResponseAdapter} from "./baseExchange";
+import BaseExchange from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
@@ -27,53 +32,29 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  * @see https://hitbtc.com/
  */
 export default class HitBTC extends BaseExchange {
-
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
-    private static instance?: HitBTC;
 
-    /**
-     * Creates a new HitBTC exchange
-     * @param {string} pubKey the public key for connecting
-     * @param {string} secKey the secret key for connecting
-     */
-    constructor(private readonly pubKey = "", private readonly secKey = "") {
-        super();
-    }
-
-    /**
-     * Creates a singleton instance of HitBTC
-     * @param {string} pKey public key
-     * @param {string} sKey secret key
-     * @returns {HitBTC} HitBTC instance
-     */
-    static getInstance(pKey = "", sKey = "") {
-        if (!HitBTC.instance) {
-            HitBTC.instance = new HitBTC(pKey, sKey);
-        }
-        return HitBTC.instance;
+    protected createConnection(): IConnection {
+        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
-        if (this.isAdjustingOrderAllowed(order, price, qty)) {
+        if (this.isAdjustingAllowed(order, price, qty)) {
             const newOrderId = this.generateOrderId(order.pair);
 
-            this.send("cancelReplaceOrder", {
+            this.send(this.createCommand("cancelReplaceOrder", {
                 clientOrderId: order.id,
                 price,
                 quantity: qty,
                 requestClientId: newOrderId,
                 strictValidate: true,
-            });
+            }));
         }
     }
 
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
-        this.send("cancelOrder", {clientOrderId: order.id});
-    }
-
-    connect() {
-        super.connect("wss://api.hitbtc.com/api/2/ws");
+        this.send(this.createCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
@@ -81,18 +62,18 @@ export default class HitBTC extends BaseExchange {
         this.setOrderInProgress(orderId);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
-        this.send("newOrder", {
+        this.send(this.createCommand("newOrder", {
             clientOrderId: orderId,
             price,
             quantity: qty,
             side,
             symbol: pair,
             type: "limit",
-        });
+        }));
     }
 
     loadCurrencies(): void {
-        this.send("getSymbols");
+        this.send(this.createCommand("getSymbols"));
     }
 
     /**
@@ -104,12 +85,14 @@ export default class HitBTC extends BaseExchange {
         const nonce: string = nanoid(32);
         const signature: string = crypto.createHmac("sha256", privateKey).update(nonce).digest("hex");
 
-        this.send("login", {
+        const command = this.createRestorableCommand("login", {
             algo: "HS256",
             nonce,
             pKey: publicKey,
             signature,
         });
+
+        this.send(command);
     }
 
     onSnapshotCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
@@ -135,26 +118,34 @@ export default class HitBTC extends BaseExchange {
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {
-        return this.send("subscribeCandles", {
+        const command = this.createRestorableCommand("subscribeCandles", {
             symbol: pair.join(""),
             period: interval.code,
         });
+
+        return this.send(command);
     }
 
-    subscribeOrderbook = (pair: Pair): void => this.send("subscribeOrderbook", {symbol: pair.join("")});
+    subscribeOrderbook = (pair: Pair): void => {
+        const command = this.createRestorableCommand("subscribeOrderbook", {symbol: pair.join("")});
+        this.send(command);
+    };
 
-    subscribeReports = (): void => this.send("subscribeReports");
+    subscribeReports = (): void => {
+        const command = this.createRestorableCommand("subscribeReports");
+        this.send(command);
+    };
 
-    protected onConnect(conn: connection): void {
-        super.onConnect(conn);
+    protected onFirstConnect(): void {
+        super.onFirstConnect();
 
-        conn.on("message", (data: IMessage) => this.adapter.onReceive(data));
-
+        this.getConnection().on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
-        if (this.pubKey !== "" && this.secKey !== "") {
+        const auth = config.exchanges.hitbtc;
+        if (auth.publicKey !== "" && auth.secretKey !== "") {
             logger.info("Live credentials are used!");
-            this.login(this.pubKey, this.secKey);
+            this.login(auth.publicKey, auth.secretKey);
         }
     }
 }

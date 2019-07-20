@@ -1,6 +1,7 @@
 import moment from "moment";
-import HitBTCAdapter, {IHitBTCCandlesResponse} from "../../sockTrader/core/exchanges/hitBTCAdapter";
+import HitBTCAdapter from "../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
+import {IHitBTCCandlesResponse} from "../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
 
 function createExchange() {
     const exchange = new HitBTC();
@@ -64,8 +65,6 @@ describe("onUpdateCandles", () => {
 
 describe("onReceive", () => {
     it("Should re-emit exchange events as API events", async () => {
-        expect.assertions(1);
-
         adapter.on("api.event_method", (args: any) => {
             expect(args).toStrictEqual({
                 id: "event_id",
@@ -84,8 +83,12 @@ describe("onReceive", () => {
         });
     });
 
-    it("Should throw when exchange emits non utf8 data", () => {
-        expect(() => adapter.onReceive({type: "not_utf8"})).toThrowError("Response is not UTF8!");
+    it("Should ignore incoming messages which are not strings", () => {
+        const spyEmit = jest.spyOn(adapter, "emit");
+        adapter.onReceive([]);
+        adapter.onReceive(undefined);
+        adapter.onReceive({});
+        expect(spyEmit).toBeCalledTimes(0);
     });
 });
 

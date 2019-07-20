@@ -1,5 +1,5 @@
 import {Moment} from "moment";
-import {ICandle} from "./candleManager";
+import {ICandle} from "../types/ICandle";
 
 export default class CandleCollection extends Array<ICandle> {
 

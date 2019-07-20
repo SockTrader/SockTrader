@@ -1,84 +1,19 @@
 import {EventEmitter} from "events";
 import moment from "moment";
-import {IMessage} from "websocket";
-import {ICandle, ICandleInterval} from "../candles/candleManager";
+import {Data} from "../connection/webSocket";
 import logger from "../logger";
-import {IOrderbookEntry} from "../orderbook";
+import {IHitBTCAuthenticateResponse} from "../types/exchanges/IHitBTCAuthenticateResponse";
+import {IHitBTCCandlesResponse} from "../types/exchanges/IHitBTCCandlesResponse";
+import {IHitBTCGetSymbolsResponse} from "../types/exchanges/IHitBTCGetSymbolsResponse";
+import {IHitBTCOrderbookResponse} from "../types/exchanges/IHitBTCOrderbookResponse";
+import {IHitBTCReportResponse} from "../types/exchanges/IHitBTCReportResponse";
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
+import {IOrderbookData} from "../types/IOrderbookData";
+import {IResponseAdapter} from "../types/IResponseAdapter";
+import {ITradeablePair} from "../types/ITradeablePair";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
-import {IOrderbookData, IResponseAdapter, ITradeablePair} from "./baseExchange";
 import HitBTC, {CandleInterval} from "./hitBTC";
-
-export interface IHitBTCOrderbookResponse {
-    jsonrpc: string;
-    method: string;
-    params: {
-        ask: IOrderbookEntry[],
-        bid: IOrderbookEntry[],
-        sequence: number,
-        symbol: string,
-    };
-}
-
-export interface IHitBTCCandlesResponse {
-    jsonrpc: string;
-    method: string;
-    params: {
-        data: Array<{
-            close: string;
-            max: string;
-            min: string;
-            open: string;
-            timestamp: string;
-            volume: string;
-            volumeQuote: string;
-        }>;
-        period: string;
-        symbol: string;
-    };
-}
-
-export interface IHitBTCAuthenticateResponse {
-    id: string;
-    jsonrpc: string;
-    result: boolean;
-}
-
-export interface IHitBTCGetSymbolsResponse {
-    id: string;
-    jsonrpc: string;
-    result: Array<{
-        baseCurrency: string;
-        feeCurrency: string;
-        id: string;
-        provideLiquidityRate: string;
-        quantityIncrement: string;
-        quoteCurrency: string;
-        takeLiquidityRate: string;
-        tickSize: string;
-    }>;
-}
-
-export interface IHitBTCReportResponse {
-    jsonrpc: string;
-    method: string;
-    params: Array<{
-        clientOrderId: string;
-        createdAt: string;
-        cumQuantity: string;
-        id: string;
-        originalRequestClientOrderId?: string;
-        postOnly: boolean;
-        price: string;
-        quantity: string;
-        reportType: string;
-        side: string;
-        status: string;
-        symbol: string;
-        timeInForce: string;
-        type: string;
-        updatedAt: string;
-    }>;
-}
 
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
@@ -116,14 +51,10 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Emits received message as api event
      * @param {IMessage} msg
      */
-    onReceive(msg: IMessage): void {
-        if (msg.type !== "utf8") {
-            throw new Error("Response is not UTF8!");
-        }
-
-        if (msg.utf8Data) {
-            const d = JSON.parse(msg.utf8Data);
-            this.emit(`api.${d.method || d.id}`, d);
+    onReceive(msg: Data): void {
+        if (typeof msg === "string") {
+            const data = JSON.parse(msg);
+            this.emit(`api.${data.method || data.id}`, data);
         }
     }
 

@@ -1,9 +1,11 @@
 import {EventEmitter} from "events";
-import {ICandle, ICandleInterval} from "../candles/candleManager";
 import Orderbook from "../orderbook";
-import {IOrder, OrderSide} from "../types/order";
-import {Pair} from "../types/pair";
-import {IOrderbookData, ITradeablePair} from "./baseExchange";
+import {ICandle} from "./ICandle";
+import {ICandleInterval} from "./ICandleInterval";
+import {IOrderbookData} from "./IOrderbookData";
+import {ITradeablePair} from "./ITradeablePair";
+import {IOrder, OrderSide} from "./order";
+import {Pair} from "./pair";
 
 /**
  * The IExchange represents a marketplace to buy and sell
@@ -37,10 +39,9 @@ export interface IExchange extends EventEmitter {
     cancelOrder(order: IOrder): void;
 
     /**
-     * Connects to the exchange with given connection properties
-     * @param {string} connectionString web socket url to connect to
+     * Connects to the remote exchange
      */
-    connect(connectionString?: string): void;
+    connect(): void;
 
     /**
      * Places an order on the exchange
@@ -71,11 +72,6 @@ export interface IExchange extends EventEmitter {
      * @returns {Orderbook} open buys and sells for pair
      */
     getOrderbook(pair: Pair): Orderbook;
-
-    /**
-     * Fires when exchange is created
-     */
-    onCreate(): void;
 
     /**
      * Registers all tradeable currencies on exchange

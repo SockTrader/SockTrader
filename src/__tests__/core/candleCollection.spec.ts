@@ -22,36 +22,33 @@ beforeEach(() => {
 
 describe("Candle collection", () => {
     test("Should return list of open values", () => {
+        expect(candles.open).toBeInstanceOf(CandleCollection);
         expect(candles.open).toEqual([5594.4, 5581.59, 5618.63, 5647.88, 5658.11, 5627.37, 5621.01]);
     });
 
     test("Should return list of high values", () => {
+        expect(candles.high).toBeInstanceOf(CandleCollection);
         expect(candles.high).toEqual([5635, 5615, 5627.01, 5651.7, 5663.99, 5660, 5638]);
     });
 
     test("Should return list of low values", () => {
+        expect(candles.low).toBeInstanceOf(CandleCollection);
         expect(candles.low).toEqual([5594.39, 5564.93, 5571.67, 5588.71, 5639.25, 5608.04, 5613.12]);
     });
 
     test("Should return list of close values", () => {
+        expect(candles.close).toBeInstanceOf(CandleCollection);
         expect(candles.close).toEqual([5625.06, 5594.4, 5581.59, 5618.63, 5647.88, 5658.11, 5627.37]);
     });
 
     test("Should return list of volume values", () => {
+        expect(candles.volume).toBeInstanceOf(CandleCollection);
         expect(candles.volume).toEqual([255.84, 225.33, 280.47, 250.94, 158.95, 263.87, 204.55]);
     });
 
-    test.skip("Should return list of timestamp values", () => {
-        // @TODO validate array of Moment timestamps
-        expect(candles.timestamp).toEqual([
-            "2019-05-06T07:00:00.000Z",
-            "2019-05-06T06:00:00.000Z",
-            "2019-05-06T05:00:00.000Z",
-            "2019-05-06T04:00:00.000Z",
-            "2019-05-06T03:00:00.000Z",
-            "2019-05-06T02:00:00.000Z",
-            "2019-05-06T01:00:00.000Z",
-        ]);
+    test("Should return list of timestamp values", () => {
+        expect(candles.timestamp).toBeInstanceOf(CandleCollection);
+        expect(candles.timestamp[0]).toBeInstanceOf(moment);
     });
 
     test("Should return first X amount of candles", () => {

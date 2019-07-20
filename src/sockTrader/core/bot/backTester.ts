@@ -1,9 +1,9 @@
 import moment from "moment";
 import Wallet, {IAssetMap} from "../assets/wallet";
-import {ICandle} from "../candles/candleManager";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";
-import SockTrader from "./sockTrader";
+import {ICandle} from "../types/ICandle";
+import SockTrader, {IStrategyConfig} from "./sockTrader";
 
 export interface IBackTestConfig {
     assets: IAssetMap;
@@ -36,34 +36,31 @@ export default class BackTester extends SockTrader {
         this.inputCandles = inputCandles;
 
         const wallet = new Wallet(config.assets);
-        this.exchange = LocalExchange.getInstance(wallet);
+        this.exchange = new LocalExchange(wallet);
     }
 
     async start(): Promise<void> {
         await super.start();
 
-        if (!this.inputCandles || this.inputCandles.length === 0) {
-            throw new Error("No candles found as input.");
-        }
+        if (!this.inputCandles || this.inputCandles.length === 0) throw new Error("No candles found as input.");
+        if (this.eventsBound) return;
 
-        if (!this.eventsBound) {
-            this.subscribeToExchangeEvents(this.strategyConfigurations);
+        this.subscribeToExchangeEvents(this.strategyConfigurations);
 
-            this.strategyConfigurations.forEach(c => {
-                const strategy = new c.strategy(c.pair, this.exchange);
-                this.bindStrategyToExchange(strategy);
-                this.bindExchangeToStrategy(strategy);
-                this.bindExchangeToReporters(this.reporters);
-            });
-
-            this.eventsBound = true;
-        }
+        this.strategyConfigurations.forEach(c => {
+            const strategy = new c.strategy(c.pair, this.exchange);
+            this.bindStrategyToExchange(strategy);
+            this.bindExchangeToStrategy(strategy);
+            this.bindExchangeToReporters(this.reporters);
+        });
 
         const candles = this.hydrateCandles(this.inputCandles);
 
         this.reportProgress({type: "started", length: candles.length});
         await (this.exchange as LocalExchange).emitCandles(candles);
         this.reportProgress({type: "finished"});
+
+        this.eventsBound = true;
     }
 
     private hydrateCandles(candles: IInputCandle[]): ICandle[] {
@@ -71,6 +68,11 @@ export default class BackTester extends SockTrader {
             ...c,
             timestamp: moment(c.timestamp),
         } as ICandle));
+    }
+
+    subscribeToExchangeEvents(config: IStrategyConfig[]): void {
+        const exchange = this.exchange;
+        exchange.once("ready", () => exchange.subscribeReports());
     }
 
     private reportProgress(status: IBotStatus) {

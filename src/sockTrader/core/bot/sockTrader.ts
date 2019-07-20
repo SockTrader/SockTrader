@@ -1,15 +1,16 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {ICandle, ICandleInterval} from "../candles/candleManager";
-import {IExchange} from "../exchanges/exchangeInterface";
 import {IOrderbook} from "../orderbook";
 import {IReporter} from "../reporters/reporterInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
+import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
+import {IExchange} from "../types/IExchange";
 import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
 
 export interface IStrategyConfig {
-    interval: ICandleInterval;
+    interval?: ICandleInterval;
     pair: Pair;
     strategy: IStrategyClass<BaseStrategy>;
 }
@@ -77,7 +78,9 @@ export default abstract class SockTrader {
         uniquePairs.forEach(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
 
         const uniquePairInterval = uniqWith<IStrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
-        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => exchange.subscribeCandles(pair, interval)));
+        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => {
+            if (interval) exchange.subscribeCandles(pair, interval);
+        }));
     }
 
     /**
