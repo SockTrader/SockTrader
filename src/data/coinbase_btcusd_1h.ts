@@ -7,7 +7,7 @@ import CandleNormalizer from "../sockTrader/data/candleNormalizer";
 const SRC_PATH = "../../src/data";
 const PATH = path.resolve(__dirname, SRC_PATH, "coinbase_btcusd_1h.csv");
 
-const normalize = (dataFrame: IDataFrame<number>): IDataFrame<number, ICandle> => {
+const normalize = (dataFrame: IDataFrame): IDataFrame<number, ICandle> => {
     return dataFrame
         .dropSeries(["Symbol", "Volume BTC"])
         .renameSeries({
