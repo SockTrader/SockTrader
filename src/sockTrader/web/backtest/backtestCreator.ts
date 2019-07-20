@@ -32,9 +32,10 @@ export default class BacktestCreator {
      * @param options
      */
     private static createProcess(scriptPath: string, options: IBacktestOptions): ChildProcess {
-        const childProcess: ChildProcess = fork(scriptPath, [
-            `--candles=${options.candlePath}`,
-            `--strategy=${options.strategyPath}`,
+        const childProcess: ChildProcess = fork(`${scriptPath}`, [
+            "backtest",
+            "--candles", options.candlePath,
+            "--strategy", options.strategyPath,
         ], {stdio: ["ipc"]});
 
         if (childProcess.stdout) childProcess.stdout.pipe(process.stdout);

@@ -1,5 +1,3 @@
-/* tslint:disable */
-import "jest";
 import BacktestCreator from "../../sockTrader/web/backtest/backtestCreator";
 import stream from "stream";
 
@@ -15,7 +13,9 @@ describe("createProcess", () => {
         const cpMock = jest.requireMock("child_process");
         expect(cpMock.fork.mock.calls[0]).toEqual([
             "./DOESNT_EXIST.js",
-            ["--candles=FAKE_CANDLE_PATH", "--strategy=FAKE_STRATEGY_PATH"],
+            ["backtest",
+                "--candles", "FAKE_CANDLE_PATH",
+                "--strategy", "FAKE_STRATEGY_PATH"],
             {stdio: ["ipc"]},
         ]);
 

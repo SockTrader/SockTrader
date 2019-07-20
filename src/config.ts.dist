@@ -9,9 +9,10 @@ export default {
         USD: 10000,
     },
 
-    exchanges: [{
-        name: "HitBTC",
-        publicKey: "REPLACE_WITH_MY_PUBLIC_KEY",
-        secretKey: "REPLACE_WITH_MY_SECRET_KEY",
-    }],
+    exchanges: {
+        hitbtc: {
+            publicKey: "REPLACE_WITH_MY_PUBLIC_KEY",
+            secretKey: "REPLACE_WITH_MY_SECRET_KEY",
+        },
+    },
 };

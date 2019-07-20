@@ -1,10 +1,9 @@
-/* tslint:disable */
 import {expect} from "chai";
-import "jest";
 import sinon from "sinon";
 
-import CandleManager, {ICandle} from "../../sockTrader/core/candles/candleManager";
+import CandleManager from "../../sockTrader/core/candles/candleManager";
 import moment, {Moment} from "moment";
+import {ICandle} from "../../sockTrader/core/types/ICandle";
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");
 const convertTimestamp = (candles: any) => candles.map((c: any) => ({...c, timestamp: c.timestamp.toArray()}));

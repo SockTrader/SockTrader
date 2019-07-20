@@ -1,5 +1,7 @@
 import Wallet from "../assets/wallet";
-import {ICandle} from "../candles/candleManager";
+import Local from "../connection/local";
+import {ICandle} from "../types/ICandle";
+import {IConnection} from "../types/IConnection";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
@@ -10,7 +12,6 @@ import BaseExchange from "./baseExchange";
  */
 export default class LocalExchange extends BaseExchange {
 
-    private static instance?: LocalExchange;
     private currentCandle?: ICandle;
     private readonly filledOrders: IOrder[] = [];
     private readonly wallet: Wallet;
@@ -26,21 +27,12 @@ export default class LocalExchange extends BaseExchange {
         this.on("core.report", (order: IOrder) => this.wallet.updateAssets(order));
     }
 
-    /**
-     * Returns singleton instance of local exchange
-     * @returns {LocalExchange} the new local exchange
-     */
-    static getInstance(wallet: Wallet) {
-        if (!LocalExchange.instance) {
-            LocalExchange.instance = new LocalExchange(wallet);
-        }
-        return LocalExchange.instance;
+    protected createConnection(): IConnection {
+        return new Local();
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
-        if (!this.currentCandle) {
-            throw new Error("Current candle undefined. Emit candles before adjusting an order.");
-        }
+        if (!this.currentCandle) throw new Error("Cannot adjust order. No candles have been emitted.");
 
         const newOrder: IOrder = {
             ...order,
@@ -61,19 +53,11 @@ export default class LocalExchange extends BaseExchange {
 
     cancelOrder(order: IOrder): void {
         this.setOrderInProgress(order.id);
-
-        const canceledOrder: IOrder = {
-            ...order,
-            reportType: ReportType.CANCELED,
-        };
-
-        this.onReport(canceledOrder);
+        this.onReport({...order, reportType: ReportType.CANCELED});
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
-        if (!this.currentCandle) {
-            throw new Error("Current candle undefined. Emit candles before creating an order.");
-        }
+        if (!this.currentCandle) throw new Error("Cannot adjust order. No candles have been emitted.");
 
         const orderId = this.generateOrderId(pair);
         const candleTime = this.currentCandle.timestamp;
@@ -99,15 +83,14 @@ export default class LocalExchange extends BaseExchange {
     }
 
     /**
-     * Emits a collection of candles from a local file as if they were
-     * sent from a real exchange
+     * Emits a collection of candles from a local file as if they were sent from a real exchange
      * @param {ICandle[]} candles
      * @returns {Promise<void>} promise
      */
     async emitCandles(candles: ICandle[]) {
         const isCandleOrderIncorrect: boolean = (candles[candles.length - 1].timestamp.isBefore(candles[0].timestamp));
 
-        (isCandleOrderIncorrect ? [...candles].reverse() : candles).reduce<ICandle[]>((acc, val, idx) => {
+        (isCandleOrderIncorrect ? [...candles].reverse() : candles).reduce<ICandle[]>((acc, val) => {
             const processedCandles = [val, ...acc];
             this.currentCandle = val;
             this.emit("core.updateCandles", processedCandles);
@@ -119,14 +102,6 @@ export default class LocalExchange extends BaseExchange {
         this.emit("ready");
         return true;
     }
-
-    loadCurrencies = (): void => undefined;
-
-    // noinspection JSUnusedGlobalSymbols
-    onUpdateCandles = (): void => undefined;
-
-    // noinspection JSUnusedGlobalSymbols
-    onUpdateOrderbook = (): void => undefined;
 
     /**
      * Checks if open order can be filled on each price update
@@ -154,6 +129,14 @@ export default class LocalExchange extends BaseExchange {
         });
         this.openOrders = openOrders;
     }
+
+    loadCurrencies = (): void => undefined;
+
+    // noinspection JSUnusedGlobalSymbols
+    onUpdateCandles = (): void => undefined;
+
+    // noinspection JSUnusedGlobalSymbols
+    onUpdateOrderbook = (): void => undefined;
 
     subscribeCandles = (): void => undefined;
 

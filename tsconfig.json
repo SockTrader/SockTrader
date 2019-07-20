@@ -4,9 +4,9 @@
   ],
   "exclude": [
     "./node_modules",
-    "./build",
     "./coverage",
     "./reports",
+    "./build/**/*",
     "**/__mocks__/*",
     "**/__tests__/*"
   ],

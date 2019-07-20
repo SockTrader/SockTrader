@@ -1,11 +1,6 @@
-/* tslint:disable */
-import "jest";
 import moment from "moment";
 import {EventEmitter} from "events";
-import {connection} from "websocket";
-import {Socket} from "net";
 import {Pair} from "../../sockTrader/core/types/pair";
-import BaseExchange from "../../sockTrader/core/exchanges/baseExchange";
 import {
     IOrder,
     OrderSide,
@@ -16,15 +11,12 @@ import {
 } from "../../sockTrader/core/types/order";
 import CandleManager from "../../sockTrader/core/candles/candleManager";
 import Orderbook from "../../sockTrader/core/orderbook";
+import MockExchange from "../../sockTrader/core/exchanges/__mocks__/mockExchange";
+import logger from "../../sockTrader/core/logger";
+
+jest.mock("../../sockTrader/core/logger");
 
 const pair: Pair = ["BTC", "USD"];
-
-// @ts-ignore
-class MockExchange extends BaseExchange {
-    public constructor() {
-        super();
-    }
-}
 
 let exc = new MockExchange();
 const getReport = (): IOrder => ({
@@ -176,19 +168,6 @@ describe("onReport", () => {
     });
 });
 
-describe("connect", () => {
-    test("Should connect via a websocket connection string", () => {
-        const spyOn = jest.spyOn(exc["socketClient"], "on");
-        const spyConnect = jest.spyOn(exc["socketClient"], "connect");
-
-        exc.connect("wss://my.fake.socket");
-
-        expect(spyOn).toHaveBeenNthCalledWith(1, "connectFailed", expect.any(Function));
-        expect(spyOn).toHaveBeenNthCalledWith(2, "connect", expect.any(Function));
-        expect(spyConnect).toBeCalledWith("wss://my.fake.socket");
-    });
-});
-
 describe("destroy", () => {
     test("Should remove all event listeners once the exchange is destroyed", () => {
         // This test should prevent memory leaks in an exchange.
@@ -201,23 +180,26 @@ describe("destroy", () => {
     });
 });
 
+// @TODO @EXAMPLE! use these tests as an example!
 describe("send", () => {
-    test("Should send messages over a socket connection", () => {
-        const mockSend = jest.fn();
-        const mockConnection: connection = new connection(new Socket(), [], "protocl", true, {});
+    test("Should send messages to a connection", () => {
+        const command = exc.createCommand("test", {param1: "1", param2: "2"});
+        exc.send(command);
 
-        mockConnection.send = mockSend;
-
-        exc["connection"] = mockConnection as any;
-        exc.send("test", {param1: "1", param2: "2"});
-
-        const result = JSON.stringify({"method": "test", "params": {"param1": "1", "param2": "2"}, "id": "test"});
-        expect(mockSend).toBeCalledWith(result);
+        expect(exc["connection"].send).toBeCalledTimes(1);
+        expect(exc["connection"].send).toBeCalledWith(command);
     });
 
-    test("Should throw error with connection undefined", () => {
-        expect(() => exc.send("test_method", {param1: "param1", param2: "param2"}))
-            .toThrow("First connect to the exchange before sending instructions..");
+    test("Should log error to error log when sending has failed", () => {
+        const command = exc.createCommand("test", {param1: "1", param2: "2"});
+
+        // @ts-ignore
+        exc["connection"].send.mockImplementation(() => {
+            throw new Error("Sending command failed");
+        });
+
+        exc.send(command);
+        expect(logger.error).toBeCalledWith(new Error("Sending command failed"));
     });
 });
 
@@ -244,15 +226,13 @@ describe("isAdjustingOrderAllowed", () => {
     test("Should disallow order in progress to be adjusted", () => {
         const order = getOrder();
 
-        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).toBe(true);
-        expect(exc["isAdjustingOrderAllowed"](order, 0.002, 0.02)).toBe(false);
+        expect(exc["isAdjustingAllowed"](order, 0.002, 0.02)).toBe(true);
+        expect(exc["isAdjustingAllowed"](order, 0.002, 0.02)).toBe(false);
     });
 
     test("Should disallow order to be adjusted when nothing changed", () => {
         const order = getOrder();
-
-        exc["orderInProgress"] = {};
-        expect(exc["isAdjustingOrderAllowed"](order, 0.001263, 0.02)).toBe(false);
+        expect(exc["isAdjustingAllowed"](order, 0.001263, 0.02)).toBe(false);
     });
 });
 
