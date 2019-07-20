@@ -4,6 +4,9 @@ language: node_js
 
 cache: npm
 
+git:
+  depth: false
+
 matrix:
   include:
     - node_js: 10
