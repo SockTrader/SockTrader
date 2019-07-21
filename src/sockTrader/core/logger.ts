@@ -5,13 +5,12 @@ const defaults = {silent: process.env.NODE_ENV === "test"};
 const stringFormat = format.printf(info => {
     const {timestamp, level, message, ...args} = info;
     const ts = moment(timestamp).format("YYYY-MM-DD HH:mm:ss");
-    return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, undefined, 2) : ""}`;
+    return `${ts} [${level}] ${message} ${Object.keys(args).length ? JSON.stringify(args, undefined, 2) : ""}`;
 });
 
 const consoleFormat = format.combine(
     format.colorize(),
     format.timestamp(),
-    format.align(),
     stringFormat,
 );
 
