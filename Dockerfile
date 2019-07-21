@@ -11,6 +11,7 @@ COPY tsconfig.json /app
 COPY src ./src
 
 RUN apk add --no-cache --virtual .build-deps alpine-sdk python && \
+    apk add --no-cache libc6-compat && \
     npm install --production --silent && \
     apk del .build-deps && \
     npm run build
