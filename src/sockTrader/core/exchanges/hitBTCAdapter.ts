@@ -125,16 +125,16 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      */
     private getIntervalFromResponse(response: IHitBTCCandlesResponse): ICandleInterval | undefined {
         let interval: ICandleInterval | undefined;
-        Object.keys(CandleInterval).some(key => {
+
+        for (const key in CandleInterval) {
+            if (!CandleInterval.hasOwnProperty(key)) continue;
             if (CandleInterval[key].code === response.params.period) {
                 interval = CandleInterval[key];
-                return true;
+                break;
             }
-            return false;
-        });
+        }
 
         if (interval === undefined) logger.debug(`Interval: "${response.params.period}" is not recognized by the system.`);
-
         return interval;
     }
 
