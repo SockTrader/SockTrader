@@ -69,7 +69,7 @@ describe("start", () => {
         expect.assertions(1);
         liveTrader["exchange"] = undefined as any;
 
-        await expect(liveTrader.start()).rejects.toEqual(new Error("No exchange defined!"));
+        await expect(liveTrader.start()).rejects.toThrow("No exchange defined!");
     });
 
     test("Should subscribe to exchange events", async () => {
