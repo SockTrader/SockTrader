@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
 import WSWebSocket from "ws";
 import logger from "../logger";
-import {IConnection} from "../types/IConnection";
+import {ICommand, IConnection} from "../types/IConnection";
 
 export type Data = WSWebSocket.Data;
 
@@ -9,7 +9,7 @@ export default class WebSocket extends EventEmitter implements IConnection {
 
     private readonly latency = 1000;
     private readonly waitForPong = 2000;
-    private readonly restoreCommands: object[] = [];
+    private readonly restoreCommands: ICommand[] = [];
     private pingTimeout?: NodeJS.Timeout;
     private resetTimeout?: NodeJS.Timeout;
     private connection?: WSWebSocket;
@@ -26,7 +26,9 @@ export default class WebSocket extends EventEmitter implements IConnection {
      */
     private heartbeat() {
         const timeout = this.timeout + this.latency;
+
         if (this.pingTimeout) global.clearTimeout(this.pingTimeout);
+        if (this.resetTimeout) global.clearTimeout(this.resetTimeout);
 
         this.pingTimeout = setTimeout(() => {
             logger.info(`No response received from exchange within ${timeout / 1000}s.`);
@@ -88,20 +90,15 @@ export default class WebSocket extends EventEmitter implements IConnection {
     }
 
     private onPong() {
-        logger.info(`Pong received`);
-        if (this.isExpectingPong) {
-            this.heartbeat();
-            if (this.resetTimeout) global.clearTimeout(this.resetTimeout);
-        }
-
+        if (this.isExpectingPong) this.heartbeat();
         this.isExpectingPong = false;
     }
 
-    addRestorable(command: object = {}) {
+    addRestorable(command: ICommand) {
         this.restoreCommands.push(command);
     }
 
-    send(command: object = {}) {
+    send(command: ICommand) {
         if (!this.connection) throw new Error(`Could not send: ${JSON.stringify(command)}. No connection available.`);
 
         this.connection.send(JSON.stringify(command));
