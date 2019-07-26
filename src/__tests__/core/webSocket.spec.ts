@@ -139,3 +139,47 @@ describe("heartbeat", () => {
         expect(spyTermination).toBeCalledTimes(1);
     });
 });
+
+describe("onPing", () => {
+    it("Should trigger heartbeat", () => {
+        const spyHeartbeat = jest.spyOn(websocket, "heartbeat" as any);
+        websocket["onPing"]();
+
+        expect(spyHeartbeat).toBeCalledTimes(1);
+    });
+});
+
+describe("onPong", () => {
+    it("Should trigger heartbeat if we're expecting a pong", () => {
+        const spyHeartbeat = jest.spyOn(websocket, "heartbeat" as any);
+
+        websocket["isExpectingPong"] = true;
+        websocket["onPong"]();
+
+        expect(spyHeartbeat).toBeCalledTimes(1);
+    });
+});
+
+describe("addRestorable", () => {
+    it("Should have an empty list when created", () => {
+        expect(websocket["restoreCommands"]).toEqual([]);
+    });
+
+    it("Should save commands for later usage", () => {
+        websocket.addRestorable({id: "login", method: "login", params: {}});
+        expect(websocket["restoreCommands"]).toEqual([{id: "login", method: "login", params: {}}]);
+    });
+});
+
+describe("send", () => {
+    it("Should throw when connection is not available", () => {
+        expect(() => websocket.send({} as any)).toThrow("Could not send: {}. No connection available.");
+    });
+
+    it("Should send a command using the connection", () => {
+        websocket["connection"] = {send: jest.fn()} as any;
+
+        websocket.send({id: "login"} as any);
+        expect((websocket["connection"] as any)["send"]).toBeCalledWith("{\"id\":\"login\"}");
+    });
+});
