@@ -57,7 +57,7 @@ export default class LocalExchange extends BaseExchange {
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
-        if (!this.currentCandle) throw new Error("Cannot adjust order. No candles have been emitted.");
+        if (!this.currentCandle) throw new Error("Cannot create order. No candles have been emitted.");
 
         const orderId = this.generateOrderId(pair);
         const candleTime = this.currentCandle.timestamp;
@@ -102,6 +102,7 @@ export default class LocalExchange extends BaseExchange {
         const processedCandles: ICandle[] = [];
 
         candleList.forEach(value => {
+            this.currentCandle = value;
             processedCandles.unshift(value);
             this.emit("core.updateCandles", processedCandles);
         });
