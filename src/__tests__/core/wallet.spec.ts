@@ -157,3 +157,25 @@ describe("updateAssets", () => {
         expect(wallet["assets"]).toEqual({BTC: 9});
     });
 });
+
+describe("isOrderAllowed", () => {
+    test("Should check if buy is allowed", () => {
+        const wallet = new Wallet({BTC: 1});
+
+        const spyBuy = jest.spyOn(wallet, "isBuyAllowed");
+        const mockOrder = {...order, side: OrderSide.BUY} as IOrder;
+
+        wallet.isOrderAllowed(mockOrder as IOrder, mockOrder as IOrder);
+        expect(spyBuy).toBeCalledWith(mockOrder, mockOrder);
+    });
+
+    test("Should check if sell is allowed", () => {
+        const wallet = new Wallet({BTC: 1});
+
+        const spySell = jest.spyOn(wallet, "isSellAllowed");
+        const mockOrder = {...order, side: OrderSide.SELL} as IOrder;
+
+        wallet.isOrderAllowed(mockOrder, mockOrder);
+        expect(spySell).toBeCalledWith(mockOrder, mockOrder);
+    });
+});
