@@ -1,7 +1,7 @@
 import moment from "moment";
-import HitBTCAdapter from "../../sockTrader/core/exchanges/hitBTCAdapter";
-import HitBTC from "../../sockTrader/core/exchanges/hitBTC";
-import {IHitBTCCandlesResponse} from "../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
+import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
+import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
+import {IHitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
 
 function createExchange() {
     const exchange = new HitBTC();

@@ -1,7 +1,7 @@
-import moment, {Moment} from "moment";
-import {Pair} from "../../sockTrader/core/types/pair";
-import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
-import Wallet from "../../sockTrader/core/assets/wallet";
+import moment from "moment";
+import {Pair} from "../../../sockTrader/core/types/pair";
+import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import Wallet from "../../../sockTrader/core/assets/wallet";
 import {
     IOrder,
     OrderSide,
@@ -9,8 +9,8 @@ import {
     OrderTimeInForce,
     OrderType,
     ReportType,
-} from "../../sockTrader/core/types/order";
-import {ICandle} from "../../sockTrader/core/types/ICandle";
+} from "../../../sockTrader/core/types/order";
+import {ICandle} from "../../../sockTrader/core/types/ICandle";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -35,29 +35,22 @@ describe("adjustOrder", () => {
     });
 
     test("Should adjust given order", () => {
-        const setOrderInProgressMock = jest.fn();
-        exchange["setOrderInProgress"] = setOrderInProgressMock;
-        const onReportMock = jest.fn();
-        exchange.onReport = onReportMock;
-        const timeStamp: Moment = moment();
-        exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: timeStamp} as ICandle;
-        const generateOrderIdMock = jest.fn(() => "12345");
-        exchange.generateOrderId = generateOrderIdMock;
+        exchange.onReport = jest.fn();
+        exchange["setOrderInProgress"] = jest.fn();
+        exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(setOrderInProgressMock).toBeCalledWith("123");
-        expect(onReportMock).toBeCalledWith(expect.objectContaining({
+        expect(exchange["setOrderInProgress"]).toBeCalledWith("123");
+        expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
             pair: pair,
-            id: "12345",
-            updatedAt: timeStamp,
+            id: expect.any(String),
+            updatedAt: expect.any(moment),
             type: OrderType.LIMIT,
             originalId: "123",
             quantity: 0.5,
             price: 0.002,
             reportType: ReportType.REPLACED,
         }));
-        expect(generateOrderIdMock).toBeCalledWith(pair);
-
     });
 });
 
@@ -80,16 +73,14 @@ describe("createOrder", () => {
         exchange["wallet"]["isOrderAllowed"] = jest.fn(() => true);
         exchange.onReport = jest.fn();
         exchange["setOrderInProgress"] = jest.fn();
-        exchange.generateOrderId = jest.fn(() => "12345");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
-        expect(exchange.generateOrderId).toBeCalledWith(pair);
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
             createdAt: expect.any(moment),
             updatedAt: expect.any(moment),
             status: OrderStatus.NEW,
             timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            id: "12345",
+            id: expect.any(String),
             type: OrderType.LIMIT,
             reportType: ReportType.NEW,
             side: OrderSide.BUY,
@@ -98,7 +89,7 @@ describe("createOrder", () => {
             price: 10,
         }));
 
-        expect(exchange["setOrderInProgress"]).toBeCalledWith("12345");
+        expect(exchange["setOrderInProgress"]).toBeCalledWith(expect.any(String));
     });
 });
 

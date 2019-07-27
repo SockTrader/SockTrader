@@ -13,6 +13,7 @@ import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
 import HitBTCAdapter from "./hitBTCAdapter";
+import {generateOrderId} from "./utils/utils";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -40,7 +41,7 @@ export default class HitBTC extends BaseExchange {
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
         if (this.isAdjustingAllowed(order, price, qty)) {
-            const newOrderId = this.generateOrderId(order.pair);
+            const newOrderId = generateOrderId(order.pair);
 
             this.send(this.createCommand("cancelReplaceOrder", {
                 clientOrderId: order.id,
@@ -58,7 +59,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
-        const orderId = this.generateOrderId(pair);
+        const orderId = generateOrderId(pair);
         this.setOrderInProgress(orderId);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);

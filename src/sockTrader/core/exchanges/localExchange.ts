@@ -5,6 +5,7 @@ import {IConnection} from "../types/IConnection";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
+import {generateOrderId} from "./utils/utils";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
@@ -36,7 +37,7 @@ export default class LocalExchange extends BaseExchange {
 
         const newOrder: IOrder = {
             ...order,
-            id: this.generateOrderId(order.pair),
+            id: generateOrderId(order.pair),
             reportType: ReportType.REPLACED,
             updatedAt: this.currentCandle.timestamp,
             type: OrderType.LIMIT,
@@ -59,7 +60,7 @@ export default class LocalExchange extends BaseExchange {
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         if (!this.currentCandle) throw new Error("Cannot create order. No candles have been emitted.");
 
-        const orderId = this.generateOrderId(pair);
+        const orderId = generateOrderId(pair);
         const candleTime = this.currentCandle.timestamp;
 
         const order: IOrder = {

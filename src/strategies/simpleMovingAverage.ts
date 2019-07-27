@@ -1,12 +1,12 @@
 import {sma as SMA} from "technicalindicators";
 import CandleCollection from "../sockTrader/core/candles/candleCollection";
+import logger from "../sockTrader/core/logger";
 import {IOrderbook} from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
 import {IExchange} from "../sockTrader/core/types/IExchange";
 import {IOrder, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
-import logger from "../sockTrader/core/logger";
 
 /**
  * Strategy using simple moving average

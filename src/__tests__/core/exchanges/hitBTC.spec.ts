@@ -1,14 +1,14 @@
 import moment from "moment";
 import {EventEmitter} from "events";
-import {Pair} from "../../sockTrader/core/types/pair";
-import HitBTC, {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
-import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import Orderbook from "../../sockTrader/core/orderbook";
-import {IOrderbookData} from "../../sockTrader/core/types/IOrderbookData";
-import {ICandle} from "../../sockTrader/core/types/ICandle";
-import WebSocket from "../../sockTrader/core/connection/webSocket";
+import {Pair} from "../../../sockTrader/core/types/pair";
+import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import {IOrder, OrderSide} from "../../../sockTrader/core/types/order";
+import Orderbook from "../../../sockTrader/core/orderbook";
+import {IOrderbookData} from "../../../sockTrader/core/types/IOrderbookData";
+import {ICandle} from "../../../sockTrader/core/types/ICandle";
+import WebSocket from "../../../sockTrader/core/connection/webSocket";
 
-jest.mock("./../../config");
+jest.mock("./../../../config");
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -155,7 +155,6 @@ describe("cancelOrder", () => {
 describe("adjustOrder", () => {
     it("Should adjust existing orders", () => {
         exchange["isAdjustingAllowed"] = jest.fn(() => true);
-        exchange.generateOrderId = jest.fn(() => "neworderid");
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
         expect(exchange.send).toBeCalledWith(expect.objectContaining({
@@ -166,7 +165,7 @@ describe("adjustOrder", () => {
                 price: 0.002,
                 quantity: 0.5,
                 strictValidate: true,
-                requestClientId: "neworderid",
+                requestClientId: expect.any(String),
             },
         }));
     });
@@ -174,7 +173,6 @@ describe("adjustOrder", () => {
 
 describe("createOrder", () => {
     it("Should create a new order", () => {
-        exchange.generateOrderId = jest.fn(() => "FAKE_ORDER_ID");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
         expect(exchange.send).toBeCalledWith(expect.objectContaining({
@@ -186,7 +184,7 @@ describe("createOrder", () => {
                 side: "buy",
                 symbol: pair,
                 type: "limit",
-                clientOrderId: "FAKE_ORDER_ID",
+                clientOrderId: expect.any(String),
             },
         }));
     });
