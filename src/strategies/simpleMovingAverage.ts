@@ -6,6 +6,7 @@ import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
 import {IExchange} from "../sockTrader/core/types/IExchange";
 import {IOrder, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
+import logger from "../sockTrader/core/logger";
 
 /**
  * Strategy using simple moving average
@@ -22,7 +23,7 @@ export default class SimpleMovingAverage extends BaseStrategy {
 
     notifyOrder(order: IOrder): void {
         if (order.status === OrderStatus.FILLED) {
-            console.log("Order:", order.updatedAt.format("YYYY-MM-DD HH:mm"), order.side, order.price);
+            logger.info(`[PT] ORDER: ${JSON.stringify(order)}`);
         }
     }
 
