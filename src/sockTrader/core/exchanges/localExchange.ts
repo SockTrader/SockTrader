@@ -45,7 +45,7 @@ export default class LocalExchange extends BaseExchange {
             price,
         };
 
-        if (!this.isOrderAllowed(newOrder, order)) return;
+        if (!this.wallet.isOrderAllowed(newOrder, order)) return;
 
         this.setOrderInProgress(order.id);
         this.onReport(newOrder);
@@ -76,7 +76,7 @@ export default class LocalExchange extends BaseExchange {
             price,
         };
 
-        if (!this.isOrderAllowed(order)) return;
+        if (!this.wallet.isOrderAllowed(order)) return;
 
         this.setOrderInProgress(orderId);
         this.onReport(order);
@@ -153,15 +153,4 @@ export default class LocalExchange extends BaseExchange {
     subscribeOrderbook = (): void => undefined;
 
     subscribeReports = (): void => undefined;
-
-    /**
-     * Validates if the wallet has sufficient funds to cover the given order.
-     * @param order
-     * @param oldOrder
-     */
-    private isOrderAllowed(order: IOrder, oldOrder?: IOrder): boolean {
-        return order.side === OrderSide.BUY
-            ? this.wallet.isBuyAllowed(order, oldOrder)
-            : this.wallet.isSellAllowed(order, oldOrder);
-    }
 }

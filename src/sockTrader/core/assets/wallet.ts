@@ -30,9 +30,7 @@ export default class Wallet {
      * @returns {boolean} is buy allowed
      */
     isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
-        const orderPrice: number = this.getOrderPrice(order);
-
-        return this.assets[order.pair[1]] >= orderPrice;
+        return this.assets[order.pair[1]] >= this.getOrderPrice(order);
     }
 
     /**
@@ -44,6 +42,17 @@ export default class Wallet {
      */
     isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
         return this.assets[order.pair[0]] >= order.quantity;
+    }
+
+    /**
+     * Validates if the wallet has sufficient funds to cover the given order.
+     * @param order
+     * @param oldOrder
+     */
+    isOrderAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+        return order.side === OrderSide.BUY
+            ? this.isBuyAllowed(order, oldOrder)
+            : this.isSellAllowed(order, oldOrder);
     }
 
     setAssets(assets: IAssetMap) {
