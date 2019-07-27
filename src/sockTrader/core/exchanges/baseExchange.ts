@@ -12,6 +12,7 @@ import {IOrderbookData} from "../types/IOrderbookData";
 import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
+import OrderManager from "./utils/orderManager";
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -20,10 +21,9 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    protected openOrders: IOrder[] = [];
+    orderManager: OrderManager = new OrderManager();
     protected candles: Record<string, CandleManager> = {};
     private readonly orderbooks: Record<string, Orderbook> = {};
-    private readonly orderInProgress: Record<string, boolean> = {};
     private readonly connection: IConnection;
     private ready = false;
 
@@ -61,8 +61,10 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     connect(): void {
-        this.connection.on("open", () => this.onConnect());
-        this.connection.once("open", () => this.onFirstConnect());
+        this.connection.once("open", () => {
+            this.onConnect();
+            this.connection.on("open", () => this.onReconnect());
+        });
         this.connection.connect();
     }
 
@@ -89,10 +91,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.candles[key];
     }
 
-    getOpenOrders(): IOrder[] {
-        return this.openOrders;
-    }
-
     getOrderbook(pair: Pair): Orderbook {
         const ticker = pair.join("");
         if (this.orderbooks[ticker]) {
@@ -100,9 +98,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         }
 
         const config = this.currencies[ticker];
-        if (!config) {
-            throw new Error(`No configuration found for pair: "${ticker}"`);
-        }
+        if (!config) throw new Error(`No configuration found for pair: "${ticker}"`);
 
         const precision = new Decimal(config.tickSize).decimalPlaces();
 
@@ -136,21 +132,16 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         const orderId = order.id;
         let oldOrder: IOrder | undefined;
 
-        this.setOrderInProgress(orderId, false);
+        this.orderManager.removeOrderProcessing(orderId);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
-            const oldOrderId = order.originalId;
-
-            oldOrder = this.openOrders.find(oo => oo.id === oldOrderId);
-            this.setOrderInProgress(oldOrderId, false);
-            this.removeOrder(oldOrderId);
-            this.addOrder(order); // Order is replaced with a new one
+            oldOrder = this.orderManager.findAndReplaceOpenOrder(order, order.originalId);
         } else if (order.reportType === ReportType.NEW) {
-            this.addOrder(order); // New order created
+            this.orderManager.addOpenOrder(order); // New order created
         } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
-            this.removeOrder(orderId); // Order is 100% filled
+            this.orderManager.removeOpenOrder(orderId); // Order is 100% filled
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.removeOrder(orderId); // Order is invalid
+            this.orderManager.removeOpenOrder(orderId); // Order is invalid
         }
 
         this.emit("core.report", order, oldOrder);
@@ -193,21 +184,13 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     /**
-     * Adds order to local array
-     * @param {IOrder} order the order to add
-     */
-    protected addOrder(order: IOrder): void {
-        this.openOrders.push(order);
-    }
-
-    /**
      * Validates if adjusting an existing order on an exchange is allowed
      * @param order the order to check
      * @param price new price
      * @param qty new quantity
      */
     protected isAdjustingAllowed(order: IOrder, price: number, qty: number): boolean {
-        if (this.orderInProgress[order.id]) {
+        if (this.orderManager.isOrderProcessing(order.id)) {
             return false; // Order still in progress
         }
 
@@ -215,42 +198,21 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             return false; // Old order === new order. No need to replace!
         }
 
-        this.setOrderInProgress(order.id);
+        this.orderManager.setOrderProcessing(order.id);
         return true;
     }
 
     /**
      * Triggers each time the exchange is reconnected to the websocket API
      */
-    protected onConnect(): void {
+    protected onReconnect(): void {
         // lifecycle event
     }
 
     /**
      * Triggers the first time the exchange is connected to the websocket API
      */
-    protected onFirstConnect(): void {
+    protected onConnect(): void {
         // lifecycle event
-    }
-
-    /**
-     * Remove order from local array
-     * @param {string} orderId of the order to remove
-     */
-    protected removeOrder(orderId: string): void {
-        this.openOrders = this.openOrders.filter(o => o.id !== orderId);
-    }
-
-    /**
-     * Sets the order in progress
-     * @param {string} orderId of the order to set in progress
-     * @param {boolean} state whether the order should be set in progress or out
-     */
-    protected setOrderInProgress(orderId: string, state = true): void {
-        if (!state) {
-            delete this.orderInProgress[orderId];
-        } else {
-            this.orderInProgress[orderId] = state;
-        }
     }
 }

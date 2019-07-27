@@ -137,11 +137,10 @@ describe("loadCurrencies", () => {
 
 describe("cancelOrder", () => {
     it("Should cancel an order", () => {
-        const setOrderInProgressMock = jest.fn();
-        exchange["setOrderInProgress"] = setOrderInProgressMock;
+        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
         exchange.cancelOrder({id: "123"} as IOrder);
 
-        expect(setOrderInProgressMock).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
         expect(exchange.send).toBeCalledWith(expect.objectContaining({
             id: "cancelOrder",
             method: "cancelOrder",
@@ -196,7 +195,7 @@ describe("onConnect", () => {
         exchange.login = jest.fn();
         exchange.adapter.onReceive = jest.fn();
 
-        exchange["onFirstConnect"]();
+        exchange["onConnect"]();
         // @ts-ignore
         exchange.getConnection = jest.fn(() => new EventEmitter());
 

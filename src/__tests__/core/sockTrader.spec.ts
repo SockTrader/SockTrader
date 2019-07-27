@@ -59,8 +59,6 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
-        // sockTrader.addExchange(hitBTC);
-
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
@@ -96,8 +94,6 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
         hitBTC.subscribeCandles = mockSubscribeCandles;
 
-        // sockTrader.addExchange(hitBTC);
-
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
@@ -123,13 +119,6 @@ describe("subscribeToExchangeEvents", () => {
     });
 
 });
-
-// describe("addExchange", () => {
-//     test("Should add exchange to socketTrader", () => {
-// sockTrader.addExchange(hitBTC);
-// expect(sockTrader.getExchange()).toBe(hitBTC);
-// });
-// });
 
 describe("addReporter", () => {
     test("Should add reporter to SockTrader instance", () => {

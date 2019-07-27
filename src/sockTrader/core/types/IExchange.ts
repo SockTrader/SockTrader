@@ -1,4 +1,5 @@
 import {EventEmitter} from "events";
+import OrderManager from "../exchanges/utils/orderManager";
 import Orderbook from "../orderbook";
 import {ICandle} from "./ICandle";
 import {ICandleInterval} from "./ICandleInterval";
@@ -13,8 +14,7 @@ import {Pair} from "./pair";
  */
 export interface IExchange extends EventEmitter {
 
-    isAuthenticated: boolean;
-    isCurrenciesLoaded: boolean;
+    orderManager: OrderManager;
 
     /**
      * Adjusts existing order on exchange
@@ -58,12 +58,6 @@ export interface IExchange extends EventEmitter {
      * i.e. removes the event listeners
      */
     destroy(): void;
-
-    /**
-     * Gets all orders that have not yet been filled
-     * @returns {IOrder[]}
-     */
-    getOpenOrders(): IOrder[];
 
     /**
      * Gets all (of everyone) open buy and sell order for a given pair on the

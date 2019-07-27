@@ -54,13 +54,13 @@ export default class HitBTC extends BaseExchange {
     }
 
     cancelOrder(order: IOrder): void {
-        this.setOrderInProgress(order.id);
+        this.orderManager.setOrderProcessing(order.id);
         this.send(this.createCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         const orderId = generateOrderId(pair);
-        this.setOrderInProgress(orderId);
+        this.orderManager.setOrderProcessing(orderId);
 
         logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
         this.send(this.createCommand("newOrder", {
@@ -137,8 +137,8 @@ export default class HitBTC extends BaseExchange {
         this.send(command);
     };
 
-    protected onFirstConnect(): void {
-        super.onFirstConnect();
+    protected onConnect(): void {
+        super.onConnect();
 
         this.getConnection().on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();

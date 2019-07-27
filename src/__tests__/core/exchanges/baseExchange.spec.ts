@@ -73,20 +73,6 @@ describe("sell", () => {
     });
 });
 
-describe("setOrderInProgress", () => {
-    test("Should put an order in progress with state true", () => {
-        const id = "ORDER_123";
-        exc["setOrderInProgress"](id, true);
-        expect(exc["orderInProgress"][id]).toBe(true);
-    });
-
-    test("Should put an order out of progress with state false", () => {
-        const id = "ORDER_123";
-        exc["setOrderInProgress"](id, false);
-        expect(exc["orderInProgress"][id]).toBe(undefined);
-    });
-});
-
 describe("getCandleManager", () => {
     test("Should return a cached candle manager for a trading pair", () => {
         const interval = {code: "D1", cron: "00 00 00 */1 * *"};
@@ -103,66 +89,54 @@ describe("getCandleManager", () => {
 
 describe("onReport", () => {
     test("Should add new order with report type NEW", () => {
-        const addOrder = jest.spyOn(exc, "addOrder" as any);
+        const addOpenOrder = jest.spyOn(exc.orderManager, "addOpenOrder");
         const report = getReport();
         exc.onReport({...report, reportType: ReportType.NEW});
-        expect(addOrder).toBeCalledWith(report);
+        expect(addOpenOrder).toBeCalledWith(report);
     });
 
     test("Should replace existing order with report type REPLACED", () => {
-        const addOrder = jest.spyOn(exc, "addOrder" as any);
-        const removeOrder = jest.spyOn(exc, "removeOrder" as any);
-        const setOrderInProgress = jest.spyOn(exc, "setOrderInProgress" as any);
+        const findAndReplaceOrder = jest.spyOn(exc.orderManager, "findAndReplaceOpenOrder");
         const report = getReport();
 
-        exc.onReport({
-            ...report,
-            reportType: ReportType.REPLACED,
-            originalId: "123",
-            id: "321",
-        });
-        expect(setOrderInProgress).toBeCalledWith("123", false);
-        expect(removeOrder).toBeCalledWith("123");
-        expect(addOrder).toBeCalledWith({
-            ...report,
-            reportType: ReportType.REPLACED,
-            originalId: "123",
-            id: "321",
-        });
+        // @formatter:off
+        exc.onReport({...report, reportType: ReportType.REPLACED, originalId: "123"});
+        expect(findAndReplaceOrder).toBeCalledWith({...report, reportType: ReportType.REPLACED, originalId: "123"}, "123");
+        // @formatter:on
     });
 
     test("Should remove filled order with report type TRADE", () => {
-        const removeOrder = jest.spyOn(exc, "removeOrder" as any);
+        const removeOpenOrder = jest.spyOn(exc.orderManager, "removeOpenOrder");
         const report = getReport();
 
         exc.onReport({...report, reportType: ReportType.TRADE, status: OrderStatus.FILLED});
-        expect(removeOrder).toBeCalledWith("123");
+        expect(removeOpenOrder).toBeCalledWith("123");
     });
 
 
     test("Should remove cancelled order with report type CANCELED", () => {
-        const removeOrder = jest.spyOn(exc, "removeOrder" as any);
+        const removeOpenOrder = jest.spyOn(exc.orderManager, "removeOpenOrder");
         const report = getReport();
 
         exc.onReport({...report, reportType: ReportType.CANCELED});
-        expect(removeOrder).toBeCalledWith("123");
+        expect(removeOpenOrder).toBeCalledWith("123");
     });
 
     test("Should remove invalid order with report type EXPIRED", () => {
-        const removeOrder = jest.spyOn(exc, "removeOrder" as any);
+        const removeOpenOrder = jest.spyOn(exc.orderManager, "removeOpenOrder");
 
         const report = getReport();
 
         exc.onReport({...report, reportType: ReportType.EXPIRED});
-        expect(removeOrder).toBeCalledWith("123");
+        expect(removeOpenOrder).toBeCalledWith("123");
     });
 
     test("Should remove order with report type SUSPENDED", () => {
-        const removeOrder = jest.spyOn(exc, "removeOrder" as any);
+        const removeOpenOrder = jest.spyOn(exc.orderManager, "removeOpenOrder");
         const report = getReport();
 
         exc.onReport({...report, reportType: ReportType.SUSPENDED});
-        expect(removeOrder).toBeCalledWith("123");
+        expect(removeOpenOrder).toBeCalledWith("123");
     });
 });
 
@@ -198,16 +172,6 @@ describe("send", () => {
 
         exc.send(command);
         expect(logger.error).toBeCalledWith(new Error("Sending command failed"));
-    });
-});
-
-describe("addOrder", () => {
-    test("Should store all open orders", () => {
-        const order = getOrder();
-        expect(exc.getOpenOrders()).toHaveLength(0);
-
-        exc["addOrder"](order);
-        expect(exc.getOpenOrders()[0]).toEqual(order);
     });
 });
 
