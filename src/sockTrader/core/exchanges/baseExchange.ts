@@ -1,7 +1,5 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
-import {lowercase, numbers, uppercase} from "nanoid-dictionary";
-import generate from "nanoid/generate";
 import CandleManager from "../candles/candleManager";
 import logger from "../logger";
 import Orderbook from "../orderbook";
@@ -27,7 +25,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     private readonly orderbooks: Record<string, Orderbook> = {};
     private readonly orderInProgress: Record<string, boolean> = {};
     private readonly connection: IConnection;
-    private orderIncrement = 0;
     private ready = false;
 
     constructor() {
@@ -72,21 +69,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     destroy(): void {
         this.removeAllListeners();
         this.connection.removeAllListeners();
-    }
-
-    /**
-     * Generates orderId based on trading pair, timestamp, increment and random string. With max length 32 characters
-     * ex: 15COVETH1531299734778DkXBry9y-sQ
-     * @param pair crypto pair (BTC USD/BTC ETH)
-     * @returns {string} order id
-     */
-    generateOrderId(pair: Pair): string {
-        this.orderIncrement += 1;
-
-        const alphabet = `${lowercase}${uppercase}${numbers}_-.|`;
-        const orderId = `${this.orderIncrement}${pair}${new Date().getTime()}`;
-
-        return orderId + generate(alphabet, 32 - orderId.length);
     }
 
     /**

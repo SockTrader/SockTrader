@@ -1,6 +1,6 @@
 import moment from "moment";
 import {EventEmitter} from "events";
-import {Pair} from "../../sockTrader/core/types/pair";
+import {Pair} from "../../../sockTrader/core/types/pair";
 import {
     IOrder,
     OrderSide,
@@ -8,13 +8,13 @@ import {
     OrderTimeInForce,
     OrderType,
     ReportType,
-} from "../../sockTrader/core/types/order";
-import CandleManager from "../../sockTrader/core/candles/candleManager";
-import Orderbook from "../../sockTrader/core/orderbook";
-import MockExchange from "../../sockTrader/core/exchanges/__mocks__/mockExchange";
-import logger from "../../sockTrader/core/logger";
+} from "../../../sockTrader/core/types/order";
+import CandleManager from "../../../sockTrader/core/candles/candleManager";
+import Orderbook from "../../../sockTrader/core/orderbook";
+import MockExchange from "../../../sockTrader/core/exchanges/__mocks__/mockExchange";
+import logger from "../../../sockTrader/core/logger";
 
-jest.mock("../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/logger");
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -55,7 +55,6 @@ describe("buy", () => {
     test("Should create a buy order", () => {
         const createOrderMock = jest.fn();
         exc.createOrder = createOrderMock;
-        exc.generateOrderId = jest.fn();
 
         exc.buy(pair, 1, 10);
         expect(createOrderMock).toBeCalled();
@@ -67,7 +66,6 @@ describe("sell", () => {
     test("Should create a sell order", () => {
         const createOrderMock = jest.fn();
         exc.createOrder = createOrderMock;
-        exc.generateOrderId = jest.fn();
 
         exc.sell(pair, 1, 10);
         expect(createOrderMock).toBeCalled();
@@ -210,15 +208,6 @@ describe("addOrder", () => {
 
         exc["addOrder"](order);
         expect(exc.getOpenOrders()[0]).toEqual(order);
-    });
-});
-
-describe("generateOrderId", () => {
-    test("Should generate a random order id", () => {
-        const orderId = exc["generateOrderId"](pair);
-        expect(typeof orderId).toBe("string");
-        expect(orderId).toHaveLength(32);
-        expect(orderId).not.toBe(exc["generateOrderId"](pair));
     });
 });
 
