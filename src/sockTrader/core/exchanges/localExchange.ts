@@ -48,12 +48,12 @@ export default class LocalExchange extends BaseExchange {
 
         if (!this.wallet.isOrderAllowed(newOrder, order)) return;
 
-        this.setOrderInProgress(order.id);
+        this.orderManager.setOrderProcessing(order.id);
         this.onReport(newOrder);
     }
 
     cancelOrder(order: IOrder): void {
-        this.setOrderInProgress(order.id);
+        this.orderManager.setOrderProcessing(order.id);
         this.onReport({...order, reportType: ReportType.CANCELED});
     }
 
@@ -79,7 +79,7 @@ export default class LocalExchange extends BaseExchange {
 
         if (!this.wallet.isOrderAllowed(order)) return;
 
-        this.setOrderInProgress(orderId);
+        this.orderManager.setOrderProcessing(orderId);
         this.onReport(order);
     }
 
@@ -114,31 +114,31 @@ export default class LocalExchange extends BaseExchange {
         return true;
     }
 
+    isOrderWithinCandle(order: IOrder, candle: ICandle) {
+        return ((order.side === OrderSide.BUY && candle.low < order.price) || (order.side === OrderSide.SELL && candle.high > order.price));
+    }
+
     /**
      * Checks if open order can be filled on each price update
      * @param {ICandle} candle the current candle
      */
     processOpenOrders(candle: ICandle): void {
         const openOrders: IOrder[] = [];
-        this.openOrders.forEach(oo => {
-            if (oo.createdAt.isAfter(candle.timestamp)) {
-                return openOrders.push(oo); // Candle should be newer than order!
+        this.orderManager.getOpenOrders().forEach(openOrder => {
+            if (openOrder.createdAt.isAfter(candle.timestamp)) {
+                return openOrders.push(openOrder); // Candle should be newer than order!
             }
 
-            const order = {...oo, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-            if (oo.side === OrderSide.BUY && candle.low < oo.price) {
+            const order = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
+
+            if (this.isOrderWithinCandle(openOrder, candle)) {
                 this.filledOrders.push(order);
                 return this.onReport(order);
             }
 
-            if (oo.side === OrderSide.SELL && candle.high > oo.price) {
-                this.filledOrders.push(order);
-                return this.onReport(order);
-            }
-
-            openOrders.push(oo);
+            openOrders.push(openOrder);
         });
-        this.openOrders = openOrders;
+        this.orderManager.setOpenOrders(openOrders);
     }
 
     loadCurrencies = (): void => undefined;

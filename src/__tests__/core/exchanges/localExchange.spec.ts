@@ -36,11 +36,11 @@ describe("adjustOrder", () => {
 
     test("Should adjust given order", () => {
         exchange.onReport = jest.fn();
-        exchange["setOrderInProgress"] = jest.fn();
+        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
         exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(exchange["setOrderInProgress"]).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
             pair: pair,
             id: expect.any(String),
@@ -56,14 +56,13 @@ describe("adjustOrder", () => {
 
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
-        const setOrderInProgressMock = jest.fn();
-        exchange["setOrderInProgress"] = setOrderInProgressMock;
+        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
         const onReportMock = jest.fn();
         exchange.onReport = onReportMock;
         exchange.cancelOrder({id: "123"} as IOrder);
 
         expect(onReportMock).toBeCalledWith({id: "123", reportType: ReportType.CANCELED});
-        expect(setOrderInProgressMock).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
     });
 });
 
@@ -72,7 +71,8 @@ describe("createOrder", () => {
         exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
         exchange["wallet"]["isOrderAllowed"] = jest.fn(() => true);
         exchange.onReport = jest.fn();
-        exchange["setOrderInProgress"] = jest.fn();
+
+        const spyOrderProcessing = jest.spyOn(exchange.orderManager, "setOrderProcessing");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
@@ -89,7 +89,7 @@ describe("createOrder", () => {
             price: 10,
         }));
 
-        expect(exchange["setOrderInProgress"]).toBeCalledWith(expect.any(String));
+        expect(spyOrderProcessing).toBeCalledWith(expect.any(String));
     });
 });
 
@@ -130,84 +130,41 @@ describe("ready", () => {
 
 describe("processOpenOrders", () => {
     test("Should not process candle older than order ", () => {
-        const earlierMoment = moment();
-        const laterMoment = moment();
-        const openOrder: IOrder = {
-            createdAt: laterMoment,
-            id: "1234",
-            pair: pair,
-            price: 13.0,
-            quantity: 0.02,
-        } as IOrder;
-        exchange["openOrders"] = [openOrder];
+        const openOrder = {createdAt: moment(), id: "1234"} as IOrder;
+        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
+        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
 
-        exchange.processOpenOrders({
-            close: 1,
-            high: 2,
-            low: 0,
-            open: 0,
-            timestamp: earlierMoment,
-            volume: 10,
-        } as ICandle);
-        expect(exchange.getOpenOrders()).toEqual([openOrder]);
+        exchange.processOpenOrders({timestamp: moment().subtract(1, "day")} as ICandle);
+
+        expect(setOpenOrders).toBeCalledWith([openOrder]);
     });
 
-    test("Should fill buy order if buy price is higher than candle low", () => {
-        const earlierMoment = moment();
-        const laterMoment = moment();
-        const openOrder: IOrder = {
-            createdAt: earlierMoment,
-            id: "1234",
-            pair: pair,
-            price: 13.0,
-            quantity: 0.02,
-            side: OrderSide.BUY,
-        } as IOrder;
-        exchange["openOrders"] = [openOrder];
-        const onReportMock = jest.fn();
-        exchange["onReport"] = onReportMock;
-
-        exchange.processOpenOrders({
-            close: 1,
-            high: 2,
-            low: 12.0,
-            open: 0,
-            timestamp: laterMoment,
-            volume: 10,
-        } as ICandle);
-        expect(exchange.getOpenOrders()).toHaveLength(0);
+    test("Should fill buy order if order price is higher than candle low", () => {
+        const openOrder = {createdAt: moment(), price: 13.0, side: OrderSide.BUY} as IOrder;
+        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
         const filledOrder = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED} as IOrder;
+        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
+        exchange["onReport"] = jest.fn();
+
+        exchange.processOpenOrders({open: 13, high: 20, low: 12, close: 14, timestamp: moment()} as ICandle);
+
+        expect(setOpenOrders).toBeCalledWith([]);
         expect(exchange["filledOrders"]).toEqual([filledOrder]);
-        expect(onReportMock).toBeCalledWith(filledOrder);
+        expect(exchange["onReport"]).toBeCalledWith(filledOrder);
     });
 
-    test("Should fill sell order if sell price is lower than candle high", () => {
-        const earlierMoment = moment();
-        const laterMoment = moment();
-        const openOrder: IOrder = {
-            createdAt: earlierMoment,
-            id: "1234",
-            pair: pair,
-            price: 18.0,
-            quantity: 0.02,
-            side: OrderSide.SELL,
-        } as IOrder;
-        exchange["openOrders"] = [openOrder];
-        const onReportMock = jest.fn();
-        exchange["onReport"] = onReportMock;
-
-        exchange.processOpenOrders({
-            close: 1,
-            high: 20,
-            low: 12.0,
-            open: 0,
-            timestamp: laterMoment,
-            volume: 10,
-        } as ICandle);
-        expect(exchange.getOpenOrders()).toHaveLength(0);
+    test("Should fill sell order if order price is lower than candle high", () => {
+        const openOrder = {createdAt: moment(), price: 13.0, side: OrderSide.SELL} as IOrder;
+        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
         const filledOrder = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED} as IOrder;
+        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
+        exchange["onReport"] = jest.fn();
+
+        exchange.processOpenOrders({open: 10, high: 14, low: 10, close: 11, timestamp: moment()} as ICandle);
+
+        expect(setOpenOrders).toBeCalledWith([]);
         expect(exchange["filledOrders"]).toEqual([filledOrder]);
-        expect(onReportMock).toBeCalledWith(filledOrder);
+        expect(exchange["onReport"]).toBeCalledWith(filledOrder);
     });
 });
 
