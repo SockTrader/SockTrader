@@ -148,6 +148,7 @@ describe("emitCandles", () => {
         exchange.emitCandles(candles);
         expect(emitMock).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
         expect(emitMock).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
+        expect(exchange["currentCandle"]).toEqual(newCandle);
     });
 });
 
