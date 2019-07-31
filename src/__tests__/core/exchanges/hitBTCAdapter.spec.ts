@@ -3,6 +3,8 @@ import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
 import {IHitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
 
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
 function createExchange() {
     const exchange = new HitBTC();
     exchange.onUpdateOrderbook = jest.fn();

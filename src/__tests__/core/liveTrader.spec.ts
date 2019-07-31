@@ -5,9 +5,8 @@ import {IStrategyConfig} from "../../sockTrader/core/bot/sockTrader";
 import {IExchange} from "../../sockTrader/core/types/IExchange";
 import {IReporter} from "../../sockTrader/core/reporters/reporterInterface";
 import IPCReporter from "../../sockTrader/core/reporters/IPCReporter";
-import logger from "../../sockTrader/core/logger";
-import {EventEmitter} from "events";
-import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
+
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
 jest.mock("../../sockTrader/core/logger");
 
@@ -19,8 +18,8 @@ const createStrategy = (): IStrategyConfig => ({
     interval: CandleInterval.ONE_HOUR,
 });
 
-const createLiveTrader = (paperTrading: boolean = false): LiveTrader => {
-    const liveTrader = new LiveTrader(paperTrading);
+const createLiveTrader = (): LiveTrader => {
+    const liveTrader = new LiveTrader();
     liveTrader.setExchange(createExchange());
     liveTrader.addStrategy(createStrategy());
     liveTrader.addReporter(createReporter());
@@ -41,18 +40,6 @@ describe("bindStrategyToExchange", () => {
         const spy = jest.spyOn(LiveTrader.prototype, "bindStrategyToExchange" as any);
         await liveTrader.start();
         expect(spy).toBeCalledWith(expect.any(SimpleMovingAverage));
-    });
-
-    test("Should log strategy events when using paper trading", () => {
-        const liveTrader = createLiveTrader(true);
-        const eventEmitter = new EventEmitter();
-
-        liveTrader["bindStrategyToExchange"](eventEmitter as BaseStrategy);
-        eventEmitter.emit("core.signal", {order: 123})
-        eventEmitter.emit("core.adjustOrder", {order: 123})
-
-        expect(logger.info).toHaveBeenNthCalledWith(1, "[PT] ORDER: {\"order\":123}");
-        expect(logger.info).toHaveBeenNthCalledWith(2, "[PT] ADJUST: {\"order\":123}");
     });
 });
 
