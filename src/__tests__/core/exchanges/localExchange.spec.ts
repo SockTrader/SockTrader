@@ -1,7 +1,6 @@
 import moment from "moment";
 import {Pair} from "../../../sockTrader/core/types/pair";
 import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
-import Wallet from "../../../sockTrader/core/assets/wallet";
 import {
     IOrder,
     OrderSide,
@@ -12,15 +11,16 @@ import {
 } from "../../../sockTrader/core/types/order";
 import {ICandle} from "../../../sockTrader/core/types/ICandle";
 
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
 const pair: Pair = ["BTC", "USD"];
 
-let wallet = new Wallet({BTC: 1});
-let exchange = new LocalExchange(wallet);
+let exchange = new LocalExchange();
 let sendMock = jest.fn();
 let emitMock = jest.fn();
 
 beforeEach(() => {
-    exchange = new LocalExchange(wallet);
+    exchange = new LocalExchange();
     exchange.send = sendMock;
     exchange.emit = emitMock;
     exchange["isAdjustingAllowed"] = jest.fn(() => true);

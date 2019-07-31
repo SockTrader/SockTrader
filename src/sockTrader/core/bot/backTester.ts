@@ -1,13 +1,8 @@
 import moment from "moment";
-import Wallet, {IAssetMap} from "../assets/wallet";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../reporters/reporterInterface";
 import {ICandle} from "../types/ICandle";
 import SockTrader, {IStrategyConfig} from "./sockTrader";
-
-export interface IBackTestConfig {
-    assets: IAssetMap;
-}
 
 interface IInputCandle {
     close: number;
@@ -28,15 +23,12 @@ export default class BackTester extends SockTrader {
 
     /**
      * Creates a new BackTester
-     * @param {IBackTestConfig} config
      * @param {IInputCandle} inputCandles
      */
-    constructor(config: IBackTestConfig, inputCandles: IInputCandle[]) {
+    constructor(inputCandles: IInputCandle[]) {
         super();
         this.inputCandles = inputCandles;
-
-        const wallet = new Wallet(config.assets);
-        this.exchange = new LocalExchange(wallet);
+        this.exchange = new LocalExchange();
     }
 
     async start(): Promise<void> {

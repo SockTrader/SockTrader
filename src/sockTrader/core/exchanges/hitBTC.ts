@@ -12,6 +12,7 @@ import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
+import {paperTrade} from "./decorators/paperTrade";
 import HitBTCAdapter from "./hitBTCAdapter";
 import {generateOrderId} from "./utils/utils";
 
@@ -32,6 +33,7 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  * The HitBTC class represent the HitBTC exchange
  * @see https://hitbtc.com/
  */
+@paperTrade
 export default class HitBTC extends BaseExchange {
     readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
 
@@ -62,7 +64,7 @@ export default class HitBTC extends BaseExchange {
         const orderId = generateOrderId(pair);
         this.orderManager.setOrderProcessing(orderId);
 
-        logger.info(`${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
+        logger.info(`PRODUCTION ${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
         this.send(this.createCommand("newOrder", {
             clientOrderId: orderId,
             price,
@@ -96,13 +98,15 @@ export default class HitBTC extends BaseExchange {
         this.send(command);
     }
 
-    onSnapshotCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
-        .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-        .set(data);
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+            .set(data);
+    }
 
-    onUpdateCandles = (pair: Pair, data: ICandle[], interval: ICandleInterval) => this
-        .getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-        .update(data);
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+            .update(data);
+    }
 
     onSnapshotOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);

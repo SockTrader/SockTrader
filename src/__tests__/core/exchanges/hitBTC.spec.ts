@@ -10,8 +10,9 @@ import WebSocket from "../../../sockTrader/core/connection/webSocket";
 
 jest.mock("./../../../config");
 
-const pair: Pair = ["BTC", "USD"];
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
+const pair: Pair = ["BTC", "USD"];
 function createExchange() {
     const exchange = new HitBTC();
     exchange.send = jest.fn();

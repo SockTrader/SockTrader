@@ -11,6 +11,7 @@
     "**/__tests__/*"
   ],
   "compilerOptions": {
+    "experimentalDecorators": true,
     "baseUrl": ".",
     "paths" : {
       "*": [
