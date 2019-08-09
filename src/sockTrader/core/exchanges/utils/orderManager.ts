@@ -2,19 +2,19 @@ import {IOrder} from "../../types/order";
 
 export default class OrderManager {
 
-    private readonly processingOrders: Record<string, boolean> = {};
+    private readonly unconfirmedOrders: Record<string, boolean> = {};
     private openOrders: IOrder[] = [];
 
-    setOrderProcessing(orderId: string) {
-        this.processingOrders[orderId] = true;
+    setOrderUnconfirmed(orderId: string) {
+        this.unconfirmedOrders[orderId] = true;
     }
 
-    isOrderProcessing(orderId: string) {
-        return this.processingOrders[orderId];
+    isOrderUnconfirmed(orderId: string) {
+        return this.unconfirmedOrders[orderId];
     }
 
-    removeOrderProcessing(orderId: string) {
-        delete this.processingOrders[orderId];
+    setOrderConfirmed(orderId: string) {
+        delete this.unconfirmedOrders[orderId];
     }
 
     getOpenOrders() {
@@ -25,9 +25,9 @@ export default class OrderManager {
         this.openOrders = orders;
     }
 
-    findAndReplaceOpenOrder(newOrder: IOrder, oldOrderId: string): IOrder | undefined {
+    replaceOpenOrder(newOrder: IOrder, oldOrderId: string): IOrder | undefined {
         const oldOrder = this.findOpenOrder(oldOrderId);
-        this.removeOrderProcessing(oldOrderId);
+        this.setOrderConfirmed(oldOrderId);
         this.removeOpenOrder(oldOrderId);
         this.addOpenOrder(newOrder);
 
@@ -44,5 +44,21 @@ export default class OrderManager {
 
     findOpenOrder(orderId: string) {
         return this.openOrders.find(openOrder => openOrder.id === orderId);
+    }
+
+    /**
+     * Validates if you can adjust an existing order on an exchange
+     * @param order the order to check
+     * @param price new price
+     * @param qty new quantity
+     */
+    canAdjustOrder(order: IOrder, price: number, qty: number): boolean {
+        if (this.isOrderUnconfirmed(order.id)) return false;
+
+        // No need to replace!
+        if (order.price === price && order.quantity === qty) return false;
+
+        this.setOrderUnconfirmed(order.id);
+        return true;
     }
 }

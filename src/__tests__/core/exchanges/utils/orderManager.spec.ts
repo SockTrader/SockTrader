@@ -14,7 +14,7 @@ describe("setOrderProcessing", () => {
     });
 
     test("Should mark an order as processing", () => {
-        orderManager.setOrderProcessing("123");
+        orderManager.setOrderUnconfirmed("123");
         expect(orderManager["processingOrders"]).toEqual({"123": true});
     });
 
@@ -22,19 +22,19 @@ describe("setOrderProcessing", () => {
 
 describe("isOrderProcessing", () => {
     test("Should return undefined when order not found", () => {
-        expect(orderManager.isOrderProcessing("123")).toEqual(undefined);
+        expect(orderManager.isOrderUnconfirmed("123")).toEqual(undefined);
     });
 
     test("Should mark an order as processing", () => {
-        orderManager.setOrderProcessing("123");
-        expect(orderManager.isOrderProcessing("123")).toEqual(true);
+        orderManager.setOrderUnconfirmed("123");
+        expect(orderManager.isOrderUnconfirmed("123")).toEqual(true);
     });
 });
 
 describe("removeOrderProcessing", () => {
     test("Should remove order in processing", () => {
-        orderManager.setOrderProcessing("123");
-        orderManager.removeOrderProcessing("123");
+        orderManager.setOrderUnconfirmed("123");
+        orderManager.setOrderConfirmed("123");
         expect(orderManager["processingOrders"]).toEqual({});
     });
 });
@@ -55,7 +55,7 @@ describe("findAndReplaceOpenOrder", () => {
         const oldOrder = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
 
         orderManager.setOpenOrders([oldOrder]);
-        const foundOrder = orderManager.findAndReplaceOpenOrder({
+        const foundOrder = orderManager.replaceOpenOrder({
             id: "2",
             price: 11,
             side: OrderSide.SELL,

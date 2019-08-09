@@ -36,11 +36,11 @@ describe("adjustOrder", () => {
 
     test("Should adjust given order", () => {
         exchange.onReport = jest.fn();
-        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
+        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
         exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
 
         exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
             pair: pair,
             id: expect.any(String),
@@ -56,13 +56,13 @@ describe("adjustOrder", () => {
 
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
-        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
+        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
         const onReportMock = jest.fn();
         exchange.onReport = onReportMock;
         exchange.cancelOrder({id: "123"} as IOrder);
 
         expect(onReportMock).toBeCalledWith({id: "123", reportType: ReportType.CANCELED});
-        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
     });
 });
 
