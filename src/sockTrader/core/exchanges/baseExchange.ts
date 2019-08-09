@@ -132,10 +132,10 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         const orderId = order.id;
         let oldOrder: IOrder | undefined;
 
-        this.orderManager.removeOrderProcessing(orderId);
+        this.orderManager.setOrderConfirmed(orderId);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
-            oldOrder = this.orderManager.findAndReplaceOpenOrder(order, order.originalId);
+            oldOrder = this.orderManager.replaceOpenOrder(order, order.originalId);
         } else if (order.reportType === ReportType.NEW) {
             this.orderManager.addOpenOrder(order); // New order created
         } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
@@ -155,22 +155,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.createOrder(pair, price, qty, OrderSide.SELL);
     }
 
-    createCommand(method: string, params: object = {}): ICommand {
-        return {method, params, id: method};
-    }
-
-    /**
-     * The created command will be automatically restored if the exchange loses connection.
-     * @param method
-     * @param params
-     */
-    createRestorableCommand(method: string, params: object = {}): ICommand {
-        const command = this.createCommand(method, params);
-
-        this.getConnection().addRestorable(command);
-        return command;
-    }
-
     /**
      * Send request over socket connection
      * @param command
@@ -181,25 +165,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         } catch (e) {
             logger.error(e);
         }
-    }
-
-    /**
-     * Validates if adjusting an existing order on an exchange is allowed
-     * @param order the order to check
-     * @param price new price
-     * @param qty new quantity
-     */
-    protected isAdjustingAllowed(order: IOrder, price: number, qty: number): boolean {
-        if (this.orderManager.isOrderProcessing(order.id)) {
-            return false; // Order still in progress
-        }
-
-        if (order.price === price && order.quantity === qty) {
-            return false; // Old order === new order. No need to replace!
-        }
-
-        this.orderManager.setOrderProcessing(order.id);
-        return true;
     }
 
     /**

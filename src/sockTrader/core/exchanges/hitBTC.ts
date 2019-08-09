@@ -15,6 +15,7 @@ import BaseExchange from "./baseExchange";
 import {paperTrade} from "./decorators/paperTrade";
 import HitBTCAdapter from "./hitBTCAdapter";
 import {generateOrderId} from "./utils/utils";
+import HitBTCCommand from "./commands/hitBTCCommand";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -42,10 +43,10 @@ export default class HitBTC extends BaseExchange {
     }
 
     adjustOrder(order: IOrder, price: number, qty: number): void {
-        if (this.isAdjustingAllowed(order, price, qty)) {
+        if (this.orderManager.canAdjustOrder(order, price, qty)) {
             const newOrderId = generateOrderId(order.pair);
 
-            this.send(this.createCommand("cancelReplaceOrder", {
+            this.send(new HitBTCCommand("cancelReplaceOrder", {
                 clientOrderId: order.id,
                 price,
                 quantity: qty,
@@ -56,16 +57,16 @@ export default class HitBTC extends BaseExchange {
     }
 
     cancelOrder(order: IOrder): void {
-        this.orderManager.setOrderProcessing(order.id);
-        this.send(this.createCommand("cancelOrder", {clientOrderId: order.id}));
+        this.orderManager.setOrderUnconfirmed(order.id);
+        this.send(new HitBTCCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
         const orderId = generateOrderId(pair);
-        this.orderManager.setOrderProcessing(orderId);
+        this.orderManager.setOrderUnconfirmed(orderId);
 
         logger.info(`PRODUCTION ${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
-        this.send(this.createCommand("newOrder", {
+        this.send(new HitBTCCommand("newOrder", {
             clientOrderId: orderId,
             price,
             quantity: qty,
@@ -76,7 +77,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     loadCurrencies(): void {
-        this.send(this.createCommand("getSymbols"));
+        this.send(new HitBTCCommand("getSymbols"));
     }
 
     /**
@@ -88,14 +89,12 @@ export default class HitBTC extends BaseExchange {
         const nonce: string = nanoid(32);
         const signature: string = crypto.createHmac("sha256", privateKey).update(nonce).digest("hex");
 
-        const command = this.createRestorableCommand("login", {
+        this.send(HitBTCCommand.createRestorable("login", {
             algo: "HS256",
             nonce,
             pKey: publicKey,
             signature,
-        });
-
-        this.send(command);
+        }));
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
@@ -123,7 +122,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {
-        const command = this.createRestorableCommand("subscribeCandles", {
+        const command = HitBTCCommand.createRestorable("subscribeCandles", {
             symbol: pair.join(""),
             period: interval.code,
         });
@@ -132,12 +131,12 @@ export default class HitBTC extends BaseExchange {
     }
 
     subscribeOrderbook = (pair: Pair): void => {
-        const command = this.createRestorableCommand("subscribeOrderbook", {symbol: pair.join("")});
+        const command = HitBTCCommand.createRestorable("subscribeOrderbook", {symbol: pair.join("")});
         this.send(command);
     };
 
     subscribeReports = (): void => {
-        const command = this.createRestorableCommand("subscribeReports");
+        const command = HitBTCCommand.createRestorable("subscribeReports");
         this.send(command);
     };
 

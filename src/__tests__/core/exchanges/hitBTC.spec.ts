@@ -138,10 +138,10 @@ describe("loadCurrencies", () => {
 
 describe("cancelOrder", () => {
     it("Should cancel an order", () => {
-        exchange["orderManager"]["setOrderProcessing"] = jest.fn();
+        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
         exchange.cancelOrder({id: "123"} as IOrder);
 
-        expect(exchange["orderManager"]["setOrderProcessing"]).toBeCalledWith("123");
+        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
         expect(exchange.send).toBeCalledWith(expect.objectContaining({
             id: "cancelOrder",
             method: "cancelOrder",

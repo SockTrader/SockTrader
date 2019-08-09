@@ -58,7 +58,7 @@ export const selfGeneratingOrders = (Exchange: new (...args: any[]) => any): any
         }
 
         cancelOrder(order: IOrder) {
-            this.orderManager.setOrderProcessing(order.id);
+            this.orderManager.setOrderUnconfirmed(order.id);
             this.onReport({...order, reportType: ReportType.CANCELED});
         }
 
@@ -83,7 +83,7 @@ export const selfGeneratingOrders = (Exchange: new (...args: any[]) => any): any
             if (!this.wallet.isOrderAllowed(order)) return;
 
             this.wallet.updateAssets(order);
-            this.orderManager.setOrderProcessing(order.id);
+            this.orderManager.setOrderUnconfirmed(order.id);
             this.onReport(order);
         }
 
@@ -104,7 +104,7 @@ export const selfGeneratingOrders = (Exchange: new (...args: any[]) => any): any
             if (!this.wallet.isOrderAllowed(newOrder, order)) return;
 
             this.wallet.updateAssets(newOrder, order);
-            this.orderManager.setOrderProcessing(order.id);
+            this.orderManager.setOrderUnconfirmed(order.id);
             this.onReport(newOrder);
         }
     }
