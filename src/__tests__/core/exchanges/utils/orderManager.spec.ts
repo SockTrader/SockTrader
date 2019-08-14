@@ -8,34 +8,33 @@ beforeEach(() => {
 });
 
 
-describe("setOrderProcessing", () => {
-    test("Should have no processingOrders when created", () => {
-        expect(orderManager["processingOrders"]).toEqual({});
+describe("setOrderUnconfirmed", () => {
+    test("Should have no unconfirmedOrders when created", () => {
+        expect(orderManager["unconfirmedOrders"]).toEqual({});
     });
 
-    test("Should mark an order as processing", () => {
+    test("Should mark an order as unconfirmed", () => {
         orderManager.setOrderUnconfirmed("123");
-        expect(orderManager["processingOrders"]).toEqual({"123": true});
+        expect(orderManager["unconfirmedOrders"]).toEqual({"123": true});
     });
-
 });
 
-describe("isOrderProcessing", () => {
+describe("setOrderConfirmed", () => {
+    test("Should remove from unconfirmed orders", () => {
+        orderManager.setOrderUnconfirmed("123");
+        orderManager.setOrderConfirmed("123");
+        expect(orderManager["unconfirmedOrders"]).toEqual({});
+    });
+});
+
+describe("isOrderUnconfirmed", () => {
     test("Should return undefined when order not found", () => {
         expect(orderManager.isOrderUnconfirmed("123")).toEqual(undefined);
     });
 
-    test("Should mark an order as processing", () => {
+    test("Should mark an order as unconfirmed", () => {
         orderManager.setOrderUnconfirmed("123");
         expect(orderManager.isOrderUnconfirmed("123")).toEqual(true);
-    });
-});
-
-describe("removeOrderProcessing", () => {
-    test("Should remove order in processing", () => {
-        orderManager.setOrderUnconfirmed("123");
-        orderManager.setOrderConfirmed("123");
-        expect(orderManager["processingOrders"]).toEqual({});
     });
 });
 
@@ -50,7 +49,7 @@ describe("get/set OpenOrders", () => {
     });
 });
 
-describe("findAndReplaceOpenOrder", () => {
+describe("replaceOpenOrder", () => {
     test("Should set and get all open orders", () => {
         const oldOrder = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
 
@@ -101,5 +100,20 @@ describe("findOpenOrder", () => {
 
         const openOrder = orderManager.findOpenOrder("10");
         expect(openOrder).toEqual(undefined);
+    });
+});
+
+describe("canAdjustOrder", () => {
+    test("Should disallow order in progress to be adjusted", () => {
+        const order: IOrder = {id: "test_order_id", price: 0.001263, quantity: 0.02} as any;
+
+        expect(orderManager.canAdjustOrder(order, 0.002, 0.02)).toBe(true);
+        expect(orderManager.canAdjustOrder(order, 0.002, 0.02)).toBe(false);
+    });
+
+    test("Should disallow order to be adjusted when nothing changed", () => {
+        const order: IOrder = {id: "test_order_id", price: 0.001263, quantity: 0.02} as any;
+
+        expect(orderManager.canAdjustOrder(order, 0.001263, 0.02)).toBe(false);
     });
 });

@@ -12,10 +12,10 @@ import {IResponseAdapter} from "../types/IResponseAdapter";
 import {IOrder, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
+import HitBTCCommand from "./commands/hitBTCCommand";
 import {paperTrade} from "./decorators/paperTrade";
 import HitBTCAdapter from "./hitBTCAdapter";
 import {generateOrderId} from "./utils/utils";
-import HitBTCCommand from "./commands/hitBTCCommand";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
