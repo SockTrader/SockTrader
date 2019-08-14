@@ -11,7 +11,7 @@ import {
 } from "../../../sockTrader/core/types/order";
 import {ICandle} from "../../../sockTrader/core/types/ICandle";
 
-process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
 const pair: Pair = ["BTC", "USD"];
 
@@ -23,36 +23,9 @@ beforeEach(() => {
     exchange = new LocalExchange();
     exchange.send = sendMock;
     exchange.emit = emitMock;
-    exchange["isAdjustingAllowed"] = jest.fn(() => true);
 });
 
 afterEach(() => jest.clearAllMocks());
-
-describe("adjustOrder", () => {
-    test("Should throw error with current candle undefined", () => {
-        expect(() => exchange.adjustOrder(null as any, 10, 10))
-            .toThrow("Cannot adjust order. No candles have been emitted.");
-    });
-
-    test("Should adjust given order", () => {
-        exchange.onReport = jest.fn();
-        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
-        exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
-
-        exchange.adjustOrder({pair: pair, id: "123"} as IOrder, 0.002, 0.5);
-        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
-        expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
-            pair: pair,
-            id: expect.any(String),
-            updatedAt: expect.any(moment),
-            type: OrderType.LIMIT,
-            originalId: "123",
-            quantity: 0.5,
-            price: 0.002,
-            reportType: ReportType.REPLACED,
-        }));
-    });
-});
 
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
@@ -68,11 +41,14 @@ describe("cancelOrder", () => {
 
 describe("createOrder", () => {
     test("Should create a new order", () => {
-        exchange["currentCandle"] = {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: moment()} as ICandle;
-        exchange["wallet"]["isOrderAllowed"] = jest.fn(() => true);
+        // @formatter:off
+        (exchange as any)["currentCandle"] = {open: 1,high: 2,low: 0,close: 1.5,volume: 1,timestamp: moment()} as ICandle;
+        (exchange as any)["wallet"]["isOrderAllowed"] = jest.fn(() => true);
+        // @formatter:on
+
         exchange.onReport = jest.fn();
 
-        const spyOrderProcessing = jest.spyOn(exchange.orderManager, "setOrderProcessing");
+        const spyOrderProcessing = jest.spyOn(exchange.orderManager, "setOrderUnconfirmed");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
@@ -100,10 +76,10 @@ describe("emitCandles", () => {
         const candle1 = {close: 1, high: 2, low: 0, open: 0, timestamp: moment1, volume: 10} as ICandle;
         const candle2 = {close: 1, high: 2, low: 0, open: 0, timestamp: moment2, volume: 10} as ICandle;
 
-        const candles: ICandle[] = [candle1, candle2];
-        exchange.emitCandles(candles);
-        expect(emitMock).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1]));
-        expect(emitMock).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1, candle2]));
+        exchange.emitCandles([candle1, candle2] as ICandle[]);
+
+        expect(exchange.emit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1]));
+        expect(exchange.emit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1, candle2]));
     });
 
     test("Should emit oldest candles first", () => {
@@ -112,11 +88,9 @@ describe("emitCandles", () => {
         const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as ICandle;
         const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as ICandle;
 
-        const candles: ICandle[] = [oldCandle, newCandle];
-        exchange.emitCandles(candles);
+        exchange.emitCandles([oldCandle, newCandle] as ICandle[]);
         expect(emitMock).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
         expect(emitMock).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
-        expect(exchange["currentCandle"]).toEqual(newCandle);
     });
 });
 
@@ -127,45 +101,3 @@ describe("ready", () => {
         expect(emitMock).toBeCalledWith("ready");
     });
 });
-
-describe("processOpenOrders", () => {
-    test("Should not process candle older than order ", () => {
-        const openOrder = {createdAt: moment(), id: "1234"} as IOrder;
-        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
-        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
-
-        exchange.processOpenOrders({timestamp: moment().subtract(1, "day")} as ICandle);
-
-        expect(setOpenOrders).toBeCalledWith([openOrder]);
-    });
-
-    test("Should fill buy order if order price is higher than candle low", () => {
-        const openOrder = {createdAt: moment(), price: 13.0, side: OrderSide.BUY} as IOrder;
-        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
-        const filledOrder = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED} as IOrder;
-        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
-        exchange["onReport"] = jest.fn();
-
-        exchange.processOpenOrders({open: 13, high: 20, low: 12, close: 14, timestamp: moment()} as ICandle);
-
-        expect(setOpenOrders).toBeCalledWith([]);
-        expect(exchange["filledOrders"]).toEqual([filledOrder]);
-        expect(exchange["onReport"]).toBeCalledWith(filledOrder);
-    });
-
-    test("Should fill sell order if order price is lower than candle high", () => {
-        const openOrder = {createdAt: moment(), price: 13.0, side: OrderSide.SELL} as IOrder;
-        const setOpenOrders = jest.spyOn(exchange.orderManager, "setOpenOrders");
-        const filledOrder = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED} as IOrder;
-        exchange.orderManager.getOpenOrders = jest.fn(() => [openOrder]);
-        exchange["onReport"] = jest.fn();
-
-        exchange.processOpenOrders({open: 10, high: 14, low: 10, close: 11, timestamp: moment()} as ICandle);
-
-        expect(setOpenOrders).toBeCalledWith([]);
-        expect(exchange["filledOrders"]).toEqual([filledOrder]);
-        expect(exchange["onReport"]).toBeCalledWith(filledOrder);
-    });
-});
-
-

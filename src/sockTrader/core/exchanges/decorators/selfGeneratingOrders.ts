@@ -48,13 +48,13 @@ export const selfGeneratingOrders = (Exchange: new (...args: any[]) => any): any
         onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
             this.currentCandle = data[0];
             this.processOpenOrders(this.currentCandle);
-            super.onSnapshotCandles(data, pair, interval);
+            super.onSnapshotCandles(pair, data, interval);
         }
 
         onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
             this.currentCandle = data[0];
             this.processOpenOrders(this.currentCandle);
-            super.onUpdateCandles(data, pair, interval);
+            super.onUpdateCandles(pair, data, interval);
         }
 
         cancelOrder(order: IOrder) {
