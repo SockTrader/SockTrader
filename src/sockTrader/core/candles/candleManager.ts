@@ -67,23 +67,30 @@ export default class CandleManager extends EventEmitter {
             const isCandleReplaced = this.findAndReplaceCandle(updatedCandle);
 
             if (!isCandleReplaced) {
-                const length = this.candles.unshift(updatedCandle);
+                this.candles.unshift(updatedCandle);
                 this.removeRetentionOverflow(this.candles);
 
-                // We might need to re-sort the array in the rare occasion that we've inserted an older candle.
-                // You never know what an exchange might return.
-                if (length >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
-                    logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(updatedCandle)}`);
-                    needsSort = true;
-                }
+                if (!needsSort) needsSort = this.needsSort();
             }
         });
 
-        if (needsSort) {
-            this.candles = this.sort(this.candles);
-        }
+        if (needsSort) this.candles = this.sort(this.candles);
 
         this.emit("update", this.candles);
+    }
+
+    /**
+     * We might need to re-sort the array in the rare occasion that we've inserted an older candle.
+     * You never know what an exchange might return.
+     */
+    private needsSort() {
+        let needsSort = false;
+        if (this.candles.length >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
+            logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(this.candles[0])}`);
+            needsSort = true;
+        }
+
+        return needsSort;
     }
 
     /**
