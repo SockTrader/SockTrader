@@ -74,6 +74,9 @@ export default class LocalExchange extends BaseExchange {
     }
 
     onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+        // huge performance overhead when running a backtest and its only useful during paper trading.
+        if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") return undefined;
+
         this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
             .update(data);
     }
