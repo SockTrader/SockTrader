@@ -1,17 +1,19 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import CandleManager from "../candles/candleManager";
-import logger from "../logger";
 import Orderbook from "../orderbook";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
-import {ICommand, IConnection} from "../types/IConnection";
+import {IConnection} from "../types/IConnection";
 import {ICurrencyMap} from "../types/ICurrencyMap";
 import {IExchange} from "../types/IExchange";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
+import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
 import {Pair} from "../types/pair";
+import BacktestReportingBehaviour from "./orderReporting/backtestReportingBehaviour";
+import PaperTradingReportingBehaviour from "./orderReporting/paperTradingReportingBehaviour";
 import OrderManager from "./utils/orderManager";
 
 /**
@@ -23,23 +25,17 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     isCurrenciesLoaded = false;
     orderManager: OrderManager = new OrderManager();
     protected candles: Record<string, CandleManager> = {};
+    protected orderReporter!: OrderReportingBehaviour;
+    protected readonly connection: IConnection;
     private readonly orderbooks: Record<string, Orderbook> = {};
-    private readonly connection: IConnection;
     private ready = false;
 
     constructor() {
         super();
 
         this.connection = this.createConnection();
+        this.setOrderReportingBehaviour();
     }
-
-    abstract adjustOrder(order: IOrder, price: number, qty: number): void;
-
-    abstract cancelOrder(order: IOrder): void;
-
-    abstract createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
-
-    abstract onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
 
     abstract onUpdateOrderbook(data: IOrderbookData): void;
 
@@ -51,10 +47,45 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     protected abstract createConnection(): IConnection;
 
+    protected abstract getOrderReportingBehaviour(): OrderReportingBehaviour;
+
+    adjustOrder(order: IOrder, price: number, qty: number) {
+        return this.orderReporter.adjustOrder(order, price, qty);
+    }
+
+    cancelOrder(order: IOrder) {
+        return this.orderReporter.cancelOrder(order);
+    }
+
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
+        return this.orderReporter.createOrder(pair, price, qty, side);
+    }
+
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.orderReporter.onSnapshotCandles(pair, data, interval);
+    }
+
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.orderReporter.onUpdateCandles(pair, data, interval);
+    }
+
     /**
      * Load trading pair configuration
      */
     protected abstract loadCurrencies(): void;
+
+    protected setOrderReportingBehaviour() {
+        console.log(process.env.SOCKTRADER_TRADING_MODE);
+        if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") {
+            this.orderReporter = new BacktestReportingBehaviour(this.orderManager, this);
+        }
+
+        if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
+            this.orderReporter = new PaperTradingReportingBehaviour();
+        }
+
+        this.orderReporter = this.getOrderReportingBehaviour();
+    }
 
     buy(pair: Pair, price: number, qty: number): void {
         this.createOrder(pair, price, qty, OrderSide.BUY);
@@ -71,24 +102,6 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     destroy(): void {
         this.removeAllListeners();
         this.connection.removeAllListeners();
-    }
-
-    /**
-     * Returns candle manager for pair and interval
-     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {ICandleInterval} interval time interval
-     * @param {(candles: CandleManager) => void} updateHandler what to do if candle collection updates
-     * @returns {CandleManager} the candle collection
-     */
-    getCandleManager(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleManager) => void): CandleManager {
-        const key = `${pair}_${interval.code}`;
-        if (this.candles[key]) {
-            return this.candles[key];
-        }
-
-        this.candles[key] = new CandleManager(interval);
-        this.candles[key].on("update", updateHandler);
-        return this.candles[key];
     }
 
     getOrderbook(pair: Pair): Orderbook {
@@ -147,24 +160,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.emit("core.report", order, oldOrder);
     }
 
-    getConnection(): IConnection {
-        return this.connection;
-    }
-
     sell(pair: Pair, price: number, qty: number): void {
         this.createOrder(pair, price, qty, OrderSide.SELL);
-    }
-
-    /**
-     * Send request over socket connection
-     * @param command
-     */
-    send(command: ICommand): void {
-        try {
-            this.connection.send(command);
-        } catch (e) {
-            logger.error(e);
-        }
     }
 
     /**

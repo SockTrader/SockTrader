@@ -4,15 +4,15 @@ import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IOrder, OrderSide} from "../types/order";
+import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import {backtest} from "./decorators/backtest";
+import BacktestReportingBehaviour from "./orderReporting/backtestReportingBehaviour";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
  * strategy testing
  */
-@backtest
 export default class LocalExchange extends BaseExchange {
 
     protected createConnection(): IConnection {
@@ -21,6 +21,21 @@ export default class LocalExchange extends BaseExchange {
 
     protected loadCurrencies(): void {
         return undefined;
+    }
+
+    adjustOrder(order: IOrder, price: number, qty: number) {
+        const adjustedOrder = super.adjustOrder(order, price, qty);
+        if (adjustedOrder) return this.onReport(adjustedOrder);
+    }
+
+    cancelOrder(order: IOrder): IOrder | void {
+        const cancelledOrder = super.cancelOrder(order);
+        if (cancelledOrder) return this.onReport(cancelledOrder);
+    }
+
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): IOrder | void {
+        const createdOrder = super.createOrder(pair, price, qty, side);
+        if (createdOrder) return this.onReport(createdOrder);
     }
 
     /**
@@ -58,28 +73,13 @@ export default class LocalExchange extends BaseExchange {
         return true;
     }
 
-    // Method implemented by decorator
-    adjustOrder(order: IOrder, price: number, qty: number): void {
-        return undefined;
-    }
-
-    // Method implemented by decorator
-    cancelOrder(order: IOrder): void {
-        return undefined;
-    }
-
-    // Method implemented by decorator
-    createOrder(pair: [string, string], price: number, qty: number, side: OrderSide): void {
-        return undefined;
-    }
-
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        // huge performance overhead when running a backtest and its only useful during paper trading.
-        if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") return undefined;
-
-        this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-            .update(data);
-    }
+    // onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+    //     // huge performance overhead when running a backtest and its only useful during paper trading.
+    //     if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
+    //         this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
+    //             .update(data);
+    //     }
+    // }
 
     // Method ignored by localExchange
     onUpdateOrderbook(data: IOrderbookData): void {
@@ -99,5 +99,9 @@ export default class LocalExchange extends BaseExchange {
     // Method ignored by localExchange
     subscribeReports(): void {
         return undefined;
+    }
+
+    protected getOrderReportingBehaviour(): OrderReportingBehaviour {
+        return new BacktestReportingBehaviour(this.orderManager, this);
     }
 }
