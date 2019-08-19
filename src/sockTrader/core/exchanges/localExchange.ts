@@ -61,11 +61,8 @@ export default class LocalExchange extends BaseExchange {
 
         candleList.forEach(value => {
             processedCandles.unshift(value);
-            // The values below don't make much sense. But that doesn't really matter because a localExchange
-            // will only be used for backtesting. And a backtest will only be ran for 1 pair at a time.
-            // The interval will be completely ignored because we're trying to run the script as fast as possible.
-            // Assuming that the given data is of good quality (ex: no holes, constant interval rate, etc..)
-            this.onUpdateCandles(["LOCAL", "LOCAL"] as Pair, processedCandles, {code: "LOCAL", cron: "*"});
+            (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
+            (this.candleProcessor as LocalCandleProcessor).onProcessCandles(processedCandles);
             this.emit("core.updateCandles", processedCandles);
         });
     }

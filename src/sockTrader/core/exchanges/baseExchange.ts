@@ -61,16 +61,19 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected abstract loadCurrencies(): void;
 
+    /**
+     * Dynamically change the behaviour of the exchange.
+     */
     protected setExchangeBehaviour() {
-        if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") {
-            this.candleProcessor = new LocalCandleProcessor(this.orderTracker, this);
-            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
-        } else if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
+        if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
             this.candleProcessor = this.getCandleProcessor();
             this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
-        } else {
+        } else if (process.env.SOCKTRADER_TRADING_MODE === "LIVE") {
             this.candleProcessor = this.getCandleProcessor();
             this.orderCreator = this.getOrderCreator();
+        } else { // In case of backtest and default fallback behaviour
+            this.candleProcessor = new LocalCandleProcessor(this.orderTracker, this);
+            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
         }
     }
 

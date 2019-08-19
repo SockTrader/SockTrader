@@ -34,8 +34,6 @@ export default class LocalCandleProcessor implements CandleProcessor {
 
             if (this.isOrderWithinCandle(openOrder, candle)) {
                 this.filledOrders.push(order);
-
-                // @TODO replace with EventEmitter!
                 return this.exchange.onReport(order);
             }
 
@@ -50,6 +48,11 @@ export default class LocalCandleProcessor implements CandleProcessor {
     }
 
     onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+        this.currentCandle = data[0];
+        this.processOpenOrders(this.currentCandle);
+    }
+
+    onProcessCandles(data: ICandle[]) {
         this.currentCandle = data[0];
         this.processOpenOrders(this.currentCandle);
     }
