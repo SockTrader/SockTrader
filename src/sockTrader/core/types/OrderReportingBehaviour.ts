@@ -6,7 +6,7 @@ import {Pair} from "./pair";
 
 export declare class OrderReportingBehaviour {
 
-    constructor(orderManager: OrderTracker);
+    constructor(orderTracker: OrderTracker);
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
 
