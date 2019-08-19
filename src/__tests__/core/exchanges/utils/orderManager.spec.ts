@@ -1,10 +1,10 @@
 import moment from "moment";
-import OrderManager from "../../../../sockTrader/core/exchanges/utils/orderManager";
+import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
 import {IOrder, OrderSide} from "../../../../sockTrader/core/types/order";
 
-let orderManager = new OrderManager();
+let orderManager = new OrderTracker();
 beforeEach(() => {
-    orderManager = new OrderManager();
+    orderManager = new OrderTracker();
 });
 
 

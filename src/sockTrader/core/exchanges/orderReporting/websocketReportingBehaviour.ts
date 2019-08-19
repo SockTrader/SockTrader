@@ -5,13 +5,13 @@ import {IConnection} from "../../types/IConnection";
 import {IOrder, OrderSide} from "../../types/order";
 import {OrderReportingBehaviour} from "../../types/OrderReportingBehaviour";
 import {Pair} from "../../types/pair";
-import OrderManager from "../utils/orderManager";
+import OrderTracker from "../utils/orderTracker";
 
 export default abstract class WebsocketReportingBehaviour implements OrderReportingBehaviour {
 
     protected candles: Record<string, CandleManager> = {};
 
-    protected constructor(protected orderManager: OrderManager, protected connection: IConnection) {
+    protected constructor(protected orderTracker: OrderTracker, protected connection: IConnection) {
     }
 
     abstract cancelOrder(order: IOrder): IOrder | void;

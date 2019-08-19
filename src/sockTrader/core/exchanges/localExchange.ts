@@ -102,6 +102,6 @@ export default class LocalExchange extends BaseExchange {
     }
 
     protected getOrderReportingBehaviour(): OrderReportingBehaviour {
-        return new BacktestReportingBehaviour(this.orderManager, this);
+        return new BacktestReportingBehaviour(this.orderTracker, this);
     }
 }

@@ -29,13 +29,13 @@ afterEach(() => jest.clearAllMocks());
 
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
-        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
+        exchange["orderTracker"]["setOrderUnconfirmed"] = jest.fn();
         const onReportMock = jest.fn();
         exchange.onReport = onReportMock;
         exchange.cancelOrder({id: "123"} as IOrder);
 
         expect(onReportMock).toBeCalledWith({id: "123", reportType: ReportType.CANCELED});
-        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
+        expect(exchange["orderTracker"]["setOrderUnconfirmed"]).toBeCalledWith("123");
     });
 });
 
@@ -48,7 +48,7 @@ describe("createOrder", () => {
 
         exchange.onReport = jest.fn();
 
-        const spyOrderProcessing = jest.spyOn(exchange.orderManager, "setOrderUnconfirmed");
+        const spyOrderProcessing = jest.spyOn(exchange.orderTracker, "setOrderUnconfirmed");
         exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
 
         expect(exchange.onReport).toBeCalledWith(expect.objectContaining({

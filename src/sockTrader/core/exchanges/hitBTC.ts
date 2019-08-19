@@ -107,6 +107,6 @@ export default class HitBTC extends BaseExchange {
     }
 
     protected getOrderReportingBehaviour(): OrderReportingBehaviour {
-        return new HitBTCReportingBehaviour(this.orderManager, this.connection, this);
+        return new HitBTCReportingBehaviour(this.orderTracker, this.connection, this);
     }
 }

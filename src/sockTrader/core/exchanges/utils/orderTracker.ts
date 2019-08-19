@@ -1,6 +1,6 @@
 import {IOrder} from "../../types/order";
 
-export default class OrderManager {
+export default class OrderTracker {
 
     private readonly unconfirmedOrders: Record<string, boolean> = {};
     private openOrders: IOrder[] = [];

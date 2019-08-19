@@ -149,12 +149,12 @@ describe("loadCurrencies", () => {
 
 describe("cancelOrder", () => {
     it("Should cancel an order", () => {
-        exchange["orderManager"]["setOrderUnconfirmed"] = jest.fn();
+        exchange["orderTracker"]["setOrderUnconfirmed"] = jest.fn();
         exchange.cancelOrder({id: "123"} as IOrder);
         expect(exchange.send).toBeCalledWith(expect.any(HitBTCCommand));
 
         const arg1 = (exchange.send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(exchange["orderManager"]["setOrderUnconfirmed"]).toBeCalledWith("123");
+        expect(exchange["orderTracker"]["setOrderUnconfirmed"]).toBeCalledWith("123");
         expect(arg1.toCommand()).toEqual({
             id: "cancelOrder",
             method: "cancelOrder",

@@ -14,7 +14,7 @@ import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
 import {Pair} from "../types/pair";
 import BacktestReportingBehaviour from "./orderReporting/backtestReportingBehaviour";
 import PaperTradingReportingBehaviour from "./orderReporting/paperTradingReportingBehaviour";
-import OrderManager from "./utils/orderManager";
+import OrderTracker from "./utils/orderTracker";
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -23,7 +23,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    orderManager: OrderManager = new OrderManager();
+    orderTracker: OrderTracker = new OrderTracker();
     protected candles: Record<string, CandleManager> = {};
     protected orderReporter!: OrderReportingBehaviour;
     protected readonly connection: IConnection;
@@ -77,7 +77,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     protected setOrderReportingBehaviour() {
         console.log(process.env.SOCKTRADER_TRADING_MODE);
         if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") {
-            this.orderReporter = new BacktestReportingBehaviour(this.orderManager, this);
+            this.orderReporter = new BacktestReportingBehaviour(this.orderTracker, this);
         }
 
         if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
@@ -145,16 +145,16 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         const orderId = order.id;
         let oldOrder: IOrder | undefined;
 
-        this.orderManager.setOrderConfirmed(orderId);
+        this.orderTracker.setOrderConfirmed(orderId);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
-            oldOrder = this.orderManager.replaceOpenOrder(order, order.originalId);
+            oldOrder = this.orderTracker.replaceOpenOrder(order, order.originalId);
         } else if (order.reportType === ReportType.NEW) {
-            this.orderManager.addOpenOrder(order); // New order created
+            this.orderTracker.addOpenOrder(order); // New order created
         } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
-            this.orderManager.removeOpenOrder(orderId); // Order is 100% filled
+            this.orderTracker.removeOpenOrder(orderId); // Order is 100% filled
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.orderManager.removeOpenOrder(orderId); // Order is invalid
+            this.orderTracker.removeOpenOrder(orderId); // Order is invalid
         }
 
         this.emit("core.report", order, oldOrder);

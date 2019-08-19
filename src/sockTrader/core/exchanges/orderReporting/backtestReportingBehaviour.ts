@@ -6,7 +6,7 @@ import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType}
 import {OrderReportingBehaviour} from "../../types/OrderReportingBehaviour";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderManager from "../utils/orderManager";
+import OrderTracker from "../utils/orderTracker";
 import {generateOrderId} from "../utils/utils";
 
 export default class BacktestReportingBehaviour implements OrderReportingBehaviour {
@@ -15,7 +15,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
     private currentCandle: ICandle | undefined;
     private wallet: Wallet = new Wallet(config.assets);
 
-    constructor(private orderManager: OrderManager, private exchange: BaseExchange) {
+    constructor(private orderTracker: OrderTracker, private exchange: BaseExchange) {
     }
 
     private isOrderWithinCandle(order: IOrder, candle: ICandle) {
@@ -29,7 +29,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
     private processOpenOrders(candle: ICandle): void {
         const openOrders: IOrder[] = [];
 
-        this.orderManager.getOpenOrders().forEach((openOrder: IOrder) => {
+        this.orderTracker.getOpenOrders().forEach((openOrder: IOrder) => {
             if (openOrder.createdAt.isAfter(candle.timestamp)) {
                 return openOrders.push(openOrder); // Candle should be newer than order!
             }
@@ -43,7 +43,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
 
             openOrders.push(openOrder);
         });
-        this.orderManager.setOpenOrders(openOrders);
+        this.orderTracker.setOpenOrders(openOrders);
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
@@ -57,7 +57,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
     }
 
     cancelOrder(order: IOrder) {
-        this.orderManager.setOrderUnconfirmed(order.id);
+        this.orderTracker.setOrderUnconfirmed(order.id);
         return {...order, reportType: ReportType.CANCELED};
     }
 
@@ -82,7 +82,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
         if (!this.wallet.isOrderAllowed(order)) return;
 
         this.wallet.updateAssets(order);
-        this.orderManager.setOrderUnconfirmed(order.id);
+        this.orderTracker.setOrderUnconfirmed(order.id);
 
         return order;
     }
@@ -104,7 +104,7 @@ export default class BacktestReportingBehaviour implements OrderReportingBehavio
         if (!this.wallet.isOrderAllowed(newOrder, order)) return;
 
         this.wallet.updateAssets(newOrder, order);
-        this.orderManager.setOrderUnconfirmed(order.id);
+        this.orderTracker.setOrderUnconfirmed(order.id);
 
         return newOrder;
     }
