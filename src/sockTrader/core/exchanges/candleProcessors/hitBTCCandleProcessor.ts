@@ -1,28 +1,16 @@
+import {EventEmitter} from "events";
 import CandleManager from "../../candles/candleManager";
+import {CandleProcessor} from "../../types/candleProcessor";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
-import {IConnection} from "../../types/IConnection";
-import {IOrder, OrderSide} from "../../types/order";
-import {OrderReportingBehaviour} from "../../types/OrderReportingBehaviour";
 import {Pair} from "../../types/pair";
-import OrderTracker from "../utils/orderTracker";
 
-export default abstract class WebsocketReportingBehaviour implements OrderReportingBehaviour {
+export default class HitBTCCandleProcessor implements CandleProcessor {
 
     protected candles: Record<string, CandleManager> = {};
 
-    protected constructor(protected orderTracker: OrderTracker, protected connection: IConnection) {
+    constructor(private exchange: EventEmitter) {
     }
-
-    abstract cancelOrder(order: IOrder): IOrder | void;
-
-    abstract adjustOrder(order: IOrder, price: number, qty: number): IOrder | void;
-
-    abstract createOrder(pair: [string, string], price: number, qty: number, side: OrderSide): IOrder | void;
-
-    abstract onSnapshotCandles(pair: [string, string], data: ICandle[], interval: ICandleInterval): void;
-
-    abstract onUpdateCandles(pair: [string, string], data: ICandle[], interval: ICandleInterval): void;
 
     /**
      * Returns candle manager for pair and interval
@@ -40,5 +28,15 @@ export default abstract class WebsocketReportingBehaviour implements OrderReport
         this.candles[key] = new CandleManager(interval);
         this.candles[key].on("update", updateHandler);
         return this.candles[key];
+    }
+
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+        this.getCandleManager(pair, interval, candles => this.exchange.emit("core.updateCandles", candles))
+            .set(data);
+    }
+
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+        this.getCandleManager(pair, interval, candles => this.exchange.emit("core.updateCandles", candles))
+            .update(data);
     }
 }

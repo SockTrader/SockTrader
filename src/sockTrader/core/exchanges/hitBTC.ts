@@ -4,16 +4,18 @@ import config from "../../../config";
 import WebSocket, {Data} from "../connection/webSocket";
 import logger from "../logger";
 import Orderbook from "../orderbook";
+import {CandleProcessor} from "../types/candleProcessor";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
-import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
+import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
+import HitBTCCandleProcessor from "./candleProcessors/hitBTCCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
-import HitBTCReportingBehaviour from "./orderReporting/hitBTCReportingBehaviour";
+import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -106,7 +108,11 @@ export default class HitBTC extends BaseExchange {
         }
     }
 
-    protected getOrderReportingBehaviour(): OrderReportingBehaviour {
-        return new HitBTCReportingBehaviour(this.orderTracker, this.connection, this);
+    protected getCandleProcessor(): CandleProcessor {
+        return new HitBTCCandleProcessor(this);
+    }
+
+    protected getOrderCreator(): OrderCreator {
+        return new HitBTCOrderCreator(this.orderTracker, this.connection);
     }
 }

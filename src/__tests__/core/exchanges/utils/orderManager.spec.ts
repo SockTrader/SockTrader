@@ -102,18 +102,3 @@ describe("findOpenOrder", () => {
         expect(openOrder).toEqual(undefined);
     });
 });
-
-describe("canAdjustOrder", () => {
-    test("Should disallow order in progress to be adjusted", () => {
-        const order: IOrder = {id: "test_order_id", price: 0.001263, quantity: 0.02} as any;
-
-        expect(orderTracker.canAdjustOrder(order, 0.002, 0.02)).toBe(true);
-        expect(orderTracker.canAdjustOrder(order, 0.002, 0.02)).toBe(false);
-    });
-
-    test("Should disallow order to be adjusted when nothing changed", () => {
-        const order: IOrder = {id: "test_order_id", price: 0.001263, quantity: 0.02} as any;
-
-        expect(orderTracker.canAdjustOrder(order, 0.001263, 0.02)).toBe(false);
-    });
-});

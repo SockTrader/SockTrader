@@ -1,13 +1,15 @@
 import Local from "../connection/local";
+import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IOrder, OrderSide} from "../types/order";
-import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
+import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import BacktestReportingBehaviour from "./orderReporting/backtestReportingBehaviour";
+import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
@@ -73,26 +75,18 @@ export default class LocalExchange extends BaseExchange {
         return true;
     }
 
-    // onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-    //     // huge performance overhead when running a backtest and its only useful during paper trading.
-    //     if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
-    //         this.getCandleManager(pair, interval, candles => this.emit("core.updateCandles", candles))
-    //             .update(data);
-    //     }
-    // }
-
     // Method ignored by localExchange
     onUpdateOrderbook(data: IOrderbookData): void {
         return undefined;
     }
 
     // Method ignored by localExchange
-    subscribeCandles(pair: [string, string], interval: ICandleInterval): void {
+    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
         return undefined;
     }
 
     // Method ignored by localExchange
-    subscribeOrderbook(pair: [string, string]): void {
+    subscribeOrderbook(pair: Pair): void {
         return undefined;
     }
 
@@ -101,7 +95,11 @@ export default class LocalExchange extends BaseExchange {
         return undefined;
     }
 
-    protected getOrderReportingBehaviour(): OrderReportingBehaviour {
-        return new BacktestReportingBehaviour(this.orderTracker, this);
+    protected getCandleProcessor(): CandleProcessor {
+        return new LocalCandleProcessor(this.orderTracker, this);
+    }
+
+    protected getOrderCreator(): OrderCreator {
+        return new LocalOrderCreator(this.orderTracker, this.wallet);
     }
 }

@@ -1,7 +1,10 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
+import config from "../../../config";
+import Wallet from "../assets/wallet";
 import CandleManager from "../candles/candleManager";
 import Orderbook from "../orderbook";
+import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
@@ -9,11 +12,11 @@ import {ICurrencyMap} from "../types/ICurrencyMap";
 import {IExchange} from "../types/IExchange";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {ITradeablePair} from "../types/ITradeablePair";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
-import {OrderReportingBehaviour} from "../types/OrderReportingBehaviour";
+import {IOrder, OrderSide} from "../types/order";
+import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
-import BacktestReportingBehaviour from "./orderReporting/backtestReportingBehaviour";
-import PaperTradingReportingBehaviour from "./orderReporting/paperTradingReportingBehaviour";
+import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import OrderTracker from "./utils/orderTracker";
 
 /**
@@ -23,10 +26,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    orderTracker: OrderTracker = new OrderTracker();
+    readonly orderTracker: OrderTracker = new OrderTracker();
+    protected orderCreator!: OrderCreator;
+    protected candleProcessor!: CandleProcessor;
     protected candles: Record<string, CandleManager> = {};
-    protected orderReporter!: OrderReportingBehaviour;
     protected readonly connection: IConnection;
+    protected readonly wallet = new Wallet(config.assets);
     private readonly orderbooks: Record<string, Orderbook> = {};
     private ready = false;
 
@@ -34,7 +39,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         super();
 
         this.connection = this.createConnection();
-        this.setOrderReportingBehaviour();
+        this.setExchangeBehaviour();
     }
 
     abstract onUpdateOrderbook(data: IOrderbookData): void;
@@ -47,44 +52,46 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     protected abstract createConnection(): IConnection;
 
-    protected abstract getOrderReportingBehaviour(): OrderReportingBehaviour;
+    protected abstract getCandleProcessor(): CandleProcessor;
 
-    adjustOrder(order: IOrder, price: number, qty: number) {
-        return this.orderReporter.adjustOrder(order, price, qty);
-    }
-
-    cancelOrder(order: IOrder) {
-        return this.orderReporter.cancelOrder(order);
-    }
-
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
-        return this.orderReporter.createOrder(pair, price, qty, side);
-    }
-
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.orderReporter.onSnapshotCandles(pair, data, interval);
-    }
-
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.orderReporter.onUpdateCandles(pair, data, interval);
-    }
+    protected abstract getOrderCreator(): OrderCreator;
 
     /**
      * Load trading pair configuration
      */
     protected abstract loadCurrencies(): void;
 
-    protected setOrderReportingBehaviour() {
-        console.log(process.env.SOCKTRADER_TRADING_MODE);
+    protected setExchangeBehaviour() {
         if (process.env.SOCKTRADER_TRADING_MODE === "BACKTEST") {
-            this.orderReporter = new BacktestReportingBehaviour(this.orderTracker, this);
+            this.candleProcessor = new LocalCandleProcessor(this.orderTracker, this);
+            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
+        } else if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
+            this.candleProcessor = this.getCandleProcessor();
+            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
+        } else {
+            this.candleProcessor = this.getCandleProcessor();
+            this.orderCreator = this.getOrderCreator();
         }
+    }
 
-        if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
-            this.orderReporter = new PaperTradingReportingBehaviour();
-        }
+    adjustOrder(order: IOrder, price: number, qty: number) {
+        return this.orderCreator.adjustOrder(order, price, qty);
+    }
 
-        this.orderReporter = this.getOrderReportingBehaviour();
+    cancelOrder(order: IOrder) {
+        return this.orderCreator.cancelOrder(order);
+    }
+
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
+        return this.orderCreator.createOrder(pair, price, qty, side);
+    }
+
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.candleProcessor.onSnapshotCandles(pair, data, interval);
+    }
+
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.candleProcessor.onUpdateCandles(pair, data, interval);
     }
 
     buy(pair: Pair, price: number, qty: number): void {
@@ -110,10 +117,10 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
             return this.orderbooks[ticker];
         }
 
-        const config = this.currencies[ticker];
-        if (!config) throw new Error(`No configuration found for pair: "${ticker}"`);
+        const currency = this.currencies[ticker];
+        if (!currency) throw new Error(`No configuration found for pair: "${ticker}"`);
 
-        const precision = new Decimal(config.tickSize).decimalPlaces();
+        const precision = new Decimal(currency.tickSize).decimalPlaces();
 
         this.orderbooks[ticker] = new Orderbook(pair, precision);
         return this.orderbooks[ticker];
@@ -142,22 +149,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     onReport(order: IOrder): void {
-        const orderId = order.id;
-        let oldOrder: IOrder | undefined;
-
-        this.orderTracker.setOrderConfirmed(orderId);
-
-        if (order.reportType === ReportType.REPLACED && order.originalId) {
-            oldOrder = this.orderTracker.replaceOpenOrder(order, order.originalId);
-        } else if (order.reportType === ReportType.NEW) {
-            this.orderTracker.addOpenOrder(order); // New order created
-        } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
-            this.orderTracker.removeOpenOrder(orderId); // Order is 100% filled
-        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.orderTracker.removeOpenOrder(orderId); // Order is invalid
-        }
-
-        this.emit("core.report", order, oldOrder);
+        const {order: newOrder, oldOrder} = this.orderTracker.process(order);
+        this.emit("core.report", newOrder, oldOrder);
     }
 
     sell(pair: Pair, price: number, qty: number): void {
