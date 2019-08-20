@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run liveTrader" type="NodeJSConfigurationType" application-parameters="live --paper --pair btc usd --strategy simpleMovingAverage --exchange hitbtc --interval 1m --force" path-to-js-file="build/index.js" working-dir="$PROJECT_DIR$">
-    <method v="2">
-      <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tsconfig.json" />
-    </method>
-  </configuration>
-</component>

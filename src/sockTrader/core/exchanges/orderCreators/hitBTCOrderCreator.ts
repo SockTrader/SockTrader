@@ -1,7 +1,7 @@
-import logger from "../../logger";
 import {IConnection} from "../../types/IConnection";
 import {IOrder, OrderSide} from "../../types/order";
 import {OrderCreator} from "../../types/orderCreator";
+import {Pair} from "../../types/pair";
 import HitBTCCommand from "../commands/hitBTCCommand";
 import OrderTracker from "../utils/orderTracker";
 import {generateOrderId} from "../utils/utils";
@@ -16,11 +16,10 @@ export default class HitBTCOrderCreator implements OrderCreator {
         this.connection.send(new HitBTCCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
-    createOrder(pair: [string, string], price: number, qty: number, side: OrderSide): IOrder | void {
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): IOrder | void {
         const orderId = generateOrderId(pair);
         this.orderTracker.setOrderUnconfirmed(orderId);
 
-        logger.info(`PRODUCTION ${side.toUpperCase()} ORDER! PRICE: ${price} SIZE: ${qty}`);
         this.connection.send(new HitBTCCommand("newOrder", {
             clientOrderId: orderId,
             price,

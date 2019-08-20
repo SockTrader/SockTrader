@@ -1,3 +1,4 @@
+import moment, {Moment} from "moment";
 import Wallet from "../../assets/wallet";
 import {ICandle} from "../../types/ICandle";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
@@ -23,9 +24,8 @@ export default class LocalOrderCreator implements OrderCreator {
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
-        if (!this.currentCandle) throw new Error("Cannot create order. Current candle is undefined.");
+        const candleTime = this.getTimeOfOrder();
 
-        const candleTime = this.currentCandle.timestamp;
         const order: IOrder = {
             createdAt: candleTime,
             updatedAt: candleTime,
@@ -49,13 +49,11 @@ export default class LocalOrderCreator implements OrderCreator {
     }
 
     adjustOrder(order: IOrder, price: number, qty: number) {
-        if (!this.currentCandle) throw new Error("Cannot adjust order. Current candle is undefined.");
-
         const newOrder: IOrder = {
             ...order,
             id: generateOrderId(order.pair),
+            updatedAt: this.getTimeOfOrder(),
             reportType: ReportType.REPLACED,
-            updatedAt: this.currentCandle.timestamp,
             type: OrderType.LIMIT,
             originalId: order.id,
             quantity: qty,
@@ -68,5 +66,16 @@ export default class LocalOrderCreator implements OrderCreator {
         this.orderTracker.setOrderUnconfirmed(order.id);
 
         return newOrder;
+    }
+
+    /**
+     * Will return the timestamp of the current candle if it has been set.
+     * Otherwise it will return the actual server time.
+     *
+     * PaperTrading: create order based on the actual server time
+     * BackTesting: create order based on the current candle time
+     */
+    private getTimeOfOrder(): Moment {
+        return this.currentCandle ? this.currentCandle.timestamp : moment();
     }
 }
