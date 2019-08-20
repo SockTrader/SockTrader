@@ -17,6 +17,14 @@
 
 <p align="center"><b>🚧 Project is currently under development! 🚧</b></p>
 
+## What is "SockTrader"?
+SockTrader is an open source cryptocurrency trading bot. You can use it to automatically buy and/or sell cryptocurrencies based on a strategy that you've programmed.
+The strategy basically contains a set of rules that will define when and how the bot should act in the cryptocurrency market. These rules can be based on technical analysis ([what is technical analysis?](https://www.investopedia.com/terms/t/technicalanalysis.asp))
+or you could simply tell the bot to buy/sell at certain price levels. In fact, it's up to you to decide the rules of the game!    
+
+The name "SockTrader" comes from web**sock**et based trading bot. Which means that SockTrader will try to make use of a realtime connection with the exchange. This has the advantage
+that one can act very quickly in a changing market with low latency.  
+
 ## Features
 - 🚀 Realtime super-fast websocket trading.
 - 📈 50+ Technical indicators. ([docs](https://github.com/anandanand84/technicalindicators))
@@ -30,8 +38,9 @@
 - More features soon..
 
 ## Use our online dashboard!
-Any strategy that has been developed in SockTrader can be backtested using our online dashboard. Once you change and save the code 
-of the selected strategy the dashboard should automatically update itself and rerun the backtest.
+We've built an online dashboard that you can use to visually confirm all the trades that happened during a backtesting session. The dashboard
+has a live reload functionality. So SockTrader will relaunch the current backtest once you've changed and saved the code of a strategy. All the trades
+will be shown on the chart as you can see in the screenshot. 
 
 Try it yourself:
 1. Follow our [Quick Start guide](#quick-start)
