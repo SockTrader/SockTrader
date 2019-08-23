@@ -1,11 +1,12 @@
 import {Pair} from "../../sockTrader/core/types/pair";
-import Wallet from "../../sockTrader/core/assets/wallet";
 import {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import BackTester from "../../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 
-const backTester = new BackTester({assets: {USD: 10000}}, [{
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
+const backTester = new BackTester([{
     "timestamp": "2018-11-15T15:00:00.000Z",
     "high": 5456.74,
     "low": 5413.16,
@@ -14,8 +15,7 @@ const backTester = new BackTester({assets: {USD: 10000}}, [{
     "volume": 1160455.58,
 }]);
 const pair: Pair = ["BTC", "USD"];
-const wallet = new Wallet({BTC: 1});
-const localExchange = new LocalExchange(wallet);
+const localExchange = new LocalExchange();
 backTester["exchange"] = localExchange;
 const emitCandlesMock = jest.fn();
 

@@ -23,6 +23,7 @@ function createExchangeByName(exchangeName: string): IExchange {
 
 export async function startLiveTrading(args: any) {
     const {strategy, pair, paper, exchange, interval, force} = args;
+    process.env.SOCKTRADER_TRADING_MODE = paper ? "PAPER" : "LIVE";
 
     if (!(force || paper)) {
         const isConfirmed = await askForConfirmation();
@@ -33,7 +34,7 @@ export async function startLiveTrading(args: any) {
     try {
         const {default: strategyFile} = await loadStrategy(strategy);
 
-        const liveTrader = new LiveTrader(paper)
+        const liveTrader = new LiveTrader()
             .setExchange(createExchangeByName(exchange))
             .addStrategy({
                 strategy: strategyFile,

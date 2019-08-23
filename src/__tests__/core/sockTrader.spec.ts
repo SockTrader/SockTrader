@@ -3,6 +3,8 @@ import SockTrader from "../../sockTrader/core/bot/sockTrader";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
 
+process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
 const hitBTC = new HitBTC();
 
 class ConcreteSockTrader extends SockTrader {

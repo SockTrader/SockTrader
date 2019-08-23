@@ -1,11 +1,15 @@
-import Wallet from "../assets/wallet";
 import Local from "../connection/local";
+import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
+import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
+import {IOrderbookData} from "../types/IOrderbookData";
+import {IOrder, OrderSide} from "../types/order";
+import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import {generateOrderId} from "./utils/utils";
+import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
@@ -13,74 +17,27 @@ import {generateOrderId} from "./utils/utils";
  */
 export default class LocalExchange extends BaseExchange {
 
-    private currentCandle?: ICandle;
-    private readonly filledOrders: IOrder[] = [];
-    private readonly wallet: Wallet;
-
-    /**
-     * Creates a new LocalExchange
-     */
-    constructor(wallet: Wallet) {
-        super();
-        this.wallet = wallet;
-
-        this.prependListener("core.updateCandles", (candles: ICandle[]) => this.processOpenOrders(candles[0]));
-        this.on("core.report", (order: IOrder) => this.wallet.updateAssets(order));
-    }
-
     protected createConnection(): IConnection {
         return new Local();
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number): void {
-        if (!this.currentCandle) throw new Error("Cannot adjust order. No candles have been emitted.");
-
-        const newOrder: IOrder = {
-            ...order,
-            id: generateOrderId(order.pair),
-            reportType: ReportType.REPLACED,
-            updatedAt: this.currentCandle.timestamp,
-            type: OrderType.LIMIT,
-            originalId: order.id,
-            quantity: qty,
-            price,
-        };
-
-        if (!this.wallet.isOrderAllowed(newOrder, order)) return;
-
-        this.orderManager.setOrderProcessing(order.id);
-        this.onReport(newOrder);
+    protected loadCurrencies(): void {
+        return undefined;
     }
 
-    cancelOrder(order: IOrder): void {
-        this.orderManager.setOrderProcessing(order.id);
-        this.onReport({...order, reportType: ReportType.CANCELED});
+    adjustOrder(order: IOrder, price: number, qty: number) {
+        const adjustedOrder = super.adjustOrder(order, price, qty);
+        if (adjustedOrder) return this.onReport(adjustedOrder);
     }
 
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void {
-        if (!this.currentCandle) throw new Error("Cannot create order. No candles have been emitted.");
+    cancelOrder(order: IOrder): IOrder | void {
+        const cancelledOrder = super.cancelOrder(order);
+        if (cancelledOrder) return this.onReport(cancelledOrder);
+    }
 
-        const orderId = generateOrderId(pair);
-        const candleTime = this.currentCandle.timestamp;
-
-        const order: IOrder = {
-            createdAt: candleTime,
-            updatedAt: candleTime,
-            status: OrderStatus.NEW,
-            timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-            id: orderId,
-            type: OrderType.LIMIT,
-            reportType: ReportType.NEW,
-            side,
-            pair,
-            quantity: qty,
-            price,
-        };
-
-        if (!this.wallet.isOrderAllowed(order)) return;
-
-        this.orderManager.setOrderProcessing(orderId);
-        this.onReport(order);
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): IOrder | void {
+        const createdOrder = super.createOrder(pair, price, qty, side);
+        if (createdOrder) return this.onReport(createdOrder);
     }
 
     /**
@@ -103,8 +60,9 @@ export default class LocalExchange extends BaseExchange {
         const processedCandles: ICandle[] = [];
 
         candleList.forEach(value => {
-            this.currentCandle = value;
             processedCandles.unshift(value);
+            (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
+            (this.candleProcessor as LocalCandleProcessor).onProcessCandles(processedCandles);
             this.emit("core.updateCandles", processedCandles);
         });
     }
@@ -114,44 +72,31 @@ export default class LocalExchange extends BaseExchange {
         return true;
     }
 
-    isOrderWithinCandle(order: IOrder, candle: ICandle) {
-        return ((order.side === OrderSide.BUY && candle.low < order.price) || (order.side === OrderSide.SELL && candle.high > order.price));
+    // Method ignored by localExchange
+    onUpdateOrderbook(data: IOrderbookData): void {
+        return undefined;
     }
 
-    /**
-     * Checks if open order can be filled on each price update
-     * @param {ICandle} candle the current candle
-     */
-    processOpenOrders(candle: ICandle): void {
-        const openOrders: IOrder[] = [];
-        this.orderManager.getOpenOrders().forEach(openOrder => {
-            if (openOrder.createdAt.isAfter(candle.timestamp)) {
-                return openOrders.push(openOrder); // Candle should be newer than order!
-            }
-
-            const order = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
-
-            if (this.isOrderWithinCandle(openOrder, candle)) {
-                this.filledOrders.push(order);
-                return this.onReport(order);
-            }
-
-            openOrders.push(openOrder);
-        });
-        this.orderManager.setOpenOrders(openOrders);
+    // Method ignored by localExchange
+    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+        return undefined;
     }
 
-    loadCurrencies = (): void => undefined;
+    // Method ignored by localExchange
+    subscribeOrderbook(pair: Pair): void {
+        return undefined;
+    }
 
-    // noinspection JSUnusedGlobalSymbols
-    onUpdateCandles = (): void => undefined;
+    // Method ignored by localExchange
+    subscribeReports(): void {
+        return undefined;
+    }
 
-    // noinspection JSUnusedGlobalSymbols
-    onUpdateOrderbook = (): void => undefined;
+    protected getCandleProcessor(): CandleProcessor {
+        return new LocalCandleProcessor(this.orderTracker, this);
+    }
 
-    subscribeCandles = (): void => undefined;
-
-    subscribeOrderbook = (): void => undefined;
-
-    subscribeReports = (): void => undefined;
+    protected getOrderCreator(): OrderCreator {
+        return new LocalOrderCreator(this.orderTracker, this.wallet);
+    }
 }
