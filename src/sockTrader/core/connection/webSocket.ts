@@ -99,9 +99,17 @@ export default class WebSocket extends EventEmitter implements IConnection {
     }
 
     send(command: ICommand) {
-        if (!this.connection) throw new Error(`Could not send: ${JSON.stringify(command)}. No connection available.`);
+        try {
+            if (!this.connection) {
+                logger.error(`Could not send: ${JSON.stringify(command)}. No connection available.`);
+                return;
+            }
 
-        this.connection.send(JSON.stringify(command));
+            if (command.restorable) this.addRestorable(command);
+            this.connection.send(JSON.stringify(command.toCommand()));
+        } catch (e) {
+            logger.error(e);
+        }
     }
 
     connect(): void {

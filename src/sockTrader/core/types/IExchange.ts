@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import OrderManager from "../exchanges/utils/orderManager";
+import OrderTracker from "../exchanges/utils/orderTracker";
 import Orderbook from "../orderbook";
 import {ICandle} from "./ICandle";
 import {ICandleInterval} from "./ICandleInterval";
@@ -14,7 +14,7 @@ import {Pair} from "./pair";
  */
 export interface IExchange extends EventEmitter {
 
-    orderManager: OrderManager;
+    orderTracker: OrderTracker;
 
     /**
      * Adjusts existing order on exchange

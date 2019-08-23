@@ -7,7 +7,7 @@ export default class Local extends EventEmitter implements IConnection {
         super();
     }
 
-    send(command: ICommand) {
+    send(command: object) {
         // ignore
     }
 

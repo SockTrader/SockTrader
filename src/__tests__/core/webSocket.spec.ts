@@ -1,6 +1,8 @@
 import WebSocket from "../../sockTrader/core/connection/webSocket";
 import logger from "../../sockTrader/core/logger";
 import ws from "ws";
+import HitBTCCommand from "../../sockTrader/core/exchanges/commands/hitBTCCommand";
+import {ICommand} from "../../sockTrader/core/types/IConnection";
 
 jest.mock("ws");
 jest.mock("../../sockTrader/core/logger");
@@ -166,20 +168,24 @@ describe("addRestorable", () => {
     });
 
     it("Should save commands for later usage", () => {
-        websocket.addRestorable({id: "login", method: "login", params: {}});
-        expect(websocket["restoreCommands"]).toEqual([{id: "login", method: "login", params: {}}]);
+        websocket.addRestorable(HitBTCCommand.createRestorable("login"));
+
+        const command: ICommand = websocket["restoreCommands"][0];
+        expect(command).toBeInstanceOf(HitBTCCommand);
+        expect(command.toCommand()).toEqual({id: "login", method: "login", params: {}});
     });
 });
 
 describe("send", () => {
-    it("Should throw when connection is not available", () => {
-        expect(() => websocket.send({} as any)).toThrow("Could not send: {}. No connection available.");
+    it("Should log error when connection is not available", () => {
+        websocket.send({} as ICommand);
+        expect((logger.error as any)).toBeCalledWith("Could not send: {}. No connection available.");
     });
 
     it("Should send a command using the connection", () => {
         websocket["connection"] = {send: jest.fn()} as any;
 
-        websocket.send({id: "login"} as any);
-        expect((websocket["connection"] as any)["send"]).toBeCalledWith("{\"id\":\"login\"}");
+        websocket.send(new HitBTCCommand("login"));
+        expect((websocket["connection"] as any)["send"]).toBeCalledWith("{\"method\":\"login\",\"params\":{},\"id\":\"login\"}");
     });
 });

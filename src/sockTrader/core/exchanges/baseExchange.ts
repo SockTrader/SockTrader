@@ -1,18 +1,23 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
+import config from "../../../config";
+import Wallet from "../assets/wallet";
 import CandleManager from "../candles/candleManager";
-import logger from "../logger";
 import Orderbook from "../orderbook";
+import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
-import {ICommand, IConnection} from "../types/IConnection";
+import {IConnection} from "../types/IConnection";
 import {ICurrencyMap} from "../types/ICurrencyMap";
 import {IExchange} from "../types/IExchange";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {ITradeablePair} from "../types/ITradeablePair";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
+import {IOrder, OrderSide} from "../types/order";
+import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
-import OrderManager from "./utils/orderManager";
+import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
+import OrderTracker from "./utils/orderTracker";
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -21,25 +26,21 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     currencies: ICurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    orderManager: OrderManager = new OrderManager();
+    readonly orderTracker: OrderTracker = new OrderTracker();
+    protected orderCreator!: OrderCreator;
+    protected candleProcessor!: CandleProcessor;
     protected candles: Record<string, CandleManager> = {};
+    protected readonly connection: IConnection;
+    protected readonly wallet = new Wallet(config.assets);
     private readonly orderbooks: Record<string, Orderbook> = {};
-    private readonly connection: IConnection;
     private ready = false;
 
     constructor() {
         super();
 
         this.connection = this.createConnection();
+        this.setExchangeBehaviour();
     }
-
-    abstract adjustOrder(order: IOrder, price: number, qty: number): void;
-
-    abstract cancelOrder(order: IOrder): void;
-
-    abstract createOrder(pair: Pair, price: number, qty: number, side: OrderSide): void;
-
-    abstract onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
 
     abstract onUpdateOrderbook(data: IOrderbookData): void;
 
@@ -51,10 +52,50 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     protected abstract createConnection(): IConnection;
 
+    protected abstract getCandleProcessor(): CandleProcessor;
+
+    protected abstract getOrderCreator(): OrderCreator;
+
     /**
      * Load trading pair configuration
      */
     protected abstract loadCurrencies(): void;
+
+    /**
+     * Dynamically change the behaviour of the exchange.
+     */
+    protected setExchangeBehaviour() {
+        if (process.env.SOCKTRADER_TRADING_MODE === "PAPER") {
+            this.candleProcessor = this.getCandleProcessor();
+            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
+        } else if (process.env.SOCKTRADER_TRADING_MODE === "LIVE") {
+            this.candleProcessor = this.getCandleProcessor();
+            this.orderCreator = this.getOrderCreator();
+        } else { // In case of backtest and default fallback behaviour
+            this.candleProcessor = new LocalCandleProcessor(this.orderTracker, this);
+            this.orderCreator = new LocalOrderCreator(this.orderTracker, this.wallet);
+        }
+    }
+
+    adjustOrder(order: IOrder, price: number, qty: number) {
+        return this.orderCreator.adjustOrder(order, price, qty);
+    }
+
+    cancelOrder(order: IOrder) {
+        return this.orderCreator.cancelOrder(order);
+    }
+
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
+        return this.orderCreator.createOrder(pair, price, qty, side);
+    }
+
+    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.candleProcessor.onSnapshotCandles(pair, data, interval);
+    }
+
+    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+        return this.candleProcessor.onUpdateCandles(pair, data, interval);
+    }
 
     buy(pair: Pair, price: number, qty: number): void {
         this.createOrder(pair, price, qty, OrderSide.BUY);
@@ -73,34 +114,16 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.connection.removeAllListeners();
     }
 
-    /**
-     * Returns candle manager for pair and interval
-     * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {ICandleInterval} interval time interval
-     * @param {(candles: CandleManager) => void} updateHandler what to do if candle collection updates
-     * @returns {CandleManager} the candle collection
-     */
-    getCandleManager(pair: Pair, interval: ICandleInterval, updateHandler: (candles: CandleManager) => void): CandleManager {
-        const key = `${pair}_${interval.code}`;
-        if (this.candles[key]) {
-            return this.candles[key];
-        }
-
-        this.candles[key] = new CandleManager(interval);
-        this.candles[key].on("update", updateHandler);
-        return this.candles[key];
-    }
-
     getOrderbook(pair: Pair): Orderbook {
         const ticker = pair.join("");
         if (this.orderbooks[ticker]) {
             return this.orderbooks[ticker];
         }
 
-        const config = this.currencies[ticker];
-        if (!config) throw new Error(`No configuration found for pair: "${ticker}"`);
+        const currency = this.currencies[ticker];
+        if (!currency) throw new Error(`No configuration found for pair: "${ticker}"`);
 
-        const precision = new Decimal(config.tickSize).decimalPlaces();
+        const precision = new Decimal(currency.tickSize).decimalPlaces();
 
         this.orderbooks[ticker] = new Orderbook(pair, precision);
         return this.orderbooks[ticker];
@@ -129,77 +152,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     onReport(order: IOrder): void {
-        const orderId = order.id;
-        let oldOrder: IOrder | undefined;
-
-        this.orderManager.removeOrderProcessing(orderId);
-
-        if (order.reportType === ReportType.REPLACED && order.originalId) {
-            oldOrder = this.orderManager.findAndReplaceOpenOrder(order, order.originalId);
-        } else if (order.reportType === ReportType.NEW) {
-            this.orderManager.addOpenOrder(order); // New order created
-        } else if (order.reportType === ReportType.TRADE && order.status === OrderStatus.FILLED) {
-            this.orderManager.removeOpenOrder(orderId); // Order is 100% filled
-        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.orderManager.removeOpenOrder(orderId); // Order is invalid
-        }
-
-        this.emit("core.report", order, oldOrder);
-    }
-
-    getConnection(): IConnection {
-        return this.connection;
+        const {order: newOrder, oldOrder} = this.orderTracker.process(order);
+        this.emit("core.report", newOrder, oldOrder);
     }
 
     sell(pair: Pair, price: number, qty: number): void {
         this.createOrder(pair, price, qty, OrderSide.SELL);
-    }
-
-    createCommand(method: string, params: object = {}): ICommand {
-        return {method, params, id: method};
-    }
-
-    /**
-     * The created command will be automatically restored if the exchange loses connection.
-     * @param method
-     * @param params
-     */
-    createRestorableCommand(method: string, params: object = {}): ICommand {
-        const command = this.createCommand(method, params);
-
-        this.getConnection().addRestorable(command);
-        return command;
-    }
-
-    /**
-     * Send request over socket connection
-     * @param command
-     */
-    send(command: ICommand): void {
-        try {
-            this.connection.send(command);
-        } catch (e) {
-            logger.error(e);
-        }
-    }
-
-    /**
-     * Validates if adjusting an existing order on an exchange is allowed
-     * @param order the order to check
-     * @param price new price
-     * @param qty new quantity
-     */
-    protected isAdjustingAllowed(order: IOrder, price: number, qty: number): boolean {
-        if (this.orderManager.isOrderProcessing(order.id)) {
-            return false; // Order still in progress
-        }
-
-        if (order.price === price && order.quantity === qty) {
-            return false; // Old order === new order. No need to replace!
-        }
-
-        this.orderManager.setOrderProcessing(order.id);
-        return true;
     }
 
     /**

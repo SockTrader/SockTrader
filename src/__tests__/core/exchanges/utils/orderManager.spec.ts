@@ -1,48 +1,47 @@
 import moment from "moment";
-import OrderManager from "../../../../sockTrader/core/exchanges/utils/orderManager";
+import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
 import {IOrder, OrderSide} from "../../../../sockTrader/core/types/order";
 
-let orderManager = new OrderManager();
+let orderTracker = new OrderTracker();
 beforeEach(() => {
-    orderManager = new OrderManager();
+    orderTracker = new OrderTracker();
 });
 
 
-describe("setOrderProcessing", () => {
-    test("Should have no processingOrders when created", () => {
-        expect(orderManager["processingOrders"]).toEqual({});
+describe("setOrderUnconfirmed", () => {
+    test("Should have no unconfirmedOrders when created", () => {
+        expect(orderTracker["unconfirmedOrders"]).toEqual({});
     });
 
-    test("Should mark an order as processing", () => {
-        orderManager.setOrderProcessing("123");
-        expect(orderManager["processingOrders"]).toEqual({"123": true});
+    test("Should mark an order as unconfirmed", () => {
+        orderTracker.setOrderUnconfirmed("123");
+        expect(orderTracker["unconfirmedOrders"]).toEqual({"123": true});
     });
-
 });
 
-describe("isOrderProcessing", () => {
+describe("setOrderConfirmed", () => {
+    test("Should remove from unconfirmed orders", () => {
+        orderTracker.setOrderUnconfirmed("123");
+        orderTracker.setOrderConfirmed("123");
+        expect(orderTracker["unconfirmedOrders"]).toEqual({});
+    });
+});
+
+describe("isOrderUnconfirmed", () => {
     test("Should return undefined when order not found", () => {
-        expect(orderManager.isOrderProcessing("123")).toEqual(undefined);
+        expect(orderTracker.isOrderUnconfirmed("123")).toEqual(undefined);
     });
 
-    test("Should mark an order as processing", () => {
-        orderManager.setOrderProcessing("123");
-        expect(orderManager.isOrderProcessing("123")).toEqual(true);
-    });
-});
-
-describe("removeOrderProcessing", () => {
-    test("Should remove order in processing", () => {
-        orderManager.setOrderProcessing("123");
-        orderManager.removeOrderProcessing("123");
-        expect(orderManager["processingOrders"]).toEqual({});
+    test("Should mark an order as unconfirmed", () => {
+        orderTracker.setOrderUnconfirmed("123");
+        expect(orderTracker.isOrderUnconfirmed("123")).toEqual(true);
     });
 });
 
 describe("get/set OpenOrders", () => {
     test("Should set and get all open orders", () => {
-        orderManager.setOpenOrders([{createdAt: moment(), price: 13.0, side: OrderSide.SELL}] as IOrder[]);
-        expect(orderManager.getOpenOrders()).toEqual(expect.objectContaining([{
+        orderTracker.setOpenOrders([{createdAt: moment(), price: 13.0, side: OrderSide.SELL}] as IOrder[]);
+        expect(orderTracker.getOpenOrders()).toEqual(expect.objectContaining([{
             createdAt: expect.any(moment),
             side: OrderSide.SELL,
             price: 13.0,
@@ -50,56 +49,56 @@ describe("get/set OpenOrders", () => {
     });
 });
 
-describe("findAndReplaceOpenOrder", () => {
+describe("replaceOpenOrder", () => {
     test("Should set and get all open orders", () => {
         const oldOrder = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
 
-        orderManager.setOpenOrders([oldOrder]);
-        const foundOrder = orderManager.findAndReplaceOpenOrder({
+        orderTracker.setOpenOrders([oldOrder]);
+        const foundOrder = orderTracker.replaceOpenOrder({
             id: "2",
             price: 11,
             side: OrderSide.SELL,
         } as IOrder, "1");
 
         expect(foundOrder).toEqual(oldOrder);
-        expect(orderManager.getOpenOrders()).toEqual([{id: "2", price: 11, side: OrderSide.SELL}]);
+        expect(orderTracker.getOpenOrders()).toEqual([{id: "2", price: 11, side: OrderSide.SELL}]);
     });
 });
 
 describe("addOpenOrder", () => {
     test("Should add open order", () => {
         const order = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
-        expect(orderManager["openOrders"]).toEqual([]);
+        expect(orderTracker["openOrders"]).toEqual([]);
 
-        orderManager.addOpenOrder(order);
-        expect(orderManager["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
+        orderTracker.addOpenOrder(order);
+        expect(orderTracker["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
     });
 });
 
 describe("removeOpenOrder", () => {
     test("Should remove open order", () => {
-        orderManager["openOrders"] = [
+        orderTracker["openOrders"] = [
             {id: "1", price: 10, side: OrderSide.BUY},
             {id: "2", price: 11, side: OrderSide.BUY},
         ] as IOrder[];
 
-        orderManager.removeOpenOrder("2");
-        expect(orderManager["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
+        orderTracker.removeOpenOrder("2");
+        expect(orderTracker["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
     });
 });
 
 describe("findOpenOrder", () => {
     test("Should find an open order", () => {
-        orderManager["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
+        orderTracker["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
 
-        const openOrder = orderManager.findOpenOrder("1");
+        const openOrder = orderTracker.findOpenOrder("1");
         expect(openOrder).toEqual({id: "1", price: 10, side: OrderSide.BUY});
     });
 
     test("Should return undefined if nothing found", () => {
-        orderManager["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
+        orderTracker["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
 
-        const openOrder = orderManager.findOpenOrder("10");
+        const openOrder = orderTracker.findOpenOrder("10");
         expect(openOrder).toEqual(undefined);
     });
 });
