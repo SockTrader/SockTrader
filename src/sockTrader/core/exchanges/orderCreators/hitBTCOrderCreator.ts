@@ -8,7 +8,7 @@ import {generateOrderId} from "../utils/utils";
 
 export default class HitBTCOrderCreator implements OrderCreator {
 
-    constructor(private orderTracker: OrderTracker, private connection: IConnection) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly connection: IConnection) {
     }
 
     cancelOrder(order: IOrder): IOrder | void {

@@ -9,7 +9,7 @@ export default class HitBTCCandleProcessor implements CandleProcessor {
 
     protected candles: Record<string, CandleManager> = {};
 
-    constructor(private exchange: EventEmitter) {
+    constructor(private readonly exchange: EventEmitter) {
     }
 
     /**

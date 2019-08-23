@@ -4,7 +4,7 @@ export default class HitBTCCommand implements ICommand {
 
     restorable = false;
 
-    constructor(private method: string, private params: object = {}) {
+    constructor(private readonly method: string, private readonly params: object = {}) {
     }
 
     static createRestorable(method: string, params: object = {}) {

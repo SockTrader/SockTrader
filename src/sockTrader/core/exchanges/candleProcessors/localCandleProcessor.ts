@@ -8,10 +8,10 @@ import OrderTracker from "../utils/orderTracker";
 
 export default class LocalCandleProcessor implements CandleProcessor {
 
-    private filledOrders: IOrder[] = [];
-    private currentCandle: ICandle | undefined;
+    private readonly filledOrders: IOrder[] = [];
+    private currentCandle?: ICandle;
 
-    constructor(private orderTracker: OrderTracker, private exchange: BaseExchange) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange) {
     }
 
     private isOrderWithinCandle(order: IOrder, candle: ICandle) {
