@@ -177,8 +177,9 @@ describe("addRestorable", () => {
 });
 
 describe("send", () => {
-    it("Should throw when connection is not available", () => {
-        expect(() => websocket.send({} as any)).toThrow("Could not send: {}. No connection available.");
+    it("Should log error when connection is not available", () => {
+        websocket.send({} as ICommand);
+        expect((logger.error as any)).toBeCalledWith("Could not send: {}. No connection available.");
     });
 
     it("Should send a command using the connection", () => {

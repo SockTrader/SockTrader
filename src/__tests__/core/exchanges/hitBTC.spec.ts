@@ -12,14 +12,10 @@ process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
 const pair: Pair = ["BTC", "USD"];
 
-function createExchange() {
-    return new HitBTC();
-}
-
-let exchange = createExchange();
+let exchange = new HitBTC();
 beforeEach(() => {
     (WebSocket as any).mockClear();
-    exchange = createExchange();
+    exchange = new HitBTC();
 });
 
 describe("createConnection", () => {

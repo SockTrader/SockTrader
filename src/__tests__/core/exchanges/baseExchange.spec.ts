@@ -1,10 +1,7 @@
 import {EventEmitter} from "events";
 import {Pair} from "../../../sockTrader/core/types/pair";
-import CandleManager from "../../../sockTrader/core/candles/candleManager";
 import Orderbook from "../../../sockTrader/core/orderbook";
 import MockExchange from "../../../sockTrader/core/exchanges/__mocks__/mockExchange";
-import logger from "../../../sockTrader/core/logger";
-import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
 
 jest.mock("../../../sockTrader/core/logger");
 
@@ -37,20 +34,6 @@ describe("sell", () => {
     });
 });
 
-describe("getCandleManager", () => {
-    test("Should return a cached candle manager for a trading pair", () => {
-        const interval = {code: "D1", cron: "00 00 00 */1 * *"};
-        const ob = exc.getCandleManager(pair, interval, () => {
-        });
-        expect(ob).toBeInstanceOf(CandleManager);
-        expect(ob).not.toBe(new CandleManager(interval));
-
-        const ob2 = exc.getCandleManager(pair, interval, () => {
-        });
-        expect(ob).toBe(ob2);
-    });
-});
-
 describe("destroy", () => {
     test("Should remove all event listeners once the exchange is destroyed", () => {
         // This test should prevent memory leaks in an exchange.
@@ -60,28 +43,6 @@ describe("destroy", () => {
 
         expect(exc).toBeInstanceOf(EventEmitter);
         expect(spyRemoveListeners).toBeCalled();
-    });
-});
-
-describe("send", () => {
-    test("Should send messages to a connection", () => {
-        const command = new HitBTCCommand("test", {param1: "1", param2: "2"});
-        exc.send(command);
-
-        expect(exc["connection"].send).toBeCalledTimes(1);
-        expect(exc["connection"].send).toBeCalledWith(command);
-    });
-
-    test("Should log error to error log when sending has failed", () => {
-        const command = new HitBTCCommand("test", {param1: "1", param2: "2"});
-
-        // @ts-ignore
-        exc["connection"].send.mockImplementation(() => {
-            throw new Error("Sending command failed");
-        });
-
-        exc.send(command);
-        expect(logger.error).toBeCalledWith(new Error("Sending command failed"));
     });
 });
 
