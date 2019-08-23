@@ -11,7 +11,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
     currentCandle?: ICandle = undefined;
 
-    constructor(private orderTracker: OrderTracker, private wallet: Wallet) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
     }
 
     setCurrentCandle(candle: ICandle) {
