@@ -5,4 +5,7 @@ module.exports = {
             secretKey: "sec_key",
         },
     },
+    assets: {
+        USD: 100000,
+    },
 };
