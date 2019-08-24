@@ -33,10 +33,10 @@ jobs:
       # First we save the split test file names into an env
       # Then we pass that to jest
       - run:
-        name: Run Jest tests using test splitting
-        command: |
-          TESTFILES=$(circleci tests glob "__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
-          npm test $TESTFILES
+          name: Run Jest tests using test splitting
+          command: |
+            TESTFILES=$(circleci tests glob "__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
+            npm test $TESTFILES
 #      - run: npm test
 #      - run: codecov -f coveerage/*.json
 #      - run: sonar-scanner
