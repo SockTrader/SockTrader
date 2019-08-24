@@ -37,7 +37,7 @@ jobs:
           name: Run Jest tests using test splitting
           command: |
             TESTFILES=$(circleci tests glob "__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
-            npm test $TESTFILES --ci --maxWorkers=2 && echo $TESTFILES
+            echo $TESTFILES && npm test $TESTFILES --ci --maxWorkers=2
 
       - store_test_results:
           path: test_results
