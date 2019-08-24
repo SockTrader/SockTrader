@@ -10,7 +10,7 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: npm install
+      - run: npm ci
       - run: cp src/config.ts.dist src/config.ts
       - persist_to_workspace:
           root: ~/project
@@ -26,12 +26,20 @@ jobs:
 
   test-unit:
     <<: *defaults
+    parallelism: 3
     steps:
       - attach_workspace:
           at: ~/project
-      - run: npm test
-      - run: codecov -f coveerage/*.json
-      - run: sonar-scanner
+      # First we save the split test file names into an env
+      # Then we pass that to jest
+      - run:
+        name: Run Jest tests using test splitting
+        command: |
+          TESTFILES=$(circleci tests glob "__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
+          npm test $TESTFILES
+#      - run: npm test
+#      - run: codecov -f coveerage/*.json
+#      - run: sonar-scanner
 
 workflows:
   version: 2
