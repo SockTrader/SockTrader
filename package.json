@@ -6,7 +6,7 @@
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
     "stryker": "stryker run",
-    "test": "jest --coverage --ci --maxWorkers=2",
+    "test": "jest --ci --maxWorkers=2",
     "backtest": "npm run build && node ./build/index.js backtest",
     "normalize": "npm run build && node ./build/index.js normalize",
     "web-dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/index.js web\"",
@@ -16,11 +16,18 @@
     "socktrader": "npm run build && node ./build/index.js",
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
+  "jest-junit": {
+    "outputDirectory": "test_results/junit"
+  },
   "jest": {
     "preset": "ts-jest",
     "moduleDirectories": [
       "node_modules",
       "src"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
@@ -117,6 +124,7 @@
     "concurrently": "^4.1.2",
     "cross-env": "^5.2.0",
     "jest": "^24.9.0",
+    "jest-junit": "^7.0.0",
     "pre-commit": "^1.2.2",
     "sinon": "^7.4.1",
     "ts-jest": "^24.0.2",
