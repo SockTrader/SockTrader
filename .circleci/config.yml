@@ -1,0 +1,46 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/project/socktrader
+  docker:
+    - image: socktrader/socktrader-ci
+
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: npm install
+      - run: cp src/config.ts.dist src/config.ts
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - socktrader
+
+  test-mutation:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: npm run stryker
+
+  test-unit:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: npm test
+      - run: codecov -f coveerage/*.json
+      - run: sonar-scanner
+
+workflows:
+  version: 2
+  install-and-parallel-test:
+    jobs:
+      - install
+      - test-mutation:
+          requires:
+            - install
+      - test-unit:
+          requires:
+            - install
