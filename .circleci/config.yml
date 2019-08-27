@@ -3,7 +3,7 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/project/socktrader
   docker:
-    - image: socktrader/socktrader-ci
+    - image: circleci/node:10.16.3
 
 jobs:
   install:
@@ -12,7 +12,6 @@ jobs:
       - checkout
       - run: npm ci
       - run: cp src/config.ts.dist src/config.ts
-      - run: mkdir test_results
       - persist_to_workspace:
           root: ~/project
           paths:
