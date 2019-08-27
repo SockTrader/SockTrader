@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.0.5
+
 defaults: &defaults
   working_directory: ~/project/socktrader
   docker:
@@ -36,17 +39,21 @@ jobs:
           command: |
             TESTFILES=$(circleci tests glob "src/__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
             npm test $TESTFILES
-      - run:
-          name: Upload Coverage Results
-          command: |
-            curl -s https://codecov.io/bash >codecov && \
-            chmod +x codecov && \
-            sh codecov -s -- \
-              -s "test_results" \
-              -t "${CODECOV_TOKEN}" \
-              -n "${CIRCLE_BUILD_NUM}" \
-              -F "unittests" \
-              -Z || echo 'Codecov upload failed'
+
+#      - run:
+#          name: Upload Coverage Results
+#          command: |
+#            curl -s https://codecov.io/bash >codecov && \
+#            chmod +x codecov && \
+#            sh codecov -s -- \
+#              -s "test_results" \
+#              -t "${CODECOV_TOKEN}" \
+#              -n "${CIRCLE_BUILD_NUM}" \
+#              -F "unittests" \
+#              -Z || echo 'Codecov upload failed'
+
+      - codecov/upload:
+          file: 'test_results/**/*.json'
 
       - store_test_results:
           path: test_results
