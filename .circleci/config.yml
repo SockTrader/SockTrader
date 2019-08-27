@@ -15,6 +15,7 @@ jobs:
       - checkout
       - run: npm ci
       - run: cp src/config.ts.dist src/config.ts
+      - run: mkdir test_results
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -41,7 +42,7 @@ jobs:
             npm test $TESTFILES --ci --maxWorkers=2 --coverage
 
       - codecov/upload:
-          file: {{ coverage_report_filepath }}
+          file: 'test_results/**/*.json'
 
       - store_test_results:
           path: test_results
