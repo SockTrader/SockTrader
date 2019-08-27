@@ -40,27 +40,26 @@ jobs:
             TESTFILES=$(circleci tests glob "src/__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
             npm test $TESTFILES
 
-#      - run:
-#          name: Upload Coverage Results
-#          command: |
-#            curl -s https://codecov.io/bash >codecov && \
-#            chmod +x codecov && \
-#            sh codecov -s -- \
-#              -s "test_results" \
-#              -t "${CODECOV_TOKEN}" \
-#              -n "${CIRCLE_BUILD_NUM}" \
-#              -F "unittests" \
-#              -Z || echo 'Codecov upload failed'
-
-      - codecov/upload:
-          file: 'test_results/**/*.json'
+      - codecov/upload
 
       - store_test_results:
           path: test_results
 
       - store_artifacts:
-          path: test_results
-          destination: test_results
+          path: test_results/coverage/clover.xml
+          destination: clover.xml
+
+      - store_artifacts:
+          path: test_results/coverage/coverage-final.json
+          destination: coverage-final.json
+
+      - store_artifacts:
+          path: test_results/coverage/lcov.info
+          destination: lcov.info
+
+      - store_artifacts:
+          path: test_results/junit/junit.xml
+          destination: junit.xml
 
 workflows:
   version: 2
