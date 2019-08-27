@@ -17,7 +17,7 @@
     "pre-commit": "echo 'Pre-commit checks..' && exit 0"
   },
   "jest-junit": {
-    "outputDirectory": "test_results/junit"
+    "outputDirectory": "test_results/jest"
   },
   "jest": {
     "preset": "ts-jest",
