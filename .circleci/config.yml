@@ -34,8 +34,6 @@ jobs:
       - attach_workspace:
           at: ~/project
 
-      # First we save the split test file names into an env
-      # Then we pass that to jest
       - run:
           name: Run Jest tests using test splitting
           command: |
