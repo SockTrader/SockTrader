@@ -1,7 +1,7 @@
 version: 2.1
 
-orbs:
-  codecov: codecov/codecov@1.0.5
+#orbs:
+#  codecov: codecov/codecov@1.0.5
 
 defaults: &defaults
   working_directory: ~/project/socktrader
@@ -39,10 +39,22 @@ jobs:
           name: Run Jest tests using test splitting
           command: |
             TESTFILES=$(circleci tests glob "src/__tests__/**/*.spec.ts" | circleci tests split --split-by=timings)
-            npm test $TESTFILES --ci --maxWorkers=2 --coverage
+            npm test $TESTFILES
+      - run:
+          name: Upload Coverage Results
+          command: |
+            curl -s https://codecov.io/bash >codecov && \
+            chmod +x codecov && \
+            sh codecov -s -- \
+              -f "test_results/**/*.json" \
+              -t "${CODECOV_TOKEN}" \
+              -n "${CIRCLE_BUILD_NUM}" \
+              -y ".codecov.yml" \
+              -F "" \
+              -Z || echo 'Codecov upload failed'
 
-      - codecov/upload:
-          file: 'test_results/**/*.json'
+#      - codecov/upload:
+#          file: 'test_results/**/*.json'
 
       - store_test_results:
           path: test_results
