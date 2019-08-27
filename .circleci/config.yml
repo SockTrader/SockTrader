@@ -1,12 +1,12 @@
 version: 2
 
+orbs:
+  codecov: codecov/codecov@1.0.5
+
 defaults: &defaults
   working_directory: ~/project/socktrader
   docker:
     - image: socktrader/socktrader-ci
-
-orbs:
-  codecov: codecov/codecov@1.0.5
 
 jobs:
   install:
@@ -51,10 +51,6 @@ jobs:
       - store_artifacts:
           path: test_results
           destination: test_results
-
-#      - run: npm test
-#      - run: codecov -f coveerage/*.json
-#      - run: sonar-scanner
 
 workflows:
   version: 2
