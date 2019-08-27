@@ -58,7 +58,7 @@ jobs:
           destination: lcov.info
 
       - store_artifacts:
-          path: test_results/junit/junit.xml
+          path: test_results/jest/junit.xml
           destination: junit.xml
 
 workflows:
