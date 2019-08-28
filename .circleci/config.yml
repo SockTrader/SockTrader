@@ -24,11 +24,11 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-            at: ~/project
+          at: ~/project
 
       - run:
           name: Run sonar scanner
-          command: >
+          command: >-
             sonar-scanner
             -Dsonar.projectKey=SockTrader_SockTrader
             -Dsonar.organization=socktrader
