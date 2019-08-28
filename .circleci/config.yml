@@ -27,6 +27,8 @@ jobs:
       - attach_workspace:
           at: ~/project
 
+      - run: ls -la test_results
+
       - run: sonar-scanner -Dsonar.projectKey=SockTrader_SockTrader -Dsonar.organization=socktrader -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN
 
   test-unit:
@@ -45,7 +47,7 @@ jobs:
       - codecov/upload
 
       - store_test_results:
-          path: test_results
+          path: test_results/junit
 
       - store_artifacts:
           path: test_results/coverage/clover.xml
@@ -76,3 +78,4 @@ workflows:
       - analyze-code:
           requires:
             - install
+            - test-unit
