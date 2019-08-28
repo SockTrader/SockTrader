@@ -8,7 +8,6 @@ defaults: &defaults
   docker:
     - image: socktrader/socktrader-ci
 
-
 jobs:
   install:
     <<: *defaults
