@@ -6,7 +6,8 @@ orbs:
 defaults: &defaults
   working_directory: ~/project/socktrader
   docker:
-    - image: circleci/node:10.16.3
+    - image: socktrader/socktrader-ci
+
 
 jobs:
   install:
@@ -19,21 +20,6 @@ jobs:
           root: ~/project
           paths:
             - socktrader
-
-#  analyze-code:
-#    <<: *defaults
-#    steps:
-#      - attach_workspace:
-#          at: ~/project
-#
-#      - run:
-#          name: Run sonar scanner
-#          command: >-
-#            sonar-scanner
-#            -Dsonar.projectKey=SockTrader_SockTrader
-#            -Dsonar.organization=socktrader
-#            -Dsonar.host.url=https://sonarcloud.io
-#            -Dsonar.login=$SONAR_LOGIN
 
   analyze-code:
     <<: *defaults
