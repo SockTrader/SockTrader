@@ -29,16 +29,6 @@ jobs:
 
       - run: sonar-scanner -Dsonar.projectKey=SockTrader_SockTrader -Dsonar.organization=socktrader -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_LOGIN
 
-  test-mutation:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/project
-
-      - run:
-          name: Run mutation testing
-          command: npm run stryker
-
   test-unit:
     <<: *defaults
     parallelism: 3
@@ -78,10 +68,6 @@ workflows:
   install-and-parallel-test:
     jobs:
       - install
-
-      - test-mutation:
-          requires:
-            - install
 
       - test-unit:
           requires:
