@@ -19,6 +19,17 @@ jobs:
           root: ~/project
           paths:
             - socktrader
+            -
+  analyze-code:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+            at: ~/project
+      - run: sonar-scanner \
+          -Dsonar.projectKey=SockTrader_SockTrader \
+          -Dsonar.organization=socktrader \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=$SONAR_LOGIN
 
   test-mutation:
     <<: *defaults
@@ -29,7 +40,7 @@ jobs:
 
   test-unit:
     <<: *defaults
-    parallelism: 4
+    parallelism: 3
     steps:
       - attach_workspace:
           at: ~/project
