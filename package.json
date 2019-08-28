@@ -21,6 +21,7 @@
   },
   "jest": {
     "preset": "ts-jest",
+    "roots": ["<rootDir>/src"],
     "coverageDirectory": "test_results/coverage",
     "moduleDirectories": [
       "node_modules",

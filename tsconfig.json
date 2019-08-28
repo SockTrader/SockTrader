@@ -5,9 +5,7 @@
   "exclude": [
     "./node_modules",
     "./test_results",
-    "./reports",
-    "**/__mocks__/*",
-    "**/__tests__/*"
+    "./reports"
   ],
   "compilerOptions": {
     "experimentalDecorators": true,
