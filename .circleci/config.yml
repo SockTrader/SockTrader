@@ -25,18 +25,24 @@ jobs:
     steps:
       - attach_workspace:
             at: ~/project
-      - run: sonar-scanner \
-          -Dsonar.projectKey=SockTrader_SockTrader \
-          -Dsonar.organization=socktrader \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=$SONAR_LOGIN
+
+      - run:
+          name: Run sonar scanner
+          command: sonar-scanner \
+            -Dsonar.projectKey=SockTrader_SockTrader \
+            -Dsonar.organization=socktrader \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_LOGIN
 
   test-mutation:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/project
-      - run: npm run stryker
+
+      - run:
+          name: Run mutation testing
+          command: npm run stryker
 
   test-unit:
     <<: *defaults
@@ -77,9 +83,15 @@ workflows:
   install-and-parallel-test:
     jobs:
       - install
+
       - test-mutation:
           requires:
             - install
+
       - test-unit:
+          requires:
+            - install
+
+      - analyze-code:
           requires:
             - install
