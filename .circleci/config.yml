@@ -20,20 +20,33 @@ jobs:
           paths:
             - socktrader
             -
+#  analyze-code:
+#    <<: *defaults
+#    steps:
+#      - attach_workspace:
+#          at: ~/project
+#
+#      - run:
+#          name: Run sonar scanner
+#          command: >-
+#            sonar-scanner
+#            -Dsonar.projectKey=SockTrader_SockTrader
+#            -Dsonar.organization=socktrader
+#            -Dsonar.host.url=https://sonarcloud.io
+#            -Dsonar.login=$SONAR_LOGIN
+
   analyze-code:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/project
 
-      - run:
-          name: Run sonar scanner
-          command: >-
-            sonar-scanner
-            -Dsonar.projectKey=SockTrader_SockTrader
-            -Dsonar.organization=socktrader
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.login=$SONAR_LOGIN
+      - run: >-
+          sonar-scanner
+          -Dsonar.projectKey=SockTrader_SockTrader
+          -Dsonar.organization=socktrader
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=$SONAR_LOGIN
 
   test-mutation:
     <<: *defaults
