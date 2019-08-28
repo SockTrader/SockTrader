@@ -6,7 +6,7 @@
   "repository": "https://github.com/SockTrader/SockTrader",
   "scripts": {
     "stryker": "stryker run",
-    "test": "jest --runInBand --ci --maxWorkers=2 --coverage",
+    "test": "jest --runInBand --ci --coverage",
     "backtest": "npm run build && node ./build/index.js backtest",
     "normalize": "npm run build && node ./build/index.js normalize",
     "web-dev": "cross-env NODE_ENV=dev nodemon -e ts --exec \"npm run build && node ./build/index.js web\"",
