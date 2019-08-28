@@ -6,7 +6,6 @@
     "./node_modules",
     "./test_results",
     "./reports",
-    "./build/**/*",
     "**/__mocks__/*",
     "**/__tests__/*"
   ],
