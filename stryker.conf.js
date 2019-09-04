@@ -5,6 +5,9 @@ module.exports = function(config) {
     testRunner: "jest",
     transpilers: [],
     coverageAnalysis: "off",
+    htmlReporter: {
+      baseDir: 'test_results/mutation/html'
+    },
     mutator: { name: "typescript", excludedMutations: ["BooleanSubstitution", "StringLiteral"] },
     tsconfigFile: "tsconfig.json",
     files: [

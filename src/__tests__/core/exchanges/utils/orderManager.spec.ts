@@ -22,7 +22,7 @@ describe("setOrderUnconfirmed", () => {
 describe("setOrderConfirmed", () => {
     test("Should remove from unconfirmed orders", () => {
         orderTracker.setOrderUnconfirmed("123");
-        orderTracker.setOrderConfirmed("123");
+        orderTracker["setOrderConfirmed"]("123");
         expect(orderTracker["unconfirmedOrders"]).toEqual({});
     });
 });
@@ -54,7 +54,7 @@ describe("replaceOpenOrder", () => {
         const oldOrder = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
 
         orderTracker.setOpenOrders([oldOrder]);
-        const foundOrder = orderTracker.replaceOpenOrder({
+        const foundOrder = orderTracker["replaceOpenOrder"]({
             id: "2",
             price: 11,
             side: OrderSide.SELL,
@@ -70,7 +70,7 @@ describe("addOpenOrder", () => {
         const order = {id: "1", price: 10, side: OrderSide.BUY} as IOrder;
         expect(orderTracker["openOrders"]).toEqual([]);
 
-        orderTracker.addOpenOrder(order);
+        orderTracker["addOpenOrder"](order);
         expect(orderTracker["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
     });
 });
@@ -82,7 +82,7 @@ describe("removeOpenOrder", () => {
             {id: "2", price: 11, side: OrderSide.BUY},
         ] as IOrder[];
 
-        orderTracker.removeOpenOrder("2");
+        orderTracker["removeOpenOrder"]("2");
         expect(orderTracker["openOrders"]).toEqual([{id: "1", price: 10, side: OrderSide.BUY}]);
     });
 });
@@ -91,14 +91,14 @@ describe("findOpenOrder", () => {
     test("Should find an open order", () => {
         orderTracker["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
 
-        const openOrder = orderTracker.findOpenOrder("1");
+        const openOrder = orderTracker["findOpenOrder"]("1");
         expect(openOrder).toEqual({id: "1", price: 10, side: OrderSide.BUY});
     });
 
     test("Should return undefined if nothing found", () => {
         orderTracker["openOrders"] = [{id: "1", price: 10, side: OrderSide.BUY}] as IOrder[];
 
-        const openOrder = orderTracker.findOpenOrder("10");
+        const openOrder = orderTracker["findOpenOrder"]("10");
         expect(openOrder).toEqual(undefined);
     });
 });
