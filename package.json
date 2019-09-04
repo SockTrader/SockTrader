@@ -21,10 +21,16 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "roots": ["<rootDir>/src"],
+    "roots": [
+      "<rootDir>/src"
+    ],
     "moduleDirectories": [
       "node_modules",
       "src"
+    ],
+    "coverageDirectory": "test_results/coverage",
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts"
     ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/strategies/"
