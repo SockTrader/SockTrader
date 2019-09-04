@@ -22,27 +22,18 @@
   "jest": {
     "preset": "ts-jest",
     "roots": ["<rootDir>/src"],
-    "coverageDirectory": "test_results/coverage",
     "moduleDirectories": [
       "node_modules",
       "src"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/strategies/"
     ],
     "reporters": [
       "default",
       "jest-junit"
     ],
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "<rootDir>/build/",
-      "<rootDir>/node_modules/"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/src/data/",
-      "<rootDir>/src/strategies/"
-    ],
     "globals": {
       "ts-jest": {
         "diagnostics": false

@@ -16,12 +16,10 @@ process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 const pair: Pair = ["BTC", "USD"];
 
 let exchange = new LocalExchange();
-let sendMock = jest.fn();
 let emitMock = jest.fn();
 
 beforeEach(() => {
     exchange = new LocalExchange();
-    exchange.send = sendMock;
     exchange.emit = emitMock;
 });
 
