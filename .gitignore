@@ -71,4 +71,3 @@ node_modules/
 # dotenv environment variables file
 .env
 .stryker-tmp
-reports
