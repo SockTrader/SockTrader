@@ -7,7 +7,7 @@ import {Pair} from "../../types/pair";
 
 export default class HitBTCCandleProcessor implements CandleProcessor {
 
-    protected candles: Record<string, CandleManager> = {};
+    private candles: Record<string, CandleManager> = {};
 
     constructor(private readonly exchange: EventEmitter) {
     }
