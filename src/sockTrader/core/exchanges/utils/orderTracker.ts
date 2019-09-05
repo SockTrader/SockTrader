@@ -30,12 +30,8 @@ export default class OrderTracker {
         return this.openOrders.find(openOrder => openOrder.id === orderId);
     }
 
-    isOrderConfirmed(orderId: string) {
-        return !this.isOrderUnconfirmed(orderId);
-    }
-
     isOrderUnconfirmed(orderId: string) {
-        return this.unconfirmedOrders[orderId];
+        return this.unconfirmedOrders[orderId] !== undefined;
     }
 
     setOrderUnconfirmed(orderId: string) {
