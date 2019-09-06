@@ -49,7 +49,7 @@ export default class CandleNormalizer {
      * Determine smallest candle interval of all candles
      * @param df
      */
-    determineCandleInterval(df: IDataFrame): number {
+    private determineCandleInterval(df: IDataFrame): number {
         const [interval] = df.aggregate([] as any, (prev, value) => {
             const [prevInterval, date] = prev;
 
@@ -65,7 +65,7 @@ export default class CandleNormalizer {
         return interval;
     }
 
-    determinePriceDecimals(df: IDataFrame): number {
+    private determinePriceDecimals(df: IDataFrame): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
         const agg = df.aggregate(0, (accum, candle) => Math.max(
             accum,
@@ -78,12 +78,12 @@ export default class CandleNormalizer {
         return Math.pow(10, agg);
     }
 
-    determineVolumeDecimals(df: IDataFrame): number {
+    private determineVolumeDecimals(df: IDataFrame): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
         return df.aggregate(0, ((accum, candle) => Math.max(accum, getDecimals(candle.volume, ds))));
     }
 
-    validateColumns(df: IDataFrame) {
+    private validateColumns(df: IDataFrame) {
         const columnNames = df.getColumnNames();
         const requiredColumns = ["timestamp", "open", "high", "low", "close", "volume"];
 
@@ -104,7 +104,6 @@ export default class CandleNormalizer {
         const ext = segs[segs.length - 1].toLowerCase();
 
         const dataFrame: IDataFrame<number, ICandle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
-
         this.validateColumns(dataFrame);
 
         return {

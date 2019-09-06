@@ -1,7 +1,7 @@
 /* tslint:disable */
 import "jest";
-import CandleNormalizer from "../../sockTrader/data/candleNormalizer";
-import {DataFrame} from "data-forge";
+import CandleNormalizer, {ICandleNormalizerConfig} from "../../sockTrader/data/candleNormalizer";
+import {DataFrame, IDataFrame} from "data-forge";
 import moment from "moment";
 
 function createDataFrame() {
@@ -15,9 +15,9 @@ function createDataFrame() {
 }
 
 function createNormalizer() {
-    return new CandleNormalizer("./coinbase_btcusd_1h.csv", {symbol: ["BTC", "USD"], name: "Bitcoin"}, () => {
-        return new DataFrame();
-    });
+    const file = "./coinbase_btcusd_1h.csv";
+    const config = {symbol: ["BTC", "USD"], name: "Bitcoin"} as ICandleNormalizerConfig;
+    return new CandleNormalizer(file, config, (candles: IDataFrame) => candles);
 }
 
 let normalizer = createNormalizer();
@@ -25,27 +25,55 @@ beforeEach(() => {
     normalizer = createNormalizer();
 });
 
+jest.mock("data-forge-fs", () => {
+    return {
+        readFile: () => ({
+            parseCSV: async () => createDataFrame(),
+        }),
+    };
+});
+
 describe("determineCandleInterval", () => {
     test("Should determine smallest interval in a series of timestamps", async () => {
-        const result = normalizer.determineCandleInterval(createDataFrame());
+        const result = normalizer["determineCandleInterval"](createDataFrame());
         expect(result).toEqual(60);
     });
 });
 
 describe("determinePriceDecimals", () => {
     test("Should determine price decimals in a series of candles", async () => {
-        const result = normalizer.determinePriceDecimals(createDataFrame());
+        const result = normalizer["determinePriceDecimals"](createDataFrame());
         expect(result).toEqual(10000);
     });
 });
 
 describe("determineVolumeDecimals", () => {
     test("Should determine amount of volume decimals in a series of candles", async () => {
-        const result = normalizer.determineVolumeDecimals(createDataFrame());
+        const result = normalizer["determineVolumeDecimals"](createDataFrame());
         expect(result).toEqual(3);
     });
 });
 
+describe("validateColumns", () => {
+    test("Should throw if dataFrame does not contain the required columns", async () => {
+        const df = createDataFrame().renameSeries({timestamp: "ts"});
+        expect(() => normalizer["validateColumns"](df)).toThrow("Columns of DataFrame are not valid!");
+    });
+});
+
+describe("normalize", () => {
+    test("Should run all individual normalize functions and return complete result", async () => {
+        const result = await normalizer.normalize();
+        expect(result).toEqual(expect.objectContaining({
+            candleInterval: 60,
+            candles: expect.any(Array),
+            name: "Bitcoin",
+            priceDecimals: 10000,
+            symbol: ["BTC", "USD"],
+            volumeDecimals: 3,
+        }));
+    });
+});
 
 describe("parseFileReader", () => {
     test("Should parse a JSON file", async () => {
