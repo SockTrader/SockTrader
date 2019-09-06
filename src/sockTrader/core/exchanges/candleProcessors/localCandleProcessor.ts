@@ -9,7 +9,6 @@ import OrderTracker from "../utils/orderTracker";
 export default class LocalCandleProcessor implements CandleProcessor {
 
     private readonly filledOrders: IOrder[] = [];
-    private currentCandle?: ICandle;
 
     constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange) {
     }
@@ -43,17 +42,14 @@ export default class LocalCandleProcessor implements CandleProcessor {
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        this.currentCandle = data[0];
-        this.processOpenOrders(this.currentCandle);
+        this.onProcessCandles(data);
     }
 
     onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        this.currentCandle = data[0];
-        this.processOpenOrders(this.currentCandle);
+        this.onProcessCandles(data);
     }
 
     onProcessCandles(data: ICandle[]) {
-        this.currentCandle = data[0];
-        this.processOpenOrders(this.currentCandle);
+        this.processOpenOrders(data[0]);
     }
 }

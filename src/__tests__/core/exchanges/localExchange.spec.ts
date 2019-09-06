@@ -99,3 +99,50 @@ describe("ready", () => {
         expect(emitMock).toBeCalledWith("ready");
     });
 });
+
+describe("adjustOrder", () => {
+    test("Should adjust order", () => {
+        const spy = jest.spyOn(exchange, "onReport");
+        exchange.adjustOrder({
+            id: "123",
+            pair: ["BTC", "USD"],
+            price: 10,
+            quantity: 1,
+            side: OrderSide.BUY,
+        } as IOrder, 100, 2);
+
+        expect(spy).toBeCalledWith(expect.objectContaining({
+            reportType: "replaced",
+            originalId: "123",
+            price: 100,
+            quantity: 2,
+        }));
+    });
+});
+
+describe("ignore methods on LocalExchange", () => {
+    test("Should do nothing when 'onUpdateOrderbook' is triggered", () => {
+        const result = exchange.onUpdateOrderbook(undefined as any);
+        expect(result).toEqual(undefined);
+    });
+
+    test("Should do nothing when 'subscribeCandles' is triggered", () => {
+        const result = exchange.subscribeCandles(undefined as any, undefined as any);
+        expect(result).toEqual(undefined);
+    });
+
+    test("Should do nothing when 'subscribeOrderbook' is triggered", () => {
+        const result = exchange.subscribeOrderbook(undefined as any);
+        expect(result).toEqual(undefined);
+    });
+
+    test("Should do nothing when 'subscribeReports' is triggered", () => {
+        const result = exchange.subscribeReports();
+        expect(result).toEqual(undefined);
+    });
+
+    test("Should do nothing when 'loadCurrencies' is triggered", () => {
+        const result = exchange["loadCurrencies"]();
+        expect(result).toEqual(undefined);
+    });
+});

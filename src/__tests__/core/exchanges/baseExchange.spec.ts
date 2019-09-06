@@ -1,15 +1,15 @@
 import {EventEmitter} from "events";
 import {Pair} from "../../../sockTrader/core/types/pair";
 import Orderbook from "../../../sockTrader/core/orderbook";
-import MockExchange from "../../../sockTrader/core/exchanges/__mocks__/mockExchange";
+import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
 
 jest.mock("../../../sockTrader/core/logger");
 
 const pair: Pair = ["BTC", "USD"];
 
-let exc = new MockExchange();
+let exc = new LocalExchange();
 beforeEach(() => {
-    exc = new MockExchange();
+    exc = new LocalExchange();
 });
 
 describe("buy", () => {
