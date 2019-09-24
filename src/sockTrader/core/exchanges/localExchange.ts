@@ -82,7 +82,7 @@ export default class LocalExchange extends BaseExchange {
     }
 
     protected getCandleProcessor(): CandleProcessor {
-        return new LocalCandleProcessor(this.orderTracker, this);
+        return new LocalCandleProcessor(this.orderTracker, this, this.wallet);
     }
 
     protected getOrderCreator(): OrderCreator {
