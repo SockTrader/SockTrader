@@ -16,6 +16,7 @@
         "src/types/*"
       ]
     },
+    "skipLibCheck": true,
     "lib": ["es2018"],
     "target": "es2018",
     "esModuleInterop": true,
