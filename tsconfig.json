@@ -16,7 +16,8 @@
         "src/types/*"
       ]
     },
-    "target": "es6",
+    "lib": ["es2018"],
+    "target": "es2018",
     "esModuleInterop": true,
     "module": "commonjs",
     "outDir": "build",

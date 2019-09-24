@@ -4,12 +4,13 @@ import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTrack
 import LocalExchange from "../../../../sockTrader/core/exchanges/localExchange";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
+import Wallet from "../../../../sockTrader/core/assets/wallet";
 
 function createCandleProcessor() {
     const tracker = new OrderTracker();
-    tracker.setOpenOrders([{id: "123", side: OrderSide.BUY, price: 10, createdAt: moment()} as IOrder]);
+    tracker.setOpenOrders([{id: "123", pair: ["BTC", "USD"], side: OrderSide.BUY, price: 10, createdAt: moment()} as IOrder]);
 
-    return new LocalCandleProcessor(tracker, new LocalExchange());
+    return new LocalCandleProcessor(tracker, new LocalExchange(), new Wallet({BTC: 10, USD: 10000}));
 }
 
 const fillCandles = [{low: 5, timestamp: moment().add(1, "day")}] as ICandle[];
