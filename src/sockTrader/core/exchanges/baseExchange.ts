@@ -15,6 +15,7 @@ import {ITradeablePair} from "../types/ITradeablePair";
 import {IOrder, OrderSide} from "../types/order";
 import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
+import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import OrderTracker from "./utils/orderTracker";
 
@@ -65,10 +66,11 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
      */
     protected setExchangeBehaviour() {
         const isLive = process.env.SOCKTRADER_TRADING_MODE === "LIVE";
+        const isPaper = process.env.SOCKTRADER_TRADING_MODE === "PAPER";
 
         // Use LocalOrderCreator in case of: backtest & paper trading
-        this.orderCreator = isLive ? this.getOrderCreator() : new LocalOrderCreator(this.orderTracker, this.wallet);
-        this.candleProcessor = this.getCandleProcessor();
+        this.orderCreator = isLive ? this.getOrderCreator() : new LocalOrderCreator(this.orderTracker, this, this.wallet);
+        this.candleProcessor = isPaper ? new PaperTradingCandleProcessor(this.orderTracker, this, this.wallet) : this.getCandleProcessor();
     }
 
     adjustOrder(order: IOrder, price: number, qty: number) {
