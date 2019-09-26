@@ -2,7 +2,7 @@ import {Pair} from "../../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
 import WebSocket from "../../../sockTrader/core/connection/webSocket";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import HitBTCCandleProcessor from "../../../sockTrader/core/exchanges/candleProcessors/hitBTCCandleProcessor";
+import RemoteCandleProcessor from "../../../sockTrader/core/exchanges/candleProcessors/remoteCandleProcessor";
 import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
 
 jest.mock("./../../../config");
@@ -178,7 +178,7 @@ describe("onConnect", () => {
 describe("getCandleProcessor", () => {
     test("Should return a new candle processor instance", () => {
         const instance = exchange["getCandleProcessor"]();
-        expect(instance).toBeInstanceOf(HitBTCCandleProcessor);
+        expect(instance).toBeInstanceOf(RemoteCandleProcessor);
     });
 });
 

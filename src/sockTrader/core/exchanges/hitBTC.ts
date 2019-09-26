@@ -12,7 +12,7 @@ import {IResponseAdapter} from "../types/IResponseAdapter";
 import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import HitBTCCandleProcessor from "./candleProcessors/hitBTCCandleProcessor";
+import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
 import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
@@ -109,7 +109,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     protected getCandleProcessor(): CandleProcessor {
-        return new HitBTCCandleProcessor(this);
+        return new RemoteCandleProcessor(this);
     }
 
     protected getOrderCreator(): OrderCreator {
