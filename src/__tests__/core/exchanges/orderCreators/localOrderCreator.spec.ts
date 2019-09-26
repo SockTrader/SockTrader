@@ -1,30 +1,40 @@
+import moment from "moment";
 import LocalOrderCreator from "../../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
 import {IOrder, OrderSide, ReportType} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/assets/wallet";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
-import moment from "moment";
+import HitBTC from "../../../../sockTrader/core/exchanges/hitBTC";
 
-let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));
+let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new HitBTC(), new Wallet({"USD": 1000}));
 beforeEach(() => {
-    localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));
+    localOrderCreator = new LocalOrderCreator(new OrderTracker(), new HitBTC(), new Wallet({"USD": 1000}));
 });
 
 describe("cancelOrder", () => {
     test("Should set cancel order as unconfirmed", () => {
         const order = {reportType: ReportType.NEW, id: "123", pair: ["BTC", "USD"], price: 10, quantity: 1} as IOrder;
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "setOrderUnconfirmed");
-        const report = localOrderCreator.cancelOrder(order);
+        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
+        localOrderCreator.cancelOrder(order);
 
         expect(spy).toBeCalledWith("123");
-        expect(report).toEqual({id: "123", pair: ["BTC", "USD"], price: 10, quantity: 1, reportType: "canceled"});
+        expect(exchangeSpy).toBeCalledWith({
+            "id": "123",
+            "pair": ["BTC", "USD"],
+            "price": 10,
+            "quantity": 1,
+            "reportType": "canceled",
+        });
     });
 });
 
 describe("createOrder", () => {
     test("Should create a new order", () => {
-        const order = localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
-        expect(order).toEqual({
+        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
+        localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
+
+        expect(exchangeSpy).toBeCalledWith({
             createdAt: expect.any(moment),
             id: expect.any(String),
             pair: ["BTC", "USD"],
@@ -62,9 +72,10 @@ describe("adjustOrder", () => {
     // @formatter:on
 
     test("Should adjust an existing order", () => {
-        const newOrder = localOrderCreator.adjustOrder(order, 10, 1);
-        expect(newOrder).toEqual({
-            createdAt: expect.any(moment),
+        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
+        localOrderCreator.adjustOrder(order, 10, 1);
+
+        expect(exchangeSpy).toBeCalledWith({
             id: expect.any(String),
             originalId: "123",
             pair: ["BTC", "USD"],
@@ -73,6 +84,7 @@ describe("adjustOrder", () => {
             reportType: "replaced",
             side: "buy",
             type: "limit",
+            createdAt: expect.any(moment),
             updatedAt: expect.any(moment),
         });
     });

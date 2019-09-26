@@ -5,7 +5,7 @@ import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
 import {Pair} from "../../types/pair";
 
-export default class HitBTCCandleProcessor implements CandleProcessor {
+export default class RemoteCandleProcessor implements CandleProcessor {
 
     private candles: Record<string, CandleManager> = {};
 

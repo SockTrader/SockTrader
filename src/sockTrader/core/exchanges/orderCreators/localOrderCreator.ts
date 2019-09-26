@@ -4,6 +4,7 @@ import {ICandle} from "../../types/ICandle";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
 import {OrderCreator} from "../../types/orderCreator";
 import {Pair} from "../../types/pair";
+import BaseExchange from "../baseExchange";
 import OrderTracker from "../utils/orderTracker";
 import {generateOrderId} from "../utils/utils";
 
@@ -11,7 +12,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
     currentCandle?: ICandle = undefined;
 
-    constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
     }
 
     setCurrentCandle(candle: ICandle) {
@@ -20,7 +21,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
     cancelOrder(order: IOrder) {
         this.orderTracker.setOrderUnconfirmed(order.id);
-        return {...order, reportType: ReportType.CANCELED};
+        this.exchange.onReport({...order, reportType: ReportType.CANCELED});
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
@@ -44,8 +45,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
         this.wallet.updateAssets(order);
         this.orderTracker.setOrderUnconfirmed(order.id);
-
-        return order;
+        this.exchange.onReport(order);
     }
 
     adjustOrder(order: IOrder, price: number, qty: number) {
@@ -64,8 +64,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
         this.wallet.updateAssets(newOrder, order);
         this.orderTracker.setOrderUnconfirmed(order.id);
-
-        return newOrder;
+        this.exchange.onReport(newOrder);
     }
 
     /**

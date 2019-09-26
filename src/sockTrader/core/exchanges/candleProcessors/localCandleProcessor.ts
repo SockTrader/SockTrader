@@ -9,8 +9,6 @@ import OrderTracker from "../utils/orderTracker";
 
 export default class LocalCandleProcessor implements CandleProcessor {
 
-    private readonly filledOrders: IOrder[] = [];
-
     constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
     }
 
@@ -33,7 +31,6 @@ export default class LocalCandleProcessor implements CandleProcessor {
             const order = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
 
             if (this.isOrderWithinCandle(openOrder, candle)) {
-                this.filledOrders.push(order);
                 this.wallet.updateAssets(order);
                 return this.exchange.onReport(order);
             }
