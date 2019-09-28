@@ -1,4 +1,5 @@
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
+import logger from "../logger";
 
 export interface IAssetMap {
     [key: string]: number;
@@ -147,5 +148,7 @@ export default class Wallet {
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
             this.revertAssetReservation(order);
         }
+
+        logger.info(`Asset update: ${JSON.stringify(this.assets)}`);
     }
 }

@@ -1,4 +1,5 @@
 import {IOrder, OrderStatus, ReportType} from "../../types/order";
+import logger from "../../logger";
 
 export default class OrderTracker {
 
@@ -65,6 +66,9 @@ export default class OrderTracker {
         } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
             this.removeOpenOrder(orderId); // Order is invalid
         }
+
+        const orders = this.openOrders.map(({side, price, quantity}: IOrder) => ({side, price, quantity}));
+        logger.info(`Open orders: ${JSON.stringify(orders)}`);
 
         return {order, oldOrder};
     }

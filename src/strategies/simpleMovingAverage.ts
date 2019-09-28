@@ -5,17 +5,18 @@ import {IOrderbook} from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
 import {IExchange} from "../sockTrader/core/types/IExchange";
-import {IOrder, OrderStatus} from "../sockTrader/core/types/order";
+import {IOrder, OrderSide, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
 
 /**
- * Strategy using simple moving average
- * This serves as a demo strategy and is on its own too simplistic
- * for productional use
+ * Simple moving average strategy.
+ * -> a buy signal is generated when fast sma crosses the slow sma upwards.
+ * -> a sell signal is generated when fast sma crosses the slow sma downwards.
  */
 export default class SimpleMovingAverage extends BaseStrategy {
 
-    inProgress = false;
+    canBuy = true;
+    canSell = false;
 
     constructor(pair: Pair, exchange: IExchange) {
         super(pair, exchange);
@@ -23,8 +24,12 @@ export default class SimpleMovingAverage extends BaseStrategy {
 
     notifyOrder(order: IOrder): void {
         if (order.status === OrderStatus.FILLED) {
-            logger.info(`[PT] ORDER: ${JSON.stringify(order)}`);
+            this.canBuy = order.side === OrderSide.SELL;
+            this.canSell = order.side === OrderSide.BUY;
         }
+
+        const {side, quantity, price, status} = order;
+        logger.info(`Order: ${JSON.stringify({side, quantity, price, status})}`);
     }
 
     updateCandles(candles: CandleCollection): void {
@@ -36,15 +41,13 @@ export default class SimpleMovingAverage extends BaseStrategy {
         const up = crossUp(fastSMA, slowSMA);
         const down = crossDown(fastSMA, slowSMA);
 
-        if (up && !this.inProgress) {
-            // current simple moving average line crosses price upward => price falls below SMA
-            this.inProgress = true;
+        if (up && this.canBuy) {
+            this.canBuy = false;
             return this.buy(this.pair, candles[0].close, 1);
         }
 
-        if (down && this.inProgress) {
-            // current simple moving average line crosses price downward => prices rises above SMA
-            this.inProgress = false;
+        if (down && this.canSell) {
+            this.canSell = false;
             return this.sell(this.pair, candles[0].close, 1);
         }
     }
