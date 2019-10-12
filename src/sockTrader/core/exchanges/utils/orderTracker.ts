@@ -1,5 +1,5 @@
-import {IOrder, OrderStatus, ReportType} from "../../types/order";
 import {orderLogger} from "../../logger";
+import {IOrder, OrderStatus, ReportType} from "../../types/order";
 
 export default class OrderTracker {
 
