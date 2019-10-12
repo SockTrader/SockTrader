@@ -1,7 +1,7 @@
 import {Decimal} from "decimal.js-light";
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
-import logger from "./logger";
+import {orderbookLogger} from "./logger";
 import {Pair} from "./types/pair";
 
 export enum Operator {
@@ -112,7 +112,7 @@ export default class Orderbook implements IOrderbook {
      */
     private isValidSequence(sequenceId: number): boolean {
         if (sequenceId <= this.sequenceId) {
-            logger.info(`Sequence dropped: ${sequenceId}, last one: ${this.sequenceId}`);
+            orderbookLogger.info(`Sequence dropped: ${sequenceId}, last one: ${this.sequenceId}`);
             return false;
         }
 

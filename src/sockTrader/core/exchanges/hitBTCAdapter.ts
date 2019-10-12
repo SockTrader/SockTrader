@@ -134,7 +134,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
             }
         }
 
-        if (interval === undefined) logger.debug(`Interval: "${response.params.period}" is not recognized by the system.`);
+        if (interval === undefined) logger.warn(`Interval: "${response.params.period}" is not recognized by the system.`);
         return interval;
     }
 

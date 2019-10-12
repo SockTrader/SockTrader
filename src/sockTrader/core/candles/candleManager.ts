@@ -3,7 +3,7 @@ import parser from "cron-parser";
 import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
 import config from "../../../config";
-import logger from "../logger";
+import {candleLogger} from "../logger";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
 
@@ -86,7 +86,7 @@ export default class CandleManager extends EventEmitter {
     private needsSort() {
         let needsSort = false;
         if (this.candles.length >= 2 && !this.candles[0].timestamp.isAfter(this.candles[1].timestamp, "minute")) {
-            logger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(this.candles[0])}`);
+            candleLogger.error(`Server has changed candle history! Suspected candle: ${JSON.stringify(this.candles[0])}`);
             needsSort = true;
         }
 

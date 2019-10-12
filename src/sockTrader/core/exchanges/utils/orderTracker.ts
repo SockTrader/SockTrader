@@ -1,5 +1,5 @@
 import {IOrder, OrderStatus, ReportType} from "../../types/order";
-import logger from "../../logger";
+import {orderLogger} from "../../logger";
 
 export default class OrderTracker {
 
@@ -29,6 +29,11 @@ export default class OrderTracker {
 
     private findOpenOrder(orderId: string) {
         return this.openOrders.find(openOrder => openOrder.id === orderId);
+    }
+
+    private logOpenOrders() {
+        const orders = this.openOrders.map(({side, price, quantity}: IOrder) => ({side, price, quantity}));
+        orderLogger.info(`Open orders: ${JSON.stringify(orders)}`);
     }
 
     isOrderUnconfirmed(orderId: string) {
@@ -67,9 +72,7 @@ export default class OrderTracker {
             this.removeOpenOrder(orderId); // Order is invalid
         }
 
-        const orders = this.openOrders.map(({side, price, quantity}: IOrder) => ({side, price, quantity}));
-        logger.info(`Open orders: ${JSON.stringify(orders)}`);
-
+        this.logOpenOrders();
         return {order, oldOrder};
     }
 }

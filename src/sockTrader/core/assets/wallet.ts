@@ -1,5 +1,5 @@
+import {walletLogger} from "../logger";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
-import logger from "../logger";
 
 export interface IAssetMap {
     [key: string]: number;
@@ -149,6 +149,6 @@ export default class Wallet {
             this.revertAssetReservation(order);
         }
 
-        logger.info(`Asset update: ${JSON.stringify(this.assets)}`);
+        walletLogger.info(`Asset update: ${JSON.stringify(this.assets)}`);
     }
 }
