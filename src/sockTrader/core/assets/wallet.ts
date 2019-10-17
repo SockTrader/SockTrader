@@ -13,15 +13,20 @@ type AssetCalc = (asset: string, priceQty: number) => void;
  */
 export default class Wallet {
 
-    private assets!: IAssetMap;
+    private readonly assets!: IAssetMap;
+    private readonly reservedAssets!: IAssetMap;
 
     /**
      * Creates a new LocalExchange
      */
     constructor(assets: IAssetMap) {
-        this.setAssets(assets);
-        this.add = this.add.bind(this);
-        this.subtract = this.subtract.bind(this);
+        this.assets = this.getAssetProxy(assets);
+        this.reservedAssets = this.getAssetProxy({});
+
+        this.addAsset = this.addAsset.bind(this);
+        this.subtractAsset = this.subtractAsset.bind(this);
+        this.addReservedAsset = this.addReservedAsset.bind(this);
+        this.subtractReservedAsset = this.subtractReservedAsset.bind(this);
     }
 
     /**
@@ -56,8 +61,8 @@ export default class Wallet {
             : this.isSellAllowed(order, oldOrder);
     }
 
-    setAssets(assets: IAssetMap) {
-        this.assets = new Proxy<IAssetMap>(assets, {
+    private getAssetProxy(assets: IAssetMap) {
+        return new Proxy<IAssetMap>(assets, {
             get: (target: IAssetMap, p: PropertyKey): any => {
                 return p in target ? target[p.toString()] : 0;
             },
@@ -86,12 +91,20 @@ export default class Wallet {
         };
     }
 
-    private add(asset: string, priceQty: number): number {
+    private addAsset(asset: string, priceQty: number): number {
         return this.assets[asset] += priceQty;
     }
 
-    private subtract(asset: string, priceQty: number): number {
+    private subtractAsset(asset: string, priceQty: number): number {
         return this.assets[asset] -= priceQty;
+    }
+
+    private addReservedAsset(asset: string, priceQty: number): number {
+        return this.reservedAssets[asset] += priceQty;
+    }
+
+    private subtractReservedAsset(asset: string, priceQty: number): number {
+        return this.reservedAssets[asset] -= priceQty;
     }
 
     /**
@@ -102,8 +115,10 @@ export default class Wallet {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(base, this.add, this.getOrderPrice(order));
-        ifSell(quote, this.add, order.quantity);
+        ifBuy(base, this.addAsset, this.getOrderPrice(order));
+        ifSell(quote, this.addAsset, order.quantity);
+        ifBuy(base, this.subtractReservedAsset, this.getOrderPrice(order));
+        ifSell(quote, this.subtractReservedAsset, order.quantity);
     }
 
     /**
@@ -115,8 +130,10 @@ export default class Wallet {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(base, this.subtract, this.getOrderPrice(order));
-        ifSell(quote, this.subtract, order.quantity);
+        ifBuy(base, this.subtractAsset, this.getOrderPrice(order));
+        ifSell(quote, this.subtractAsset, order.quantity);
+        ifBuy(base, this.addReservedAsset, this.getOrderPrice(order));
+        ifSell(quote, this.addReservedAsset, order.quantity);
     }
 
     /**
@@ -127,8 +144,10 @@ export default class Wallet {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
-        ifBuy(quote, this.add, order.quantity);
-        ifSell(base, this.add, this.getOrderPrice(order));
+        ifBuy(quote, this.addAsset, order.quantity);
+        ifSell(base, this.addAsset, this.getOrderPrice(order));
+        ifBuy(base, this.subtractReservedAsset, this.getOrderPrice(order));
+        ifSell(quote, this.subtractReservedAsset, order.quantity);
     }
 
     /**
@@ -149,6 +168,7 @@ export default class Wallet {
             this.revertAssetReservation(order);
         }
 
-        walletLogger.info(`Asset update: ${JSON.stringify(this.assets)}`);
+        walletLogger.info(`wallet: ${JSON.stringify(this.assets)}`);
+        walletLogger.info(`reservedWallet: ${JSON.stringify(this.reservedAssets)}`);
     }
 }
