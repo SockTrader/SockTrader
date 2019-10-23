@@ -1,5 +1,6 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
+import Events from "../events";
 import {IOrderbook} from "../orderbook";
 import {IReporter} from "../reporters/reporterInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
@@ -89,7 +90,7 @@ export default abstract class SockTrader {
      * @param {IReporter} reporters
      */
     protected bindExchangeToReporters(reporters: IReporter[]): void {
-        this.exchange.on("core.report", (order: IOrder) =>
+        Events.on("core.report", (order: IOrder) =>
             reporters.forEach(r => r.reportOrder(order)),
         );
     }
@@ -102,11 +103,11 @@ export default abstract class SockTrader {
      * @param {BaseStrategy} strategy
      */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
-        this.exchange.on("core.report", (order: IOrder) => strategy.notifyOrder(order));
-        this.exchange.on("core.snapshotOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        this.exchange.on("core.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        this.exchange.on("core.snapshotCandles", (candles: ICandle[]) => strategy._onSnapshotCandles(candles));
-        this.exchange.on("core.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
+        Events.on("core.report", (order: IOrder) => strategy.notifyOrder(order));
+        Events.on("core.snapshotOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        Events.on("core.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
+        Events.on("core.snapshotCandles", (candles: ICandle[]) => strategy._onSnapshotCandles(candles));
+        Events.on("core.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
     }
 
     /**

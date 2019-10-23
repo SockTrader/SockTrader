@@ -2,6 +2,7 @@ import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
 import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
+import Events from "../../sockTrader/core/events";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
@@ -133,13 +134,12 @@ describe("addReporter", () => {
 
 describe("bindExchangeToStrategy", () => {
     test("Should bind exchange events to strategy", () => {
-        const mockOn = jest.fn();
-        hitBTC.on = mockOn;
+        const on = jest.spyOn(Events, "on");
 
         sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
-        expect(mockOn).toBeCalledWith("core.report", expect.any(Function));
-        expect(mockOn).toBeCalledWith("core.updateOrderbook", expect.any(Function));
-        expect(mockOn).toBeCalledWith("core.updateCandles", expect.any(Function));
+        expect(on).toBeCalledWith("core.report", expect.any(Function));
+        expect(on).toBeCalledWith("core.updateOrderbook", expect.any(Function));
+        expect(on).toBeCalledWith("core.updateCandles", expect.any(Function));
     });
 });
 

@@ -16,6 +16,7 @@ import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
 import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
+import Events from "../events";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -66,14 +67,14 @@ export default class HitBTC extends BaseExchange {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.setOrders(ask, bid, sequence);
 
-        this.emit("core.snapshotOrderbook", orderbook);
+        Events.emit("core.snapshotOrderbook", orderbook);
     }
 
     onUpdateOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.addIncrement(ask, bid, sequence);
 
-        this.emit("core.updateOrderbook", orderbook);
+        Events.emit("core.updateOrderbook", orderbook);
     }
 
     subscribeCandles(pair: Pair, interval: ICandleInterval): void {
@@ -109,7 +110,7 @@ export default class HitBTC extends BaseExchange {
     }
 
     protected getCandleProcessor(): CandleProcessor {
-        return new RemoteCandleProcessor(this);
+        return new RemoteCandleProcessor();
     }
 
     protected getOrderCreator(): OrderCreator {

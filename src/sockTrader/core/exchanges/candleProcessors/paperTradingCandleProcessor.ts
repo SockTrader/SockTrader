@@ -15,7 +15,7 @@ export default class PaperTradingCandleProcessor implements CandleProcessor {
 
     constructor(readonly orderTracker: OrderTracker, readonly exchange: BaseExchange, readonly wallet: Wallet) {
         this.localCandleProcessor = new LocalCandleProcessor(orderTracker, exchange, wallet);
-        this.remoteCandleProcessor = new RemoteCandleProcessor(exchange);
+        this.remoteCandleProcessor = new RemoteCandleProcessor();
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {

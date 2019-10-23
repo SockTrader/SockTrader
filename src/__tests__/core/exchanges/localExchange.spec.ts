@@ -1,5 +1,6 @@
 import moment from "moment";
 import {Pair} from "../../../sockTrader/core/types/pair";
+import Events from "../../../sockTrader/core/events";
 import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
 import {
     IOrder,
@@ -69,6 +70,8 @@ describe("createOrder", () => {
 
 describe("emitCandles", () => {
     test("Should emit a collection of candles", () => {
+        const spyEmit = jest.spyOn(Events, "emit");
+
         const moment1 = moment();
         const moment2 = moment();
         const candle1 = {close: 1, high: 2, low: 0, open: 0, timestamp: moment1, volume: 10} as ICandle;
@@ -76,19 +79,21 @@ describe("emitCandles", () => {
 
         exchange.emitCandles([candle1, candle2] as ICandle[]);
 
-        expect(exchange.emit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1]));
-        expect(exchange.emit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1, candle2]));
+        expect(spyEmit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1]));
+        expect(spyEmit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1, candle2]));
     });
 
     test("Should emit oldest candles first", () => {
+        const spyEmit = jest.spyOn(Events, "emit");
+
         const oldMoment = moment().subtract(5, "minutes");
         const newMoment = moment();
         const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as ICandle;
         const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as ICandle;
 
         exchange.emitCandles([oldCandle, newCandle] as ICandle[]);
-        expect(emitMock).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
-        expect(emitMock).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
+        expect(spyEmit).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
+        expect(spyEmit).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
     });
 });
 

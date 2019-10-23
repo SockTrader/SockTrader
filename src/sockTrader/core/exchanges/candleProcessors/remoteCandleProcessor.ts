@@ -1,5 +1,5 @@
-import {EventEmitter} from "events";
 import CandleManager from "../../candles/candleManager";
+import Events from "../../events";
 import {CandleProcessor} from "../../types/candleProcessor";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
@@ -8,9 +8,6 @@ import {Pair} from "../../types/pair";
 export default class RemoteCandleProcessor implements CandleProcessor {
 
     private candles: Record<string, CandleManager> = {};
-
-    constructor(private readonly exchange: EventEmitter) {
-    }
 
     /**
      * Returns candle manager for pair and interval
@@ -31,12 +28,12 @@ export default class RemoteCandleProcessor implements CandleProcessor {
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        this.getCandleManager(pair, interval, candles => this.exchange.emit("core.updateCandles", candles))
+        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles))
             .set(data);
     }
 
     onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
-        this.getCandleManager(pair, interval, candles => this.exchange.emit("core.updateCandles", candles))
+        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles))
             .update(data);
     }
 }

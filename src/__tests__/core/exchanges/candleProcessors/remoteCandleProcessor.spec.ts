@@ -1,12 +1,11 @@
 import RemoteCandleProcessor from "../../../../sockTrader/core/exchanges/candleProcessors/remoteCandleProcessor";
-import {EventEmitter} from "events";
 import {CandleInterval} from "../../../../sockTrader/core/exchanges/hitBTC";
 import CandleManager from "../../../../sockTrader/core/candles/candleManager";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
 
-let candleProcessor = new RemoteCandleProcessor(new EventEmitter());
+let candleProcessor = new RemoteCandleProcessor();
 beforeEach(() => {
-    candleProcessor = new RemoteCandleProcessor(new EventEmitter());
+    candleProcessor = new RemoteCandleProcessor();
 });
 
 describe("getCandleManager", () => {
