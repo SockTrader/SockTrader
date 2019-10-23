@@ -30,7 +30,6 @@ export default class LiveTrader extends SockTrader {
             const strategy = new c.strategy(c.pair, this.exchange);
             this.bindStrategyToExchange(strategy);
             this.bindExchangeToStrategy(strategy);
-            this.bindExchangeToReporters(this.reporters);
         });
 
         this.eventsBound = true;

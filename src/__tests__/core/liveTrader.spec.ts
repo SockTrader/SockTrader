@@ -3,14 +3,11 @@ import LiveTrader from "../../sockTrader/core/bot/liveTrader";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import {IStrategyConfig} from "../../sockTrader/core/bot/sockTrader";
 import {IExchange} from "../../sockTrader/core/types/IExchange";
-import {IReporter} from "../../sockTrader/core/reporters/reporterInterface";
-import IPCReporter from "../../sockTrader/core/reporters/IPCReporter";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
 jest.mock("../../sockTrader/core/logger");
 
-const createReporter = (): IReporter => new IPCReporter();
 const createExchange = (): IExchange => new HitBTC();
 const createStrategy = (): IStrategyConfig => ({
     strategy: SimpleMovingAverage,
@@ -22,7 +19,6 @@ const createLiveTrader = (): LiveTrader => {
     const liveTrader = new LiveTrader();
     liveTrader.setExchange(createExchange());
     liveTrader.addStrategy(createStrategy());
-    liveTrader.addReporter(createReporter());
     return liveTrader;
 };
 
@@ -85,13 +81,6 @@ describe("start", () => {
 
         await liveTrader.start();
         expect(spy).toBeCalledWith(expect.any(SimpleMovingAverage));
-    });
-
-    test("Should bind reporters to exchange events", async () => {
-        const spy = jest.spyOn(liveTrader, "bindExchangeToReporters" as any);
-
-        await liveTrader.start();
-        expect(spy).toBeCalledWith([createReporter()]);
     });
 
     test("Should not bind and connect twice or more", async () => {

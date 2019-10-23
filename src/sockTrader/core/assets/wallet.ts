@@ -1,5 +1,4 @@
 import Events from "../events";
-import {walletLogger} from "../logger";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 
 export interface IAssetMap {

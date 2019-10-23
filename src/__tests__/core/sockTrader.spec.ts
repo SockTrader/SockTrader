@@ -123,15 +123,6 @@ describe("subscribeToExchangeEvents", () => {
 
 });
 
-describe("addReporter", () => {
-    test("Should add reporter to SockTrader instance", () => {
-        const mock = jest.fn();
-        const result = sockTrader.addReporter(mock as any);
-        expect(result).toEqual(sockTrader);
-        expect(sockTrader["reporters"]).toEqual([mock]);
-    });
-});
-
 describe("bindExchangeToStrategy", () => {
     test("Should bind exchange events to strategy", () => {
         const on = jest.spyOn(Events, "on");

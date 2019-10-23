@@ -1,14 +1,16 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
+import {IAssetMap} from "../assets/wallet";
 import Events from "../events";
 import {IOrderbook} from "../orderbook";
-import {IReporter} from "../reporters/reporterInterface";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IExchange} from "../types/IExchange";
 import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
+import {isAssetAware} from "../types/plugins/IAssetAware";
+import {isReportAware} from "../types/plugins/IReportAware";
 
 export interface IStrategyConfig {
     interval?: ICandleInterval;
@@ -24,17 +26,17 @@ export interface IStrategyConfig {
  */
 export default abstract class SockTrader {
     protected eventsBound = false;
+    protected plugins: any[] = [];
     protected exchange!: IExchange;
-    protected reporters: IReporter[] = [];
     protected strategyConfigurations: IStrategyConfig[] = [];
 
     /**
-     * Adds a reporter
-     * @param {IReporter} reporter strategy reporter
+     * Set plugins
+     * @param plugin
      * @returns {this}
      */
-    addReporter(reporter: IReporter): this {
-        this.reporters.push(reporter);
+    setPlugins(plugin: any[]): this {
+        this.plugins = plugin;
 
         return this;
     }
@@ -85,14 +87,17 @@ export default abstract class SockTrader {
     }
 
     /**
-     * Registers the reporters to listen to exhange events:
-     * - report: order update
-     * @param {IReporter} reporters
+     * Registers plugins to listen to various tradingbot events:
+     * @param plugins
      */
-    protected bindExchangeToReporters(reporters: IReporter[]): void {
-        Events.on("core.report", (order: IOrder) =>
-            reporters.forEach(r => r.reportOrder(order)),
-        );
+    protected bindEventsToPlugins(plugins: any[]): void {
+        Events.on("core.report", (order: IOrder) => plugins.forEach(p => {
+            if (isReportAware(p)) p.onReport(order);
+        }));
+
+        Events.on("core.updateAssets", (assets: IAssetMap, reservedAssets: IAssetMap) => plugins.forEach(p => {
+            if (isAssetAware(p)) p.onUpdateAssets(assets, reservedAssets);
+        }));
     }
 
     /**
