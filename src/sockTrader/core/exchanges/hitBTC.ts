@@ -2,6 +2,7 @@ import crypto from "crypto";
 import nanoid from "nanoid";
 import config from "../../../config";
 import WebSocket, {Data} from "../connection/webSocket";
+import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
 import {CandleProcessor} from "../types/candleProcessor";
@@ -16,7 +17,6 @@ import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
 import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
-import Events from "../events";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},

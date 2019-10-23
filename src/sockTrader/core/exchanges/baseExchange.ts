@@ -3,6 +3,7 @@ import {EventEmitter} from "events";
 import config from "../../../config";
 import Wallet from "../assets/wallet";
 import CandleManager from "../candles/candleManager";
+import Events from "../events";
 import Orderbook from "../orderbook";
 import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
@@ -18,7 +19,6 @@ import {Pair} from "../types/pair";
 import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import OrderTracker from "./utils/orderTracker";
-import Events from "../events";
 
 /**
  * The BaseExchange resembles common marketplace functionality
