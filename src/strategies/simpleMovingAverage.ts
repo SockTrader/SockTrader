@@ -1,6 +1,5 @@
 import {sma as SMA} from "technicalindicators";
 import CandleCollection from "../sockTrader/core/candles/candleCollection";
-import logger from "../sockTrader/core/logger";
 import {IOrderbook} from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
@@ -27,9 +26,6 @@ export default class SimpleMovingAverage extends BaseStrategy {
             this.canBuy = order.side === OrderSide.SELL;
             this.canSell = order.side === OrderSide.BUY;
         }
-
-        const {side, quantity, price, status} = order;
-        logger.info(`Order: ${JSON.stringify({side, quantity, price, status})}`);
     }
 
     updateCandles(candles: CandleCollection): void {

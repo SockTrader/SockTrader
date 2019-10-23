@@ -1,5 +1,6 @@
+import config from "../../config";
 import BackTester from "../core/bot/backTester";
-import IPCReporter from "../core/reporters/IPCReporter";
+import IPCReporter from "../core/plugins/IPCReporter";
 import {loadCandleFile, loadStrategy} from "./util";
 
 export async function startBacktest(args: any) {
@@ -16,7 +17,7 @@ export async function startBacktest(args: any) {
                 pair: candleFile.symbol,
             });
 
-        if (process.send) backTester.addReporter(new IPCReporter());
+        backTester.setPlugins([...config.plugins, new IPCReporter()]);
 
         await backTester.start();
     } catch (e) {

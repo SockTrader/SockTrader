@@ -1,8 +1,9 @@
 import moment from "moment";
 import LocalExchange from "../exchanges/localExchange";
-import {IBotStatus} from "../reporters/reporterInterface";
+import {IBotStatus} from "../types/IBotStatus";
 import {ICandle} from "../types/ICandle";
 import SockTrader, {IStrategyConfig} from "./sockTrader";
+import {isTradingBotAware} from "../types/plugins/ITradingBotAware";
 
 interface IInputCandle {
     close: number;
@@ -43,7 +44,6 @@ export default class BackTester extends SockTrader {
             const strategy = new c.strategy(c.pair, this.exchange);
             this.bindStrategyToExchange(strategy);
             this.bindExchangeToStrategy(strategy);
-            this.bindExchangeToReporters(this.reporters);
         });
 
         const candles = this.hydrateCandles(this.inputCandles);
@@ -68,6 +68,8 @@ export default class BackTester extends SockTrader {
     }
 
     private reportProgress(status: IBotStatus) {
-        this.reporters.forEach(r => r.reportBotProgress(status));
+        this.plugins.forEach(p => {
+            if (isTradingBotAware(p)) p.onBotProgress(status);
+        });
     }
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 import "jest";
-import IPCReporter from "../../sockTrader/core/reporters/IPCReporter";
+import IPCReporter from "../../sockTrader/core/plugins/IPCReporter";
 import moment from "moment";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../sockTrader/core/types/order";
 
@@ -9,7 +9,7 @@ describe("IPC Reporter", () => {
         const reporter = new IPCReporter();
 
         const spy = jest.spyOn(reporter, "send" as any);
-        await reporter.reportBotProgress({current: 10, length: 100, type: "progress"});
+        await reporter.onBotProgress({current: 10, length: 100, type: "progress"});
 
         expect(spy.mock.calls[0]).toEqual([{
             type: "status_report",
@@ -21,7 +21,7 @@ describe("IPC Reporter", () => {
         const reporter = new IPCReporter();
 
         const spy = jest.spyOn(reporter, "send" as any);
-        await reporter.reportOrder({
+        await reporter.onReport({
             createdAt: moment(),
             id: "Order123",
             pair: ["BTC", "USD"],

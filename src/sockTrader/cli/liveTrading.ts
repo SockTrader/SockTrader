@@ -1,4 +1,5 @@
 import inquirer from "inquirer";
+import config from "../../config";
 import LiveTrader from "../core/bot/liveTrader";
 import {exchanges} from "../core/exchanges";
 import {IExchange} from "../core/types/IExchange";
@@ -41,6 +42,8 @@ export async function startLiveTrading(args: any) {
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],
                 interval: getExchangeInterval(exchange, interval),
             });
+
+        liveTrader.setPlugins(config.plugins);
 
         await liveTrader.start();
     } catch (e) {
