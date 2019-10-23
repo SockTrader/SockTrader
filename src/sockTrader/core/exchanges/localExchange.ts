@@ -1,4 +1,5 @@
 import Local from "../connection/local";
+import Events from "../events";
 import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
@@ -36,7 +37,7 @@ export default class LocalExchange extends BaseExchange {
             processedCandles.unshift(value);
             (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
             (this.candleProcessor as LocalCandleProcessor).onProcessCandles(processedCandles);
-            this.emit("core.updateCandles", processedCandles);
+            Events.emit("core.updateCandles", processedCandles);
         });
     }
 

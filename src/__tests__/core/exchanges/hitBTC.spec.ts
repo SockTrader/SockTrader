@@ -1,6 +1,7 @@
 import {Pair} from "../../../sockTrader/core/types/pair";
 import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
 import WebSocket from "../../../sockTrader/core/connection/webSocket";
+import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
 import RemoteCandleProcessor from "../../../sockTrader/core/exchanges/candleProcessors/remoteCandleProcessor";
 import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
@@ -71,7 +72,7 @@ describe("orderbook management", () => {
 
     describe("onSnapshotOrderbook", () => {
         test("Should emit incremental changes", () => {
-            const emitSpy = jest.spyOn(exchange, "emit");
+            const emitSpy = jest.spyOn(Events, "emit");
             exchange.onSnapshotOrderbook({
                 sequence: 2,
                 pair,
@@ -91,7 +92,7 @@ describe("orderbook management", () => {
 
     describe("onUpdateOrderbook", () => {
         test("Should emit incremental changes", () => {
-            const emitSpy = jest.spyOn(exchange, "emit");
+            const emitSpy = jest.spyOn(Events, "emit");
 
             exchange.onUpdateOrderbook({
                 sequence: 2,

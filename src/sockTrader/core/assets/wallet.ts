@@ -1,3 +1,4 @@
+import Events from "../events";
 import {walletLogger} from "../logger";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
 
@@ -168,7 +169,6 @@ export default class Wallet {
             this.revertAssetReservation(order);
         }
 
-        walletLogger.info(`wallet: ${JSON.stringify(this.assets)}`);
-        walletLogger.info(`reservedWallet: ${JSON.stringify(this.reservedAssets)}`);
+        Events.emit("core.updateAssets", this.assets, this.reservedAssets);
     }
 }

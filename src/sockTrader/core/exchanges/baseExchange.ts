@@ -18,6 +18,7 @@ import {Pair} from "../types/pair";
 import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import OrderTracker from "./utils/orderTracker";
+import Events from "../events";
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -149,7 +150,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
 
     onReport(order: IOrder): void {
         const {order: newOrder, oldOrder} = this.orderTracker.process(order);
-        this.emit("core.report", newOrder, oldOrder);
+        Events.emit("core.report", newOrder, oldOrder);
     }
 
     sell(pair: Pair, price: number, qty: number): void {
