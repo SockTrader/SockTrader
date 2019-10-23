@@ -50,7 +50,6 @@ describe("start", () => {
 
         const bindStrategyToExchangeSpy = jest.spyOn(backTester, "bindStrategyToExchange" as any);
         const bindExchangeToStrategySpy = jest.spyOn(backTester, "bindExchangeToStrategy" as any);
-        const bindExchangeToReporters = jest.spyOn(backTester, "bindExchangeToReporters" as any);
 
         await backTester.start();
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
@@ -65,6 +64,5 @@ describe("start", () => {
         }));
         expect(backTester["eventsBound"]).toEqual(true);
         expect(bindExchangeToStrategySpy).toBeCalledTimes(1);
-        expect(bindExchangeToReporters).toBeCalledTimes(1);
     });
 });
