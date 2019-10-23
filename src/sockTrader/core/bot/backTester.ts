@@ -2,8 +2,8 @@ import moment from "moment";
 import LocalExchange from "../exchanges/localExchange";
 import {IBotStatus} from "../types/IBotStatus";
 import {ICandle} from "../types/ICandle";
-import SockTrader, {IStrategyConfig} from "./sockTrader";
 import {isTradingBotAware} from "../types/plugins/ITradingBotAware";
+import SockTrader, {IStrategyConfig} from "./sockTrader";
 
 interface IInputCandle {
     close: number;
