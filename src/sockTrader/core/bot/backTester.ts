@@ -39,6 +39,7 @@ export default class BackTester extends SockTrader {
         if (this.eventsBound) return;
 
         this.subscribeToExchangeEvents(this.strategyConfigurations);
+        this.bindEventsToPlugins(this.plugins);
 
         this.strategyConfigurations.forEach(c => {
             const strategy = new c.strategy(c.pair, this.exchange);

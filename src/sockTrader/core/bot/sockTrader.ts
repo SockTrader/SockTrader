@@ -11,6 +11,7 @@ import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
 import {isAssetAware} from "../types/plugins/IAssetAware";
 import {isReportAware} from "../types/plugins/IReportAware";
+import {isOrderbookAware} from "../types/plugins/IOrderbookAware";
 
 export interface IStrategyConfig {
     interval?: ICandleInterval;
@@ -97,6 +98,10 @@ export default abstract class SockTrader {
 
         Events.on("core.updateAssets", (assets: IAssetMap, reservedAssets: IAssetMap) => plugins.forEach(p => {
             if (isAssetAware(p)) p.onUpdateAssets(assets, reservedAssets);
+        }));
+
+        Events.on("core.updateOrderbook", (orderbook: IOrderbook) => plugins.forEach(p => {
+            if (isOrderbookAware(p)) p.onUpdateOrderbook(orderbook);
         }));
     }
 

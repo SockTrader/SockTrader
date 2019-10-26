@@ -1,3 +1,7 @@
+import OrderLogger from "./sockTrader/core/plugins/logging/orderLogger";
+import SpreadLogger from "./sockTrader/core/plugins/logging/spreadLogger";
+import WalletLogger from "./sockTrader/core/plugins/logging/walletLogger";
+
 export default {
     timezone: "Europe/Brussels",
 
@@ -15,4 +19,10 @@ export default {
             secretKey: "REPLACE_WITH_MY_SECRET_KEY",
         },
     },
+
+    plugins: [
+        new WalletLogger(),
+        new OrderLogger(),
+        new SpreadLogger(),
+    ],
 };
