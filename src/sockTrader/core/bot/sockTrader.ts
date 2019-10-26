@@ -10,8 +10,8 @@ import {IExchange} from "../types/IExchange";
 import {IOrder} from "../types/order";
 import {Pair} from "../types/pair";
 import {isAssetAware} from "../types/plugins/IAssetAware";
-import {isReportAware} from "../types/plugins/IReportAware";
 import {isOrderbookAware} from "../types/plugins/IOrderbookAware";
+import {isReportAware} from "../types/plugins/IReportAware";
 
 export interface IStrategyConfig {
     interval?: ICandleInterval;
