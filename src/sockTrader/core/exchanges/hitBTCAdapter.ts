@@ -166,8 +166,8 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      */
     private mapOrderbook({params: ob}: IHitBTCOrderbookResponse): IOrderbookData {
         return {
-            ask: ob.ask,
-            bid: ob.bid,
+            ask: ob.ask.map(a => ({price: parseFloat(a.price), size: parseFloat(a.size)})),
+            bid: ob.bid.map(a => ({price: parseFloat(a.price), size: parseFloat(a.size)})),
             pair: this.exchange.currencies[ob.symbol].id,
             sequence: ob.sequence,
         };

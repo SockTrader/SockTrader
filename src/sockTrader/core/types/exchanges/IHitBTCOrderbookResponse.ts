@@ -1,11 +1,14 @@
-import {IOrderbookEntry} from "../../orderbook";
+interface IHitBTCOrderbookEntry {
+    price: string;
+    size: string;
+}
 
 export interface IHitBTCOrderbookResponse {
     jsonrpc: string;
     method: string;
     params: {
-        ask: IOrderbookEntry[],
-        bid: IOrderbookEntry[],
+        ask: IHitBTCOrderbookEntry[],
+        bid: IHitBTCOrderbookEntry[],
         sequence: number,
         symbol: string,
     };
