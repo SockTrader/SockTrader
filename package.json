@@ -109,6 +109,7 @@
     "technicalindicators": "^2.0.9",
     "typescript": "^3.6.4",
     "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.2.1",
     "ws": "^7.1.2",
     "yargs": "^14.2.0"
   },
