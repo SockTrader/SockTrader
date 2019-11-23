@@ -6,7 +6,7 @@ import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
+import LocalOrderFiller from "./orderFillers/localOrderFiller";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
 
 /**
@@ -25,16 +25,14 @@ export default class LocalExchange extends BaseExchange {
 
     /**
      * Emits a collection of candles from a local file as if they were sent from a real exchange
-     * @param {ICandle[]} candles
-     * @returns {Promise<void>} promise
      */
-    async emitCandles(candles: ICandle[]) {
+    emitCandles(candles: ICandle[]) {
         const processedCandles: ICandle[] = [];
 
         candles.forEach(value => {
             processedCandles.unshift(value);
             (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
-            (this.candleProcessor as LocalCandleProcessor).onProcessCandles(processedCandles);
+            (this.orderFiller as LocalOrderFiller).onProcessCandles(processedCandles);
             Events.emit("core.updateCandles", processedCandles);
         });
     }

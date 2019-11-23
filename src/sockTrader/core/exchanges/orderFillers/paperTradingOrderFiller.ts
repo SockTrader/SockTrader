@@ -2,20 +2,20 @@ import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
-import {ICandleProcessor} from "../../types/ICandleProcessor";
+import {IOrderFiller} from "../../types/IOrderFiller";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import LocalCandleProcessor from "./localCandleProcessor";
-import RemoteCandleProcessor from "./remoteCandleProcessor";
+import LocalOrderFiller from "./localOrderFiller";
+import RemoteOrderFiller from "./remoteOrderFiller";
 
-export default class PaperTradingCandleProcessor implements ICandleProcessor {
+export default class PaperTradingOrderFiller implements IOrderFiller {
 
-    private localCandleProcessor: LocalCandleProcessor;
-    private remoteCandleProcessor: RemoteCandleProcessor;
+    private localCandleProcessor: LocalOrderFiller;
+    private remoteCandleProcessor: RemoteOrderFiller;
 
     constructor(readonly orderTracker: OrderTracker, readonly exchange: BaseExchange, readonly wallet: Wallet) {
-        this.localCandleProcessor = new LocalCandleProcessor(orderTracker, exchange, wallet);
-        this.remoteCandleProcessor = new RemoteCandleProcessor();
+        this.localCandleProcessor = new LocalOrderFiller(orderTracker, exchange, wallet);
+        this.remoteCandleProcessor = new RemoteOrderFiller();
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {

@@ -1,10 +1,10 @@
 import OrderTrackerFactory from "../order/orderTrackerFactory";
 import WalletFactory from "../plugins/wallet/walletFactory";
-import {ICandleProcessor} from "../types/ICandleProcessor";
+import {IOrderFiller} from "../types/IOrderFiller";
 import BaseExchange from "./baseExchange";
-import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
-import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
-import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
+import LocalOrderFiller from "./orderFillers/localOrderFiller";
+import PaperTradingOrderFiller from "./orderFillers/paperTradingOrderFiller";
+import RemoteOrderFiller from "./orderFillers/remoteOrderFiller";
 import {exchanges, IExchangeDefinition} from "./index";
 import LocalExchange from "./localExchange";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
@@ -46,15 +46,15 @@ export default class ExchangeFactory {
         return isLive ? orderCreator : new LocalOrderCreator(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
     }
 
-    private getCandleProcessor(exchange: BaseExchange): ICandleProcessor {
+    private getCandleProcessor(exchange: BaseExchange): IOrderFiller {
         switch (process.env.SOCKTRADER_TRADING_MODE) {
             case "PAPER":
-                return new PaperTradingCandleProcessor(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
+                return new PaperTradingOrderFiller(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
             case "LIVE":
-                return new RemoteCandleProcessor();
+                return new RemoteOrderFiller();
             case "BACKTEST":
             default:
-                return new LocalCandleProcessor(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
+                return new LocalOrderFiller(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
         }
     }
 }

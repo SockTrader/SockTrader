@@ -4,7 +4,7 @@ import CandleManager from "../candles/candleManager";
 import Orderbook from "../orderbook";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
-import {ICandleProcessor} from "../types/ICandleProcessor";
+import {IOrderFiller} from "../types/IOrderFiller";
 import {IConnection} from "../types/IConnection";
 import {ICurrencyMap} from "../types/ICurrencyMap";
 import {IExchange} from "../types/IExchange";
@@ -22,7 +22,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     isAuthenticated = false;
     isCurrenciesLoaded = false;
     protected orderCreator!: IOrderCreator;
-    protected candleProcessor!: ICandleProcessor;
+    protected orderFiller!: IOrderFiller;
     protected candles: Record<string, CandleManager> = {};
     protected readonly connection: IConnection;
     private readonly orderbooks: Record<string, Orderbook> = {};
@@ -53,8 +53,8 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.orderCreator = orderCreator;
     }
 
-    setCandleProcessor(candleProcessor: ICandleProcessor) {
-        this.candleProcessor = candleProcessor;
+    setCandleProcessor(orderFiller: IOrderFiller) {
+        this.orderFiller = orderFiller;
     }
 
     adjustOrder(order: IOrder, price: number, qty: number) {
@@ -70,11 +70,11 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
     }
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.candleProcessor.onSnapshotCandles(pair, data, interval);
+        return this.orderFiller.onSnapshotCandles(pair, data, interval);
     }
 
     onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.candleProcessor.onUpdateCandles(pair, data, interval);
+        return this.orderFiller.onUpdateCandles(pair, data, interval);
     }
 
     buy(pair: Pair, price: number, qty: number): void {

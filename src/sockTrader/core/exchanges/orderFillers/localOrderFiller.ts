@@ -2,12 +2,12 @@ import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
-import {ICandleProcessor} from "../../types/ICandleProcessor";
+import {IOrderFiller} from "../../types/IOrderFiller";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
 
-export default class LocalCandleProcessor implements ICandleProcessor {
+export default class LocalOrderFiller implements IOrderFiller {
 
     constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
     }
