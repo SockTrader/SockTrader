@@ -1,4 +1,4 @@
-import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
+import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import HitBTCOrderCreator from "../../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
 import {IOrder, OrderSide, ReportType} from "../../../../sockTrader/core/types/order";
 import Local from "../../../../sockTrader/core/connection/local";

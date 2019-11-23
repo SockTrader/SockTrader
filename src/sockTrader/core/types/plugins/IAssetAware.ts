@@ -1,4 +1,4 @@
-import {IAssetMap} from "../../assets/wallet";
+import {IAssetMap} from "../../plugins/wallet/wallet";
 
 export interface IAssetAware {
     onUpdateAssets: (assets: IAssetMap, reservedAssets: IAssetMap) => void;

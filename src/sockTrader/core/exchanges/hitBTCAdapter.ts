@@ -2,6 +2,7 @@ import {EventEmitter} from "events";
 import moment from "moment";
 import {Data} from "../connection/webSocket";
 import logger from "../logger";
+import OrderTrackerFactory from "../order/orderTrackerFactory";
 import {IHitBTCAuthenticateResponse} from "../types/exchanges/IHitBTCAuthenticateResponse";
 import {IHitBTCCandlesResponse} from "../types/exchanges/IHitBTCCandlesResponse";
 import {IHitBTCGetSymbolsResponse} from "../types/exchanges/IHitBTCGetSymbolsResponse";
@@ -101,8 +102,9 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * @param {IHitBTCReportResponse} data report data
      */
     private onReport(data: IHitBTCReportResponse): void {
+        const orderTracker = OrderTrackerFactory.getInstance();
         data.params.forEach(report => {
-            this.exchange.onReport({
+            orderTracker.process({
                 id: report.clientOrderId,
                 originalId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
                 createdAt: moment(report.createdAt),

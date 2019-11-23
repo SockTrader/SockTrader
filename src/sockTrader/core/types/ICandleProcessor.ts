@@ -2,7 +2,7 @@ import {ICandle} from "./ICandle";
 import {ICandleInterval} from "./ICandleInterval";
 import {Pair} from "./pair";
 
-export declare class CandleProcessor {
+export interface ICandleProcessor {
 
     onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
 

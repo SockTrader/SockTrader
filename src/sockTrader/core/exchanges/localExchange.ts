@@ -1,11 +1,9 @@
 import Local from "../connection/local";
 import Events from "../events";
-import {CandleProcessor} from "../types/candleProcessor";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
-import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
 import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
@@ -64,13 +62,5 @@ export default class LocalExchange extends BaseExchange {
     // Method ignored by localExchange
     subscribeReports(): void {
         return undefined;
-    }
-
-    protected getCandleProcessor(): CandleProcessor {
-        return new LocalCandleProcessor(this.orderTracker, this, this.wallet);
-    }
-
-    protected getOrderCreator(): OrderCreator {
-        return new LocalOrderCreator(this.orderTracker, this, this.wallet);
     }
 }

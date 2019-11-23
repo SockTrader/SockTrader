@@ -2,6 +2,7 @@ import moment from "moment";
 import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
 import {IHitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
+import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFactory";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
@@ -176,8 +177,10 @@ describe("onGetSymbols", () => {
 });
 
 describe("onReport", () => {
-    it("Should load currency configuration for exchange", () => {
-        const excReportSpy = jest.spyOn(exchange, "onReport");
+    it("Should report order to OrderTracker", () => {
+        const orderTracker = OrderTrackerFactory.getInstance();
+        const excReportSpy = jest.spyOn(orderTracker, "process");
+
         exchange["currencies"] = {
             "ETHBTC": {
                 id: ["ETH", "BTC"],
@@ -209,7 +212,7 @@ describe("onReport", () => {
 
         expect(excReportSpy).toBeCalledWith(
             expect.objectContaining({
-                "createdAt": expect.anything(),
+                "createdAt": expect.any(moment),
                 "id": "57d5525562c945448e3cbd559bd068c3",
                 "originalId": undefined,
                 "pair": ["ETH", "BTC"],
@@ -220,7 +223,7 @@ describe("onReport", () => {
                 "status": "new",
                 "timeInForce": "GTC",
                 "type": "limit",
-                "updatedAt": expect.anything(),
+                "updatedAt": expect.any(moment),
             }),
         );
     });

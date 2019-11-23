@@ -1,11 +1,11 @@
 import CandleManager from "../../candles/candleManager";
 import Events from "../../events";
-import {CandleProcessor} from "../../types/candleProcessor";
+import {ICandleProcessor} from "../../types/ICandleProcessor";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
 import {Pair} from "../../types/pair";
 
-export default class RemoteCandleProcessor implements CandleProcessor {
+export default class RemoteCandleProcessor implements ICandleProcessor {
 
     private candles: Record<string, CandleManager> = {};
 

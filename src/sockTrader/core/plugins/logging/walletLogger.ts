@@ -1,6 +1,6 @@
-import {IAssetMap} from "../../assets/wallet";
 import {walletLogger} from "../../logger";
 import {IAssetAware} from "../../types/plugins/IAssetAware";
+import {IAssetMap} from "../wallet/wallet";
 
 export default class WalletLogger implements IAssetAware {
 

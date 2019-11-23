@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
-import OrderTracker from "../exchanges/utils/orderTracker";
+import BaseExchange from "../exchanges/baseExchange";
+import LocalExchange from "../exchanges/localExchange";
 import Orderbook from "../orderbook";
 import {ICandle} from "./ICandle";
 import {ICandleInterval} from "./ICandleInterval";
@@ -8,13 +9,13 @@ import {ITradeablePair} from "./ITradeablePair";
 import {IOrder, OrderSide} from "./order";
 import {Pair} from "./pair";
 
+export const isLocalExchange = (exchange: BaseExchange): exchange is LocalExchange => exchange instanceof LocalExchange;
+
 /**
  * The IExchange represents a marketplace to buy and sell
  * cryptocurrencies
  */
 export interface IExchange extends EventEmitter {
-
-    orderTracker: OrderTracker;
 
     /**
      * Adjusts existing order on exchange
@@ -72,12 +73,6 @@ export interface IExchange extends EventEmitter {
      * @param {ITradeablePair[]} currencies
      */
     onCurrenciesLoaded(currencies: ITradeablePair[]): void;
-
-    /**
-     * Updates the local order when exchange sends updated information
-     * @param {IOrder} order the order to update
-     */
-    onReport(order: IOrder): void;
 
     /**
      * Updates local candle collection with collection from exchange

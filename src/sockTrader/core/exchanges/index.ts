@@ -1,15 +1,19 @@
 import {ICandleInterval} from "../types/ICandleInterval";
+import {IOrderCreator} from "../types/IOrderCreator";
 import BaseExchange from "./baseExchange";
 import HitBTC, {CandleInterval} from "./hitBTC";
+import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
 
 export interface IExchangeDefinition {
     class: new() => BaseExchange;
+    orderCreator: new(...args: any[]) => IOrderCreator;
     intervals: Record<string, ICandleInterval>;
 }
 
 export const exchanges: Record<string, IExchangeDefinition> = {
     hitbtc: {
         class: HitBTC,
+        orderCreator: HitBTCOrderCreator,
         intervals: {
             "1m": CandleInterval.ONE_MINUTE,
             "3m": CandleInterval.THREE_MINUTES,

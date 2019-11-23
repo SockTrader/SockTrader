@@ -1,7 +1,7 @@
 import {IOrder, OrderSide} from "./order";
 import {Pair} from "./pair";
 
-export declare class OrderCreator {
+export interface IOrderCreator {
 
     cancelOrder(order: IOrder): IOrder | void;
 

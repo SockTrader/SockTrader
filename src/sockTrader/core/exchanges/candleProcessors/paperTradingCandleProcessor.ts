@@ -1,14 +1,14 @@
-import Wallet from "../../assets/wallet";
-import {CandleProcessor} from "../../types/candleProcessor";
+import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
+import {ICandleProcessor} from "../../types/ICandleProcessor";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderTracker from "../utils/orderTracker";
+import OrderTracker from "../../order/orderTracker";
 import LocalCandleProcessor from "./localCandleProcessor";
 import RemoteCandleProcessor from "./remoteCandleProcessor";
 
-export default class PaperTradingCandleProcessor implements CandleProcessor {
+export default class PaperTradingCandleProcessor implements ICandleProcessor {
 
     private localCandleProcessor: LocalCandleProcessor;
     private remoteCandleProcessor: RemoteCandleProcessor;

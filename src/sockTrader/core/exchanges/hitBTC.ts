@@ -5,18 +5,14 @@ import WebSocket, {Data} from "../connection/webSocket";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
-import {CandleProcessor} from "../types/candleProcessor";
 import {ICandleInterval} from "../types/ICandleInterval";
 import {IConnection} from "../types/IConnection";
 import {IOrderbookData} from "../types/IOrderbookData";
 import {IResponseAdapter} from "../types/IResponseAdapter";
-import {OrderCreator} from "../types/orderCreator";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
-import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
 
 export const CandleInterval: Record<string, ICandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -107,13 +103,5 @@ export default class HitBTC extends BaseExchange {
             logger.info("Live credentials are used!");
             this.login(auth.publicKey, auth.secretKey);
         }
-    }
-
-    protected getCandleProcessor(): CandleProcessor {
-        return new RemoteCandleProcessor();
-    }
-
-    protected getOrderCreator(): OrderCreator {
-        return new HitBTCOrderCreator(this.orderTracker, this.connection);
     }
 }

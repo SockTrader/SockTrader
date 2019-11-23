@@ -1,6 +1,6 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {IAssetMap} from "../assets/wallet";
+import {IAssetMap} from "../plugins/wallet/wallet";
 import Events from "../events";
 import {IOrderbook} from "../orderbook";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";

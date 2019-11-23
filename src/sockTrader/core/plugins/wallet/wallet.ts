@@ -1,5 +1,5 @@
-import Events from "../events";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../types/order";
+import Events from "../../events";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
 
 export interface IAssetMap {
     [key: string]: number;

@@ -1,6 +1,6 @@
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
 import generate from "nanoid/generate";
-import {Pair} from "../../types/pair";
+import {Pair} from "../types/pair";
 
 /**
  * Generates orderId based on trading pair, timestamp, increment and random string. With max length 32 characters

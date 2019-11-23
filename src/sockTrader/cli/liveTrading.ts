@@ -1,8 +1,7 @@
 import inquirer from "inquirer";
 import config from "../../config";
 import LiveTrader from "../core/bot/liveTrader";
-import {exchanges} from "../core/exchanges";
-import {IExchange} from "../core/types/IExchange";
+import ExchangeFactory from "../core/exchanges/exchangeFactory";
 import {getExchangeInterval, loadStrategy} from "./util";
 
 export async function askForConfirmation(): Promise<boolean> {
@@ -13,13 +12,6 @@ export async function askForConfirmation(): Promise<boolean> {
     }]);
 
     return confirmation;
-}
-
-function createExchangeByName(exchangeName: string): IExchange {
-    const exchange = exchanges[exchangeName];
-    if (!exchange) throw new Error(`Could not find exchange: ${exchangeName}`);
-
-    return new exchange.class();
 }
 
 export async function startLiveTrading(args: any) {
@@ -34,9 +26,10 @@ export async function startLiveTrading(args: any) {
 
     try {
         const {default: strategyFile} = await loadStrategy(strategy);
+        const exchangeInstance = new ExchangeFactory().createExchange(exchange);
 
         const liveTrader = new LiveTrader()
-            .setExchange(createExchangeByName(exchange))
+            .setExchange(exchangeInstance)
             .addStrategy({
                 strategy: strategyFile,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],

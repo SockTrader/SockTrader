@@ -1,5 +1,6 @@
-import {orderLogger} from "../../logger";
-import {IOrder, OrderStatus, ReportType} from "../../types/order";
+import Events from "../events";
+import {orderLogger} from "../logger";
+import {IOrder, OrderStatus, ReportType} from "../types/order";
 
 export default class OrderTracker {
 
@@ -73,6 +74,6 @@ export default class OrderTracker {
         }
 
         this.logOpenOrders();
-        return {order, oldOrder};
+        Events.emit("core.report", order, oldOrder);
     }
 }

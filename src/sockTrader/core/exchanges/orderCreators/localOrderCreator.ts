@@ -1,14 +1,14 @@
 import moment, {Moment} from "moment";
-import Wallet from "../../assets/wallet";
+import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
-import {OrderCreator} from "../../types/orderCreator";
+import {IOrderCreator} from "../../types/IOrderCreator";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderTracker from "../utils/orderTracker";
-import {generateOrderId} from "../utils/utils";
+import OrderTracker from "../../order/orderTracker";
+import {generateOrderId} from "../../utils/utils";
 
-export default class LocalOrderCreator implements OrderCreator {
+export default class LocalOrderCreator implements IOrderCreator {
 
     currentCandle?: ICandle = undefined;
 
@@ -21,7 +21,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
     cancelOrder(order: IOrder) {
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport({...order, reportType: ReportType.CANCELED});
+        this.orderTracker.process({...order, reportType: ReportType.CANCELED});
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
@@ -45,7 +45,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
         this.wallet.updateAssets(order);
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport(order);
+        this.orderTracker.process(order);
     }
 
     adjustOrder(order: IOrder, price: number, qty: number) {
@@ -64,7 +64,7 @@ export default class LocalOrderCreator implements OrderCreator {
 
         this.wallet.updateAssets(newOrder, order);
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport(newOrder);
+        this.orderTracker.process(newOrder);
     }
 
     /**

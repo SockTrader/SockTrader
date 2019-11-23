@@ -1,13 +1,13 @@
-import Wallet from "../../assets/wallet";
-import {CandleProcessor} from "../../types/candleProcessor";
+import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
+import {ICandleProcessor} from "../../types/ICandleProcessor";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderTracker from "../utils/orderTracker";
+import OrderTracker from "../../order/orderTracker";
 
-export default class LocalCandleProcessor implements CandleProcessor {
+export default class LocalCandleProcessor implements ICandleProcessor {
 
     constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
     }
@@ -32,7 +32,7 @@ export default class LocalCandleProcessor implements CandleProcessor {
 
             if (this.isOrderWithinCandle(openOrder, candle)) {
                 this.wallet.updateAssets(order);
-                return this.exchange.onReport(order);
+                return this.orderTracker.process(order);
             }
 
             openOrders.push(openOrder);

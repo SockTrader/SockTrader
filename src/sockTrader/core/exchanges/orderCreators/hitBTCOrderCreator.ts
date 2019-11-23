@@ -1,12 +1,12 @@
 import {IConnection} from "../../types/IConnection";
 import {IOrder, OrderSide} from "../../types/order";
-import {OrderCreator} from "../../types/orderCreator";
+import {IOrderCreator} from "../../types/IOrderCreator";
 import {Pair} from "../../types/pair";
 import HitBTCCommand from "../commands/hitBTCCommand";
-import OrderTracker from "../utils/orderTracker";
-import {generateOrderId} from "../utils/utils";
+import OrderTracker from "../../order/orderTracker";
+import {generateOrderId} from "../../utils/utils";
 
-export default class HitBTCOrderCreator implements OrderCreator {
+export default class HitBTCOrderCreator implements IOrderCreator {
 
     constructor(private readonly orderTracker: OrderTracker, private readonly connection: IConnection) {
     }

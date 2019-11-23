@@ -7,7 +7,7 @@ import {
     ReportType,
 } from "../../sockTrader/core/types/order";
 import moment from "moment";
-import Wallet from "../../sockTrader/core/assets/wallet";
+import Wallet from "../../sockTrader/core/plugins/wallet/wallet";
 
 let order: IOrder;
 beforeEach(() => {
