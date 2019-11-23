@@ -1,12 +1,12 @@
 import moment, {Moment} from "moment";
+import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
 import {IOrderCreator} from "../../types/IOrderCreator";
+import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
 import {Pair} from "../../types/pair";
-import BaseExchange from "../baseExchange";
-import OrderTracker from "../../order/orderTracker";
 import {generateOrderId} from "../../utils/utils";
+import BaseExchange from "../baseExchange";
 
 export default class LocalOrderCreator implements IOrderCreator {
 

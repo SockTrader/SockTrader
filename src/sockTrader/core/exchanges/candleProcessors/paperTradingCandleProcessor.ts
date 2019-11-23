@@ -1,10 +1,10 @@
+import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
 import {ICandleProcessor} from "../../types/ICandleProcessor";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderTracker from "../../order/orderTracker";
 import LocalCandleProcessor from "./localCandleProcessor";
 import RemoteCandleProcessor from "./remoteCandleProcessor";
 

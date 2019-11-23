@@ -1,3 +1,4 @@
+import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
 import {ICandle} from "../../types/ICandle";
 import {ICandleInterval} from "../../types/ICandleInterval";
@@ -5,7 +6,6 @@ import {ICandleProcessor} from "../../types/ICandleProcessor";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
 import {Pair} from "../../types/pair";
 import BaseExchange from "../baseExchange";
-import OrderTracker from "../../order/orderTracker";
 
 export default class LocalCandleProcessor implements ICandleProcessor {
 

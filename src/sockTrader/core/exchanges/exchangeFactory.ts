@@ -6,8 +6,8 @@ import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
 import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
 import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import {exchanges, IExchangeDefinition} from "./index";
-import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import LocalExchange from "./localExchange";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
 
 export default class ExchangeFactory {
 

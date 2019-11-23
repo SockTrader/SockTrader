@@ -1,10 +1,10 @@
-import {IConnection} from "../../types/IConnection";
-import {IOrder, OrderSide} from "../../types/order";
-import {IOrderCreator} from "../../types/IOrderCreator";
-import {Pair} from "../../types/pair";
-import HitBTCCommand from "../commands/hitBTCCommand";
 import OrderTracker from "../../order/orderTracker";
+import {IConnection} from "../../types/IConnection";
+import {IOrderCreator} from "../../types/IOrderCreator";
+import {IOrder, OrderSide} from "../../types/order";
+import {Pair} from "../../types/pair";
 import {generateOrderId} from "../../utils/utils";
+import HitBTCCommand from "../commands/hitBTCCommand";
 
 export default class HitBTCOrderCreator implements IOrderCreator {
 

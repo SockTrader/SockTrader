@@ -1,8 +1,8 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
-import {IAssetMap} from "../plugins/wallet/wallet";
 import Events from "../events";
 import {IOrderbook} from "../orderbook";
+import {IAssetMap} from "../plugins/wallet/wallet";
 import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
 import {ICandle} from "../types/ICandle";
 import {ICandleInterval} from "../types/ICandleInterval";
