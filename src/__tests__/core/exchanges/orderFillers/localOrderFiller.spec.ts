@@ -2,7 +2,7 @@ import moment from "moment";
 import LocalOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import LocalExchange from "../../../../sockTrader/core/exchanges/localExchange";
-import {IOrder, OrderSide} from "../../../../sockTrader/core/types/order";
+import {IOrder, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 
@@ -47,28 +47,28 @@ describe("onUpdateCandles", () => {
 
 describe("onProcessCandles", () => {
     test("Should set empty array in OrderTracker when all orders are filled", () => {
-        const spy = jest.spyOn(candleProcessor["orderTracker"], "setOpenOrders");
+        const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
-        candleProcessor.onProcessCandles(fillCandles);
+        orderFiller.onProcessCandles(fillCandles);
         expect(spy).toBeCalledWith([]);
     });
 
     test("Should set all open orders in OrderTracker", () => {
-        const spy = jest.spyOn(candleProcessor["orderTracker"], "setOpenOrders");
+        const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
-        candleProcessor.onProcessCandles(notFillCandles);
+        orderFiller.onProcessCandles(notFillCandles);
         expect(spy).toBeCalledWith([expect.objectContaining({
             createdAt: expect.any(moment),
             id: "123",
             price: 10,
-            side: OrderSide.BUY
+            side: OrderSide.BUY,
         })]);
     });
 
-    test("Should notify exchange about the filled order", () => {
-        const spy = jest.spyOn(candleProcessor["exchange"], "onReport");
+    test("Should process order by orderTracker", () => {
+        const spy = jest.spyOn(orderFiller["orderTracker"], "process");
 
-        candleProcessor.onProcessCandles(fillCandles);
+        orderFiller.onProcessCandles(fillCandles);
         expect(spy).toBeCalledWith(expect.objectContaining({
             createdAt: expect.any(moment),
             id: "123",

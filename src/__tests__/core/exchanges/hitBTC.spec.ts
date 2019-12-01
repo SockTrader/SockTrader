@@ -3,8 +3,12 @@ import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC"
 import WebSocket from "../../../sockTrader/core/connection/webSocket";
 import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import RemoteCandleProcessor from "../../../sockTrader/core/exchanges/candleProcessors/remoteCandleProcessor";
+import RemoteOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
 import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
+import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
+import OrderTracker from "../../../sockTrader/core/order/orderTracker";
+import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
+import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 
 jest.mock("./../../../config");
 jest.mock("./../../../sockTrader/core/connection/webSocket");
@@ -176,16 +180,18 @@ describe("onConnect", () => {
     });
 });
 
-describe("getCandleProcessor", () => {
-    test("Should return a new candle processor instance", () => {
-        const instance = exchange["getCandleProcessor"]();
-        expect(instance).toBeInstanceOf(RemoteCandleProcessor);
+describe("setCandleProcessor", () => {
+    test("Should be able to set an orderFiller instance", () => {
+        const orderFiller = new LocalOrderFiller(new OrderTracker(), exchange, new Wallet({}));
+        exchange["setCandleProcessor"](orderFiller);
+        expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
     });
 });
 
 describe("getOrderCreator", () => {
-    test("Should return a new order creator instance", () => {
-        const instance = exchange["getOrderCreator"]();
-        expect(instance).toBeInstanceOf(HitBTCOrderCreator);
+    test("Should be able to set an orderCreator instance", () => {
+        const orderCreator = new LocalOrderCreator(new OrderTracker(), exchange, new Wallet({}));
+        exchange["setOrderCreator"](orderCreator);
+        expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
     });
 });

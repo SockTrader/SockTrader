@@ -2,12 +2,12 @@ import OrderTrackerFactory from "../order/orderTrackerFactory";
 import WalletFactory from "../plugins/wallet/walletFactory";
 import {IOrderFiller} from "../types/IOrderFiller";
 import BaseExchange from "./baseExchange";
-import LocalOrderFiller from "./orderFillers/localOrderFiller";
-import PaperTradingOrderFiller from "./orderFillers/paperTradingOrderFiller";
-import RemoteOrderFiller from "./orderFillers/remoteOrderFiller";
 import {exchanges, IExchangeDefinition} from "./index";
 import LocalExchange from "./localExchange";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
+import LocalOrderFiller from "./orderFillers/localOrderFiller";
+import PaperTradingOrderFiller from "./orderFillers/paperTradingOrderFiller";
+import RemoteOrderFiller from "./orderFillers/remoteOrderFiller";
 
 export default class ExchangeFactory {
 
