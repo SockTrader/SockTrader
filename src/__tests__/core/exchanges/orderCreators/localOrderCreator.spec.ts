@@ -1,8 +1,8 @@
 import moment from "moment";
 import LocalOrderCreator from "../../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
-import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
+import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {IOrder, OrderSide, ReportType} from "../../../../sockTrader/core/types/order";
-import Wallet from "../../../../sockTrader/core/assets/wallet";
+import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
 import HitBTC from "../../../../sockTrader/core/exchanges/hitBTC";
 
@@ -15,23 +15,23 @@ describe("cancelOrder", () => {
     test("Should set cancel order as unconfirmed", () => {
         const order = {reportType: ReportType.NEW, id: "123", pair: ["BTC", "USD"], price: 10, quantity: 1} as IOrder;
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "setOrderUnconfirmed");
-        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
         localOrderCreator.cancelOrder(order);
 
         expect(spy).toBeCalledWith("123");
-        expect(exchangeSpy).toBeCalledWith({
-            "id": "123",
-            "pair": ["BTC", "USD"],
-            "price": 10,
-            "quantity": 1,
-            "reportType": "canceled",
-        });
+    });
+
+    test("Should process order in orderTracker", () => {
+        const order = {reportType: ReportType.NEW, id: "123", pair: ["BTC", "USD"], price: 10, quantity: 1} as IOrder;
+        const spy = jest.spyOn(localOrderCreator["orderTracker"], "process");
+        localOrderCreator.cancelOrder(order);
+
+        expect(spy).toBeCalledWith(expect.objectContaining({id: "123", price: 10, quantity: 1, reportType: "canceled"}));
     });
 });
 
 describe("createOrder", () => {
-    test("Should create a new order", () => {
-        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
+    test("Should process newly created order by orderTracker", () => {
+        const exchangeSpy = jest.spyOn(localOrderCreator["orderTracker"], "process");
         localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
 
         expect(exchangeSpy).toBeCalledWith({
@@ -64,6 +64,14 @@ describe("createOrder", () => {
         expect(allowSpy).toBeCalledWith(expect.objectContaining({pair: ["BTC", "USD"], price: 100, quantity: 1}));
         expect(updateSpy).toBeCalledWith(expect.objectContaining({pair: ["BTC", "USD"], price: 100, quantity: 1}));
     });
+
+    test("Should block order creation if insufficient funds", () => {
+        localOrderCreator["wallet"].isOrderAllowed = jest.fn(() => false);
+        const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
+
+        localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
+        expect(updateSpy).toBeCalledTimes(0);
+    });
 });
 
 describe("adjustOrder", () => {
@@ -71,8 +79,8 @@ describe("adjustOrder", () => {
     const order = {id: "123", side: OrderSide.BUY, createdAt: moment(), pair: ["BTC", "USD"], price: 100, quantity: 2} as IOrder;
     // @formatter:on
 
-    test("Should adjust an existing order", () => {
-        const exchangeSpy = jest.spyOn(localOrderCreator["exchange"], "onReport");
+    test("Should process adjusted order by orderTracker", () => {
+        const exchangeSpy = jest.spyOn(localOrderCreator["orderTracker"], "process");
         localOrderCreator.adjustOrder(order, 10, 1);
 
         expect(exchangeSpy).toBeCalledWith({
@@ -109,6 +117,14 @@ describe("adjustOrder", () => {
             expect.objectContaining({price: 10, quantity: 1}),
             expect.objectContaining({price: 100, quantity: 2}),
         );
+    });
+
+    test("Should block order adjustment if insufficient funds", () => {
+        localOrderCreator["wallet"].isOrderAllowed = jest.fn(() => false);
+        const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
+
+        localOrderCreator.adjustOrder(order, 10, 1);
+        expect(updateSpy).toBeCalledTimes(0);
     });
 });
 

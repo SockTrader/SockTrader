@@ -1,7 +1,7 @@
 import moment from "moment";
-import {Pair} from "../../../sockTrader/core/types/pair";
 import Events from "../../../sockTrader/core/events";
-import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import {ICandle} from "../../../sockTrader/core/types/ICandle";
+import {isLocalExchange} from "../../../sockTrader/core/types/IExchange";
 import {
     IOrder,
     OrderSide,
@@ -10,47 +10,39 @@ import {
     OrderType,
     ReportType,
 } from "../../../sockTrader/core/types/order";
-import {ICandle} from "../../../sockTrader/core/types/ICandle";
+import {Pair} from "../../../sockTrader/core/types/pair";
+import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
+import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
+import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 
 process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
 const pair: Pair = ["BTC", "USD"];
-
-let exchange = new LocalExchange();
+let exchange = new ExchangeFactory().createExchange();
 let emitMock = jest.fn();
 
 beforeEach(() => {
-    exchange = new LocalExchange();
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+    exchange = new ExchangeFactory().createExchange();
     exchange.emit = emitMock;
 });
 
-afterEach(() => jest.clearAllMocks());
-
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
-        exchange["orderTracker"]["setOrderUnconfirmed"] = jest.fn();
-        const onReportMock = jest.fn();
-        exchange.onReport = onReportMock;
+        const spyEmit = jest.spyOn(Events, "emit");
         exchange.cancelOrder({id: "123"} as IOrder);
 
-        expect(onReportMock).toBeCalledWith({id: "123", reportType: ReportType.CANCELED});
-        expect(exchange["orderTracker"]["setOrderUnconfirmed"]).toBeCalledWith("123");
+        expect(spyEmit).toBeCalledWith("core.report", {id: "123", reportType: "canceled"}, undefined);
     });
 });
 
 describe("createOrder", () => {
     test("Should create a new order", () => {
-        // @formatter:off
-        (exchange as any)["currentCandle"] = {open: 1,high: 2,low: 0,close: 1.5,volume: 1,timestamp: moment()} as ICandle;
-        (exchange as any)["wallet"]["isOrderAllowed"] = jest.fn(() => true);
-        // @formatter:on
+        const spyEmit = jest.spyOn(Events, "emit");
+        exchange.createOrder(pair, 10, 1, OrderSide.BUY);
 
-        exchange.onReport = jest.fn();
-
-        const spyOrderProcessing = jest.spyOn(exchange.orderTracker, "setOrderUnconfirmed");
-        exchange["createOrder"](pair, 10, 1, OrderSide.BUY);
-
-        expect(exchange.onReport).toBeCalledWith(expect.objectContaining({
+        expect(spyEmit).toBeCalledWith("core.report", expect.objectContaining({
             createdAt: expect.any(moment),
             updatedAt: expect.any(moment),
             status: OrderStatus.NEW,
@@ -62,36 +54,69 @@ describe("createOrder", () => {
             pair: pair,
             quantity: 1,
             price: 10,
-        }));
+        }), undefined);
+    });
+});
 
-        expect(spyOrderProcessing).toBeCalledWith(expect.any(String));
+describe("adjustOrder", () => {
+    test("Should adjust order", () => {
+        const spyEmit = jest.spyOn(Events, "emit");
+        exchange.createOrder(["BTC", "USD"], 10, 1, OrderSide.BUY);
+        exchange.adjustOrder({
+            id: "2",
+            pair: ["BTC", "USD"],
+            price: 10,
+            quantity: 1,
+            side: OrderSide.BUY,
+        } as IOrder, 100, 2);
+
+        expect(spyEmit).toHaveBeenNthCalledWith(2, "core.report", expect.objectContaining({
+            reportType: "new",
+            status: "new",
+            price: 10,
+            quantity: 1,
+        }), undefined);
+        expect(spyEmit).toHaveBeenNthCalledWith(4, "core.report", expect.objectContaining({
+            reportType: "replaced",
+            price: 100,
+            quantity: 2,
+        }), undefined);
     });
 });
 
 describe("emitCandles", () => {
-    test("Should emit a collection of candles", () => {
-        const spyEmit = jest.spyOn(Events, "emit");
+    test("Should send processedCandles to the orderFiller", () => {
+        const spy = jest.spyOn(exchange["orderFiller"] as LocalOrderFiller, "onProcessCandles");
+        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
+        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
 
-        const moment1 = moment();
-        const moment2 = moment();
-        const candle1 = {close: 1, high: 2, low: 0, open: 0, timestamp: moment1, volume: 10} as ICandle;
-        const candle2 = {close: 1, high: 2, low: 0, open: 0, timestamp: moment2, volume: 10} as ICandle;
+        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as ICandle[]);
 
-        exchange.emitCandles([candle1, candle2] as ICandle[]);
+        expect(spy).toHaveBeenNthCalledWith(1, [candle1]);
+        expect(spy).toHaveBeenNthCalledWith(2, [candle2, candle1]);
+    });
 
-        expect(spyEmit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1]));
-        expect(spyEmit).toBeCalledWith("core.updateCandles", expect.arrayContaining([candle1, candle2]));
+    test("Should notify orderCreator about the current candle", () => {
+        const spy = jest.spyOn(exchange["orderCreator"] as LocalOrderCreator, "setCurrentCandle");
+        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
+        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
+
+        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as ICandle[]);
+
+        expect(spy).toHaveBeenNthCalledWith(1, candle1);
+        expect(spy).toHaveBeenNthCalledWith(2, candle2);
     });
 
     test("Should emit oldest candles first", () => {
         const spyEmit = jest.spyOn(Events, "emit");
 
-        const oldMoment = moment().subtract(5, "minutes");
         const newMoment = moment();
+        const oldMoment = newMoment.subtract(5, "minutes");
         const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as ICandle;
         const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as ICandle;
 
-        exchange.emitCandles([oldCandle, newCandle] as ICandle[]);
+        if (isLocalExchange(exchange)) exchange.emitCandles([oldCandle, newCandle] as ICandle[]);
+
         expect(spyEmit).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
         expect(spyEmit).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));
     });
@@ -102,26 +127,6 @@ describe("ready", () => {
         const isReady = exchange.isReady();
         expect(isReady).toEqual(true);
         expect(emitMock).toBeCalledWith("ready");
-    });
-});
-
-describe("adjustOrder", () => {
-    test("Should adjust order", () => {
-        const spy = jest.spyOn(exchange, "onReport");
-        exchange.adjustOrder({
-            id: "123",
-            pair: ["BTC", "USD"],
-            price: 10,
-            quantity: 1,
-            side: OrderSide.BUY,
-        } as IOrder, 100, 2);
-
-        expect(spy).toBeCalledWith(expect.objectContaining({
-            reportType: "replaced",
-            originalId: "123",
-            price: 100,
-            quantity: 2,
-        }));
     });
 });
 
