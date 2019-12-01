@@ -1,6 +1,7 @@
 import moment from "moment";
-import OrderTracker from "../../../../sockTrader/core/exchanges/utils/orderTracker";
+import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
+import Events from "../../../../sockTrader/core/events";
 
 let orderTracker = new OrderTracker();
 beforeEach(() => {
@@ -57,43 +58,52 @@ describe("process", () => {
     });
 
     test("Should replace open order", () => {
-        const result = orderTracker.process({reportType: ReportType.REPLACED, id: "456", originalId: "123"} as IOrder);
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderTracker.process({reportType: ReportType.REPLACED, id: "456", originalId: "123"} as IOrder);
 
         expect(orderTracker.getOpenOrders()).toEqual([{reportType: ReportType.REPLACED, id: "456", originalId: "123"}]);
-        expect(result.oldOrder).toEqual({id: "123", reportType: ReportType.NEW});
+        expect(emitSpy).toBeCalledWith(
+            "core.report",
+            expect.objectContaining({"id": "456", "originalId": "123", "reportType": "replaced"}),
+            expect.objectContaining({"id": "123", "reportType": "new"}),
+        );
     });
 
     test("Should add open order", () => {
-        const {oldOrder} = orderTracker.process({reportType: ReportType.NEW, price: 10, quantity: 1} as IOrder);
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderTracker.process({reportType: ReportType.NEW, price: 10, quantity: 1} as IOrder);
 
         expect(orderTracker.getOpenOrders()[1]).toEqual({reportType: ReportType.NEW, price: 10, quantity: 1});
-        expect(oldOrder).toEqual(undefined);
+        expect(emitSpy).toBeCalledWith(
+            "core.report",
+            expect.objectContaining({"price": 10, "quantity": 1, "reportType": "new"}),
+            undefined,
+        );
     });
 
     test("Should remove open order when order is filled", () => {
-        const order = {reportType: ReportType.TRADE, status: OrderStatus.FILLED, id: "123"} as IOrder;
-        const result = orderTracker.process(order);
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderTracker.process({reportType: ReportType.TRADE, status: OrderStatus.FILLED, id: "123"} as IOrder);
 
         expect(orderTracker.getOpenOrders()).toEqual([]);
-        expect(result.oldOrder).toEqual(undefined);
+        expect(emitSpy).toBeCalledWith(
+            "core.report",
+            expect.objectContaining({"id": "123", "reportType": "trade", "status": "filled"}),
+            undefined,
+        );
     });
 
     test.each([
         [ReportType.CANCELED], [ReportType.EXPIRED], [ReportType.SUSPENDED],
     ])("Should remove open order when order is canceled, expired or suspended", (status) => {
-        const {oldOrder} = orderTracker.process({reportType: status, id: "123"} as IOrder);
-        expect(orderTracker.getOpenOrders()).toEqual([]);
-        expect(oldOrder).toEqual(undefined);
-    });
-
-    test("Should remove open order when order is canceled, expired or suspended", () => {
-        const {oldOrder} = orderTracker.process({
-            reportType: ReportType.TRADE,
-            status: OrderStatus.FILLED,
-            id: "123",
-        } as IOrder);
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderTracker.process({reportType: status, id: "123"} as IOrder);
 
         expect(orderTracker.getOpenOrders()).toEqual([]);
-        expect(oldOrder).toEqual(undefined);
+        expect(emitSpy).toBeCalledWith(
+            "core.report",
+            expect.objectContaining({"id": "123", "reportType": "trade", "status": "filled"}),
+            undefined,
+        );
     });
 });
