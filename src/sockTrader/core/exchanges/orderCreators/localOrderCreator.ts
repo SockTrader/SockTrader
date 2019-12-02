@@ -20,7 +20,7 @@ export default class LocalOrderCreator implements IOrderCreator {
 
     cancelOrder(order: IOrder) {
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.orderTracker.process({...order, reportType: ReportType.CANCELED});
+        this.orderTracker.process({...order, status: OrderStatus.CANCELED, reportType: ReportType.CANCELED});
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
@@ -53,6 +53,7 @@ export default class LocalOrderCreator implements IOrderCreator {
             id: generateOrderId(order.pair),
             updatedAt: this.getTimeOfOrder(),
             reportType: ReportType.REPLACED,
+            status: OrderStatus.NEW,
             type: OrderType.LIMIT,
             originalId: order.id,
             quantity: qty,

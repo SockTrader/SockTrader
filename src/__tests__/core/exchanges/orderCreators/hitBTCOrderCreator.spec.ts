@@ -3,7 +3,7 @@ import HitBTCOrderCreator from "../../../../sockTrader/core/exchanges/orderCreat
 import {OrderSide} from "../../../../sockTrader/core/types/order";
 import Local from "../../../../sockTrader/core/connection/local";
 import HitBTCCommand from "../../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import {FX_FILLED_BUY_ORDER} from "../../../../__fixtures__/order";
+import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
 jest.mock("../../../../sockTrader/core/connection/local");
 
@@ -16,20 +16,20 @@ describe("cancelOrder", () => {
     test("Should set cancel order as unconfirmed", () => {
         const unconfirmedSpy = jest.spyOn(hitBTCOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
-        hitBTCOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
+        hitBTCOrderCreator.cancelOrder(FX_NEW_BUY_ORDER);
 
-        expect(unconfirmedSpy).toBeCalledWith("FILLED_BUY_ORDER_1");
+        expect(unconfirmedSpy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
     test("Should send cancel command to connection", () => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
-        hitBTCOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
+        hitBTCOrderCreator.cancelOrder(FX_NEW_BUY_ORDER);
 
         expect(sendSpy.mock.calls[0][0]).toBeInstanceOf(HitBTCCommand);
         expect(sendSpy).toBeCalledWith({
             method: "cancelOrder",
-            params: {clientOrderId: "FILLED_BUY_ORDER_1"},
+            params: {clientOrderId: "NEW_BUY_ORDER_1"},
             restorable: false,
         });
     });
@@ -69,21 +69,21 @@ describe("adjustOrder", () => {
     test("Should set adjust order as unconfirmed", () => {
         const unconfirmedSpy = jest.spyOn(hitBTCOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
-        hitBTCOrderCreator.adjustOrder(FX_FILLED_BUY_ORDER, 10, 1);
+        hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
 
-        expect(unconfirmedSpy).toBeCalledWith("FILLED_BUY_ORDER_1");
+        expect(unconfirmedSpy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
     test("Should send adjust command to connection", () => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
-        hitBTCOrderCreator.adjustOrder(FX_FILLED_BUY_ORDER, 10, 1);
+        hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
 
         expect(sendSpy.mock.calls[0][0]).toBeInstanceOf(HitBTCCommand);
         expect(sendSpy).toBeCalledWith({
             method: "cancelReplaceOrder",
             params: {
-                clientOrderId: "FILLED_BUY_ORDER_1",
+                clientOrderId: "NEW_BUY_ORDER_1",
                 price: 10,
                 quantity: 1,
                 requestClientId: expect.any(String),
@@ -97,7 +97,7 @@ describe("adjustOrder", () => {
         hitBTCOrderCreator["orderTracker"].isOrderUnconfirmed = jest.fn(() => true);
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
-        hitBTCOrderCreator.adjustOrder(FX_FILLED_BUY_ORDER, 10, 1);
+        hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
 
         expect(sendSpy).toBeCalledTimes(0);
     });
@@ -107,7 +107,7 @@ describe("adjustOrder", () => {
     ])("Should not adjust when price and quantity is unchanged", (price, qty, result) => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
-        hitBTCOrderCreator.adjustOrder(FX_FILLED_BUY_ORDER, price, qty);
+        hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, price, qty);
 
         expect(sendSpy).toBeCalledTimes(result);
     });
