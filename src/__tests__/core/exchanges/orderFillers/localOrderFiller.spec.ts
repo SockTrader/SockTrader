@@ -1,7 +1,6 @@
 import moment from "moment";
 import LocalOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
-import LocalExchange from "../../../../sockTrader/core/exchanges/localExchange";
 import {IOrder, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
@@ -16,7 +15,7 @@ function createOrderFiller() {
         createdAt: moment(),
     } as IOrder]);
 
-    return new LocalOrderFiller(tracker, new LocalExchange(), new Wallet({BTC: 10, USD: 10000}));
+    return new LocalOrderFiller(tracker, new Wallet({BTC: 10, USD: 10000}));
 }
 
 const fillCandles = [{low: 5, timestamp: moment().add(1, "day")}] as ICandle[];

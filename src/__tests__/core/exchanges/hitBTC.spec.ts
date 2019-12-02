@@ -3,8 +3,6 @@ import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC"
 import WebSocket from "../../../sockTrader/core/connection/webSocket";
 import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import RemoteOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
-import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
 import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
@@ -182,7 +180,7 @@ describe("onConnect", () => {
 
 describe("setCandleProcessor", () => {
     test("Should be able to set an orderFiller instance", () => {
-        const orderFiller = new LocalOrderFiller(new OrderTracker(), exchange, new Wallet({}));
+        const orderFiller = new LocalOrderFiller(new OrderTracker(), new Wallet({}));
         exchange["setCandleProcessor"](orderFiller);
         expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
     });
@@ -190,7 +188,7 @@ describe("setCandleProcessor", () => {
 
 describe("getOrderCreator", () => {
     test("Should be able to set an orderCreator instance", () => {
-        const orderCreator = new LocalOrderCreator(new OrderTracker(), exchange, new Wallet({}));
+        const orderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({}));
         exchange["setOrderCreator"](orderCreator);
         expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
     });

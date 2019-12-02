@@ -4,11 +4,10 @@ import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {IOrder, OrderSide, ReportType} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 import {ICandle} from "../../../../sockTrader/core/types/ICandle";
-import HitBTC from "../../../../sockTrader/core/exchanges/hitBTC";
 
-let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new HitBTC(), new Wallet({"USD": 1000}));
+let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));
 beforeEach(() => {
-    localOrderCreator = new LocalOrderCreator(new OrderTracker(), new HitBTC(), new Wallet({"USD": 1000}));
+    localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));
 });
 
 describe("cancelOrder", () => {
@@ -25,7 +24,12 @@ describe("cancelOrder", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "process");
         localOrderCreator.cancelOrder(order);
 
-        expect(spy).toBeCalledWith(expect.objectContaining({id: "123", price: 10, quantity: 1, reportType: "canceled"}));
+        expect(spy).toBeCalledWith(expect.objectContaining({
+            id: "123",
+            price: 10,
+            quantity: 1,
+            reportType: "canceled",
+        }));
     });
 });
 

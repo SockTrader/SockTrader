@@ -6,13 +6,12 @@ import {IOrderCreator} from "../../types/IOrderCreator";
 import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
 import {Pair} from "../../types/pair";
 import {generateOrderId} from "../../utils/utils";
-import BaseExchange from "../baseExchange";
 
 export default class LocalOrderCreator implements IOrderCreator {
 
     currentCandle?: ICandle = undefined;
 
-    constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
     }
 
     setCurrentCandle(candle: ICandle) {
@@ -41,9 +40,9 @@ export default class LocalOrderCreator implements IOrderCreator {
             price,
         };
 
-        if (!this.wallet.isOrderAllowed(order)) return;
+        if (!this.wallet.isOrderAllowed(order)) return; // @TODO remove dependency
 
-        this.wallet.updateAssets(order);
+        this.wallet.updateAssets(order); // @TODO remove dependency
         this.orderTracker.setOrderUnconfirmed(order.id);
         this.orderTracker.process(order);
     }
@@ -60,9 +59,9 @@ export default class LocalOrderCreator implements IOrderCreator {
             price,
         };
 
-        if (!this.wallet.isOrderAllowed(newOrder, order)) return;
+        if (!this.wallet.isOrderAllowed(newOrder, order)) return; // @TODO remove dependency
 
-        this.wallet.updateAssets(newOrder, order);
+        this.wallet.updateAssets(newOrder, order); // @TODO remove dependency
         this.orderTracker.setOrderUnconfirmed(order.id);
         this.orderTracker.process(newOrder);
     }

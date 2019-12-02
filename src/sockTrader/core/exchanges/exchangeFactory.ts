@@ -18,8 +18,8 @@ export default class ExchangeFactory {
         // Use LocalOrderCreator in case of: backtest & paper trading
 
         // @TODO getOrderCreator doesn't work!
-        exchange.setOrderCreator(this.getOrderCreator(exchange, def));
-        exchange.setCandleProcessor(this.getCandleProcessor(exchange));
+        exchange.setOrderCreator(this.getOrderCreator(def));
+        exchange.setCandleProcessor(this.getCandleProcessor());
 
         return exchange;
     }
@@ -39,22 +39,22 @@ export default class ExchangeFactory {
         };
     }
 
-    private getOrderCreator(exchange: BaseExchange, config: IExchangeDefinition) {
+    private getOrderCreator(config: IExchangeDefinition) {
         const isLive = process.env.SOCKTRADER_TRADING_MODE === "LIVE";
 
         const orderCreator = new config.orderCreator();
-        return isLive ? orderCreator : new LocalOrderCreator(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
+        return isLive ? orderCreator : new LocalOrderCreator(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
     }
 
-    private getCandleProcessor(exchange: BaseExchange): IOrderFiller {
+    private getCandleProcessor(): IOrderFiller {
         switch (process.env.SOCKTRADER_TRADING_MODE) {
             case "PAPER":
-                return new PaperTradingOrderFiller(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
+                return new PaperTradingOrderFiller(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
             case "LIVE":
                 return new RemoteOrderFiller();
             case "BACKTEST":
             default:
-                return new LocalOrderFiller(OrderTrackerFactory.getInstance(), exchange, WalletFactory.getInstance());
+                return new LocalOrderFiller(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
         }
     }
 }

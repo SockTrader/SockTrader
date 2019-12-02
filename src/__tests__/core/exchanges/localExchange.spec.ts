@@ -85,8 +85,12 @@ describe("adjustOrder", () => {
 });
 
 describe("emitCandles", () => {
+    beforeEach(() => {
+        (exchange["orderFiller"] as LocalOrderFiller)["onProcessCandles"] = jest.fn();
+    });
+
     test("Should send processedCandles to the orderFiller", () => {
-        const spy = jest.spyOn(exchange["orderFiller"] as LocalOrderFiller, "onProcessCandles");
+        const spy = (exchange["orderFiller"] as LocalOrderFiller)["onProcessCandles"] = jest.fn();
         const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
         const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
 
