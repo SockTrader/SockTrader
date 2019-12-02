@@ -1,9 +1,9 @@
 import moment from "moment";
 import Events from "../../../sockTrader/core/events";
-import {ICandle} from "../../../sockTrader/core/types/ICandle";
-import {isLocalExchange} from "../../../sockTrader/core/types/IExchange";
+import {Candle} from "../../../sockTrader/core/types/Candle";
+import {isLocalExchange} from "../../../sockTrader/core/types/Exchange";
 import {
-    IOrder,
+    Order,
     OrderSide,
     OrderStatus,
     OrderTimeInForce,
@@ -31,9 +31,9 @@ beforeEach(() => {
 describe("cancelOrder", () => {
     test("Should cancel an order", () => {
         const spyEmit = jest.spyOn(Events, "emit");
-        exchange.cancelOrder({id: "123"} as IOrder);
+        exchange.cancelOrder({id: "123"} as Order);
 
-        expect(spyEmit).toBeCalledWith("core.report", {id: "123", reportType: "canceled"}, undefined);
+        expect(spyEmit).toBeCalledWith("core.report", {id: "123", reportType: "canceled", status: "canceled"}, undefined);
     });
 });
 
@@ -68,7 +68,7 @@ describe("adjustOrder", () => {
             price: 10,
             quantity: 1,
             side: OrderSide.BUY,
-        } as IOrder, 100, 2);
+        } as Order, 100, 2);
 
         expect(spyEmit).toHaveBeenNthCalledWith(2, "core.report", expect.objectContaining({
             reportType: "new",
@@ -91,10 +91,10 @@ describe("emitCandles", () => {
 
     test("Should send processedCandles to the orderFiller", () => {
         const spy = (exchange["orderFiller"] as LocalOrderFiller)["onProcessCandles"] = jest.fn();
-        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
-        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
+        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as Candle;
+        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as Candle;
 
-        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as ICandle[]);
+        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as Candle[]);
 
         expect(spy).toHaveBeenNthCalledWith(1, [candle1]);
         expect(spy).toHaveBeenNthCalledWith(2, [candle2, candle1]);
@@ -102,10 +102,10 @@ describe("emitCandles", () => {
 
     test("Should notify orderCreator about the current candle", () => {
         const spy = jest.spyOn(exchange["orderCreator"] as LocalOrderCreator, "setCurrentCandle");
-        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
-        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as ICandle;
+        const candle1 = {close: 1, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as Candle;
+        const candle2 = {close: 2, high: 0, low: 0, open: 0, timestamp: moment(), volume: 10} as Candle;
 
-        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as ICandle[]);
+        if (isLocalExchange(exchange)) exchange.emitCandles([candle1, candle2] as Candle[]);
 
         expect(spy).toHaveBeenNthCalledWith(1, candle1);
         expect(spy).toHaveBeenNthCalledWith(2, candle2);
@@ -116,10 +116,10 @@ describe("emitCandles", () => {
 
         const newMoment = moment();
         const oldMoment = newMoment.subtract(5, "minutes");
-        const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as ICandle;
-        const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as ICandle;
+        const oldCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: oldMoment, volume: 10} as Candle;
+        const newCandle = {close: 1, high: 2, low: 0, open: 0, timestamp: newMoment, volume: 10} as Candle;
 
-        if (isLocalExchange(exchange)) exchange.emitCandles([oldCandle, newCandle] as ICandle[]);
+        if (isLocalExchange(exchange)) exchange.emitCandles([oldCandle, newCandle] as Candle[]);
 
         expect(spyEmit).toHaveBeenNthCalledWith(1, "core.updateCandles", expect.arrayContaining([oldCandle]));
         expect(spyEmit).toHaveBeenNthCalledWith(2, "core.updateCandles", expect.arrayContaining([newCandle, oldCandle]));

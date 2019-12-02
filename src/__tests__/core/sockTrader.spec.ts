@@ -1,6 +1,6 @@
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
-import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
+import {HitBTCCandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
 import Events from "../../sockTrader/core/events";
 
@@ -31,12 +31,12 @@ describe("subscribeToExchangeEvents", () => {
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FOUR_HOURS,
+                interval: HitBTCCandleInterval.FOUR_HOURS,
             },
         ]);
         hitBTC.emit("ready");
@@ -45,8 +45,8 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FOUR_HOURS);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FOUR_HOURS);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -65,12 +65,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
-            interval: CandleInterval.FIVE_MINUTES,
+            interval: HitBTCCandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcCovPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
         ]);
         hitBTC.emit("ready");
@@ -80,8 +80,8 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcCovPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, HitBTCCandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -100,12 +100,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
-            interval: CandleInterval.FIVE_MINUTES,
+            interval: HitBTCCandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
         ]);
         hitBTC.emit("ready");
@@ -114,7 +114,7 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(1);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();

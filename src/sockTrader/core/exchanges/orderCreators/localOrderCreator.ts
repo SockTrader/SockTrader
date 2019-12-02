@@ -1,24 +1,24 @@
 import moment, {Moment} from "moment";
 import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
-import {ICandle} from "../../types/ICandle";
-import {IOrderCreator} from "../../types/IOrderCreator";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
+import {Candle} from "../../types/Candle";
+import {Order, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
+import {OrderCreator} from "../../types/OrderCreator";
 import {Pair} from "../../types/pair";
 import {generateOrderId} from "../../utils/utils";
 
-export default class LocalOrderCreator implements IOrderCreator {
+export default class LocalOrderCreator implements OrderCreator {
 
-    currentCandle?: ICandle = undefined;
+    currentCandle?: Candle = undefined;
 
     constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
     }
 
-    setCurrentCandle(candle: ICandle) {
+    setCurrentCandle(candle: Candle) {
         this.currentCandle = candle;
     }
 
-    cancelOrder(order: IOrder) {
+    cancelOrder(order: Order) {
         this.orderTracker.setOrderUnconfirmed(order.id);
         this.orderTracker.process({...order, status: OrderStatus.CANCELED, reportType: ReportType.CANCELED});
     }
@@ -26,7 +26,7 @@ export default class LocalOrderCreator implements IOrderCreator {
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
         const candleTime = this.getTimeOfOrder();
 
-        const order: IOrder = {
+        const order: Order = {
             createdAt: candleTime,
             updatedAt: candleTime,
             status: OrderStatus.NEW,
@@ -47,8 +47,8 @@ export default class LocalOrderCreator implements IOrderCreator {
         this.orderTracker.process(order);
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number) {
-        const newOrder: IOrder = {
+    adjustOrder(order: Order, price: number, qty: number) {
+        const newOrder: Order = {
             ...order,
             id: generateOrderId(order.pair),
             updatedAt: this.getTimeOfOrder(),

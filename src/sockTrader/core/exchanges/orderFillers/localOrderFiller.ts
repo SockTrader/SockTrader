@@ -1,28 +1,28 @@
 import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
-import {ICandle} from "../../types/ICandle";
-import {ICandleInterval} from "../../types/ICandleInterval";
-import {IOrderFiller} from "../../types/IOrderFiller";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
+import {Candle} from "../../types/Candle";
+import {CandleInterval} from "../../types/CandleInterval";
+import {Order, OrderSide, OrderStatus, ReportType} from "../../types/order";
+import {OrderFiller} from "../../types/OrderFiller";
 import {Pair} from "../../types/pair";
 
-export default class LocalOrderFiller implements IOrderFiller {
+export default class LocalOrderFiller implements OrderFiller {
 
     constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
     }
 
-    private isOrderWithinCandle(order: IOrder, candle: ICandle) {
+    private isOrderWithinCandle(order: Order, candle: Candle) {
         return ((order.side === OrderSide.BUY && candle.low < order.price) || (order.side === OrderSide.SELL && candle.high > order.price));
     }
 
     /**
      * Checks if open order can be filled on each price update
-     * @param {ICandle} candle the current candle
+     * @param {Candle} candle the current candle
      */
-    private processOpenOrders(candle: ICandle): void {
-        const openOrders: IOrder[] = [];
+    private processOpenOrders(candle: Candle): void {
+        const openOrders: Order[] = [];
 
-        this.orderTracker.getOpenOrders().forEach((openOrder: IOrder) => {
+        this.orderTracker.getOpenOrders().forEach((openOrder: Order) => {
             if (openOrder.createdAt.isAfter(candle.timestamp)) {
                 return openOrders.push(openOrder); // Candle should be newer than order!
             }
@@ -39,15 +39,15 @@ export default class LocalOrderFiller implements IOrderFiller {
         this.orderTracker.setOpenOrders(openOrders);
     }
 
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+    onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
         this.onProcessCandles(data);
     }
 
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void {
+    onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
         this.onProcessCandles(data);
     }
 
-    onProcessCandles(data: ICandle[]) {
+    onProcessCandles(data: Candle[]) {
         this.processOpenOrders(data[0]);
     }
 }

@@ -1,10 +1,10 @@
 import {sma as SMA} from "technicalindicators";
 import CandleCollection from "../sockTrader/core/candles/candleCollection";
-import {IOrderbook} from "../sockTrader/core/orderbook";
+import Orderbook from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
-import {IExchange} from "../sockTrader/core/types/IExchange";
-import {IOrder, OrderSide, OrderStatus} from "../sockTrader/core/types/order";
+import {Exchange} from "../sockTrader/core/types/Exchange";
+import {Order, OrderSide, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
 
 /**
@@ -17,11 +17,11 @@ export default class SimpleMovingAverage extends BaseStrategy {
     canBuy = true;
     canSell = false;
 
-    constructor(pair: Pair, exchange: IExchange) {
+    constructor(pair: Pair, exchange: Exchange) {
         super(pair, exchange);
     }
 
-    notifyOrder(order: IOrder): void {
+    notifyOrder(order: Order): void {
         if (order.status === OrderStatus.FILLED) {
             this.canBuy = order.side === OrderSide.SELL;
             this.canSell = order.side === OrderSide.BUY;
@@ -48,7 +48,7 @@ export default class SimpleMovingAverage extends BaseStrategy {
         }
     }
 
-    updateOrderbook(orderBook: IOrderbook): void {
+    updateOrderbook(orderBook: Orderbook): void {
         // Ignore method
     }
 }

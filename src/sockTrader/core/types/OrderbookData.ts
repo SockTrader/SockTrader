@@ -1,9 +1,9 @@
-import {IOrderbookEntry} from "../orderbook";
+import {OrderbookEntry} from "../orderbook";
 import {Pair} from "./pair";
 
-export interface IOrderbookData {
-    ask: IOrderbookEntry[];
-    bid: IOrderbookEntry[];
+export interface OrderbookData {
+    ask: OrderbookEntry[];
+    bid: OrderbookEntry[];
     pair: Pair;
     sequence: number;
 }

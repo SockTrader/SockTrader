@@ -1,4 +1,4 @@
-export interface IHitBTCCandlesResponse {
+export interface HitBTCCandlesResponse {
     jsonrpc: string;
     method: string;
     params: {

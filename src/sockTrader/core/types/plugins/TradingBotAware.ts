@@ -1,7 +1,7 @@
-import {IBotStatus} from "../IBotStatus";
+import {BotStatus} from "../BotStatus";
 
-export interface ITradingBotAware {
-    onBotProgress: (status: IBotStatus) => void;
+export interface TradingBotAware {
+    onBotProgress: (status: BotStatus) => void;
 }
 
-export const isTradingBotAware = (plugin: any): plugin is ITradingBotAware => plugin.onBotProgress !== undefined;
+export const isTradingBotAware = (plugin: any): plugin is TradingBotAware => plugin.onBotProgress !== undefined;

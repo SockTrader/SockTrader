@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
-import {ICommand, IConnection} from "../types/IConnection";
+import {Command, Connection} from "../types/Connection";
 
-export default class Local extends EventEmitter implements IConnection {
+export default class Local extends EventEmitter implements Connection {
 
     constructor() {
         super();
@@ -15,7 +15,7 @@ export default class Local extends EventEmitter implements IConnection {
         // ignore
     }
 
-    addRestorable(command: ICommand): void {
+    addRestorable(command: Command): void {
         // ignore
     }
 }

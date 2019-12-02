@@ -1,6 +1,6 @@
-import {ICommand} from "../../types/IConnection";
+import {Command} from "../../types/Connection";
 
-export default class HitBTCCommand implements ICommand {
+export default class HitBTCCommand implements Command {
 
     restorable = false;
 

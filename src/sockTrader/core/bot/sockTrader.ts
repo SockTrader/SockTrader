@@ -1,20 +1,20 @@
 import uniqBy from "lodash.uniqby";
 import uniqWith from "lodash.uniqwith";
 import Events from "../events";
-import {IOrderbook} from "../orderbook";
-import {IAssetMap} from "../plugins/wallet/wallet";
-import BaseStrategy, {IAdjustSignal, ISignal, IStrategyClass} from "../strategy/baseStrategy";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IExchange} from "../types/IExchange";
-import {IOrder} from "../types/order";
+import Orderbook from "../orderbook";
+import {AssetMap} from "../plugins/wallet/wallet";
+import BaseStrategy, {AdjustSignal, IStrategyClass, Signal} from "../strategy/baseStrategy";
+import {Candle} from "../types/Candle";
+import {CandleInterval} from "../types/CandleInterval";
+import {Exchange} from "../types/Exchange";
+import {Order} from "../types/order";
 import {Pair} from "../types/pair";
-import {isAssetAware} from "../types/plugins/IAssetAware";
-import {isOrderbookAware} from "../types/plugins/IOrderbookAware";
-import {isReportAware} from "../types/plugins/IReportAware";
+import {isAssetAware} from "../types/plugins/AssetAware";
+import {isOrderbookAware} from "../types/plugins/OrderbookAware";
+import {isReportAware} from "../types/plugins/ReportAware";
 
-export interface IStrategyConfig {
-    interval?: ICandleInterval;
+export interface StrategyConfig {
+    interval?: CandleInterval;
     pair: Pair;
     strategy: IStrategyClass<BaseStrategy>;
 }
@@ -28,8 +28,8 @@ export interface IStrategyConfig {
 export default abstract class SockTrader {
     protected eventsBound = false;
     protected plugins: any[] = [];
-    protected exchange!: IExchange;
-    protected strategyConfigurations: IStrategyConfig[] = [];
+    protected exchange!: Exchange;
+    protected strategyConfigurations: StrategyConfig[] = [];
 
     /**
      * Set plugins
@@ -44,10 +44,10 @@ export default abstract class SockTrader {
 
     /**
      * Adds a strategy
-     * @param {IStrategyConfig} config strategy configuration
+     * @param {StrategyConfig} config strategy configuration
      * @returns {this}
      */
-    addStrategy(config: IStrategyConfig): this {
+    addStrategy(config: StrategyConfig): this {
         this.strategyConfigurations.push(config);
 
         return this;
@@ -68,9 +68,9 @@ export default abstract class SockTrader {
      * - new candles for a pair/interval combination found in given
      *   configuration
      * - orderbook changes of a pair found in given configuration
-     * @param {IStrategyConfig[]} config strategy configuration
+     * @param {StrategyConfig[]} config strategy configuration
      */
-    subscribeToExchangeEvents(config: IStrategyConfig[]): void {
+    subscribeToExchangeEvents(config: StrategyConfig[]): void {
         const exchange = this.exchange;
 
         exchange.once("ready", () => exchange.subscribeReports());
@@ -78,10 +78,10 @@ export default abstract class SockTrader {
         // Be sure to only subscribe once to a certain trading pair.
         // Even if multiple strategyConfigurations are listening to the same events.
         // Because we will dispatch the same data to each strategy.
-        const uniquePairs = uniqBy<IStrategyConfig>(config, "pair");
+        const uniquePairs = uniqBy<StrategyConfig>(config, "pair");
         uniquePairs.forEach(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
 
-        const uniquePairInterval = uniqWith<IStrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
+        const uniquePairInterval = uniqWith<StrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
         uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => {
             if (interval) exchange.subscribeCandles(pair, interval);
         }));
@@ -92,15 +92,15 @@ export default abstract class SockTrader {
      * @param plugins
      */
     protected bindEventsToPlugins(plugins: any[]): void {
-        Events.on("core.report", (order: IOrder) => plugins.forEach(p => {
+        Events.on("core.report", (order: Order) => plugins.forEach(p => {
             if (isReportAware(p)) p.onReport(order);
         }));
 
-        Events.on("core.updateAssets", (assets: IAssetMap, reservedAssets: IAssetMap) => plugins.forEach(p => {
+        Events.on("core.updateAssets", (assets: AssetMap, reservedAssets: AssetMap) => plugins.forEach(p => {
             if (isAssetAware(p)) p.onUpdateAssets(assets, reservedAssets);
         }));
 
-        Events.on("core.updateOrderbook", (orderbook: IOrderbook) => plugins.forEach(p => {
+        Events.on("core.updateOrderbook", (orderbook: Orderbook) => plugins.forEach(p => {
             if (isOrderbookAware(p)) p.onUpdateOrderbook(orderbook);
         }));
     }
@@ -113,11 +113,11 @@ export default abstract class SockTrader {
      * @param {BaseStrategy} strategy
      */
     protected bindExchangeToStrategy(strategy: BaseStrategy): void {
-        Events.on("core.report", (order: IOrder) => strategy.notifyOrder(order));
-        Events.on("core.snapshotOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        Events.on("core.updateOrderbook", (orderbook: IOrderbook) => strategy.updateOrderbook(orderbook));
-        Events.on("core.snapshotCandles", (candles: ICandle[]) => strategy._onSnapshotCandles(candles));
-        Events.on("core.updateCandles", (candles: ICandle[]) => strategy._onUpdateCandles(candles));
+        Events.on("core.report", (order: Order) => strategy.notifyOrder(order));
+        Events.on("core.snapshotOrderbook", (orderbook: Orderbook) => strategy.updateOrderbook(orderbook));
+        Events.on("core.updateOrderbook", (orderbook: Orderbook) => strategy.updateOrderbook(orderbook));
+        Events.on("core.snapshotCandles", (candles: Candle[]) => strategy._onSnapshotCandles(candles));
+        Events.on("core.updateCandles", (candles: Candle[]) => strategy._onUpdateCandles(candles));
     }
 
     /**
@@ -129,7 +129,7 @@ export default abstract class SockTrader {
     protected bindStrategyToExchange(strategy: BaseStrategy): void {
         const exchange = this.exchange;
         // @TODO add cancel order event!
-        strategy.on("core.signal", ({symbol, price, qty, side}: ISignal) => exchange.createOrder(symbol, price, qty, side));
-        strategy.on("core.adjustOrder", ({order, price, qty}: IAdjustSignal) => exchange.adjustOrder(order, price, qty));
+        strategy.on("core.signal", ({symbol, price, qty, side}: Signal) => exchange.createOrder(symbol, price, qty, side));
+        strategy.on("core.adjustOrder", ({order, price, qty}: AdjustSignal) => exchange.adjustOrder(order, price, qty));
     }
 }

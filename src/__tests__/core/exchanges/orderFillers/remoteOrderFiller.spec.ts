@@ -1,7 +1,7 @@
 import RemoteOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
-import {CandleInterval} from "../../../../sockTrader/core/exchanges/hitBTC";
+import {HitBTCCandleInterval} from "../../../../sockTrader/core/exchanges/hitBTC";
 import CandleManager from "../../../../sockTrader/core/candles/candleManager";
-import {ICandle} from "../../../../sockTrader/core/types/ICandle";
+import {Candle} from "../../../../sockTrader/core/types/Candle";
 
 let orderFiller = new RemoteOrderFiller();
 beforeEach(() => {
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 describe("getCandleManager", () => {
     const updateHandler = jest.fn();
-    const interval = CandleInterval.ONE_MINUTE;
+    const interval = HitBTCCandleInterval.ONE_MINUTE;
 
     test("Should create a new CandleManager", () => {
         const manager = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
@@ -25,10 +25,10 @@ describe("getCandleManager", () => {
 });
 
 describe("onSnapshotCandles", () => {
-    const interval = CandleInterval.ONE_MINUTE;
+    const interval = HitBTCCandleInterval.ONE_MINUTE;
 
     test("Should set new candles on CandleManager", () => {
-        const candles = [{open: 10, high: 20, low: 5, close: 15}] as ICandle[];
+        const candles = [{open: 10, high: 20, low: 5, close: 15}] as Candle[];
         const setMock = jest.fn();
 
         orderFiller.getCandleManager = jest.fn(() => ({set: setMock})) as any;
@@ -39,10 +39,10 @@ describe("onSnapshotCandles", () => {
 });
 
 describe("onUpdateCandles", () => {
-    const interval = CandleInterval.ONE_MINUTE;
+    const interval = HitBTCCandleInterval.ONE_MINUTE;
 
     test("Should update new candles on CandleManager", () => {
-        const candles = [{open: 10, high: 20, low: 5, close: 15}] as ICandle[];
+        const candles = [{open: 10, high: 20, low: 5, close: 15}] as Candle[];
         const updateMock = jest.fn();
 
         orderFiller.getCandleManager = jest.fn(() => ({update: updateMock})) as any;

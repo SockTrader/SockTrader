@@ -1,5 +1,5 @@
-import {ITradeablePair} from "./ITradeablePair";
+import {TradeablePair} from "./TradeablePair";
 
-export interface ICurrencyMap {
-    [key: string]: ITradeablePair;
+export interface CurrencyMap {
+    [key: string]: TradeablePair;
 }

@@ -3,7 +3,7 @@ import {ChildProcess, fork} from "child_process";
 /**
  * Configuration for backtest process
  */
-export interface IBacktestOptions {
+export interface BacktestOptions {
     candlePath: string;
     strategyPath: string;
 }
@@ -16,7 +16,7 @@ export default class BacktestCreator {
      */
     process?: ChildProcess;
 
-    create(scriptPath: string, options: IBacktestOptions) {
+    create(scriptPath: string, options: BacktestOptions) {
         if (typeof this.process !== "undefined") {
             this.process.removeAllListeners();
             this.process.kill("SIGKILL");
@@ -31,7 +31,7 @@ export default class BacktestCreator {
      * @param scriptPath
      * @param options
      */
-    private static createProcess(scriptPath: string, options: IBacktestOptions): ChildProcess {
+    private static createProcess(scriptPath: string, options: BacktestOptions): ChildProcess {
         const childProcess: ChildProcess = fork(`${scriptPath}`, [
             "backtest",
             "--candles", options.candlePath,

@@ -1,5 +1,5 @@
 import {Pair} from "../../../sockTrader/core/types/pair";
-import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
 import WebSocket from "../../../sockTrader/core/connection/webSocket";
 import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
@@ -116,7 +116,7 @@ describe("orderbook management", () => {
 
 describe("subscribeCandles", () => {
     test("Should send out subscribe to candle events", () => {
-        exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
+        exchange.subscribeCandles(pair, HitBTCCandleInterval.FIVE_MINUTES);
 
         const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
         expect(arg1).toBeInstanceOf(HitBTCCommand);

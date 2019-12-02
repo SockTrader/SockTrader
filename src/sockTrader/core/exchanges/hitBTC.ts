@@ -5,16 +5,16 @@ import WebSocket, {Data} from "../connection/webSocket";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {IResponseAdapter} from "../types/IResponseAdapter";
+import {CandleInterval} from "../types/CandleInterval";
+import {Connection} from "../types/Connection";
+import {OrderbookData} from "../types/OrderbookData";
 import {Pair} from "../types/pair";
+import {ResponseAdapter} from "../types/ResponseAdapter";
 import BaseExchange from "./baseExchange";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
 
-export const CandleInterval: Record<string, ICandleInterval> = {
+export const HitBTCCandleInterval: Record<string, CandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
     THREE_MINUTES: {code: "M3", cron: "00 */3 * * * *"},
     FIVE_MINUTES: {code: "M5", cron: "00 */5 * * * *"},
@@ -32,9 +32,9 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  * @see https://hitbtc.com/
  */
 export default class HitBTC extends BaseExchange {
-    readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
+    readonly adapter: ResponseAdapter = new HitBTCAdapter(this);
 
-    protected createConnection(): IConnection {
+    protected createConnection(): Connection {
         return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
     }
 
@@ -59,21 +59,21 @@ export default class HitBTC extends BaseExchange {
         }));
     }
 
-    onSnapshotOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
+    onSnapshotOrderbook({pair, ask, bid, sequence}: OrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.setOrders(ask, bid, sequence);
 
         Events.emit("core.snapshotOrderbook", orderbook);
     }
 
-    onUpdateOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
+    onUpdateOrderbook({pair, ask, bid, sequence}: OrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.addIncrement(ask, bid, sequence);
 
         Events.emit("core.updateOrderbook", orderbook);
     }
 
-    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+    subscribeCandles(pair: Pair, interval: CandleInterval): void {
         const command = HitBTCCommand.createRestorable("subscribeCandles", {
             symbol: pair.join(""),
             period: interval.code,

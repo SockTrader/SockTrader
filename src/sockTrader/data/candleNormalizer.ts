@@ -1,17 +1,17 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
 import moment from "moment";
-import {ICandle} from "../core/types/ICandle";
+import {Candle} from "../core/types/Candle";
 import {Pair} from "../core/types/pair";
 import {getDecimals} from "./utils";
 
-export interface ICandleNormalizerConfig {
+export interface CandleNormalizerConfig {
     decimalSeparator?: string;
     name: string;
     symbol: Pair;
 }
 
-export type Parser = (candles: IDataFrame) => IDataFrame<number, ICandle>;
+export type Parser = (candles: IDataFrame) => IDataFrame<number, Candle>;
 
 /**
  * The CandleNormalizer parses a file containing candles and returns
@@ -22,7 +22,7 @@ export default class CandleNormalizer {
     private readonly filePath: string;
     private readonly parser: Parser;
 
-    constructor(filePath: string, public candleNormalizerConfig: ICandleNormalizerConfig, parser: Parser) {
+    constructor(filePath: string, public candleNormalizerConfig: CandleNormalizerConfig, parser: Parser) {
         this.parser = parser;
         this.filePath = filePath;
     }
@@ -103,7 +103,7 @@ export default class CandleNormalizer {
         const segs = this.filePath.split(".");
         const ext = segs[segs.length - 1].toLowerCase();
 
-        const dataFrame: IDataFrame<number, ICandle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
+        const dataFrame: IDataFrame<number, Candle> = this.parser(await CandleNormalizer.parseFileReader(readFile(this.filePath), ext));
         this.validateColumns(dataFrame);
 
         return {

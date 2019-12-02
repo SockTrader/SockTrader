@@ -1,6 +1,6 @@
 export type BotStatusType = "started" | "finished" | "progress";
 
-export interface IBotStatus {
+export interface BotStatus {
     current?: number;
     length?: number;
     type: BotStatusType;

@@ -1,7 +1,7 @@
 import moment from "moment";
 import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
-import {IHitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/IHitBTCCandlesResponse";
+import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/HitBTCCandlesResponse";
 import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFactory";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
@@ -57,7 +57,7 @@ describe("onUpdateCandles", () => {
             params: {period: "H1", symbol: "BTCUSD", data: []},
             method: "",
             jsonrpc: "",
-        } as IHitBTCCandlesResponse);
+        } as HitBTCCandlesResponse);
 
         const [arg1, arg2, arg3] = exchange.onUpdateCandles.mock.calls[0];
         expect(arg1).toStrictEqual(["BTC", "USD"]);

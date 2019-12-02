@@ -1,5 +1,5 @@
 import {
-    IOrder,
+    Order,
     OrderSide,
     OrderStatus,
     OrderTimeInForce,
@@ -9,7 +9,7 @@ import {
 import moment from "moment";
 import Wallet from "../../sockTrader/core/plugins/wallet/wallet";
 
-let order: IOrder;
+let order: Order;
 beforeEach(() => {
     order = {
         id: "123",
@@ -113,7 +113,7 @@ describe("updateAssets", () => {
     });
 
     test("Should update asset amount when buy order is replaced", () => {
-        const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
+        const oldOrder1: Order = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
         wallet.updateAssets(oldOrder1);
         expect(wallet["assets"]).toEqual({USD: 0, BTC: 10});
 
@@ -144,7 +144,7 @@ describe("updateAssets", () => {
         const calculator = jest.fn();
         wallet["createCalculator"] = jest.fn(() => calculator);
 
-        const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
+        const oldOrder1: Order = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
         wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, undefined);
 
         expect(calculator).toHaveBeenCalledTimes(0);
@@ -152,11 +152,11 @@ describe("updateAssets", () => {
 
     test("Should update asset amount when sell order is replaced", () => {
         const wallet = new Wallet({BTC: 10});
-        const oldOrder1: IOrder = {...order, quantity: 1, side: OrderSide.SELL, reportType: ReportType.NEW};
+        const oldOrder1: Order = {...order, quantity: 1, side: OrderSide.SELL, reportType: ReportType.NEW};
         wallet.updateAssets(oldOrder1);
         expect(wallet["assets"]).toEqual({BTC: 9});
 
-        const oldOrder2: IOrder = {...oldOrder1, quantity: 2, reportType: ReportType.REPLACED};
+        const oldOrder2: Order = {...oldOrder1, quantity: 2, reportType: ReportType.REPLACED};
         wallet.updateAssets(oldOrder2, oldOrder1);
         expect(wallet["assets"]).toEqual({BTC: 8});
 
@@ -170,9 +170,9 @@ describe("isOrderAllowed", () => {
         const wallet = new Wallet({BTC: 1});
 
         const spyBuy = jest.spyOn(wallet, "isBuyAllowed");
-        const mockOrder = {...order, side: OrderSide.BUY} as IOrder;
+        const mockOrder = {...order, side: OrderSide.BUY} as Order;
 
-        wallet.isOrderAllowed(mockOrder as IOrder, mockOrder as IOrder);
+        wallet.isOrderAllowed(mockOrder as Order, mockOrder as Order);
         expect(spyBuy).toBeCalledWith(mockOrder, mockOrder);
     });
 
@@ -180,7 +180,7 @@ describe("isOrderAllowed", () => {
         const wallet = new Wallet({BTC: 1});
 
         const spySell = jest.spyOn(wallet, "isSellAllowed");
-        const mockOrder = {...order, side: OrderSide.SELL} as IOrder;
+        const mockOrder = {...order, side: OrderSide.SELL} as Order;
 
         wallet.isOrderAllowed(mockOrder, mockOrder);
         expect(spySell).toBeCalledWith(mockOrder, mockOrder);

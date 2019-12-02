@@ -1,7 +1,7 @@
-import {IAssetMap} from "../../plugins/wallet/wallet";
+import {AssetMap} from "../../plugins/wallet/wallet";
 
-export interface IAssetAware {
-    onUpdateAssets: (assets: IAssetMap, reservedAssets: IAssetMap) => void;
+export interface AssetAware {
+    onUpdateAssets: (assets: AssetMap, reservedAssets: AssetMap) => void;
 }
 
-export const isAssetAware = (plugin: any): plugin is IAssetAware => plugin.onUpdateAssets !== undefined;
+export const isAssetAware = (plugin: any): plugin is AssetAware => plugin.onUpdateAssets !== undefined;

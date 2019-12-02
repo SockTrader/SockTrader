@@ -1,16 +1,16 @@
 import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
-import {IOrder, OrderSide} from "../../sockTrader/core/types/order";
-import {IOrderbook} from "../../sockTrader/core/orderbook";
-import {ICandle} from "../../sockTrader/core/types/ICandle";
+import {Order, OrderSide} from "../../sockTrader/core/types/order";
+import {Candle} from "../../sockTrader/core/types/Candle";
+import Orderbook from "../../sockTrader/core/orderbook";
 
 class MyStrategy extends BaseStrategy {
-    notifyOrder(order: IOrder): void {
+    notifyOrder(order: Order): void {
     }
 
-    updateCandles(candles: ICandle[]): void {
+    updateCandles(candles: Candle[]): void {
     }
 
-    updateOrderbook(orderBook: IOrderbook): void {
+    updateOrderbook(orderBook: Orderbook): void {
     }
 }
 
@@ -28,7 +28,7 @@ afterEach(() => {
 
 describe("adjust", () => {
     test("Should emit adjustOrder event", () => {
-        strategy["adjust"]({side: OrderSide.BUY} as IOrder, 10, 1);
+        strategy["adjust"]({side: OrderSide.BUY} as Order, 10, 1);
 
         expect(emitMock).toBeCalledTimes(1);
         expect(emitMock).toBeCalledWith("core.adjustOrder", {

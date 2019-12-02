@@ -3,7 +3,7 @@ import LocalOrderCreator from "../../../../sockTrader/core/exchanges/orderCreato
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
-import {ICandle} from "../../../../sockTrader/core/types/ICandle";
+import {Candle} from "../../../../sockTrader/core/types/Candle";
 import {FX_FILLED_BUY_ORDER, FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
 let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));
@@ -142,7 +142,7 @@ describe("adjustOrder", () => {
 describe("getTimeOfOrder", () => {
     test("Should return time of current candle", () => {
         const currentTime = moment("2019-01-24 18:00");
-        localOrderCreator.setCurrentCandle({timestamp: currentTime} as ICandle);
+        localOrderCreator.setCurrentCandle({timestamp: currentTime} as Candle);
 
         const timestamp = localOrderCreator["getTimeOfOrder"]();
 

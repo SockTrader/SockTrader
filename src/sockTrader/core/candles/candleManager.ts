@@ -4,8 +4,8 @@ import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
 import config from "../../../config";
 import {candleLogger} from "../logger";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
+import {Candle} from "../types/Candle";
+import {CandleInterval} from "../types/CandleInterval";
 
 /**
  * Contains OHLCV history data for a trading pair.
@@ -13,18 +13,18 @@ import {ICandleInterval} from "../types/ICandleInterval";
  * The collection can automatically generate values if no new values were pushed during a time interval
  */
 export default class CandleManager extends EventEmitter {
-    private candles: ICandle[] = [];
+    private candles: Candle[] = [];
     private readonly cronjob: CronJob;
-    private readonly interval: ICandleInterval;
+    private readonly interval: CandleInterval;
     private readonly retentionPeriod: number = 0;
 
     /**
      * Creates a new CandleManager
-     * @param {ICandleInterval} interval the interval between the candles
+     * @param {CandleInterval} interval the interval between the candles
      * @param {boolean} generateCandles if should generate candles when nothing is received
      * @param {number} retentionPeriod how long to keep candles
      */
-    constructor(interval: ICandleInterval, generateCandles = true, retentionPeriod = 0) {
+    constructor(interval: CandleInterval, generateCandles = true, retentionPeriod = 0) {
         super();
         this.retentionPeriod = retentionPeriod;
         this.interval = interval;
@@ -36,7 +36,7 @@ export default class CandleManager extends EventEmitter {
     /**
      * Immediately set/replace all candles in the collection
      */
-    set(candles: ICandle[]): void {
+    set(candles: Candle[]): void {
         const interval = parser.parseExpression(this.interval.cron, {
             endDate: candles[0].timestamp.toDate(),
             currentDate: new Date(),
@@ -46,7 +46,7 @@ export default class CandleManager extends EventEmitter {
         this.emit("update", this.candles);
     }
 
-    sort(candles: ICandle[]): ICandle[] {
+    sort(candles: Candle[]): Candle[] {
         return [...candles].sort((a, b) => b.timestamp.diff(a.timestamp));
     }
 
@@ -59,9 +59,9 @@ export default class CandleManager extends EventEmitter {
 
     /**
      * Update or insert newly received candles
-     * @param {ICandle[]} candles candles to add
+     * @param {Candle[]} candles candles to add
      */
-    update(candles: ICandle[]): void {
+    update(candles: Candle[]): void {
         let needsSort = false;
         candles.forEach(updatedCandle => {
             const isCandleReplaced = this.findAndReplaceCandle(updatedCandle);
@@ -98,7 +98,7 @@ export default class CandleManager extends EventEmitter {
      * Returns true on a successful replacement
      * @param newCandle
      */
-    private findAndReplaceCandle(newCandle: ICandle): boolean {
+    private findAndReplaceCandle(newCandle: Candle): boolean {
         return this.candles.some((candle, idx) => {
             if (this.candleEqualsTimestamp(candle, newCandle.timestamp)) {
                 this.candles[idx] = newCandle;
@@ -110,24 +110,24 @@ export default class CandleManager extends EventEmitter {
 
     /**
      * Validates if a candle equals a certain timestamp
-     * @param {ICandle} candle the candle
+     * @param {Candle} candle the candle
      * @param {moment.Moment} timestamp the time
      * @returns {boolean} occurs on given time
      */
-    private candleEqualsTimestamp(candle: ICandle, timestamp: Moment): boolean {
+    private candleEqualsTimestamp(candle: Candle, timestamp: Moment): boolean {
         return candle.timestamp.isSameOrAfter(timestamp, "minute");
     }
 
     /**
      * Fill gaps in candle list until now, based on a cron expression
-     * @param {ICandle[]} candles candle collection to fill
+     * @param {Candle[]} candles candle collection to fill
      * @param interval interval for which to fill
-     * @returns {ICandle[]} the filled collection
+     * @returns {Candle[]} the filled collection
      */
-    private fillCandleGaps(candles: ICandle[], interval: any): ICandle[] {
+    private fillCandleGaps(candles: Candle[], interval: any): Candle[] {
         candles = this.sort(candles);
 
-        const result: ICandle[] = [];
+        const result: Candle[] = [];
         const generateCandle = this.getCandleGenerator(candles);
 
         while (true) {
@@ -151,7 +151,7 @@ export default class CandleManager extends EventEmitter {
         const last = moment(this.cronjob.lastDate()).second(0).millisecond(0);
 
         if (this.candles.length <= 0) {
-            this.candles.unshift(this.getRecycledCandle({close: 0} as ICandle, last));
+            this.candles.unshift(this.getRecycledCandle({close: 0} as Candle, last));
         } else if (last.isAfter(this.candles[0].timestamp, "minute")) {
             this.candles.unshift(this.getRecycledCandle(this.candles[0], last));
         }
@@ -164,10 +164,10 @@ export default class CandleManager extends EventEmitter {
      * Returns a function which will either return a new candle or recycle a previous candle
      * This function should be executed on every timer tick so that even though no values
      * changed, the candle collection receives a 'new' candle
-     * @param {ICandle[]} candles collection
+     * @param {Candle[]} candles collection
      * @returns {(interval: moment.Moment) => ICandle} candle generator
      */
-    private getCandleGenerator(candles: ICandle[]): (interval: Moment) => ICandle {
+    private getCandleGenerator(candles: Candle[]): (interval: Moment) => Candle {
         let position = 0;
         return nextInterval => {
             let candle = candles[position];
@@ -187,9 +187,9 @@ export default class CandleManager extends EventEmitter {
      * for indicating an interval without price change
      * @param {number} close the close
      * @param {moment.Moment} timestamp the timestamp
-     * @returns {ICandle} copied candle
+     * @returns {Candle} copied candle
      */
-    private getRecycledCandle({close}: ICandle, timestamp: Moment): ICandle {
+    private getRecycledCandle({close}: Candle, timestamp: Moment): Candle {
         return {
             open: close,
             high: close,
@@ -202,9 +202,9 @@ export default class CandleManager extends EventEmitter {
 
     /**
      * Removes candles outside the retention period
-     * @param {ICandle[]} candles the candle collection
+     * @param {Candle[]} candles the candle collection
      */
-    private removeRetentionOverflow(candles: ICandle[]): void {
+    private removeRetentionOverflow(candles: Candle[]): void {
         if (this.retentionPeriod > 0 && candles.length > this.retentionPeriod) {
             candles.splice(this.retentionPeriod - candles.length);
         }

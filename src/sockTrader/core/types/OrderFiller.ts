@@ -1,11 +1,11 @@
-import {ICandle} from "./ICandle";
-import {ICandleInterval} from "./ICandleInterval";
+import {Candle} from "./Candle";
+import {CandleInterval} from "./CandleInterval";
 import {Pair} from "./pair";
 
-export interface IOrderFiller {
+export interface OrderFiller {
 
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
+    onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval): void;
 
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval): void;
+    onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval): void;
 
 }

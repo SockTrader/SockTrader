@@ -1,22 +1,22 @@
 import {EventEmitter} from "events";
 import CandleCollection from "../candles/candleCollection";
-import {IOrderbook} from "../orderbook";
-import {ICandle} from "../types/ICandle";
-import {IExchange} from "../types/IExchange";
-import {IOrder, OrderSide} from "../types/order";
+import Orderbook from "../orderbook";
+import {Candle} from "../types/Candle";
+import {Exchange} from "../types/Exchange";
+import {Order, OrderSide} from "../types/order";
 import {Pair} from "../types/pair";
 
-export type IStrategyClass<T> = new(pair: Pair, exchange: IExchange) => T;
+export type IStrategyClass<T> = new(pair: Pair, exchange: Exchange) => T;
 
-export interface ISignal {
+export interface Signal {
     price: number;
     qty: number;
     side: OrderSide;
     symbol: Pair;
 }
 
-export interface IAdjustSignal {
-    order: IOrder;
+export interface AdjustSignal {
+    order: Order;
     price: number;
     qty: number;
 }
@@ -26,21 +26,21 @@ export interface IAdjustSignal {
  */
 export default abstract class BaseStrategy extends EventEmitter {
 
-    constructor(readonly pair: Pair, readonly exchange: IExchange) {
+    constructor(readonly pair: Pair, readonly exchange: Exchange) {
         super();
     }
 
     /**
      * The strategy will be notified when the state of an order changes.
-     * @param {IOrder} order – the new state of the order
+     * @param {Order} order – the new state of the order
      */
-    abstract notifyOrder(order: IOrder): void;
+    abstract notifyOrder(order: Order): void;
 
     /**
      * Called on orderbook update coming from the exchange
-     * @param {IOrderbook} orderBook – the new state of the orderbook
+     * @param {Orderbook} orderBook – the new state of the orderbook
      */
-    abstract updateOrderbook(orderBook: IOrderbook): void;
+    abstract updateOrderbook(orderBook: Orderbook): void;
 
     /**
      * Called on each new candle coming from the exchange
@@ -53,7 +53,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * so that the resulting strategy has some extra utility methods to manipulate the candles.
      * @param candles – candles coming from the remote exchange
      */
-    _onUpdateCandles(candles: ICandle[]): void {
+    _onUpdateCandles(candles: Candle[]): void {
         this.updateCandles(new CandleCollection(...candles));
     }
 
@@ -62,7 +62,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * so that the resulting strategy has some extra utility methods to manipulate the candles.
      * @param candles – candles coming from the remote exchange
      */
-    _onSnapshotCandles(candles: ICandle[]): void {
+    _onSnapshotCandles(candles: Candle[]): void {
         this.warmUpCandles(new CandleCollection(...candles));
     }
 
@@ -76,19 +76,19 @@ export default abstract class BaseStrategy extends EventEmitter {
 
     /**
      * Adjusts an existing order. Either price or quantity can be different.
-     * @param {IOrder} order – the order that you would like to manipulate
+     * @param {Order} order – the order that you would like to manipulate
      * @param {number} price – the new price of the order
      * @param {number} qty – the new quantity of the order
      */
-    protected adjust(order: IOrder, price: number, qty: number): void {
-        this.emit("core.adjustOrder", {order, price, qty} as IAdjustSignal);
+    protected adjust(order: Order, price: number, qty: number): void {
+        this.emit("core.adjustOrder", {order, price, qty} as AdjustSignal);
     }
 
     /**
      * Sends a buy/sell signal to the exchange
      */
     protected signal(symbol: Pair, price: number, qty: number, side: OrderSide) {
-        this.emit("core.signal", {symbol, price, qty, side} as ISignal);
+        this.emit("core.signal", {symbol, price, qty, side} as Signal);
     }
 
     /**

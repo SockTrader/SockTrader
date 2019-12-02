@@ -2,12 +2,12 @@ import {EventEmitter} from "events";
 import BaseExchange from "../exchanges/baseExchange";
 import LocalExchange from "../exchanges/localExchange";
 import Orderbook from "../orderbook";
-import {ICandle} from "./ICandle";
-import {ICandleInterval} from "./ICandleInterval";
-import {IOrderbookData} from "./IOrderbookData";
-import {ITradeablePair} from "./ITradeablePair";
-import {IOrder, OrderSide} from "./order";
+import {Candle} from "./Candle";
+import {CandleInterval} from "./CandleInterval";
+import {Order, OrderSide} from "./order";
+import {OrderbookData} from "./OrderbookData";
 import {Pair} from "./pair";
+import {TradeablePair} from "./TradeablePair";
 
 export const isLocalExchange = (exchange: BaseExchange): exchange is LocalExchange => exchange instanceof LocalExchange;
 
@@ -15,7 +15,7 @@ export const isLocalExchange = (exchange: BaseExchange): exchange is LocalExchan
  * The IExchange represents a marketplace to buy and sell
  * cryptocurrencies
  */
-export interface IExchange extends EventEmitter {
+export interface Exchange extends EventEmitter {
 
     /**
      * Adjusts existing order on exchange
@@ -23,7 +23,7 @@ export interface IExchange extends EventEmitter {
      * @param price the new price
      * @param qty the new quantity
      */
-    adjustOrder(order: IOrder, price: number, qty: number): void;
+    adjustOrder(order: Order, price: number, qty: number): void;
 
     /**
      * Signals a buy to the exchange
@@ -35,9 +35,9 @@ export interface IExchange extends EventEmitter {
 
     /**
      * Cancel existing order on exchange
-     * @param {IOrder} order to cancel
+     * @param {Order} order to cancel
      */
-    cancelOrder(order: IOrder): void;
+    cancelOrder(order: Order): void;
 
     /**
      * Connects to the remote exchange
@@ -70,23 +70,23 @@ export interface IExchange extends EventEmitter {
 
     /**
      * Registers all tradeable currencies on exchange
-     * @param {ITradeablePair[]} currencies
+     * @param {TradeablePair[]} currencies
      */
-    onCurrenciesLoaded(currencies: ITradeablePair[]): void;
+    onCurrenciesLoaded(currencies: TradeablePair[]): void;
 
     /**
      * Updates local candle collection with collection from exchange
      * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {ICandle[]} candles updated candles
-     * @param {ICandleInterval} interval candle interval
+     * @param {Candle[]} candles updated candles
+     * @param {CandleInterval} interval candle interval
      */
-    onUpdateCandles(pair: Pair, candles: ICandle[], interval: ICandleInterval): void;
+    onUpdateCandles(pair: Pair, candles: Candle[], interval: CandleInterval): void;
 
     /**
      * Updates local order collection with collection from exchange
-     * @param {IOrderbookData} orderBook the orders
+     * @param {OrderbookData} orderBook the orders
      */
-    onUpdateOrderbook(orderBook: IOrderbookData): void;
+    onUpdateOrderbook(orderBook: OrderbookData): void;
 
     /**
      * Sends a sell signal to the exchange
@@ -100,9 +100,9 @@ export interface IExchange extends EventEmitter {
      * Registers to a candle collection for a given pair/interval
      * e.g. BTC/ETH every 5 minutes
      * @param {Pair} pair crypto pair (BTC USD/BTC ETH)
-     * @param {ICandleInterval} interval time interval
+     * @param {CandleInterval} interval time interval
      */
-    subscribeCandles(pair: Pair, interval: ICandleInterval): void;
+    subscribeCandles(pair: Pair, interval: CandleInterval): void;
 
     /**
      * Registers to order book for given pair

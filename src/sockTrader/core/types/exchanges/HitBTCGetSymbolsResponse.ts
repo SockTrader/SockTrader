@@ -1,4 +1,4 @@
-export interface IHitBTCGetSymbolsResponse {
+export interface HitBTCGetSymbolsResponse {
     id: string;
     jsonrpc: string;
     result: Array<{

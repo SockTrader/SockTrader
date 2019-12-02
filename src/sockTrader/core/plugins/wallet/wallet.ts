@@ -1,7 +1,7 @@
 import Events from "../../events";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../../types/order";
+import {Order, OrderSide, OrderStatus, ReportType} from "../../types/order";
 
-export interface IAssetMap {
+export interface AssetMap {
     [key: string]: number;
 }
 
@@ -13,13 +13,13 @@ type AssetCalc = (asset: string, priceQty: number) => void;
  */
 export default class Wallet {
 
-    private readonly assets!: IAssetMap;
-    private readonly reservedAssets!: IAssetMap;
+    private readonly assets!: AssetMap;
+    private readonly reservedAssets!: AssetMap;
 
     /**
      * Creates a new LocalExchange
      */
-    constructor(assets: IAssetMap) {
+    constructor(assets: AssetMap) {
         this.assets = this.getAssetProxy(assets);
         this.reservedAssets = this.getAssetProxy({});
 
@@ -31,22 +31,22 @@ export default class Wallet {
 
     /**
      * Checks if funds are sufficient for a buy
-     * @param {IOrder} order the order to verify
-     * @param {IOrder} oldOrder
+     * @param {Order} order the order to verify
+     * @param {Order} oldOrder
      * @returns {boolean} is buy allowed
      */
-    isBuyAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+    isBuyAllowed(order: Order, oldOrder?: Order): boolean {
         return this.assets[order.pair[1]] >= this.getOrderPrice(order);
     }
 
     /**
      * Checks if current quantity of currency in possession
      * if sufficient for given sell order
-     * @param {IOrder} order the order to verify
-     * @param {IOrder} oldOrder
+     * @param {Order} order the order to verify
+     * @param {Order} oldOrder
      * @returns {boolean} is sell allowed
      */
-    isSellAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+    isSellAllowed(order: Order, oldOrder?: Order): boolean {
         return this.assets[order.pair[0]] >= order.quantity;
     }
 
@@ -55,15 +55,15 @@ export default class Wallet {
      * @param order
      * @param oldOrder
      */
-    isOrderAllowed(order: IOrder, oldOrder?: IOrder): boolean {
+    isOrderAllowed(order: Order, oldOrder?: Order): boolean {
         return order.side === OrderSide.BUY
             ? this.isBuyAllowed(order, oldOrder)
             : this.isSellAllowed(order, oldOrder);
     }
 
-    private getAssetProxy(assets: IAssetMap) {
-        return new Proxy<IAssetMap>(assets, {
-            get: (target: IAssetMap, p: PropertyKey): any => {
+    private getAssetProxy(assets: AssetMap) {
+        return new Proxy<AssetMap>(assets, {
+            get: (target: AssetMap, p: PropertyKey): any => {
                 return p in target ? target[p.toString()] : 0;
             },
         });
@@ -71,10 +71,10 @@ export default class Wallet {
 
     /**
      * Calculates total price of order
-     * @param {IOrder} order the order
+     * @param {Order} order the order
      * @returns {number} total price
      */
-    private getOrderPrice(order: IOrder) {
+    private getOrderPrice(order: Order) {
         return order.price * order.quantity;
     }
 
@@ -84,7 +84,7 @@ export default class Wallet {
         };
     }
 
-    private createCalculators(order: IOrder) {
+    private createCalculators(order: Order) {
         return {
             ifBuy: this.createCalculator(order.side, OrderSide.BUY),
             ifSell: this.createCalculator(order.side, OrderSide.SELL),
@@ -111,7 +111,7 @@ export default class Wallet {
      * Revert asset reservation
      * @param order
      */
-    private revertAssetReservation(order: IOrder): void {
+    private revertAssetReservation(order: Order): void {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
@@ -126,7 +126,7 @@ export default class Wallet {
      * Ofc the exchange would throw an error at some point.
      * @param order
      */
-    private reserveAsset(order: IOrder): void {
+    private reserveAsset(order: Order): void {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
@@ -140,7 +140,7 @@ export default class Wallet {
      * Assets will be released on the other side of the trade.
      * @param order
      */
-    private releaseAsset(order: IOrder): void {
+    private releaseAsset(order: Order): void {
         const [quote, base] = order.pair;
         const {ifBuy, ifSell} = this.createCalculators(order);
 
@@ -152,10 +152,10 @@ export default class Wallet {
 
     /**
      * Updates the assets on the exchange for given new order
-     * @param {IOrder} order new order
-     * @param {IOrder} oldOrder old order
+     * @param {Order} order new order
+     * @param {Order} oldOrder old order
      */
-    updateAssets(order: IOrder, oldOrder?: IOrder) {
+    updateAssets(order: Order, oldOrder?: Order) {
         if (ReportType.REPLACED === order.reportType && oldOrder) {
             this.revertAssetReservation(oldOrder);
             this.reserveAsset(order);

@@ -1,5 +1,5 @@
 import {Pair} from "../../sockTrader/core/types/pair";
-import {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
+import {HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import BackTester from "../../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
@@ -22,7 +22,7 @@ const emitCandlesMock = jest.fn();
 backTester.addStrategy({
     strategy: SimpleMovingAverage,
     pair: pair,
-    interval: CandleInterval.ONE_HOUR,
+    interval: HitBTCCandleInterval.ONE_HOUR,
 });
 
 beforeEach(() => {
@@ -55,7 +55,7 @@ describe("start", () => {
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
             strategy: SimpleMovingAverage,
             pair: pair,
-            interval: CandleInterval.ONE_HOUR,
+            interval: HitBTCCandleInterval.ONE_HOUR,
         }]));
 
         expect(bindStrategyToExchangeSpy).toHaveBeenCalledWith(expect.objectContaining({

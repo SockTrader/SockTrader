@@ -1,15 +1,15 @@
 import {EventEmitter} from "events";
 import WSWebSocket from "ws";
 import logger from "../logger";
-import {ICommand, IConnection} from "../types/IConnection";
+import {Command, Connection} from "../types/Connection";
 
 export type Data = WSWebSocket.Data;
 
-export default class WebSocket extends EventEmitter implements IConnection {
+export default class WebSocket extends EventEmitter implements Connection {
 
     private readonly latency = 1000;
     private readonly waitForPong = 2000;
-    private readonly restoreCommands: ICommand[] = [];
+    private readonly restoreCommands: Command[] = [];
     private pingTimeout?: NodeJS.Timeout;
     private resetTimeout?: NodeJS.Timeout;
     private connection?: WSWebSocket;
@@ -94,11 +94,11 @@ export default class WebSocket extends EventEmitter implements IConnection {
         this.isExpectingPong = false;
     }
 
-    addRestorable(command: ICommand) {
+    addRestorable(command: Command) {
         this.restoreCommands.push(command);
     }
 
-    send(command: ICommand) {
+    send(command: Command) {
         try {
             if (!this.connection) {
                 logger.error(`Could not send: ${JSON.stringify(command)}. No connection available.`);

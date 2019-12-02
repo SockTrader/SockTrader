@@ -1,17 +1,17 @@
 import Events from "../events";
 import {orderLogger} from "../logger";
-import {IOrder, OrderStatus, ReportType} from "../types/order";
+import {Order, OrderStatus, ReportType} from "../types/order";
 
 export default class OrderTracker {
 
     private readonly unconfirmedOrders: Record<string, boolean> = {};
-    private openOrders: IOrder[] = [];
+    private openOrders: Order[] = [];
 
     private setOrderConfirmed(orderId: string) {
         delete this.unconfirmedOrders[orderId];
     }
 
-    private replaceOpenOrder(newOrder: IOrder, oldOrderId: string): IOrder | undefined {
+    private replaceOpenOrder(newOrder: Order, oldOrderId: string): Order | undefined {
         const oldOrder = this.findOpenOrder(oldOrderId);
         this.setOrderConfirmed(oldOrderId);
         this.removeOpenOrder(oldOrderId);
@@ -20,7 +20,7 @@ export default class OrderTracker {
         return oldOrder;
     }
 
-    private addOpenOrder(order: IOrder) {
+    private addOpenOrder(order: Order) {
         this.openOrders.push(order);
     }
 
@@ -33,7 +33,7 @@ export default class OrderTracker {
     }
 
     private logOpenOrders() {
-        const orders = this.openOrders.map(({side, price, quantity}: IOrder) => ({side, price, quantity}));
+        const orders = this.openOrders.map(({side, price, quantity}: Order) => ({side, price, quantity}));
         orderLogger.info(`Open orders: ${JSON.stringify(orders)}`);
     }
 
@@ -49,7 +49,7 @@ export default class OrderTracker {
         return this.openOrders;
     }
 
-    setOpenOrders(orders: IOrder[]) {
+    setOpenOrders(orders: Order[]) {
         this.openOrders = orders;
     }
 
@@ -57,9 +57,9 @@ export default class OrderTracker {
      * Processes order depending on the reportType
      * @param order
      */
-    process(order: IOrder) {
+    process(order: Order) {
         const orderId = order.id;
-        let oldOrder: IOrder | undefined;
+        let oldOrder: Order | undefined;
 
         this.setOrderConfirmed(orderId);
 

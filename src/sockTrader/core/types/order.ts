@@ -38,7 +38,7 @@ export enum OrderTimeInForce {
     GOOD_TILL_DATE = "GTD",
 }
 
-export interface IOrder {
+export interface Order {
     createdAt: Moment;
     id: string;
     originalId?: string;

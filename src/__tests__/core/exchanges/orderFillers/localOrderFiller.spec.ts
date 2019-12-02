@@ -1,8 +1,8 @@
 import moment from "moment";
 import LocalOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
-import {IOrder, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
-import {ICandle} from "../../../../sockTrader/core/types/ICandle";
+import {Order, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
+import {Candle} from "../../../../sockTrader/core/types/Candle";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 
 function createOrderFiller() {
@@ -13,13 +13,13 @@ function createOrderFiller() {
         side: OrderSide.BUY,
         price: 10,
         createdAt: moment(),
-    } as IOrder]);
+    } as Order]);
 
     return new LocalOrderFiller(tracker, new Wallet({BTC: 10, USD: 10000}));
 }
 
-const fillCandles = [{low: 5, timestamp: moment().add(1, "day")}] as ICandle[];
-const notFillCandles = [{low: 15, timestamp: moment().add(1, "day")}] as ICandle[];
+const fillCandles = [{low: 5, timestamp: moment().add(1, "day")}] as Candle[];
+const notFillCandles = [{low: 15, timestamp: moment().add(1, "day")}] as Candle[];
 
 let orderFiller = createOrderFiller();
 beforeEach(() => {

@@ -1,7 +1,7 @@
 import moment = require("moment");
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
+import {Order, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../sockTrader/core/types/order";
 
-export const FX_FILLED_BUY_ORDER: IOrder = {
+export const FX_FILLED_BUY_ORDER: Order = {
     createdAt: moment().subtract(5, "minutes"),
     side: OrderSide.BUY,
     status: OrderStatus.FILLED,
@@ -15,7 +15,7 @@ export const FX_FILLED_BUY_ORDER: IOrder = {
     quantity: 1,
 };
 
-export const FX_NEW_BUY_ORDER: IOrder = {
+export const FX_NEW_BUY_ORDER: Order = {
     createdAt: moment().subtract(5, "minutes"),
     side: OrderSide.BUY,
     status: OrderStatus.NEW,

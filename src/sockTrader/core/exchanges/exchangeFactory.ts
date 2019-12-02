@@ -1,8 +1,8 @@
 import OrderTrackerFactory from "../order/orderTrackerFactory";
 import WalletFactory from "../plugins/wallet/walletFactory";
-import {IOrderFiller} from "../types/IOrderFiller";
+import {OrderFiller} from "../types/OrderFiller";
 import BaseExchange from "./baseExchange";
-import {exchanges, IExchangeDefinition} from "./index";
+import {ExchangeDefinition, exchanges} from "./index";
 import LocalExchange from "./localExchange";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
 import LocalOrderFiller from "./orderFillers/localOrderFiller";
@@ -24,9 +24,9 @@ export default class ExchangeFactory {
         return exchange;
     }
 
-    private getExchangeDefinition(exchangeName?: string): IExchangeDefinition {
+    private getExchangeDefinition(exchangeName?: string): ExchangeDefinition {
         if (exchangeName) {
-            const def: IExchangeDefinition = exchanges[exchangeName];
+            const def: ExchangeDefinition = exchanges[exchangeName];
             if (!def) throw new Error(`Could not find exchange: ${exchangeName}`);
 
             return def;
@@ -39,14 +39,14 @@ export default class ExchangeFactory {
         };
     }
 
-    private getOrderCreator(config: IExchangeDefinition) {
+    private getOrderCreator(config: ExchangeDefinition) {
         const isLive = process.env.SOCKTRADER_TRADING_MODE === "LIVE";
 
         const orderCreator = new config.orderCreator();
         return isLive ? orderCreator : new LocalOrderCreator(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
     }
 
-    private getCandleProcessor(): IOrderFiller {
+    private getCandleProcessor(): OrderFiller {
         switch (process.env.SOCKTRADER_TRADING_MODE) {
             case "PAPER":
                 return new PaperTradingOrderFiller(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());

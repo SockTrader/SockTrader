@@ -2,29 +2,29 @@ import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import CandleManager from "../candles/candleManager";
 import Orderbook from "../orderbook";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {ICurrencyMap} from "../types/ICurrencyMap";
-import {IExchange} from "../types/IExchange";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {IOrderCreator} from "../types/IOrderCreator";
-import {IOrderFiller} from "../types/IOrderFiller";
-import {ITradeablePair} from "../types/ITradeablePair";
-import {IOrder, OrderSide} from "../types/order";
+import {Candle} from "../types/Candle";
+import {CandleInterval} from "../types/CandleInterval";
+import {Connection} from "../types/Connection";
+import {CurrencyMap} from "../types/CurrencyMap";
+import {Exchange} from "../types/Exchange";
+import {Order, OrderSide} from "../types/order";
+import {OrderbookData} from "../types/OrderbookData";
+import {OrderCreator} from "../types/OrderCreator";
+import {OrderFiller} from "../types/OrderFiller";
 import {Pair} from "../types/pair";
+import {TradeablePair} from "../types/TradeablePair";
 
 /**
  * The BaseExchange resembles common marketplace functionality
  */
-export default abstract class BaseExchange extends EventEmitter implements IExchange {
-    currencies: ICurrencyMap = {};
+export default abstract class BaseExchange extends EventEmitter implements Exchange {
+    currencies: CurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    protected orderCreator!: IOrderCreator;
-    protected orderFiller!: IOrderFiller;
+    protected orderCreator!: OrderCreator;
+    protected orderFiller!: OrderFiller;
     protected candles: Record<string, CandleManager> = {};
-    protected readonly connection: IConnection;
+    protected readonly connection: Connection;
     private readonly orderbooks: Record<string, Orderbook> = {};
     private ready = false;
 
@@ -34,34 +34,34 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.connection = this.createConnection();
     }
 
-    abstract onUpdateOrderbook(data: IOrderbookData): void;
+    abstract onUpdateOrderbook(data: OrderbookData): void;
 
-    abstract subscribeCandles(pair: Pair, interval: ICandleInterval): void;
+    abstract subscribeCandles(pair: Pair, interval: CandleInterval): void;
 
     abstract subscribeOrderbook(pair: Pair): void;
 
     abstract subscribeReports(): void;
 
-    protected abstract createConnection(): IConnection;
+    protected abstract createConnection(): Connection;
 
     /**
      * Load trading pair configuration
      */
     protected abstract loadCurrencies(): void;
 
-    setOrderCreator(orderCreator: IOrderCreator) {
+    setOrderCreator(orderCreator: OrderCreator) {
         this.orderCreator = orderCreator;
     }
 
-    setCandleProcessor(orderFiller: IOrderFiller) {
+    setCandleProcessor(orderFiller: OrderFiller) {
         this.orderFiller = orderFiller;
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number) {
+    adjustOrder(order: Order, price: number, qty: number) {
         return this.orderCreator.adjustOrder(order, price, qty);
     }
 
-    cancelOrder(order: IOrder) {
+    cancelOrder(order: Order) {
         return this.orderCreator.cancelOrder(order);
     }
 
@@ -69,11 +69,11 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.orderCreator.createOrder(pair, price, qty, side);
     }
 
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+    onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval) {
         return this.orderFiller.onSnapshotCandles(pair, data, interval);
     }
 
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
+    onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval) {
         return this.orderFiller.onUpdateCandles(pair, data, interval);
     }
 
@@ -125,7 +125,7 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
-    onCurrenciesLoaded(currencies: ITradeablePair[]): void {
+    onCurrenciesLoaded(currencies: TradeablePair[]): void {
         currencies.forEach(currency => this.currencies[currency.id.join("")] = currency);
         this.isCurrenciesLoaded = true;
         this.isReady();

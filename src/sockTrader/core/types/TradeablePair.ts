@@ -1,6 +1,6 @@
 import {Pair} from "./pair";
 
-export interface ITradeablePair {
+export interface TradeablePair {
     id: Pair;
     quantityIncrement: number;
     tickSize: number;

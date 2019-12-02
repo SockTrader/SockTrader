@@ -1,4 +1,4 @@
-export interface IHitBTCReportResponse {
+export interface HitBTCReportResponse {
     jsonrpc: string;
     method: string;
     params: Array<{

@@ -1,13 +1,13 @@
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
-import {ICandle} from "../sockTrader/core/types/ICandle";
+import {Candle} from "../sockTrader/core/types/Candle";
 import CandleNormalizer from "../sockTrader/data/candleNormalizer";
 
 const SRC_PATH = "../../src/data";
 const PATH = path.resolve(__dirname, SRC_PATH, "coinbase_btcusd_1h.csv");
 
-const normalize = (dataFrame: IDataFrame): IDataFrame<number, ICandle> => {
+const normalize = (dataFrame: IDataFrame): IDataFrame<number, Candle> => {
     return dataFrame
         .dropSeries(["Symbol", "Volume BTC"])
         .renameSeries({

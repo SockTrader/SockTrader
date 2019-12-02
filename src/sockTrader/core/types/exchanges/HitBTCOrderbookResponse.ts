@@ -1,4 +1,4 @@
-interface IHitBTCOrderbookEntry {
+interface HitBTCOrderbookEntry {
     price: string;
     size: string;
 }
@@ -7,8 +7,8 @@ export interface HitBTCOrderbookResponse {
     jsonrpc: string;
     method: string;
     params: {
-        ask: IHitBTCOrderbookEntry[],
-        bid: IHitBTCOrderbookEntry[],
+        ask: HitBTCOrderbookEntry[],
+        bid: HitBTCOrderbookEntry[],
         sequence: number,
         symbol: string,
     };

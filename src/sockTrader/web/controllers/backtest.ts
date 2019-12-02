@@ -1,7 +1,7 @@
 import chokidar, {FSWatcher} from "chokidar";
 import path from "path";
 import {Socket} from "socket.io";
-import BacktestCreator, {IBacktestOptions} from "../backtest/backtestCreator";
+import BacktestCreator, {BacktestOptions} from "../backtest/backtestCreator";
 
 /**
  * Path to entry script relative to current folder
@@ -29,7 +29,7 @@ export function resolvePath(p: string[] | string): string {
 export default (socket: Socket) => {
 
     const scriptPath = resolvePath(BACKTEST_SCRIPT);
-    const spawnProcess = (options: IBacktestOptions) => {
+    const spawnProcess = (options: BacktestOptions) => {
         const curProcess = creator.create(scriptPath, options);
 
         curProcess.on("message", event => {

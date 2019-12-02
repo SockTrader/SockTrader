@@ -1,4 +1,4 @@
-export interface CronInterval {
+export interface CandleInterval {
     code: string;
     cron: string;
 }

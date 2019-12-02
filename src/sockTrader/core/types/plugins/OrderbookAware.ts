@@ -1,7 +1,7 @@
 import Orderbook from "../../orderbook";
 
-export interface IOrderbookAware {
+export interface OrderbookAware {
     onUpdateOrderbook: (orderbook: Orderbook) => void;
 }
 
-export const isOrderbookAware = (plugin: any): plugin is IOrderbookAware => plugin.onUpdateOrderbook !== undefined;
+export const isOrderbookAware = (plugin: any): plugin is OrderbookAware => plugin.onUpdateOrderbook !== undefined;

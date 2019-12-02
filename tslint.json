@@ -21,6 +21,7 @@
     "curly": [true, "ignore-same-line"],
     "object-literal-key-quotes": [true, "consistent-as-needed"],
     "one-line": [true, "check-catch", "check-finally", "check-else"],
+    "interface-name": [true, "never-prefix"],
     "indent": [true, "spaces", 4],
     "linebreak-style": [true, "LF"],
     "space-within-parens": [true, 0],

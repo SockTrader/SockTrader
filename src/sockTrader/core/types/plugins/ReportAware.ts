@@ -1,7 +1,7 @@
-import {IOrder} from "../order";
+import {Order} from "../order";
 
-export interface IReportAware {
-    onReport: (order: IOrder) => void;
+export interface ReportAware {
+    onReport: (order: Order) => void;
 }
 
-export const isReportAware = (plugin: any): plugin is IReportAware => plugin.onReport !== undefined;
+export const isReportAware = (plugin: any): plugin is ReportAware => plugin.onReport !== undefined;

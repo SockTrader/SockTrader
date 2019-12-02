@@ -1,4 +1,4 @@
-import {IExchange} from "../types/IExchange";
+import {Exchange} from "../types/Exchange";
 import SockTrader from "./sockTrader";
 
 /**
@@ -9,10 +9,10 @@ export default class LiveTrader extends SockTrader {
 
     /**
      * Sets an exchange
-     * @param {IExchange} exchange the exchange to add
+     * @param {Exchange} exchange the exchange to add
      * @returns {this}
      */
-    setExchange(exchange: IExchange): this {
+    setExchange(exchange: Exchange): this {
         this.exchange = exchange;
 
         return this;

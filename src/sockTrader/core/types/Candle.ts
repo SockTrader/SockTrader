@@ -1,6 +1,6 @@
 import {Moment} from "moment";
 
-export interface ICandle {
+export interface Candle {
     close: number;
     high: number;
     low: number;

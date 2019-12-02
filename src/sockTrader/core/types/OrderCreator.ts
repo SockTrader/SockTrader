@@ -1,12 +1,12 @@
-import {IOrder, OrderSide} from "./order";
+import {Order, OrderSide} from "./order";
 import {Pair} from "./pair";
 
-export interface IOrderCreator {
+export interface OrderCreator {
 
-    cancelOrder(order: IOrder): IOrder | void;
+    cancelOrder(order: Order): Order | void;
 
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): IOrder | void;
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): Order | void;
 
-    adjustOrder(order: IOrder, price: number, qty: number): IOrder | void;
+    adjustOrder(order: Order, price: number, qty: number): Order | void;
 
 }

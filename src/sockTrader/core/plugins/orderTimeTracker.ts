@@ -1,8 +1,8 @@
 import {orderLogger} from "../logger";
-import {IOrder, OrderStatus, ReportType} from "../types/order";
-import {IReportAware} from "../types/plugins/IReportAware";
+import {Order, OrderStatus, ReportType} from "../types/order";
+import {ReportAware} from "../types/plugins/ReportAware";
 
-export default class OrderTimeTracker implements IReportAware {
+export default class OrderTimeTracker implements ReportAware {
 
     private orders: Record<string, number> = {};
 
@@ -10,7 +10,7 @@ export default class OrderTimeTracker implements IReportAware {
         return Math.floor(Date.now() / 1000);
     }
 
-    onReport({id, originalId, status, reportType}: IOrder) {
+    onReport({id, originalId, status, reportType}: Order) {
         if (status === OrderStatus.NEW) {
             this.orders[id] = this.getCurrentTime();
         }

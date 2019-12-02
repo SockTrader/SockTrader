@@ -3,7 +3,7 @@ import sinon from "sinon";
 
 import CandleManager from "../../sockTrader/core/candles/candleManager";
 import moment, {Moment} from "moment";
-import {ICandle} from "../../sockTrader/core/types/ICandle";
+import {Candle} from "../../sockTrader/core/types/Candle";
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");
 const convertTimestamp = (candles: any) => candles.map((c: any) => ({...c, timestamp: c.timestamp.toArray()}));
@@ -36,7 +36,7 @@ describe("update", () => {
 
         // @TODO fix bug when retentionPeriod = 1
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false, 2);
-        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        cc.on("update", (candles: Candle[]) => results.push(convertTimestamp(candles)));
 
         cc.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, "-", 1)}]);
         cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, "+", 1)}]);
@@ -63,7 +63,7 @@ describe("update", () => {
         const results: any = [];
 
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
-        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        cc.on("update", (candles: Candle[]) => results.push(convertTimestamp(candles)));
 
         cc.set([{open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, "-", 1)}]);
         cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, "+", 1)}]);
@@ -89,7 +89,7 @@ describe("update", () => {
 
     test("Should fill all candle gaps until last interval occurrence before current time", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
-        cc.on("update", (candles: ICandle[]) => {
+        cc.on("update", (candles: Candle[]) => {
             expect(convertTimestamp(candles)).to.deep.equal([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 6).toArray()},
@@ -115,7 +115,7 @@ describe("update", () => {
         const results: any = [];
 
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, true);
-        cc.on("update", (candles: ICandle[]) => results.push(convertTimestamp(candles)));
+        cc.on("update", (candles: Candle[]) => results.push(convertTimestamp(candles)));
 
         // Generate new empty candle
         clock.tick("01:00");
@@ -146,7 +146,7 @@ describe("update", () => {
 describe("fillCandleGaps", () => {
     test("Should fill all candle gaps until retention period is met", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false, 3);
-        cc.on("update", (candles: ICandle[]) => {
+        cc.on("update", (candles: Candle[]) => {
             expect(convertTimestamp(candles)).to.deep.equal([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 6).toArray()},

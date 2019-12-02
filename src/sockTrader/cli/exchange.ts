@@ -1,4 +1,4 @@
-import {exchanges, IExchangeDefinition} from "../core/exchanges";
+import {ExchangeDefinition, exchanges} from "../core/exchanges";
 
 export function listExchanges() {
     for (const exchange of Object.keys(exchanges)) {
@@ -7,7 +7,7 @@ export function listExchanges() {
     }
 }
 
-function getExchangeConfig({intervals}: IExchangeDefinition) {
+function getExchangeConfig({intervals}: ExchangeDefinition) {
     return Object.keys(intervals).reduce((prevValue, index) => {
         const {code, ...rest}: any = intervals[index];
         prevValue[index] = rest;

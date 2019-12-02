@@ -1,9 +1,9 @@
 import Local from "../connection/local";
 import Events from "../events";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {IOrderbookData} from "../types/IOrderbookData";
+import {Candle} from "../types/Candle";
+import {CandleInterval} from "../types/CandleInterval";
+import {Connection} from "../types/Connection";
+import {OrderbookData} from "../types/OrderbookData";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
@@ -15,7 +15,7 @@ import LocalOrderFiller from "./orderFillers/localOrderFiller";
  */
 export default class LocalExchange extends BaseExchange {
 
-    protected createConnection(): IConnection {
+    protected createConnection(): Connection {
         return new Local();
     }
 
@@ -26,8 +26,8 @@ export default class LocalExchange extends BaseExchange {
     /**
      * Emits a collection of candles from a local file as if they were sent from a real exchange
      */
-    emitCandles(candles: ICandle[]) {
-        let processedCandles: ICandle[] = [];
+    emitCandles(candles: Candle[]) {
+        let processedCandles: Candle[] = [];
 
         candles.forEach(value => {
             processedCandles = [value, ...processedCandles];
@@ -43,12 +43,12 @@ export default class LocalExchange extends BaseExchange {
     }
 
     // Method ignored by localExchange
-    onUpdateOrderbook(data: IOrderbookData): void {
+    onUpdateOrderbook(data: OrderbookData): void {
         return undefined;
     }
 
     // Method ignored by localExchange
-    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+    subscribeCandles(pair: Pair, interval: CandleInterval): void {
         return undefined;
     }
 
