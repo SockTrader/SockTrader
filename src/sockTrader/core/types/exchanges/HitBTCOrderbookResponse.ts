@@ -3,7 +3,7 @@ interface IHitBTCOrderbookEntry {
     size: string;
 }
 
-export interface IHitBTCOrderbookResponse {
+export interface HitBTCOrderbookResponse {
     jsonrpc: string;
     method: string;
     params: {

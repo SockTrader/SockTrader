@@ -1,4 +1,4 @@
-export interface ICandleInterval {
+export interface CronInterval {
     code: string;
     cron: string;
 }

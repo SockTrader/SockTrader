@@ -1,16 +1,16 @@
 import {EventEmitter} from "events";
 
-export interface ICommand {
+export interface Command {
     restorable: boolean;
 
     toCommand(): object;
 }
 
-export interface IConnection extends EventEmitter {
+export interface Connection extends EventEmitter {
 
     send(command: object): void;
 
-    addRestorable(command: ICommand): void;
+    addRestorable(command: Command): void;
 
     connect(): void;
 }
