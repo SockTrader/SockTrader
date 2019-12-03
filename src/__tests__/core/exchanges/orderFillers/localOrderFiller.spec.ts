@@ -4,7 +4,7 @@ import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 import {FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
-import {FX_FILL_CANDLES, FX_NOT_FILL_CANDLES} from "../../../../__fixtures__/candles";
+import {FX_FILL_CANDLES, FX_HISTORICAL_CANDLES, FX_NOT_FILL_CANDLES} from "../../../../__fixtures__/candles";
 import {Candle} from "../../../../sockTrader/core/types/Candle";
 
 function createOrderFiller() {
@@ -66,14 +66,26 @@ describe("isOrderWithinCandle", () => {
 });
 
 describe("onProcessCandles", () => {
-    test("Should set empty array in OrderTracker when all orders are filled", () => {
+    test("Should keep open order if candle is older than order", () => {
+        const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
+
+        orderFiller.onProcessCandles(FX_HISTORICAL_CANDLES);
+        expect(spy).toBeCalledWith([expect.objectContaining({
+            createdAt: expect.any(moment),
+            id: "NEW_BUY_ORDER_1",
+            price: 100,
+            side: OrderSide.BUY,
+        })]);
+    });
+
+    test("Should clear order tracker if all orders haven been filled", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
         orderFiller.onProcessCandles(FX_FILL_CANDLES);
         expect(spy).toBeCalledWith([]);
     });
 
-    test("Should set all open orders in OrderTracker", () => {
+    test("Should keep all open orders if nothing could have been filled", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
         orderFiller.onProcessCandles(FX_NOT_FILL_CANDLES);
