@@ -19,7 +19,7 @@ export default class ExchangeFactory {
 
         // @TODO getOrderCreator doesn't work!
         exchange.setOrderCreator(this.getOrderCreator(def));
-        exchange.setCandleProcessor(this.getCandleProcessor());
+        exchange.setOrderFiller(this.getCandleProcessor());
 
         return exchange;
     }

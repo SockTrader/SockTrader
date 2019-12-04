@@ -178,10 +178,10 @@ describe("onConnect", () => {
     });
 });
 
-describe("setCandleProcessor", () => {
+describe("setOrderFiller", () => {
     test("Should be able to set an orderFiller instance", () => {
         const orderFiller = new LocalOrderFiller(new OrderTracker(), new Wallet({}));
-        exchange["setCandleProcessor"](orderFiller);
+        exchange["setOrderFiller"](orderFiller);
         expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
     });
 });

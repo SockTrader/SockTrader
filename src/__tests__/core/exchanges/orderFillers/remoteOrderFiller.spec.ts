@@ -1,7 +1,8 @@
 import RemoteOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
 import {HitBTCCandleInterval} from "../../../../sockTrader/core/exchanges/hitBTC";
 import CandleManager from "../../../../sockTrader/core/candles/candleManager";
-import {Candle} from "../../../../sockTrader/core/types/Candle";
+import Events from "../../../../sockTrader/core/events";
+import {FX_HISTORICAL_CANDLES} from "../../../../__fixtures__/candles";
 
 let orderFiller = new RemoteOrderFiller();
 beforeEach(() => {
@@ -17,6 +18,15 @@ describe("getCandleManager", () => {
         expect(manager).toBeInstanceOf(CandleManager);
     });
 
+    test("Should return same CandleManager instance when calling multiple times", () => {
+        const manager1 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
+        const manager2 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
+        const manager3 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
+
+        expect(manager1).toStrictEqual(manager2);
+        expect(manager2).toStrictEqual(manager3);
+    });
+
     test("Should bind updateHandler to 'update' event of newly created CandleManager", () => {
         const manager = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
         manager.emit("update", {test: 123});
@@ -28,13 +38,18 @@ describe("onSnapshotCandles", () => {
     const interval = HitBTCCandleInterval.ONE_MINUTE;
 
     test("Should set new candles on CandleManager", () => {
-        const candles = [{open: 10, high: 20, low: 5, close: 15}] as Candle[];
-        const setMock = jest.fn();
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderFiller.onSnapshotCandles(["BTC", "USD"], FX_HISTORICAL_CANDLES, interval);
 
-        orderFiller.getCandleManager = jest.fn(() => ({set: setMock})) as any;
-        orderFiller.onSnapshotCandles(["BTC", "USD"], candles, interval);
-
-        expect(setMock).toBeCalledWith([{"close": 15, "high": 20, "low": 5, "open": 10}]);
+        expect(emitSpy).toBeCalledWith("core.updateCandles", expect.arrayContaining([
+            expect.objectContaining({
+                open: 100,
+                high: 110,
+                low: 99,
+                close: 102,
+                volume: 1000,
+            }),
+        ]));
     });
 });
 
@@ -42,13 +57,18 @@ describe("onUpdateCandles", () => {
     const interval = HitBTCCandleInterval.ONE_MINUTE;
 
     test("Should update new candles on CandleManager", () => {
-        const candles = [{open: 10, high: 20, low: 5, close: 15}] as Candle[];
-        const updateMock = jest.fn();
+        const emitSpy = jest.spyOn(Events, "emit");
+        orderFiller.onUpdateCandles(["BTC", "USD"], FX_HISTORICAL_CANDLES, interval);
 
-        orderFiller.getCandleManager = jest.fn(() => ({update: updateMock})) as any;
-        orderFiller.onUpdateCandles(["BTC", "USD"], candles, interval);
-
-        expect(updateMock).toBeCalledWith([{"close": 15, "high": 20, "low": 5, "open": 10}]);
+        expect(emitSpy).toBeCalledWith("core.updateCandles", expect.arrayContaining([
+            expect.objectContaining({
+                open: 100,
+                high: 110,
+                low: 99,
+                close: 102,
+                volume: 1000,
+            }),
+        ]));
     });
 });
 

@@ -53,7 +53,7 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
         this.orderCreator = orderCreator;
     }
 
-    setCandleProcessor(orderFiller: OrderFiller) {
+    setOrderFiller(orderFiller: OrderFiller) {
         this.orderFiller = orderFiller;
     }
 

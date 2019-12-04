@@ -20,7 +20,7 @@ beforeEach(() => {
 });
 
 describe("onSnapshotCandles", () => {
-    test("Should process open orders", () => {
+    test("Should try to fill open orders if possible", () => {
         const spy = jest.spyOn(orderFiller, "processOpenOrders" as any);
         orderFiller.onSnapshotCandles(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
 
@@ -36,7 +36,7 @@ describe("onSnapshotCandles", () => {
 });
 
 describe("onUpdateCandles", () => {
-    test("Should process open orders", () => {
+    test("Should try to fill open orders if possible", () => {
         const spy = jest.spyOn(orderFiller, "processOpenOrders" as any);
         orderFiller.onUpdateCandles(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
 

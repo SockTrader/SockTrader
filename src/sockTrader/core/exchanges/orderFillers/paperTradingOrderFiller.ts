@@ -9,21 +9,21 @@ import RemoteOrderFiller from "./remoteOrderFiller";
 
 export default class PaperTradingOrderFiller implements OrderFiller {
 
-    private localCandleProcessor: LocalOrderFiller;
-    private remoteCandleProcessor: RemoteOrderFiller;
+    private localOrderFiller: LocalOrderFiller;
+    private remoteOrderFiller: RemoteOrderFiller;
 
     constructor(readonly orderTracker: OrderTracker, readonly wallet: Wallet) {
-        this.localCandleProcessor = new LocalOrderFiller(orderTracker, wallet);
-        this.remoteCandleProcessor = new RemoteOrderFiller();
+        this.localOrderFiller = new LocalOrderFiller(orderTracker, wallet);
+        this.remoteOrderFiller = new RemoteOrderFiller();
     }
 
     onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
-        this.localCandleProcessor.onSnapshotCandles(pair, data, interval);
-        this.remoteCandleProcessor.onSnapshotCandles(pair, data, interval);
+        this.localOrderFiller.onSnapshotCandles(pair, data, interval);
+        this.remoteOrderFiller.onSnapshotCandles(pair, data, interval);
     }
 
     onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
-        this.localCandleProcessor.onUpdateCandles(pair, data, interval);
-        this.remoteCandleProcessor.onUpdateCandles(pair, data, interval);
+        this.localOrderFiller.onUpdateCandles(pair, data, interval);
+        this.remoteOrderFiller.onUpdateCandles(pair, data, interval);
     }
 }
