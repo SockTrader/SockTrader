@@ -1,7 +1,7 @@
 import moment from "moment";
-import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
-import {Order, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
-import Events from "../../../../sockTrader/core/events";
+import OrderTracker from "../../../sockTrader/core/order/orderTracker";
+import {Order, OrderSide, OrderStatus, ReportType} from "../../../sockTrader/core/types/order";
+import Events from "../../../sockTrader/core/events";
 
 let orderTracker = new OrderTracker();
 beforeEach(() => {

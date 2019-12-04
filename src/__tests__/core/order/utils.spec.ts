@@ -1,4 +1,4 @@
-import {generateOrderId} from "../../../../sockTrader/core/utils/utils";
+import {generateOrderId} from "../../../sockTrader/core/utils/utils";
 
 describe("generateOrderId", () => {
     test("Should generate a random order id", () => {

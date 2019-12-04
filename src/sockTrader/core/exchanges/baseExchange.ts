@@ -94,6 +94,10 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
         this.connection.removeAllListeners();
     }
 
+    /**
+     * @TODO refactor into orderbook factory
+     * @deprecated
+     */
     getOrderbook(pair: Pair): Orderbook {
         const ticker = pair.join("");
         if (this.orderbooks[ticker]) {
