@@ -32,9 +32,11 @@ export const HitBTCCandleInterval: Record<string, CandleInterval> = {
  */
 export default class HitBTC extends BaseExchange {
     readonly adapter: ResponseAdapter = new HitBTCAdapter(this);
+    private publicKey: string = config.exchanges.hitbtc.publicKey;
+    private secretKey: string = config.exchanges.hitbtc.secretKey;
 
     protected createConnection(): WebSocket {
-        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
+        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40000);
     }
 
     loadCurrencies(): void {
@@ -97,10 +99,9 @@ export default class HitBTC extends BaseExchange {
         this.connection.on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
-        const auth = config.exchanges.hitbtc;
-        if (auth.publicKey !== "" && auth.secretKey !== "") {
+        if (this.publicKey !== "" && this.secretKey !== "") {
             logger.info("Live credentials are used!");
-            this.login(auth.publicKey, auth.secretKey);
+            this.login(this.publicKey, this.secretKey);
         }
     }
 }

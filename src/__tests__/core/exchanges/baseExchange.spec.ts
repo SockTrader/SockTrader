@@ -5,7 +5,11 @@ import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory"
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 import {OrderSide} from "../../../sockTrader/core/types/order";
 import {FX_FILL_CANDLES} from "../../../__fixtures__/candles";
-import {ALL_CURRENCIES, BTCUSD} from "../../../__fixtures__/currencies";
+import {FX_ALL_CURRENCIES, FX_BTCUSD} from "../../../__fixtures__/currencies";
+import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
+import OrderTracker from "../../../sockTrader/core/order/orderTracker";
+import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
+import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 
 jest.mock("../../../sockTrader/core/logger");
 
@@ -14,6 +18,22 @@ const pair: Pair = ["BTC", "USD"];
 let exchange = new ExchangeFactory().createExchange();
 beforeEach(() => {
     exchange = new ExchangeFactory().createExchange();
+});
+
+describe("setOrderFiller", () => {
+    test("Should be able to set an orderFiller instance", () => {
+        const orderFiller = new LocalOrderFiller(new OrderTracker(), new Wallet({}));
+        exchange.setOrderFiller(orderFiller);
+        expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
+    });
+});
+
+describe("getOrderCreator", () => {
+    test("Should be able to set an orderCreator instance", () => {
+        const orderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({}));
+        exchange.setOrderCreator(orderCreator);
+        expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
+    });
 });
 
 describe("buy", () => {
@@ -115,7 +135,7 @@ describe("connect", () => {
 });
 
 // @TODO test needs to be refactored into orderbook factory
-describe.skip("getOrderbook", () => {
+describe("getOrderbook", () => {
     test("Should throw error if no configuration is found for given pair", () => {
         expect(() => exchange.getOrderbook(pair)).toThrow("No configuration found for pair: \"BTCUSD\"");
     });
@@ -123,7 +143,7 @@ describe.skip("getOrderbook", () => {
     test("Should get singleton exchange orderbook", () => {
         const symbol = pair.join("");
 
-        exchange.currencies[symbol] = BTCUSD;
+        exchange.currencies[symbol] = FX_BTCUSD;
 
         // Returns a new empty orderbook
         const orderbook = exchange.getOrderbook(pair);
@@ -163,7 +183,7 @@ describe("onCurrenciedLoaded", () => {
         const isReadySpy = jest.spyOn(exchange, "isReady");
 
         expect(exchange.currencies).toEqual({});
-        exchange.onCurrenciesLoaded(ALL_CURRENCIES);
+        exchange.onCurrenciesLoaded(FX_ALL_CURRENCIES);
         expect(exchange.currencies).toEqual(expect.objectContaining({
             BTCUSD: {
                 id: ["BTC", "USD"],

@@ -1,24 +1,16 @@
-/* tslint:disable */
 import {expect} from "chai";
 import {spy} from "sinon";
 import "jest";
 import Orderbook, {Operator, OrderbookSide} from "../../sockTrader/core/orderbook";
 import {Pair} from "../../sockTrader/core/types/pair";
+import {FX_ASK, FX_BID} from "../../__fixtures__/orderbook";
 
 const pair: Pair = ["BTC", "ETH"];
 describe('Orderbook', () => {
     let ob = new Orderbook(pair, 8);
     beforeEach(() => {
         ob = new Orderbook(pair, 8);
-        ob.setOrders([
-            {price: 0.074819, size: 100},
-            {price: 0.074817, size: 100},
-            {price: 0.074834, size: 2500},
-        ], [
-            {price: 0.074940, size: 451},
-            {price: 0.074944, size: 2000},
-            {price: 0.074925, size: 100},
-        ], 1);
+        ob.setOrders(FX_ASK, FX_BID, 1);
     });
 
     it("calculate the adjusted price", () => {
