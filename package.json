@@ -4,6 +4,14 @@
   "description": "Websocket based trading bot for cryptocurrencies",
   "main": "src/index.ts",
   "repository": "https://github.com/SockTrader/SockTrader",
+  "license": "GPL-3.0",
+  "authors": [
+    "wouter cleymans",
+    "thijs raets"
+  ],
+  "engines": {
+    "node": ">=12.13.1"
+  },
   "scripts": {
     "stryker": "stryker run",
     "test": "jest  --ci --maxWorkers=2 --coverage",
@@ -32,10 +40,8 @@
     "collectCoverageFrom": [
       "<rootDir>/src/**/*.ts",
       "!<rootDir>/src/data/*.ts",
-      "!<rootDir>/src/__fixtures__/*.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/src/strategies/"
+      "!<rootDir>/src/__fixtures__/*.ts",
+      "!<rootDir>/src/strategies/**/*"
     ],
     "reporters": [
       "default",
@@ -52,14 +58,7 @@
     "pre-commit",
     "lint"
   ],
-  "authors": [
-    "wouter cleymans",
-    "thijs raets"
-  ],
-  "engines": {
-    "node": ">=10.16.3"
-  },
-  "license": "GPL-3.0",
+
   "nodemonConfig": {
     "ignore": [
       "logs/*"
