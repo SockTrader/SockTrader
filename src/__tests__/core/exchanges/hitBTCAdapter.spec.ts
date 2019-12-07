@@ -5,6 +5,7 @@ import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFact
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_BTCUSD, FX_ETHUSD} from "../../../__fixtures__/currencies";
 import logger from "../../../sockTrader/core/logger";
+import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
@@ -226,6 +227,12 @@ describe("onSnapshotCandles", () => {
             {close: 9, high: 10, low: 9, open: 9, timestamp: expect.any(moment), volume: 1100},
         ], {code: "H1", cron: "00 00 */1 * * *"});
     });
+
+    it("Should ignore a candle snapshot with an unrecognized interval", () => {
+        exchange.onSnapshotCandles = jest.fn();
+        adapter.emit("api.snapshotCandles", {params: {period: "UNKNOWN"}} as HitBTCCandlesResponse);
+        expect(exchange.onSnapshotCandles).toBeCalledTimes(0);
+    });
 });
 
 describe("onUpdateCandles", () => {
@@ -240,6 +247,35 @@ describe("onUpdateCandles", () => {
 
         expect(exchange.onUpdateCandles).toBeCalledWith(["BTC", "USD"], [], {code: "H1", cron: "00 00 */1 * * *"});
     });
+
+    it("Should ignore a candle update with an unrecognized interval", () => {
+        exchange.onUpdateCandles = jest.fn();
+        adapter.emit("api.snapshotCandles", {params: {period: "UNKNOWN"}} as HitBTCCandlesResponse);
+        expect(exchange.onUpdateCandles).toBeCalledTimes(0);
+    });
+});
+
+describe("onSnapshotOrderbook", () => {
+    it("Should trigger an new orderbook snapshot on the exchange", () => {
+        const spy = jest.spyOn(exchange, "onSnapshotOrderbook");
+        adapter["onSnapshotOrderbook"]({
+            jsonrpc: "2.0",
+            method: "string",
+            params: {
+                ask: FX_ASK,
+                bid: FX_BID,
+                sequence: 1,
+                symbol: "BTCUSD",
+            },
+        });
+
+        expect(spy).toBeCalledWith({
+            ask: FX_ASK,
+            bid: FX_BID,
+            pair: ["BTC", "USD"],
+            sequence: 1,
+        });
+    });
 });
 
 describe("onUpdateOrderbook", () => {
@@ -249,16 +285,16 @@ describe("onUpdateOrderbook", () => {
             jsonrpc: "2.0",
             method: "string",
             params: {
-                ask: [{price: 10, size: 10}],
-                bid: [{price: 10, size: 10}],
+                ask: FX_ASK,
+                bid: FX_BID,
                 sequence: 1,
                 symbol: "BTCUSD",
             },
         });
 
         expect(spy).toBeCalledWith({
-            ask: [{price: 10, size: 10}],
-            bid: [{price: 10, size: 10}],
+            ask: FX_ASK,
+            bid: FX_BID,
             pair: ["BTC", "USD"],
             sequence: 1,
         });
