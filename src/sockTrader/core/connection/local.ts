@@ -12,7 +12,7 @@ export default class Local extends EventEmitter implements Connection {
     }
 
     connect(): void {
-        // ignore
+        this.emit("open");
     }
 
     addRestorable(command: Command): void {

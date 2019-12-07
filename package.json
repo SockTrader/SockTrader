@@ -31,7 +31,8 @@
     "coverageDirectory": "test_results/coverage",
     "collectCoverageFrom": [
       "<rootDir>/src/**/*.ts",
-      "!<rootDir>/src/data/*.ts"
+      "!<rootDir>/src/data/*.ts",
+      "!<rootDir>/src/__fixtures__/*.ts"
     ],
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/strategies/"

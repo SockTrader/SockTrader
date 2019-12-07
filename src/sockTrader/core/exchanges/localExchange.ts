@@ -15,6 +15,9 @@ import LocalOrderFiller from "./orderFillers/localOrderFiller";
  */
 export default class LocalExchange extends BaseExchange {
 
+    isCurrenciesLoaded = true;
+    isAuthenticated = true;
+
     protected createConnection(): Connection {
         return new Local();
     }
@@ -35,11 +38,6 @@ export default class LocalExchange extends BaseExchange {
             (this.orderFiller as LocalOrderFiller).onProcessCandles(processedCandles);
             Events.emit("core.updateCandles", processedCandles);
         });
-    }
-
-    isReady(): boolean {
-        this.emit("ready");
-        return true;
     }
 
     // Method ignored by localExchange
