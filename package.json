@@ -58,7 +58,6 @@
     "pre-commit",
     "lint"
   ],
-
   "nodemonConfig": {
     "ignore": [
       "logs/*"
@@ -67,7 +66,7 @@
   },
   "dependencies": {
     "@types/boom": "^7.3.0",
-    "@types/chai": "^4.2.5",
+    "@types/chai": "^4.2.6",
     "@types/chokidar": "^2.1.3",
     "@types/cors": "^2.8.6",
     "@types/cron": "^1.7.1",
@@ -107,9 +106,9 @@
     "socket.io": "^2.3.0",
     "source-map-support": "^0.5.16",
     "technicalindicators": "^3.0.0",
-    "typescript": "^3.7.2",
+    "typescript": "^3.7.3",
     "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.3.0",
+    "winston-daily-rotate-file": "^4.3.1",
     "ws": "^7.2.0",
     "yargs": "^15.0.2"
   },
