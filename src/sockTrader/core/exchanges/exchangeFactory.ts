@@ -19,7 +19,7 @@ export default class ExchangeFactory {
 
         // @TODO getOrderCreator doesn't work!
         exchange.setOrderCreator(this.getOrderCreator(def));
-        exchange.setOrderFiller(this.getCandleProcessor());
+        exchange.setOrderFiller(this.getOrderFiller());
 
         return exchange;
     }
@@ -46,7 +46,7 @@ export default class ExchangeFactory {
         return isLive ? orderCreator : new LocalOrderCreator(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
     }
 
-    private getCandleProcessor(): OrderFiller {
+    private getOrderFiller(): OrderFiller {
         switch (process.env.SOCKTRADER_TRADING_MODE) {
             case "PAPER":
                 return new PaperTradingOrderFiller(OrderTrackerFactory.getInstance(), WalletFactory.getInstance());
