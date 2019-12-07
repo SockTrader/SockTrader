@@ -140,8 +140,6 @@ describe("subscribeReports", () => {
 
 describe("onConnect", () => {
     beforeEach(() => {
-        jest.resetModules();
-
         exchange.login = jest.fn();
         exchange.loadCurrencies = jest.fn();
     });

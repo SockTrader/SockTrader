@@ -7,11 +7,42 @@ import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators
 import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
 
-
 let factory = new ExchangeFactory();
 beforeEach(() => {
     factory = new ExchangeFactory();
 });
+
+describe("createExchange", () => {
+    it("Should return a properly HitBTC exchange in LIVE trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
+        const exchange = factory.createExchange("hitbtc");
+
+        expect(exchange).toBeInstanceOf(HitBTC);
+        expect(exchange["orderCreator"]).toBeInstanceOf(HitBTCOrderCreator);
+        expect(exchange["orderFiller"]).toBeInstanceOf(RemoteOrderFiller);
+    });
+
+    it("Should return a properly HitBTC exchange in PAPER trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "PAPER";
+
+        const exchange = factory.createExchange("hitbtc");
+
+        expect(exchange).toBeInstanceOf(HitBTC);
+        expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
+        expect(exchange["orderFiller"]).toBeInstanceOf(PaperTradingOrderFiller);
+    });
+
+    it("Should return a properly Local exchange in PAPER trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
+
+        const exchange = factory.createExchange();
+
+        expect(exchange).toBeInstanceOf(LocalExchange);
+        expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
+        expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
+    });
+})
 
 describe("getOrderFiller", () => {
     it("Should return RemoteOrderFiller when using LIVE trading mode", () => {
@@ -33,6 +64,35 @@ describe("getOrderFiller", () => {
 
         const orderFiller = factory["getOrderFiller"]();
         expect(orderFiller).toBeInstanceOf(LocalOrderFiller);
+    });
+});
+
+describe("getOrderCreator", () => {
+    it("Should return LocalOrderCreator when using BACKTEST trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
+
+        const def = factory["getExchangeDefinition"]("hitbtc");
+        const orderCreator = factory["getOrderCreator"](def);
+
+        expect(orderCreator).toBeInstanceOf(LocalOrderCreator);
+    });
+
+    it("Should return LocalOrderCreator when using PAPER trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "PAPER";
+
+        const def = factory["getExchangeDefinition"]("hitbtc");
+        const orderCreator = factory["getOrderCreator"](def);
+
+        expect(orderCreator).toBeInstanceOf(LocalOrderCreator);
+    });
+
+    it("Should return LocalOrderCreator when using LIVE trading mode", () => {
+        process.env.SOCKTRADER_TRADING_MODE = "LIVE";
+
+        const def = factory["getExchangeDefinition"]("hitbtc");
+        const orderCreator = factory["getOrderCreator"](def);
+
+        expect(orderCreator).toBeInstanceOf(HitBTCOrderCreator);
     });
 });
 
