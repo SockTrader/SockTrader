@@ -1,7 +1,7 @@
 import OrderTracker from "../../order/orderTracker";
-import {Connection} from "../../types/Connection";
+import {Connection} from "../../types/connection";
 import {Order, OrderSide} from "../../types/order";
-import {OrderCreator} from "../../types/OrderCreator";
+import {OrderCreator} from "../../types/orderCreator";
 import {Pair} from "../../types/pair";
 import {generateOrderId} from "../../utils/utils";
 import HitBTCCommand from "../commands/hitBTCCommand";

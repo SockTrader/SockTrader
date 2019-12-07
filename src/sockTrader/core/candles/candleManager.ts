@@ -4,8 +4,8 @@ import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
 import config from "../../../config";
 import {candleLogger} from "../logger";
-import {Candle} from "../types/Candle";
-import {CandleInterval} from "../types/CandleInterval";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
 
 /**
  * Contains OHLCV history data for a trading pair.

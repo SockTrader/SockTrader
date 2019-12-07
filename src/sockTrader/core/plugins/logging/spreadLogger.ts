@@ -1,6 +1,6 @@
 import {orderbookLogger} from "../../logger";
 import Orderbook, {OrderbookEntry, OrderbookSide} from "../../orderbook";
-import {OrderbookAware} from "../../types/plugins/OrderbookAware";
+import {OrderbookAware} from "../../types/plugins/orderbookAware";
 
 export default class SpreadLogger implements OrderbookAware {
 

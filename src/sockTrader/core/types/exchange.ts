@@ -2,12 +2,12 @@ import {EventEmitter} from "events";
 import BaseExchange from "../exchanges/baseExchange";
 import LocalExchange from "../exchanges/localExchange";
 import Orderbook from "../orderbook";
-import {Candle} from "./Candle";
-import {CandleInterval} from "./CandleInterval";
+import {Candle} from "./candle";
+import {CandleInterval} from "./candleInterval";
 import {Order, OrderSide} from "./order";
-import {OrderbookData} from "./OrderbookData";
+import {OrderbookData} from "./orderbookData";
 import {Pair} from "./pair";
-import {TradeablePair} from "./TradeablePair";
+import {TradeablePair} from "./tradeablePair";
 
 export const isLocalExchange = (exchange: BaseExchange): exchange is LocalExchange => exchange instanceof LocalExchange;
 

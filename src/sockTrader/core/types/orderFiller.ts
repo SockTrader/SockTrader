@@ -1,5 +1,5 @@
-import {Candle} from "./Candle";
-import {CandleInterval} from "./CandleInterval";
+import {Candle} from "./candle";
+import {CandleInterval} from "./candleInterval";
 import {Pair} from "./pair";
 
 export interface OrderFiller {

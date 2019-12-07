@@ -1,5 +1,5 @@
 import {Moment} from "moment";
-import {Candle} from "../types/Candle";
+import {Candle} from "../types/candle";
 
 export default class CandleCollection extends Array<Candle> {
 

@@ -1,4 +1,4 @@
-import {Exchange} from "../types/Exchange";
+import {Exchange} from "../types/exchange";
 import SockTrader from "./sockTrader";
 
 /**

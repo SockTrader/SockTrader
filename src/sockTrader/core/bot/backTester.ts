@@ -1,8 +1,8 @@
 import moment from "moment";
 import LocalExchange from "../exchanges/localExchange";
-import {BotStatus} from "../types/BotStatus";
-import {Candle} from "../types/Candle";
-import {isTradingBotAware} from "../types/plugins/TradingBotAware";
+import {BotStatus} from "../types/botStatus";
+import {Candle} from "../types/candle";
+import {isTradingBotAware} from "../types/plugins/tradingBotAware";
 import SockTrader, {StrategyConfig} from "./sockTrader";
 
 interface InputCandle {

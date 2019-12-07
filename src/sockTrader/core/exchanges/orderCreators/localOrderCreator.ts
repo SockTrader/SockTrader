@@ -1,9 +1,9 @@
 import moment, {Moment} from "moment";
 import OrderTracker from "../../order/orderTracker";
 import Wallet from "../../plugins/wallet/wallet";
-import {Candle} from "../../types/Candle";
+import {Candle} from "../../types/candle";
 import {Order, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
-import {OrderCreator} from "../../types/OrderCreator";
+import {OrderCreator} from "../../types/orderCreator";
 import {Pair} from "../../types/pair";
 import {generateOrderId} from "../../utils/utils";
 

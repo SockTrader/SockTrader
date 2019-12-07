@@ -1,7 +1,7 @@
 import moment from "moment";
 import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
 import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
-import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/HitBTCCandlesResponse";
+import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/hitBTCCandlesResponse";
 import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFactory";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";

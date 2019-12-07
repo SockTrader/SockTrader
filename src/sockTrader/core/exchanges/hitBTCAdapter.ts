@@ -3,17 +3,17 @@ import moment from "moment";
 import {Data} from "../connection/webSocket";
 import logger from "../logger";
 import OrderTrackerFactory from "../order/orderTrackerFactory";
-import {Candle} from "../types/Candle";
-import {CandleInterval} from "../types/CandleInterval";
-import {HitBTCAuthenticateResponse} from "../types/exchanges/HitBTCAuthenticateResponse";
-import {HitBTCCandlesResponse} from "../types/exchanges/HitBTCCandlesResponse";
-import {HitBTCGetSymbolsResponse} from "../types/exchanges/HitBTCGetSymbolsResponse";
-import {HitBTCOrderbookResponse} from "../types/exchanges/HitBTCOrderbookResponse";
-import {HitBTCReportResponse} from "../types/exchanges/HitBTCReportResponse";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {HitBTCAuthenticateResponse} from "../types/exchanges/hitBTCAuthenticateResponse";
+import {HitBTCCandlesResponse} from "../types/exchanges/hitBTCCandlesResponse";
+import {HitBTCGetSymbolsResponse} from "../types/exchanges/hitBTCGetSymbolsResponse";
+import {HitBTCOrderbookResponse} from "../types/exchanges/hitBTCOrderbookResponse";
+import {HitBTCReportResponse} from "../types/exchanges/hitBTCReportResponse";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
-import {OrderbookData} from "../types/OrderbookData";
-import {ResponseAdapter} from "../types/ResponseAdapter";
-import {TradeablePair} from "../types/TradeablePair";
+import {OrderbookData} from "../types/orderbookData";
+import {ResponseAdapter} from "../types/responseAdapter";
+import {TradeablePair} from "../types/tradeablePair";
 import HitBTC, {HitBTCCandleInterval} from "./hitBTC";
 
 /**

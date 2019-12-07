@@ -1,4 +1,4 @@
-import {TradeablePair} from "./TradeablePair";
+import {TradeablePair} from "./tradeablePair";
 
 export interface CurrencyMap {
     [key: string]: TradeablePair;

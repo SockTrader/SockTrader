@@ -1,4 +1,4 @@
-import {BotStatus} from "../BotStatus";
+import {BotStatus} from "../botStatus";
 
 export interface TradingBotAware {
     onBotProgress: (status: BotStatus) => void;

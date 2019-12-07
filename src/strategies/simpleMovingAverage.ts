@@ -3,7 +3,7 @@ import CandleCollection from "../sockTrader/core/candles/candleCollection";
 import Orderbook from "../sockTrader/core/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {crossDown, crossUp} from "../sockTrader/core/strategy/utils";
-import {Exchange} from "../sockTrader/core/types/Exchange";
+import {Exchange} from "../sockTrader/core/types/exchange";
 import {Order, OrderSide, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
 

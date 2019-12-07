@@ -1,4 +1,4 @@
-import {TradeablePair} from "../sockTrader/core/types/TradeablePair";
+import {TradeablePair} from "../sockTrader/core/types/tradeablePair";
 
 export const ETHUSD: TradeablePair = {
     id: ["ETH", "USD"],

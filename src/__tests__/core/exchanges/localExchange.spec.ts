@@ -1,7 +1,7 @@
 import moment from "moment";
 import Events from "../../../sockTrader/core/events";
-import {Candle} from "../../../sockTrader/core/types/Candle";
-import {isLocalExchange} from "../../../sockTrader/core/types/Exchange";
+import {Candle} from "../../../sockTrader/core/types/candle";
+import {isLocalExchange} from "../../../sockTrader/core/types/exchange";
 import {
     Order,
     OrderSide,

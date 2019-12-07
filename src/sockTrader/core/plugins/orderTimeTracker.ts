@@ -1,6 +1,6 @@
 import {orderLogger} from "../logger";
 import {Order, OrderStatus, ReportType} from "../types/order";
-import {ReportAware} from "../types/plugins/ReportAware";
+import {ReportAware} from "../types/plugins/reportAware";
 
 export default class OrderTimeTracker implements ReportAware {
 

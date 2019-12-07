@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import {exchanges} from "../core/exchanges";
-import {CandleInterval} from "../core/types/CandleInterval";
+import {CandleInterval} from "../core/types/candleInterval";
 
 export async function loadStrategy(strategyFilename: string) {
     const strategyPath = path.resolve(__dirname, "./../../strategies", strategyFilename);

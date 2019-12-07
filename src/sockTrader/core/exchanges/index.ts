@@ -1,5 +1,5 @@
-import {CandleInterval} from "../types/CandleInterval";
-import {OrderCreator} from "../types/OrderCreator";
+import {CandleInterval} from "../types/candleInterval";
+import {OrderCreator} from "../types/orderCreator";
 import BaseExchange from "./baseExchange";
 import HitBTC, {HitBTCCandleInterval} from "./hitBTC";
 import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";

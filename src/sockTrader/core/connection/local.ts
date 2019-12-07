@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import {Command, Connection} from "../types/Connection";
+import {Command, Connection} from "../types/connection";
 
 export default class Local extends EventEmitter implements Connection {
 

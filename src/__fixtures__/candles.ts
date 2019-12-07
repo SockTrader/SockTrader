@@ -1,5 +1,5 @@
 import moment from "moment";
-import {Candle} from "../sockTrader/core/types/Candle";
+import {Candle} from "../sockTrader/core/types/candle";
 
 export const FX_FILL_CANDLES: Candle[] = [
     {

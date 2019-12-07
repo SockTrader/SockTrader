@@ -3,7 +3,7 @@ import LocalOrderCreator from "../../../../sockTrader/core/exchanges/orderCreato
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
-import {Candle} from "../../../../sockTrader/core/types/Candle";
+import {Candle} from "../../../../sockTrader/core/types/candle";
 import {FX_FILLED_BUY_ORDER, FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
 let localOrderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({"USD": 1000}));

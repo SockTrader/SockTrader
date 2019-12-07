@@ -1,5 +1,5 @@
 import {walletLogger} from "../../logger";
-import {AssetAware} from "../../types/plugins/AssetAware";
+import {AssetAware} from "../../types/plugins/assetAware";
 import {AssetMap} from "../wallet/wallet";
 
 export default class WalletLogger implements AssetAware {

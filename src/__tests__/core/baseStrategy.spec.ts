@@ -1,6 +1,6 @@
 import BaseStrategy from "../../sockTrader/core/strategy/baseStrategy";
 import {Order, OrderSide} from "../../sockTrader/core/types/order";
-import {Candle} from "../../sockTrader/core/types/Candle";
+import {Candle} from "../../sockTrader/core/types/candle";
 import Orderbook from "../../sockTrader/core/orderbook";
 
 class MyStrategy extends BaseStrategy {

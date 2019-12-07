@@ -5,7 +5,7 @@ import {OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/ty
 import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
 import {FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
 import {FX_FILL_CANDLES, FX_HISTORICAL_CANDLES, FX_NOT_FILL_CANDLES} from "../../../../__fixtures__/candles";
-import {Candle} from "../../../../sockTrader/core/types/Candle";
+import {Candle} from "../../../../sockTrader/core/types/candle";
 
 function createOrderFiller() {
     const tracker = new OrderTracker();

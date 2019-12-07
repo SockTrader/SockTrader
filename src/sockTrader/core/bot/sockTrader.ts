@@ -4,14 +4,14 @@ import Events from "../events";
 import Orderbook from "../orderbook";
 import {AssetMap} from "../plugins/wallet/wallet";
 import BaseStrategy, {AdjustSignal, IStrategyClass, Signal} from "../strategy/baseStrategy";
-import {Candle} from "../types/Candle";
-import {CandleInterval} from "../types/CandleInterval";
-import {Exchange} from "../types/Exchange";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {Exchange} from "../types/exchange";
 import {Order} from "../types/order";
 import {Pair} from "../types/pair";
-import {isAssetAware} from "../types/plugins/AssetAware";
-import {isOrderbookAware} from "../types/plugins/OrderbookAware";
-import {isReportAware} from "../types/plugins/ReportAware";
+import {isAssetAware} from "../types/plugins/assetAware";
+import {isOrderbookAware} from "../types/plugins/orderbookAware";
+import {isReportAware} from "../types/plugins/reportAware";
 
 export interface StrategyConfig {
     interval?: CandleInterval;

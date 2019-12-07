@@ -1,8 +1,8 @@
 import CandleManager from "../../candles/candleManager";
 import Events from "../../events";
-import {Candle} from "../../types/Candle";
-import {CandleInterval} from "../../types/CandleInterval";
-import {OrderFiller} from "../../types/OrderFiller";
+import {Candle} from "../../types/candle";
+import {CandleInterval} from "../../types/candleInterval";
+import {OrderFiller} from "../../types/orderFiller";
 import {Pair} from "../../types/pair";
 
 export default class RemoteOrderFiller implements OrderFiller {

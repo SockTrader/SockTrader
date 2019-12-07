@@ -1,7 +1,7 @@
-import {BotStatus} from "../types/BotStatus";
+import {BotStatus} from "../types/botStatus";
 import {Order} from "../types/order";
-import {ReportAware} from "../types/plugins/ReportAware";
-import {TradingBotAware} from "../types/plugins/TradingBotAware";
+import {ReportAware} from "../types/plugins/reportAware";
+import {TradingBotAware} from "../types/plugins/tradingBotAware";
 
 export default class IPCReporter implements TradingBotAware, ReportAware {
 

@@ -2,7 +2,7 @@ import HitBTC, {HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitB
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import {StrategyConfig} from "../../sockTrader/core/bot/sockTrader";
-import {Exchange} from "../../sockTrader/core/types/Exchange";
+import {Exchange} from "../../sockTrader/core/types/exchange";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 

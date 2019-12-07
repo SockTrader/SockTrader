@@ -1,6 +1,6 @@
 import OrderTrackerFactory from "../order/orderTrackerFactory";
 import WalletFactory from "../plugins/wallet/walletFactory";
-import {OrderFiller} from "../types/OrderFiller";
+import {OrderFiller} from "../types/orderFiller";
 import BaseExchange from "./baseExchange";
 import {ExchangeDefinition, exchanges} from "./index";
 import LocalExchange from "./localExchange";

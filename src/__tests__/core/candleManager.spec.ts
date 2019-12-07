@@ -3,7 +3,7 @@ import sinon from "sinon";
 
 import CandleManager from "../../sockTrader/core/candles/candleManager";
 import moment, {Moment} from "moment";
-import {Candle} from "../../sockTrader/core/types/Candle";
+import {Candle} from "../../sockTrader/core/types/candle";
 
 const start = moment().seconds(0).millisecond(0).subtract(7, "minutes");
 const convertTimestamp = (candles: any) => candles.map((c: any) => ({...c, timestamp: c.timestamp.toArray()}));

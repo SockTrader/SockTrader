@@ -1,7 +1,7 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
 import moment from "moment";
-import {Candle} from "../core/types/Candle";
+import {Candle} from "../core/types/candle";
 import {Pair} from "../core/types/pair";
 import {getDecimals} from "./utils";
 

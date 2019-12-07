@@ -2,17 +2,17 @@ import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import CandleManager from "../candles/candleManager";
 import Orderbook from "../orderbook";
-import {Candle} from "../types/Candle";
-import {CandleInterval} from "../types/CandleInterval";
-import {Connection} from "../types/Connection";
-import {CurrencyMap} from "../types/CurrencyMap";
-import {Exchange} from "../types/Exchange";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {Connection} from "../types/connection";
+import {CurrencyMap} from "../types/currencyMap";
+import {Exchange} from "../types/exchange";
 import {Order, OrderSide} from "../types/order";
-import {OrderbookData} from "../types/OrderbookData";
-import {OrderCreator} from "../types/OrderCreator";
-import {OrderFiller} from "../types/OrderFiller";
+import {OrderbookData} from "../types/orderbookData";
+import {OrderCreator} from "../types/orderCreator";
+import {OrderFiller} from "../types/orderFiller";
 import {Pair} from "../types/pair";
-import {TradeablePair} from "../types/TradeablePair";
+import {TradeablePair} from "../types/tradeablePair";
 
 /**
  * The BaseExchange resembles common marketplace functionality

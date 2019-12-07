@@ -1,4 +1,4 @@
-import {Command} from "../../types/Connection";
+import {Command} from "../../types/connection";
 
 export default class HitBTCCommand implements Command {
 

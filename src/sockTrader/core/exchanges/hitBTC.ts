@@ -5,11 +5,10 @@ import WebSocket, {Data} from "../connection/webSocket";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
-import {CandleInterval} from "../types/CandleInterval";
-import {Connection} from "../types/Connection";
-import {OrderbookData} from "../types/OrderbookData";
+import {CandleInterval} from "../types/candleInterval";
+import {OrderbookData} from "../types/orderbookData";
 import {Pair} from "../types/pair";
-import {ResponseAdapter} from "../types/ResponseAdapter";
+import {ResponseAdapter} from "../types/responseAdapter";
 import BaseExchange from "./baseExchange";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
@@ -34,7 +33,7 @@ export const HitBTCCandleInterval: Record<string, CandleInterval> = {
 export default class HitBTC extends BaseExchange {
     readonly adapter: ResponseAdapter = new HitBTCAdapter(this);
 
-    protected createConnection(): Connection {
+    protected createConnection(): WebSocket {
         return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
     }
 
