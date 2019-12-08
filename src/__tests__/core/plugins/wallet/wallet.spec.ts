@@ -1,29 +1,10 @@
-import {
-    Order,
-    OrderSide,
-    OrderStatus,
-    OrderTimeInForce,
-    OrderType,
-    ReportType,
-} from "../../sockTrader/core/types/order";
-import moment from "moment";
-import Wallet from "../../sockTrader/core/plugins/wallet/wallet";
+import {Order, OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
+import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
+import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
 let order: Order;
 beforeEach(() => {
-    order = {
-        id: "123",
-        createdAt: moment(),
-        price: 10,
-        quantity: 0.5,
-        reportType: ReportType.NEW,
-        side: OrderSide.BUY,
-        status: OrderStatus.NEW,
-        pair: ["BTC", "USD"],
-        timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
-        type: OrderType.LIMIT,
-        updatedAt: moment(),
-    };
+    order = FX_NEW_BUY_ORDER;
 });
 
 describe("assets property", () => {
@@ -50,7 +31,7 @@ describe("isSellAllowed", () => {
 
 describe("isBuyAllowed", () => {
     test("Should allow buy when enough funds", () => {
-        const wallet = new Wallet({USD: 10});
+        const wallet = new Wallet({USD: 100});
         const allowed1 = wallet.isBuyAllowed(order);
         expect(allowed1).toBe(true);
     });
@@ -65,26 +46,26 @@ describe("isBuyAllowed", () => {
 describe("updateAssets", () => {
     let wallet: Wallet;
     beforeEach(() => {
-        wallet = new Wallet({USD: 10, BTC: 10});
+        wallet = new Wallet({USD: 1000, BTC: 10});
     });
 
     test("Should reserve assets when creating a new buy order", () => {
         wallet.updateAssets({...order, side: OrderSide.BUY});
-        expect(wallet["assets"]).toEqual({USD: 5, BTC: 10});
-        expect(wallet["reservedAssets"]).toEqual({USD: 5});
+        expect(wallet["assets"]).toEqual({USD: 900, BTC: 10});
+        expect(wallet["reservedAssets"]).toEqual({USD: 100});
     });
 
     test("Should reserve assets when creating a new sell order", () => {
         wallet.updateAssets({...order, side: OrderSide.SELL});
-        expect(wallet["assets"]).toEqual({USD: 10, BTC: 9.5});
-        expect(wallet["reservedAssets"]).toEqual({BTC: 0.5});
+        expect(wallet["assets"]).toEqual({USD: 1000, BTC: 9});
+        expect(wallet["reservedAssets"]).toEqual({BTC: 1});
     });
 
     test("Should apply new asset state when buy order is filled", () => {
         wallet.updateAssets({...order, side: OrderSide.BUY});
         wallet.updateAssets({...order, side: OrderSide.BUY, reportType: ReportType.TRADE, status: OrderStatus.FILLED});
 
-        expect(wallet["assets"]).toEqual({USD: 5, BTC: 10.5});
+        expect(wallet["assets"]).toEqual({USD: 900, BTC: 11});
         expect(wallet["reservedAssets"]).toEqual({USD: 0});
     });
 
@@ -92,7 +73,7 @@ describe("updateAssets", () => {
         wallet.updateAssets({...order, side: OrderSide.SELL});
         wallet.updateAssets({...order, side: OrderSide.SELL, reportType: ReportType.TRADE, status: OrderStatus.FILLED});
 
-        expect(wallet["assets"]).toEqual({USD: 15, BTC: 9.5});
+        expect(wallet["assets"]).toEqual({USD: 1100, BTC: 9});
         expect(wallet["reservedAssets"]).toEqual({BTC: 0});
     });
 
@@ -100,7 +81,7 @@ describe("updateAssets", () => {
         wallet.updateAssets({...order, side: OrderSide.BUY});
         wallet.updateAssets({...order, side: OrderSide.BUY, reportType: ReportType.CANCELED});
 
-        expect(wallet["assets"]).toEqual({USD: 10, BTC: 10});
+        expect(wallet["assets"]).toEqual({USD: 1000, BTC: 10});
         expect(wallet["reservedAssets"]).toEqual({USD: 0});
     });
 
@@ -108,17 +89,17 @@ describe("updateAssets", () => {
         wallet.updateAssets({...order, side: OrderSide.SELL});
         wallet.updateAssets({...order, side: OrderSide.SELL, reportType: ReportType.CANCELED});
 
-        expect(wallet["assets"]).toEqual({USD: 10, BTC: 10});
+        expect(wallet["assets"]).toEqual({USD: 1000, BTC: 10});
         expect(wallet["reservedAssets"]).toEqual({BTC: 0});
     });
 
     test("Should update asset amount when buy order is replaced", () => {
         const oldOrder1: Order = {...order, quantity: 1, side: OrderSide.BUY, reportType: ReportType.NEW};
         wallet.updateAssets(oldOrder1);
-        expect(wallet["assets"]).toEqual({USD: 0, BTC: 10});
+        expect(wallet["assets"]).toEqual({USD: 900, BTC: 10});
 
         wallet.updateAssets({...oldOrder1, quantity: 0.5, reportType: ReportType.REPLACED}, oldOrder1);
-        expect(wallet["assets"]).toEqual({USD: 5, BTC: 10});
+        expect(wallet["assets"]).toEqual({USD: 950, BTC: 10});
     });
 
     test("Should do nothing when order reports are invalid", () => {

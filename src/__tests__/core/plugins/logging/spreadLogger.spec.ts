@@ -12,6 +12,10 @@ function createOrderbook() {
     return orderbook;
 }
 
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 describe("onUpdateOrderbook", () => {
     test("Should log orderbook spread", () => {
         const orderLogger = new SpreadLogger();

@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import config from "../../config";
 import LiveTrader from "../core/bot/liveTrader";
 import ExchangeFactory from "../core/exchanges/exchangeFactory";
+import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {getExchangeInterval, loadStrategy} from "./util";
 
 export async function askForConfirmation(): Promise<boolean> {
@@ -36,7 +37,7 @@ export async function startLiveTrading(args: any) {
                 interval: getExchangeInterval(exchange, interval),
             });
 
-        liveTrader.setPlugins(config.plugins);
+        liveTrader.setPlugins([...config.plugins, WalletFactory.getInstance()]);
 
         await liveTrader.start();
     } catch (e) {

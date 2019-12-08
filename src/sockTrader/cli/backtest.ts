@@ -1,6 +1,7 @@
 import config from "../../config";
 import BackTester from "../core/bot/backTester";
 import IPCReporter from "../core/plugins/IPCReporter";
+import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {loadCandleFile, loadStrategy} from "./util";
 
 export async function startBacktest(args: any) {
@@ -17,7 +18,7 @@ export async function startBacktest(args: any) {
                 pair: candleFile.symbol,
             });
 
-        backTester.setPlugins([...config.plugins, new IPCReporter()]);
+        backTester.setPlugins([...config.plugins, new IPCReporter(), WalletFactory.getInstance()]);
 
         await backTester.start();
     } catch (e) {
