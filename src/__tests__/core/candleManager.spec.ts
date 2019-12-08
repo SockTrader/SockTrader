@@ -1,6 +1,4 @@
-import {expect} from "chai";
 import sinon from "sinon";
-
 import CandleManager from "../../sockTrader/core/candles/candleManager";
 import moment, {Moment} from "moment";
 import {Candle} from "../../sockTrader/core/types/candle";
@@ -21,7 +19,7 @@ describe("CandleManager", () => {
             {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: start.clone().add(1, "day")},
         ]);
 
-        expect(candles).to.deep.equal([
+        expect(candles).toEqual([
             {open: 1.5, high: 3, low: 1, close: 2, volume: 5, timestamp: start.clone().add(1, "day")},
             {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: start.clone().add(5, "minutes")},
             {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()},
@@ -42,7 +40,7 @@ describe("update", () => {
         cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, "+", 1)}]);
         cc.update([{open: 3, high: 4, low: 2, close: 3.5, volume: 1, timestamp: getTime(start, "+", 2)}]);
 
-        expect(results).to.deep.equal([
+        expect(results).toEqual([
             [
                 {open: 1.5, high: 1.5, low: 1.5, close: 1.5, volume: 0, timestamp: getTime(start).toArray()},
                 {open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, "-", 1).toArray()},
@@ -69,7 +67,7 @@ describe("update", () => {
         cc.update([{open: 1, high: 3, low: 0, close: 3, volume: 2, timestamp: getTime(start, "+", 1)}]);
         cc.update([{open: 1, high: 4, low: 0, close: 3.5, volume: 3, timestamp: getTime(start, "+", 1)}]);
 
-        expect(results).to.deep.equal([
+        expect(results).toEqual([
             [
                 {open: 1.5, high: 1.5, low: 1.5, close: 1.5, volume: 0, timestamp: getTime(start).toArray()},
                 {open: 1, high: 2, low: 1, close: 1.5, volume: 1, timestamp: getTime(start, "-", 1).toArray()},
@@ -90,7 +88,7 @@ describe("update", () => {
     test("Should fill all candle gaps until last interval occurrence before current time", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
         cc.on("update", (candles: Candle[]) => {
-            expect(convertTimestamp(candles)).to.deep.equal([
+            expect(convertTimestamp(candles)).toEqual([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 6).toArray()},
                 {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: getTime(start, "+", 5).toArray()},
@@ -127,18 +125,15 @@ describe("update", () => {
         clock.tick("01:00");
 
         cc.stop();
-        expect(results).to.deep.equal([
-            [
-                {open: 0, high: 0, low: 0, close: 0, volume: 0, timestamp: getTime(start, "+", 1).toArray()},
-            ],
-            [
-                {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTime(start, "+", 1).toArray()},
-            ],
+        expect(results).toEqual([
+            [{open: 0, high: 0, low: 0, close: 0, volume: 0, timestamp: getTime(start, "+", 1).toArray()}],
+            [{open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTime(start, "+", 1).toArray()}],
             [
                 {open: 1.5, high: 1.5, low: 1.5, close: 1.5, volume: 0, timestamp: getTime(start, "+", 2).toArray()},
                 {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: getTime(start, "+", 1).toArray()},
             ],
         ]);
+
         clock.restore();
     });
 });
@@ -147,7 +142,7 @@ describe("fillCandleGaps", () => {
     test("Should fill all candle gaps until retention period is met", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false, 3);
         cc.on("update", (candles: Candle[]) => {
-            expect(convertTimestamp(candles)).to.deep.equal([
+            expect(convertTimestamp(candles)).toEqual([
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 7).toArray()},
                 {open: 3, high: 3, low: 3, close: 3, volume: 0, timestamp: getTime(start, "+", 6).toArray()},
                 {open: 2, high: 4, low: 2, close: 3, volume: 10, timestamp: getTime(start, "+", 5).toArray()},
