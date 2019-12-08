@@ -1,15 +1,15 @@
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import HitBTCOrderCreator from "../../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
 import {OrderSide} from "../../../../sockTrader/core/types/order";
-import Local from "../../../../sockTrader/core/connection/local";
+import LocalConnection from "../../../../sockTrader/core/connection/localConnection";
 import HitBTCCommand from "../../../../sockTrader/core/exchanges/commands/hitBTCCommand";
 import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
-jest.mock("../../../../sockTrader/core/connection/local");
+jest.mock("../../../../sockTrader/core/connection/localConnection");
 
-let hitBTCOrderCreator = new HitBTCOrderCreator(new OrderTracker(), new Local());
+let hitBTCOrderCreator = new HitBTCOrderCreator(new OrderTracker(), new LocalConnection());
 beforeEach(() => {
-    hitBTCOrderCreator = new HitBTCOrderCreator(new OrderTracker(), new Local());
+    hitBTCOrderCreator = new HitBTCOrderCreator(new OrderTracker(), new LocalConnection());
 });
 
 describe("cancelOrder", () => {

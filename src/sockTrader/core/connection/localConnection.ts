@@ -1,7 +1,7 @@
 import {EventEmitter} from "events";
 import {Command, Connection} from "../types/connection";
 
-export default class Local extends EventEmitter implements Connection {
+export default class LocalConnection extends EventEmitter implements Connection {
 
     constructor() {
         super();

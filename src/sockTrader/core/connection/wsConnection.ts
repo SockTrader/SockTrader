@@ -5,7 +5,7 @@ import {Command, Connection} from "../types/connection";
 
 export type Data = WSWebSocket.Data;
 
-export default class WebSocket extends EventEmitter implements Connection {
+export default class WsConnection extends EventEmitter implements Connection {
 
     private readonly latency = 1000;
     private readonly waitForPong = 2000;

@@ -1,6 +1,6 @@
 import {Pair} from "../../../sockTrader/core/types/pair";
 import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
-import WebSocket from "../../../sockTrader/core/connection/webSocket";
+import WsConnection from "../../../sockTrader/core/connection/wsConnection";
 import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
@@ -9,7 +9,7 @@ import {FX_ASK, FX_ASK_UPDATE, FX_BID, FX_BID_UPDATE} from "../../../__fixtures_
 import Orderbook from "../../../sockTrader/core/orderbook";
 
 jest.mock("./../../../config");
-jest.mock("./../../../sockTrader/core/connection/webSocket");
+jest.mock("./../../../sockTrader/core/connection/wsConnection");
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
@@ -17,14 +17,14 @@ const pair: Pair = ["BTC", "USD"];
 
 let exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
 beforeEach(() => {
-    (WebSocket as any).mockClear();
+    (WsConnection as any).mockClear();
     exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
 });
 
 describe("createConnection", () => {
     it("Should create a new websocket connection", () => {
         const connection = exchange["createConnection"]();
-        expect(connection).toBeInstanceOf(WebSocket);
+        expect(connection).toBeInstanceOf(WsConnection);
     });
 });
 

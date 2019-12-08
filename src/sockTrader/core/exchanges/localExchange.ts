@@ -1,4 +1,4 @@
-import Local from "../connection/local";
+import LocalConnection from "../connection/localConnection";
 import Events from "../events";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";
@@ -19,7 +19,7 @@ export default class LocalExchange extends BaseExchange {
     isAuthenticated = true;
 
     protected createConnection(): Connection {
-        return new Local();
+        return new LocalConnection();
     }
 
     protected loadCurrencies(): void {
@@ -27,7 +27,8 @@ export default class LocalExchange extends BaseExchange {
     }
 
     /**
-     * Emits a collection of candles from a local file as if they were sent from a real exchange
+     * Emits a collection of candles from a local file as if they were sent from a real exchange.
+     * Candles should be ordered during normalization process.
      */
     emitCandles(candles: Candle[]) {
         let processedCandles: Candle[] = [];

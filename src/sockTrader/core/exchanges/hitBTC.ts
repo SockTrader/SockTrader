@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import config from "../../../config";
-import WebSocket, {Data} from "../connection/webSocket";
+import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
@@ -35,8 +35,8 @@ export default class HitBTC extends BaseExchange {
     private publicKey: string = config.exchanges.hitbtc.publicKey;
     private secretKey: string = config.exchanges.hitbtc.secretKey;
 
-    protected createConnection(): WebSocket {
-        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40000);
+    protected createConnection(): WsConnection {
+        return new WsConnection("wss://api.hitbtc.com/api/2/ws", 40000);
     }
 
     loadCurrencies(): void {

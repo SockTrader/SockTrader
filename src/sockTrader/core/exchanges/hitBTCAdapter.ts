@@ -1,6 +1,6 @@
 import {EventEmitter} from "events";
 import moment from "moment";
-import {Data} from "../connection/webSocket";
+import {Data} from "../connection/wsConnection";
 import logger from "../logger";
 import OrderTrackerFactory from "../order/orderTrackerFactory";
 import {Candle} from "../types/candle";
