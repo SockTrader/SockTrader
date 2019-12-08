@@ -17,7 +17,7 @@ describe("cancelOrder", () => {
 
         localOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
 
-        expect(spy).toBeCalledWith("FILLED_BUY_ORDER_1");
+        expect(spy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
     test("Should send order cancellation to orderTracker", () => {
@@ -26,7 +26,7 @@ describe("cancelOrder", () => {
         localOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
 
         expect(spy).toBeCalledWith(expect.objectContaining({
-            id: "FILLED_BUY_ORDER_1",
+            id: "NEW_BUY_ORDER_1",
             price: 100,
             quantity: 1,
             status: "canceled",

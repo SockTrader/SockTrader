@@ -13,7 +13,6 @@ export default class OrderTracker {
 
     private replaceOpenOrder(newOrder: Order, oldOrderId: string): Order | undefined {
         const oldOrder = this.findOpenOrder(oldOrderId);
-        this.setOrderConfirmed(oldOrderId);
         this.removeOpenOrder(oldOrderId);
         this.addOpenOrder(newOrder);
 
@@ -64,6 +63,7 @@ export default class OrderTracker {
         this.setOrderConfirmed(orderId);
 
         if (order.reportType === ReportType.REPLACED && order.originalId) {
+            this.setOrderConfirmed(order.originalId);
             oldOrder = this.replaceOpenOrder(order, order.originalId);
         } else if (order.reportType === ReportType.NEW) {
             this.addOpenOrder(order); // New order created
