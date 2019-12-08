@@ -4,7 +4,7 @@ import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 import {OrderSide} from "../../../sockTrader/core/types/order";
-import {FX_FILL_CANDLES} from "../../../__fixtures__/candles";
+import {FX_CANDLE_1} from "../../../__fixtures__/candles";
 import {FX_ALL_CURRENCIES, FX_BTCUSD} from "../../../__fixtures__/currencies";
 import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
@@ -79,16 +79,16 @@ describe("createOrder", () => {
 describe("onSnapshotCandles", () => {
     test("Should forward onSnapshotCandles request to OrderFiller", () => {
         const spy = jest.spyOn(exchange["orderFiller"], "onSnapshotCandles");
-        exchange.onSnapshotCandles(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
-        expect(spy).toBeCalledWith(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
+        exchange.onSnapshotCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
+        expect(spy).toBeCalledWith(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
     });
 });
 
 describe("onUpdateCandles", () => {
     test("Should forward onUpdateCandles request to OrderFiller", () => {
         const spy = jest.spyOn(exchange["orderFiller"], "onUpdateCandles");
-        exchange.onUpdateCandles(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
-        expect(spy).toBeCalledWith(["BTC", "USD"], FX_FILL_CANDLES, {code: "code", cron: "*"});
+        exchange.onUpdateCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
+        expect(spy).toBeCalledWith(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
     });
 });
 

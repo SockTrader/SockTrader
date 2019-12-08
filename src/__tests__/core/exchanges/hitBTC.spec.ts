@@ -21,6 +21,21 @@ beforeEach(() => {
     exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
 });
 
+describe("HitBTCCandleInterval", () => {
+    it("Should have all possible candle intervals defined", () => {
+        expect(HitBTCCandleInterval.ONE_MINUTE).toEqual({code: "M1", cron: "00 */1 * * * *"});
+        expect(HitBTCCandleInterval.THREE_MINUTES).toEqual({code: "M3", cron: "00 */3 * * * *"});
+        expect(HitBTCCandleInterval.FIVE_MINUTES).toEqual({code: "M5", cron: "00 */5 * * * *"});
+        expect(HitBTCCandleInterval.FIFTEEN_MINUTES).toEqual({code: "M15", cron: "00 */15 * * * *"});
+        expect(HitBTCCandleInterval.THIRTY_MINUTES).toEqual({code: "M30", cron: "00 */30 * * * *"});
+        expect(HitBTCCandleInterval.ONE_HOUR).toEqual({code: "H1", cron: "00 00 */1 * * *"});
+        expect(HitBTCCandleInterval.FOUR_HOURS).toEqual({code: "H4", cron: "00 00 2,6,10,14,18,22 * * *"});
+        expect(HitBTCCandleInterval.ONE_DAY).toEqual({code: "D1", cron: "00 00 00 */1 * *"});
+        expect(HitBTCCandleInterval.SEVEN_DAYS).toEqual({code: "D7", cron: "00 00 00 */7 * *"});
+        expect(HitBTCCandleInterval.ONE_MONTH).toEqual({code: "1M", cron: "00 00 00 00 */1 *"});
+    });
+});
+
 describe("createConnection", () => {
     it("Should create a new websocket connection", () => {
         const connection = exchange["createConnection"]();
@@ -150,7 +165,7 @@ describe("onConnect", () => {
 
         exchange["onConnect"]();
 
-        const [,callback] = spy.mock.calls[0];
+        const [, callback] = spy.mock.calls[0];
         expect(spy).toBeCalledWith("message", expect.any(Function));
 
         callback(JSON.stringify({test: 123}));
@@ -168,9 +183,11 @@ describe("onConnect", () => {
         expect(exchange.login).toBeCalledTimes(1);
     });
 
-    test("Should not call login when no credentials were given", () => {
-        exchange["publicKey"] = "";
-        exchange["secretKey"] = "";
+    test.each([
+        ["", "secret"], ["public", ""], ["", ""],
+    ])("Should not call login when no credentials were given", (publicKey, secretKey) => {
+        exchange["publicKey"] = publicKey;
+        exchange["secretKey"] = secretKey;
 
         exchange["onConnect"]();
         expect(exchange.login).toBeCalledTimes(0);

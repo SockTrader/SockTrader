@@ -1,7 +1,7 @@
 import moment from "moment";
 import {Candle} from "../sockTrader/core/types/candle";
 
-export const FX_FILL_CANDLES: Candle[] = [
+export const FX_CANDLE_1: Candle[] = [
     {
         open: 100,
         high: 110,
@@ -12,7 +12,7 @@ export const FX_FILL_CANDLES: Candle[] = [
     },
 ];
 
-export const FX_NOT_FILL_CANDLES: Candle[] = [
+export const FX_CANDLE_2: Candle[] = [
     {
         open: 100,
         high: 110,
@@ -32,4 +32,10 @@ export const FX_HISTORICAL_CANDLES: Candle[] = [
         volume: 1000,
         timestamp: moment().subtract(1, "day"),
     },
+];
+
+export const FX_CANDLE_LIST: Candle[] = [
+    ...FX_CANDLE_2,
+    ...FX_HISTORICAL_CANDLES,
+    ...FX_CANDLE_1,
 ];
