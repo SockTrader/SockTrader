@@ -120,10 +120,7 @@ describe("adjustOrder", () => {
 
         localOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 2);
 
-        expect(allowSpy).toBeCalledWith(
-            expect.objectContaining({price: 10, quantity: 2}),
-            expect.objectContaining({price: 100, quantity: 1}),
-        );
+        expect(allowSpy).toBeCalledWith(expect.objectContaining({price: 10, quantity: 2}));
         expect(updateSpy).toBeCalledWith(
             expect.objectContaining({price: 10, quantity: 2}),
             expect.objectContaining({price: 100, quantity: 1}),

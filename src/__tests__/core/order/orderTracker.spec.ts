@@ -1,7 +1,7 @@
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 import Events from "../../../sockTrader/core/events";
 import {
-    FX_CANCELLED_ORDER,
+    FX_CANCELLED_BUY_ORDER,
     FX_FILLED_BUY_ORDER,
     FX_NEW_BUY_ORDER,
     FX_NEW_SELL_ORDER,
@@ -163,9 +163,9 @@ describe("process", () => {
         [ReportType.CANCELED], [ReportType.EXPIRED], [ReportType.SUSPENDED],
     ])("Should remove open order when order is canceled, expired or suspended", (reportType) => {
         const spy = jest.spyOn(Events, "emit");
-        orderTracker.process({...FX_CANCELLED_ORDER, reportType});
+        orderTracker.process({...FX_CANCELLED_BUY_ORDER, reportType});
 
         expect(orderTracker.getOpenOrders()).toEqual([]);
-        expect(spy).toBeCalledWith("core.report", {...FX_CANCELLED_ORDER, reportType}, undefined);
+        expect(spy).toBeCalledWith("core.report", {...FX_CANCELLED_BUY_ORDER, reportType}, undefined);
     });
 });

@@ -1,5 +1,5 @@
 import "jest";
-import {crossDown, crossUp} from "../../sockTrader/core/strategy/utils";
+import {crossDown, crossUp} from "../../../sockTrader/core/strategy/utils";
 
 /**
  * NOTE THAT ARRAY VALUES ARE REVERSED! THIS IS THE EXPECTED BEHAVIOUR.

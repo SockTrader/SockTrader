@@ -60,7 +60,7 @@ export default class LocalOrderCreator implements OrderCreator {
             price,
         };
 
-        if (!this.wallet.isOrderAllowed(newOrder, order)) return; // @TODO remove dependency
+        if (!this.wallet.isOrderAllowed(newOrder)) return; // @TODO remove dependency
 
         this.wallet.updateAssets(newOrder, order); // @TODO remove dependency
         this.orderTracker.setOrderUnconfirmed(order.id);

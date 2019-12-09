@@ -32,10 +32,9 @@ export default class Wallet {
     /**
      * Checks if funds are sufficient for a buy
      * @param {Order} order the order to verify
-     * @param {Order} oldOrder
      * @returns {boolean} is buy allowed
      */
-    isBuyAllowed(order: Order, oldOrder?: Order): boolean {
+    isBuyAllowed(order: Order): boolean {
         return this.assets[order.pair[1]] >= this.getOrderPrice(order);
     }
 
@@ -43,22 +42,18 @@ export default class Wallet {
      * Checks if current quantity of currency in possession
      * if sufficient for given sell order
      * @param {Order} order the order to verify
-     * @param {Order} oldOrder
      * @returns {boolean} is sell allowed
      */
-    isSellAllowed(order: Order, oldOrder?: Order): boolean {
+    isSellAllowed(order: Order): boolean {
         return this.assets[order.pair[0]] >= order.quantity;
     }
 
     /**
      * Validates if the wallet has sufficient funds to cover the given order.
      * @param order
-     * @param oldOrder
      */
-    isOrderAllowed(order: Order, oldOrder?: Order): boolean {
-        return order.side === OrderSide.BUY
-            ? this.isBuyAllowed(order, oldOrder)
-            : this.isSellAllowed(order, oldOrder);
+    isOrderAllowed(order: Order): boolean {
+        return order.side === OrderSide.BUY ? this.isBuyAllowed(order) : this.isSellAllowed(order);
     }
 
     private getAssetProxy(assets: AssetMap) {
