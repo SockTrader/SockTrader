@@ -29,7 +29,6 @@ export const FX_FILLED_SELL_ORDER: Order = {
     quantity: 1,
 };
 
-
 export const FX_NEW_BUY_ORDER: Order = {
     createdAt: moment().subtract(5, "minutes"),
     side: OrderSide.BUY,

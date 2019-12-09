@@ -1,4 +1,3 @@
-import "jest";
 import {crossDown, crossUp} from "../../../sockTrader/core/strategy/utils";
 
 /**

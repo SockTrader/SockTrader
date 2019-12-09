@@ -14,6 +14,9 @@ export const validateRecursive = (validator: Validator) => {
     return validate;
 };
 
+const recursiveCrossUp = validateRecursive(((a, b) => a < b));
+const recursiveCrossDown = validateRecursive(((a, b) => a > b));
+
 /**
  * Validates a positive crossover of lineA and lineB
  *
@@ -36,11 +39,7 @@ export const validateRecursive = (validator: Validator) => {
  * @returns {boolean} lineA crosses over lineB
  */
 export function crossUp(lineA: number[], lineB: number[]): boolean {
-    const validate = validateRecursive(((a, b) => a < b));
-
-    return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] <= lineB[0]))
-        ? false
-        : validate(lineA, lineB, 1);
+    return (lineA[0] <= lineB[0]) ? false : recursiveCrossUp(lineA, lineB, 1);
 }
 
 /**
@@ -65,9 +64,5 @@ export function crossUp(lineA: number[], lineB: number[]): boolean {
  * @returns {boolean} lineA goes under lineB
  */
 export function crossDown(lineA: number[], lineB: number[]): boolean {
-    const validate = validateRecursive(((a, b) => a > b));
-
-    return ((lineA.length < 2 || lineB.length < 2) || (lineA[0] >= lineB[0]))
-        ? false
-        : validate(lineA, lineB, 1);
+    return (lineA[0] >= lineB[0]) ? false : recursiveCrossDown(lineA, lineB, 1);
 }
