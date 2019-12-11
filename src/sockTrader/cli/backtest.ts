@@ -4,24 +4,30 @@ import IPCReporter from "../core/plugins/IPCReporter";
 import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {loadCandleFile, loadStrategy} from "./util";
 
-export async function startBacktest(args: any) {
-    process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
-    const {candles: candleFilename, strategy: strategyFilename} = args;
+export default class BackTest {
+    constructor(private candleFile: string, private strategyFile: string) {
+    }
 
-    try {
-        const {default: strategy} = await loadStrategy(strategyFilename);
-        const {default: candleFile} = await loadCandleFile(candleFilename);
-
-        const backTester = new BackTester(candleFile.candles)
+    createBackTester(candleFile: any, strategy: any) {
+        return new BackTester(candleFile.candles)
+            .setPlugins([...config.plugins, new IPCReporter(), WalletFactory.getInstance()])
             .addStrategy({
                 strategy,
                 pair: candleFile.symbol,
             });
+    }
 
-        backTester.setPlugins([...config.plugins, new IPCReporter(), WalletFactory.getInstance()]);
+    async start() {
+        try {
+            process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
-        await backTester.start();
-    } catch (e) {
-        console.error(e);
+            const {default: strategy} = await loadStrategy(this.strategyFile);
+            const {default: candleFile} = await loadCandleFile(this.candleFile);
+
+            const backTester = this.createBackTester(candleFile, strategy);
+            await backTester.start();
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
