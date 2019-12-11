@@ -2,6 +2,8 @@ import BackTest from "../../sockTrader/cli/backtest";
 import {loadCandleFile, loadStrategy} from "../../sockTrader/cli/util";
 import {FX_CANDLE_LIST} from "../../__fixtures__/candles";
 import BackTester from "../../sockTrader/core/bot/backTester";
+import WalletFactory from "../../sockTrader/core/plugins/wallet/walletFactory";
+import IPCReporter from "../../sockTrader/core/plugins/IPCReporter";
 
 jest.mock("../../sockTrader/cli/util");
 
@@ -39,7 +41,7 @@ describe("startBacktest", () => {
 
 
 describe("createBackTester", () => {
-    test("Should create a BackTester instance", async () => {
+    test("Should create a configured BackTester instance", async () => {
         const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
 
         const {default: strategy} = await loadStrategy("");
@@ -52,6 +54,10 @@ describe("createBackTester", () => {
         expect(instance["strategyConfigurations"]).toEqual([
             expect.objectContaining({pair: ["BTC", "USD"]}),
         ]);
+        expect(instance["plugins"]).toEqual(expect.arrayContaining([
+            WalletFactory.getInstance(),
+            new IPCReporter(),
+        ]));
     });
 });
 
