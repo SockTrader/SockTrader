@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 describe("listStrategies", () => {
-    test("Should all available strategy files", async () => {
+    it("Should all available strategy files", async () => {
         (loadFiles as any).mockImplementation(() => (["simpleMovingAverage"]));
         const spy = jest.spyOn(console, "table").mockImplementation();
 
@@ -21,7 +21,7 @@ describe("listStrategies", () => {
 });
 
 describe("listCandles", () => {
-    test("Should all available candle data files", async () => {
+    it("Should all available candle data files", async () => {
         (loadFiles as any).mockImplementation(() => (["coinbase_btcusd_1h"]));
         const spy = jest.spyOn(console, "table").mockImplementation();
 

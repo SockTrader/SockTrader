@@ -20,7 +20,7 @@ beforeEach(() => {
 });
 
 describe("onSnapshotCandles", () => {
-    test("Should try to fill open orders if possible", () => {
+    it("Should try to fill open orders if possible", () => {
         const spy = jest.spyOn(orderFiller, "processOpenOrders" as any);
         orderFiller.onSnapshotCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
 
@@ -36,7 +36,7 @@ describe("onSnapshotCandles", () => {
 });
 
 describe("onUpdateCandles", () => {
-    test("Should try to fill open orders if possible", () => {
+    it("Should try to fill open orders if possible", () => {
         const spy = jest.spyOn(orderFiller, "processOpenOrders" as any);
         orderFiller.onUpdateCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
 
@@ -66,7 +66,7 @@ describe("isOrderWithinCandle", () => {
 });
 
 describe("onProcessCandles", () => {
-    test("Should keep open order if candle is older than order", () => {
+    it("Should keep open order if candle is older than order", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
         orderFiller.onProcessCandles(FX_HISTORICAL_CANDLES);
@@ -78,14 +78,14 @@ describe("onProcessCandles", () => {
         })]);
     });
 
-    test("Should clear order tracker if all orders haven been filled", () => {
+    it("Should clear order tracker if all orders haven been filled", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
         orderFiller.onProcessCandles(FX_CANDLE_1);
         expect(spy).toBeCalledWith([]);
     });
 
-    test("Should keep all open orders if nothing could have been filled", () => {
+    it("Should keep all open orders if nothing could have been filled", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "setOpenOrders");
 
         orderFiller.onProcessCandles(FX_CANDLE_2);
@@ -97,7 +97,7 @@ describe("onProcessCandles", () => {
         })]);
     });
 
-    test("Should process order by orderTracker", () => {
+    it("Should process order by orderTracker", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "process");
 
         orderFiller.onProcessCandles(FX_CANDLE_1);

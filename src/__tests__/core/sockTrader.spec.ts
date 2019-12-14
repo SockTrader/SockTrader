@@ -17,7 +17,7 @@ const btcEthPair: Pair = ["BTC", "ETH"];
 const btcCovPair: Pair = ["BTC", "COV"];
 
 describe("subscribeToExchangeEvents", () => {
-    test("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
+    it("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -53,7 +53,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
+    it("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -88,7 +88,7 @@ describe("subscribeToExchangeEvents", () => {
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
+    it("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -124,7 +124,7 @@ describe("subscribeToExchangeEvents", () => {
 });
 
 describe("bindExchangeToStrategy", () => {
-    test("Should bind exchange events to strategy", () => {
+    it("Should bind exchange events to strategy", () => {
         const on = jest.spyOn(Events, "on");
 
         sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
@@ -135,7 +135,7 @@ describe("bindExchangeToStrategy", () => {
 });
 
 describe("bindStrategyToExchange", () => {
-    test("Should bind strategy events to exchange", () => {
+    it("Should bind strategy events to exchange", () => {
         const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
         const spyOn = jest.spyOn(simpleMovingAverage, "on");
 

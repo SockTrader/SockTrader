@@ -1,7 +1,7 @@
 import {listExchanges} from "../../sockTrader/cli/exchangeListing";
 
 describe("listExchanges", () => {
-    test("Should all available exchanges", () => {
+    it("Should all available exchanges", () => {
         const spyLog = jest.spyOn(console, "log").mockImplementation();
         const spyTable = jest.spyOn(console, "table").mockImplementation();
 

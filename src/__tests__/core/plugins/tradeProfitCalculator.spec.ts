@@ -14,29 +14,29 @@ beforeEach(() => {
 
 describe("onReport", () => {
 
-    test("Should not log when selling too much assets", async () => {
+    it("Should not log when selling too much assets", async () => {
         calculator.onReport(FX_FILLED_SELL_ORDER);
         expect(walletLogger.info).toBeCalledTimes(0);
     });
 
-    test("Should not log when status is not FILLED or PARTIALLY_FILLED", async () => {
+    it("Should not log when status is not FILLED or PARTIALLY_FILLED", async () => {
         calculator.onReport(FX_NEW_BUY_ORDER);
         expect(walletLogger.info).toBeCalledTimes(0);
     });
 
-    test("Should log when status is FILLED", async () => {
+    it("Should log when status is FILLED", async () => {
         calculator.onReport(FX_FILLED_BUY_ORDER);
         expect(walletLogger.info).toBeCalledTimes(1);
         expect(walletLogger.info).toBeCalledWith("Avg buy: 100");
     });
 
-    test("Should log when status is PARTIALLY_FILLED", async () => {
+    it("Should log when status is PARTIALLY_FILLED", async () => {
         calculator.onReport({side:OrderSide.BUY, price: 100, quantity: 5, status: OrderStatus.PARTIALLY_FILLED} as Order);
         expect(walletLogger.info).toBeCalledTimes(1);
         expect(walletLogger.info).toBeCalledWith("Avg buy: 100");
     });
 
-    test("Should log profit/loss compared to average buy price", async () => {
+    it("Should log profit/loss compared to average buy price", async () => {
         calculator.onReport({...FX_FILLED_BUY_ORDER, price: 50, quantity: 5});
         calculator.onReport({...FX_FILLED_BUY_ORDER, price: 150, quantity: 5});
         expect(walletLogger.info).toHaveBeenNthCalledWith(1,"Avg buy: 50");

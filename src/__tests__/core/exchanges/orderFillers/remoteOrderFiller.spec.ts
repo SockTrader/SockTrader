@@ -13,12 +13,12 @@ describe("getCandleManager", () => {
     const updateHandler = jest.fn();
     const interval = HitBTCCandleInterval.ONE_MINUTE;
 
-    test("Should create a new CandleManager", () => {
+    it("Should create a new CandleManager", () => {
         const manager = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
         expect(manager).toBeInstanceOf(CandleManager);
     });
 
-    test("Should return same CandleManager instance when calling multiple times", () => {
+    it("Should return same CandleManager instance when calling multiple times", () => {
         const manager1 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
         const manager2 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
         const manager3 = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
@@ -27,7 +27,7 @@ describe("getCandleManager", () => {
         expect(manager2).toStrictEqual(manager3);
     });
 
-    test("Should bind updateHandler to 'update' event of newly created CandleManager", () => {
+    it("Should bind updateHandler to 'update' event of newly created CandleManager", () => {
         const manager = orderFiller.getCandleManager(["BTC", "USD"], interval, updateHandler);
         manager.emit("update", {test: 123});
         expect(updateHandler).toBeCalledWith({test: 123});
@@ -37,7 +37,7 @@ describe("getCandleManager", () => {
 describe("onSnapshotCandles", () => {
     const interval = HitBTCCandleInterval.ONE_MINUTE;
 
-    test("Should set new candles on CandleManager", () => {
+    it("Should set new candles on CandleManager", () => {
         const emitSpy = jest.spyOn(Events, "emit");
         orderFiller.onSnapshotCandles(["BTC", "USD"], FX_HISTORICAL_CANDLES, interval);
 
@@ -56,7 +56,7 @@ describe("onSnapshotCandles", () => {
 describe("onUpdateCandles", () => {
     const interval = HitBTCCandleInterval.ONE_MINUTE;
 
-    test("Should update new candles on CandleManager", () => {
+    it("Should update new candles on CandleManager", () => {
         const emitSpy = jest.spyOn(Events, "emit");
         orderFiller.onUpdateCandles(["BTC", "USD"], FX_HISTORICAL_CANDLES, interval);
 

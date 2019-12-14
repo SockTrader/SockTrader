@@ -18,7 +18,7 @@ describe("emitCandles", () => {
         (exchange["orderFiller"] as LocalOrderFiller)["onProcessCandles"] = jest.fn();
     });
 
-    test("Should send processedCandles to the orderFiller", () => {
+    it("Should send processedCandles to the orderFiller", () => {
         const orderFiller = exchange["orderFiller"] as LocalOrderFiller;
 
         exchange.emitCandles(FX_CANDLE_LIST);
@@ -27,7 +27,7 @@ describe("emitCandles", () => {
         expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(2, [...FX_HISTORICAL_CANDLES, ...FX_CANDLE_2]);
     });
 
-    test("Should notify orderCreator about the current candle", () => {
+    it("Should notify orderCreator about the current candle", () => {
         const spy = jest.spyOn(exchange["orderCreator"] as LocalOrderCreator, "setCurrentCandle");
 
         if (isLocalExchange(exchange)) exchange.emitCandles(FX_CANDLE_LIST);
@@ -38,38 +38,38 @@ describe("emitCandles", () => {
 });
 
 describe("createConnection", () => {
-    test("Should return a local connection", () => {
+    it("Should return a local connection", () => {
         const connection = exchange["createConnection"]();
         expect(connection).toBeInstanceOf(LocalConnection);
     });
 });
 
 describe("ignore methods on LocalExchange", () => {
-    test("Should do nothing when 'onUpdateOrderbook' is triggered", () => {
+    it("Should do nothing when 'onUpdateOrderbook' is triggered", () => {
         const result = exchange.onUpdateOrderbook(undefined as any);
         expect(exchange.onUpdateOrderbook.toString()).toMatch(/return undefined/);
         expect(result).toEqual(undefined);
     });
 
-    test("Should do nothing when 'subscribeCandles' is triggered", () => {
+    it("Should do nothing when 'subscribeCandles' is triggered", () => {
         const result = exchange.subscribeCandles(undefined as any, undefined as any);
         expect(exchange.subscribeCandles.toString()).toMatch(/return undefined/);
         expect(result).toEqual(undefined);
     });
 
-    test("Should do nothing when 'subscribeOrderbook' is triggered", () => {
+    it("Should do nothing when 'subscribeOrderbook' is triggered", () => {
         const result = exchange.subscribeOrderbook(undefined as any);
         expect(exchange.subscribeOrderbook.toString()).toMatch(/return undefined/);
         expect(result).toEqual(undefined);
     });
 
-    test("Should do nothing when 'subscribeReports' is triggered", () => {
+    it("Should do nothing when 'subscribeReports' is triggered", () => {
         const result = exchange.subscribeReports();
         expect(exchange.subscribeReports.toString()).toMatch(/return undefined/);
         expect(result).toEqual(undefined);
     });
 
-    test("Should do nothing when 'loadCurrencies' is triggered", () => {
+    it("Should do nothing when 'loadCurrencies' is triggered", () => {
         const result = exchange["loadCurrencies"]();
         expect(exchange["loadCurrencies"].toString()).toMatch(/return undefined/);
         expect(result).toEqual(undefined);

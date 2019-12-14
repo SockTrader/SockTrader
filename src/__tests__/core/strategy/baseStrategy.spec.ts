@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 describe("_onUpdateCandles", () => {
-    test("Should wrap incoming candles in a CandleCollection", () => {
+    it("Should wrap incoming candles in a CandleCollection", () => {
         const spy = jest.spyOn(strategy, "updateCandles");
         strategy._onUpdateCandles(FX_CANDLE_LIST);
 
@@ -21,7 +21,7 @@ describe("_onUpdateCandles", () => {
 });
 
 describe("_onSnapshotCandles", () => {
-    test("Should wrap incoming candles in a CandleCollection", () => {
+    it("Should wrap incoming candles in a CandleCollection", () => {
         const spy = jest.spyOn(strategy, "warmUpCandles" as any);
         strategy._onSnapshotCandles(FX_CANDLE_LIST);
 

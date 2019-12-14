@@ -11,7 +11,7 @@ const getTime = (start: Moment, action = "+", minutes = 0): Moment => {
 };
 
 describe("CandleManager", () => {
-    test("Should sort all candles, with the latest candle first and the last candle last", () => {
+    it("Should sort all candles, with the latest candle first and the last candle last", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
         const candles = cc.sort([
             {open: 1, high: 2, low: 0, close: 1.5, volume: 1, timestamp: start.clone()},
@@ -28,7 +28,7 @@ describe("CandleManager", () => {
 });
 
 describe("update", () => {
-    test("Should remove oldest candle when retention period is met", () => {
+    it("Should remove oldest candle when retention period is met", () => {
         const start = moment().seconds(0).millisecond(0);
         const results: any = [];
 
@@ -56,7 +56,7 @@ describe("update", () => {
         ]);
     });
 
-    test("Should update the candle manager", () => {
+    it("Should update the candle manager", () => {
         const start = moment().seconds(0).millisecond(0);
         const results: any = [];
 
@@ -85,7 +85,7 @@ describe("update", () => {
         ]);
     });
 
-    test("Should fill all candle gaps until last interval occurrence before current time", () => {
+    it("Should fill all candle gaps until last interval occurrence before current time", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
         cc.on("update", (candles: Candle[]) => {
             expect(convertTimestamp(candles)).toEqual([
@@ -107,7 +107,7 @@ describe("update", () => {
         ]);
     });
 
-    test("Should automatically generate new candles", () => {
+    it("Should automatically generate new candles", () => {
         const start = moment().seconds(0).millisecond(0);
         const clock = sinon.useFakeTimers(new Date());
         const results: any = [];
@@ -139,7 +139,7 @@ describe("update", () => {
 });
 
 describe("fillCandleGaps", () => {
-    test("Should fill all candle gaps until retention period is met", () => {
+    it("Should fill all candle gaps until retention period is met", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false, 3);
         cc.on("update", (candles: Candle[]) => {
             expect(convertTimestamp(candles)).toEqual([

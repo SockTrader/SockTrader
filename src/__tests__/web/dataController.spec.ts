@@ -14,7 +14,7 @@ const mockResponse = () => {
 };
 
 describe("Send candle data of a normalized candle file", () => {
-    test("Should return all data in a normalized candle file", async () => {
+    it("Should return all data in a normalized candle file", async () => {
         const isFile = jest.fn(() => true);
         require("fs").__setStatMock({isFile});
 
@@ -29,7 +29,7 @@ describe("Send candle data of a normalized candle file", () => {
 
 describe("List all normalized candle files", () => {
 
-    test("Should return list of all candle files in base64 encoded format", async () => {
+    it("Should return list of all candle files in base64 encoded format", async () => {
         const res = mockResponse();
 
         await dataListHandler(null as any, res, null as any);

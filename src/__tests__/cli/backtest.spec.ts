@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 
 describe("startBacktest", () => {
-    test("Should be able to start a backtesting process", async () => {
+    it("Should be able to start a backtesting process", async () => {
         const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
         const start = jest.fn();
         bt.createBackTester = () => ({start}) as any;
@@ -25,7 +25,7 @@ describe("startBacktest", () => {
         expect(process.env.SOCKTRADER_TRADING_MODE).toEqual("BACKTEST");
     });
 
-    test("Should log exceptions to console output", async () => {
+    it("Should log exceptions to console output", async () => {
         const spy = jest.spyOn(console, "error").mockImplementation();
 
         const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
@@ -41,7 +41,7 @@ describe("startBacktest", () => {
 
 
 describe("createBackTester", () => {
-    test("Should create a configured BackTester instance", async () => {
+    it("Should create a configured BackTester instance", async () => {
         const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
 
         const {default: strategy} = await loadStrategy("");

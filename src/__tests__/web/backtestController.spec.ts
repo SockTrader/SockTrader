@@ -43,7 +43,7 @@ describe("Web-based backtest process creator", () => {
         });
     };
 
-    test("Should start a new backtest process when it receives an \"new_backtest\" event", () => {
+    it("Should start a new backtest process when it receives an \"new_backtest\" event", () => {
         startBackTest();
         expect(backtestCreator.prototype.create).toHaveBeenLastCalledWith(
             expect.stringContaining("src/index.js"),
@@ -51,7 +51,7 @@ describe("Web-based backtest process creator", () => {
         );
     });
 
-    test("Should forward events from backtest process to frontend", () => {
+    it("Should forward events from backtest process to frontend", () => {
         startBackTest();
 
         socket.once("MY_TEST", (payload) => expect(payload).toEqual("sample payload"));
@@ -63,7 +63,7 @@ describe("Web-based backtest process creator", () => {
         processMock.emit("exit", 9, "SIGKILL");
     });
 
-    test("Socket should receive an \"process_start\" event when process has started", () => {
+    it("Socket should receive an \"process_start\" event when process has started", () => {
         socket.once("process_start", ({processId}) => expect(typeof processId).toBe("number"));
         startBackTest();
     });

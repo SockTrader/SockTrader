@@ -13,7 +13,7 @@ const mockResponse = () => {
 };
 
 describe("strategy listing", () => {
-    test("Should return list of all strategy files in base64 encoded format", async () => {
+    it("Should return list of all strategy files in base64 encoded format", async () => {
         const res = mockResponse();
 
         await strategyListHandler(null as any, res, null as any);

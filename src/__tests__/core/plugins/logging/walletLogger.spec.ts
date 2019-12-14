@@ -5,7 +5,7 @@ import {AssetMap} from "../../../../sockTrader/core/plugins/wallet/wallet";
 jest.mock("../../../../sockTrader/core/logger");
 
 describe("onUpdateAssets", () => {
-    test("Should log reserved and non reserved assets", () => {
+    it("Should log reserved and non reserved assets", () => {
         const assets: AssetMap = {BTC: 1, USD: 10};
         const reserved: AssetMap = {USD: 1000};
 
@@ -18,7 +18,7 @@ describe("onUpdateAssets", () => {
 });
 
 describe("objectToArray", () => {
-    test("Should convert AssetMap to Array", () => {
+    it("Should convert AssetMap to Array", () => {
         const assets: AssetMap = {BTC: 1, USD: 10};
 
         const logger = new WalletLogger();

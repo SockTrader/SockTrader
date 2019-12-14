@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 describe("bindStrategyToExchange", () => {
-    test("Should forward strategy events when not using paper trading", async () => {
+    it("Should forward strategy events when not using paper trading", async () => {
         const spy = jest.spyOn(LiveTrader.prototype, "bindStrategyToExchange" as any);
         await liveTrader.start();
         expect(spy).toBeCalledWith(expect.any(SimpleMovingAverage));
@@ -40,7 +40,7 @@ describe("bindStrategyToExchange", () => {
 });
 
 describe("setExchange", () => {
-    test("Should set the exchange", () => {
+    it("Should set the exchange", () => {
         const exchange = createExchange();
         liveTrader.setExchange(exchange);
         expect(liveTrader["exchange"]).toEqual(exchange);
@@ -48,42 +48,42 @@ describe("setExchange", () => {
 });
 
 describe("start", () => {
-    test("Should throw an error if no exchange is found", async () => {
+    it("Should throw an error if no exchange is found", async () => {
         expect.assertions(1);
         liveTrader["exchange"] = undefined as any;
 
         await expect(liveTrader.start()).rejects.toThrow("No exchange defined!");
     });
 
-    test("Should subscribe to exchange events", async () => {
+    it("Should subscribe to exchange events", async () => {
         const spy = jest.spyOn(liveTrader, "subscribeToExchangeEvents");
 
         await liveTrader.start();
         expect(spy).toBeCalledWith([createStrategy()]);
     });
 
-    test("Should connect to exchange", async () => {
+    it("Should connect to exchange", async () => {
         const spy = jest.spyOn(liveTrader["exchange"], "connect");
 
         await liveTrader.start();
         expect(spy.mock.calls[0]).toEqual([]);
     });
 
-    test("Should bind exchange to strategy events", async () => {
+    it("Should bind exchange to strategy events", async () => {
         const spy = jest.spyOn(liveTrader, "bindStrategyToExchange" as any);
 
         await liveTrader.start();
         expect(spy).toBeCalledWith(expect.any(SimpleMovingAverage));
     });
 
-    test("Should bind strategy to exchange events", async () => {
+    it("Should bind strategy to exchange events", async () => {
         const spy = jest.spyOn(liveTrader, "bindExchangeToStrategy" as any);
 
         await liveTrader.start();
         expect(spy).toBeCalledWith(expect.any(SimpleMovingAverage));
     });
 
-    test("Should not bind and connect twice or more", async () => {
+    it("Should not bind and connect twice or more", async () => {
         const subscribeToExchangeEvents = jest.spyOn(liveTrader, "subscribeToExchangeEvents" as any);
         const bindStrategyToExchange = jest.spyOn(liveTrader, "bindStrategyToExchange" as any);
         const bindExchangeToStrategy = jest.spyOn(liveTrader, "bindExchangeToStrategy" as any);

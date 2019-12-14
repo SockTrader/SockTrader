@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 
 describe("setOrderFiller", () => {
-    test("Should be able to set an orderFiller instance", () => {
+    it("Should be able to set an orderFiller instance", () => {
         const orderFiller = new LocalOrderFiller(new OrderTracker(), new Wallet({}));
         exchange.setOrderFiller(orderFiller);
         expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
@@ -29,7 +29,7 @@ describe("setOrderFiller", () => {
 });
 
 describe("getOrderCreator", () => {
-    test("Should be able to set an orderCreator instance", () => {
+    it("Should be able to set an orderCreator instance", () => {
         const orderCreator = new LocalOrderCreator(new OrderTracker(), new Wallet({}));
         exchange.setOrderCreator(orderCreator);
         expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
@@ -37,7 +37,7 @@ describe("getOrderCreator", () => {
 });
 
 describe("buy", () => {
-    test("Should create a buy order", () => {
+    it("Should create a buy order", () => {
         const spy = jest.spyOn(LocalExchange.prototype, "createOrder");
         exchange.buy(["BTC", "USD"], 100, 1);
         expect(spy).toBeCalledWith(["BTC", "USD"], 100, 1, "buy");
@@ -45,7 +45,7 @@ describe("buy", () => {
 });
 
 describe("sell", () => {
-    test("Should create a sell order", () => {
+    it("Should create a sell order", () => {
         const spy = jest.spyOn(LocalExchange.prototype, "createOrder");
         exchange.sell(["BTC", "USD"], 100, 1);
         expect(spy).toBeCalledWith(["BTC", "USD"], 100, 1, "sell");
@@ -53,7 +53,7 @@ describe("sell", () => {
 });
 
 describe("adjustOrder", () => {
-    test("Should forward adjustOrder request to OrderCreator", () => {
+    it("Should forward adjustOrder request to OrderCreator", () => {
         const spy = jest.spyOn(exchange["orderCreator"], "adjustOrder");
         exchange.adjustOrder(FX_NEW_BUY_ORDER, 100, 2);
         expect(spy).toBeCalledWith(FX_NEW_BUY_ORDER, 100, 2);
@@ -61,7 +61,7 @@ describe("adjustOrder", () => {
 });
 
 describe("cancelOrder", () => {
-    test("Should forward cancelOrder request to OrderCreator", () => {
+    it("Should forward cancelOrder request to OrderCreator", () => {
         const spy = jest.spyOn(exchange["orderCreator"], "cancelOrder");
         exchange.cancelOrder(FX_NEW_BUY_ORDER);
         expect(spy).toBeCalledWith(FX_NEW_BUY_ORDER);
@@ -69,7 +69,7 @@ describe("cancelOrder", () => {
 });
 
 describe("createOrder", () => {
-    test("Should forward createOrder request to OrderCreator", () => {
+    it("Should forward createOrder request to OrderCreator", () => {
         const spy = jest.spyOn(exchange["orderCreator"], "createOrder");
         exchange.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
         expect(spy).toBeCalledWith(["BTC", "USD"], 100, 1, OrderSide.BUY);
@@ -77,7 +77,7 @@ describe("createOrder", () => {
 });
 
 describe("onSnapshotCandles", () => {
-    test("Should forward onSnapshotCandles request to OrderFiller", () => {
+    it("Should forward onSnapshotCandles request to OrderFiller", () => {
         const spy = jest.spyOn(exchange["orderFiller"], "onSnapshotCandles");
         exchange.onSnapshotCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
         expect(spy).toBeCalledWith(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
@@ -85,7 +85,7 @@ describe("onSnapshotCandles", () => {
 });
 
 describe("onUpdateCandles", () => {
-    test("Should forward onUpdateCandles request to OrderFiller", () => {
+    it("Should forward onUpdateCandles request to OrderFiller", () => {
         const spy = jest.spyOn(exchange["orderFiller"], "onUpdateCandles");
         exchange.onUpdateCandles(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
         expect(spy).toBeCalledWith(["BTC", "USD"], FX_CANDLE_1, {code: "code", cron: "*"});
@@ -93,7 +93,7 @@ describe("onUpdateCandles", () => {
 });
 
 describe("destroy", () => {
-    test("Should remove all event listeners once the exchange is destroyed", () => {
+    it("Should remove all event listeners once the exchange is destroyed", () => {
         const spy1 = jest.spyOn(exchange, "removeAllListeners");
         const spy2 = jest.spyOn(exchange["connection"], "removeAllListeners");
 
@@ -105,7 +105,7 @@ describe("destroy", () => {
 });
 
 describe("connect", () => {
-    test("Should call connect on connection", () => {
+    it("Should call connect on connection", () => {
         const spy = jest.spyOn(exchange["connection"], "connect");
 
         exchange.connect();
@@ -113,7 +113,7 @@ describe("connect", () => {
         expect(spy).toBeCalledTimes(1);
     });
 
-    test("Should trigger onConnect event in exchange once connected", () => {
+    it("Should trigger onConnect event in exchange once connected", () => {
         const spy = jest.spyOn(exchange as any, "onConnect");
 
         exchange.connect();
@@ -121,7 +121,7 @@ describe("connect", () => {
         expect(spy).toBeCalledTimes(1);
     });
 
-    test("Should trigger onReconnect event in exchange when reconnected", () => {
+    it("Should trigger onReconnect event in exchange when reconnected", () => {
         const spy1 = jest.spyOn(exchange as any, "onConnect");
         const spy2 = jest.spyOn(exchange as any, "onReconnect");
 
@@ -136,11 +136,11 @@ describe("connect", () => {
 
 // @TODO test needs to be refactored into orderbook factory
 describe("getOrderbook", () => {
-    test("Should throw error if no configuration is found for given pair", () => {
+    it("Should throw error if no configuration is found for given pair", () => {
         expect(() => exchange.getOrderbook(pair)).toThrow("No configuration found for pair: \"BTCUSD\"");
     });
 
-    test("Should get singleton exchange orderbook", () => {
+    it("Should get singleton exchange orderbook", () => {
         const symbol = pair.join("");
 
         exchange.currencies[symbol] = FX_BTCUSD;
@@ -157,7 +157,7 @@ describe("getOrderbook", () => {
 });
 
 describe("isReady", () => {
-    test("Should emit ready event once", () => {
+    it("Should emit ready event once", () => {
         const spy = jest.spyOn(exchange, "emit");
 
         exchange.isReady();
@@ -179,7 +179,7 @@ describe("isReady", () => {
 });
 
 describe("onCurrenciedLoaded", () => {
-    test("Should store currency configuration in Exchange", () => {
+    it("Should store currency configuration in Exchange", () => {
         const isReadySpy = jest.spyOn(exchange, "isReady");
 
         expect(exchange.currencies).toEqual({});

@@ -5,7 +5,7 @@ import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 jest.mock("../../../../sockTrader/core/logger");
 
 describe("onReport", () => {
-    test("Should log order reports", () => {
+    it("Should log order reports", () => {
         const orderLogger = new OrderLogger();
         orderLogger.onReport(FX_NEW_BUY_ORDER);
 

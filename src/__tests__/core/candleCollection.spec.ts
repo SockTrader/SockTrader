@@ -21,42 +21,42 @@ beforeEach(() => {
 });
 
 describe("Candle collection", () => {
-    test("Should return list of open values", () => {
+    it("Should return list of open values", () => {
         expect(candles.open).toBeInstanceOf(CandleCollection);
         expect(candles.open).toEqual([5594.4, 5581.59, 5618.63, 5647.88, 5658.11, 5627.37, 5621.01]);
     });
 
-    test("Should return list of high values", () => {
+    it("Should return list of high values", () => {
         expect(candles.high).toBeInstanceOf(CandleCollection);
         expect(candles.high).toEqual([5635, 5615, 5627.01, 5651.7, 5663.99, 5660, 5638]);
     });
 
-    test("Should return list of low values", () => {
+    it("Should return list of low values", () => {
         expect(candles.low).toBeInstanceOf(CandleCollection);
         expect(candles.low).toEqual([5594.39, 5564.93, 5571.67, 5588.71, 5639.25, 5608.04, 5613.12]);
     });
 
-    test("Should return list of close values", () => {
+    it("Should return list of close values", () => {
         expect(candles.close).toBeInstanceOf(CandleCollection);
         expect(candles.close).toEqual([5625.06, 5594.4, 5581.59, 5618.63, 5647.88, 5658.11, 5627.37]);
     });
 
-    test("Should return list of volume values", () => {
+    it("Should return list of volume values", () => {
         expect(candles.volume).toBeInstanceOf(CandleCollection);
         expect(candles.volume).toEqual([255.84, 225.33, 280.47, 250.94, 158.95, 263.87, 204.55]);
     });
 
-    test("Should return list of timestamp values", () => {
+    it("Should return list of timestamp values", () => {
         expect(candles.timestamp).toBeInstanceOf(CandleCollection);
         expect(candles.timestamp[0]).toBeInstanceOf(moment);
     });
 
-    test("Should return first X amount of candles", () => {
+    it("Should return first X amount of candles", () => {
         const result = candles.first(1);
         expect(result.length).toEqual(1);
     });
 
-    test("Should return last X amount of candles", () => {
+    it("Should return last X amount of candles", () => {
         const result = candles.last(1);
         expect(result.length).toEqual(1);
     });

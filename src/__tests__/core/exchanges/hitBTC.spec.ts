@@ -57,7 +57,7 @@ describe("loadCurrencies", () => {
 });
 
 describe("login", () => {
-    test("Should authenticate user on exchange", () => {
+    it("Should authenticate user on exchange", () => {
         exchange.login("PUB_123", "PRIV_123");
 
         expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
@@ -86,13 +86,13 @@ describe("orderbook management", () => {
     });
 
     describe("onSnapshotOrderbook", () => {
-        test("Should emit orderbook instance when new orderbook snapshot has been received", () => {
+        it("Should emit orderbook instance when new orderbook snapshot has been received", () => {
             const spy = jest.spyOn(Events, "emit");
             exchange.onSnapshotOrderbook({sequence: 2, pair, ask: FX_ASK, bid: FX_BID});
             expect(spy).toBeCalledWith("core.snapshotOrderbook", expect.any(Orderbook));
         });
 
-        test("Should send snapshot to orderbook", () => {
+        it("Should send snapshot to orderbook", () => {
             const spy = jest.spyOn(Orderbook.prototype, "setOrders");
             exchange.onSnapshotOrderbook({sequence: 2, pair, ask: FX_ASK, bid: FX_BID});
             expect(spy).toBeCalledWith(FX_ASK, FX_BID, 2);
@@ -100,13 +100,13 @@ describe("orderbook management", () => {
     });
 
     describe("onUpdateOrderbook", () => {
-        test("Should emit orderbook instance when orderbook update has been received", () => {
+        it("Should emit orderbook instance when orderbook update has been received", () => {
             const spy = jest.spyOn(Events, "emit");
             exchange.onUpdateOrderbook({sequence: 2, pair, ask: FX_ASK_UPDATE, bid: FX_BID_UPDATE});
             expect(spy).toBeCalledWith("core.updateOrderbook", expect.any(Orderbook));
         });
 
-        test("Should send increment to orderbook", () => {
+        it("Should send increment to orderbook", () => {
             const spy = jest.spyOn(Orderbook.prototype, "addIncrement");
             exchange.onUpdateOrderbook({sequence: 2, pair, ask: FX_ASK_UPDATE, bid: FX_BID_UPDATE});
             expect(spy).toBeCalledWith(FX_ASK_UPDATE, FX_BID_UPDATE, 2);
@@ -115,7 +115,7 @@ describe("orderbook management", () => {
 });
 
 describe("subscribeCandles", () => {
-    test("Should send restorable subscribeCandles command to connection", () => {
+    it("Should send restorable subscribeCandles command to connection", () => {
         exchange.subscribeCandles(pair, HitBTCCandleInterval.FIVE_MINUTES);
 
         expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
@@ -128,7 +128,7 @@ describe("subscribeCandles", () => {
 });
 
 describe("subscribeOrderbook", () => {
-    test("Should send restorable subscribeOrderbook command to connection", () => {
+    it("Should send restorable subscribeOrderbook command to connection", () => {
         exchange.subscribeOrderbook(pair);
 
         expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
@@ -141,7 +141,7 @@ describe("subscribeOrderbook", () => {
 });
 
 describe("subscribeReports", () => {
-    test("Should send restorable subscribeReports command to connection", () => {
+    it("Should send restorable subscribeReports command to connection", () => {
         exchange.subscribeReports();
 
         expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
@@ -159,7 +159,7 @@ describe("onConnect", () => {
         exchange.loadCurrencies = jest.fn();
     });
 
-    test("Should forward all messages to the adapter when connected", () => {
+    it("Should forward all messages to the adapter when connected", () => {
         const spy = jest.spyOn(exchange["connection"], "on");
         const onReceiveSpy = jest.spyOn(exchange["adapter"], "onReceive");
 
@@ -173,12 +173,12 @@ describe("onConnect", () => {
         expect(onReceiveSpy).toBeCalledWith(JSON.stringify({test: 123}));
     });
 
-    test("Should send command to load currency configuration", () => {
+    it("Should send command to load currency configuration", () => {
         exchange["onConnect"]();
         expect(exchange.loadCurrencies).toBeCalledTimes(1);
     });
 
-    test("Should call login when connected", () => {
+    it("Should call login when connected", () => {
         exchange["onConnect"]();
         expect(exchange.login).toBeCalledTimes(1);
     });

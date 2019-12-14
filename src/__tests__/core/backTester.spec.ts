@@ -35,7 +35,7 @@ afterEach(() => {
 
 
 describe("start", () => {
-    test("Should throw error with no candle loader", async () => {
+    it("Should throw error with no candle loader", async () => {
         try {
             await backTester.start();
         } catch (e) {
@@ -43,7 +43,7 @@ describe("start", () => {
         }
     });
 
-    test("Should bind events if not bound yet", async () => {
+    it("Should bind events if not bound yet", async () => {
         backTester["eventsBound"] = false;
         const subscribeToExchangeEventsMock = jest.fn();
         backTester.subscribeToExchangeEvents = subscribeToExchangeEventsMock;

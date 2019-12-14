@@ -18,7 +18,7 @@ beforeEach(() => {
     orderFiller = createOrderFiller();
 });
 
-test("Should fill orders by using the LocalOrderFiller", () => {
+it("Should fill orders by using the LocalOrderFiller", () => {
     const spy1 = jest.spyOn(orderFiller["localOrderFiller"], "onSnapshotCandles");
     const spy2 = jest.spyOn(orderFiller["localOrderFiller"], "onUpdateCandles");
 
@@ -29,7 +29,7 @@ test("Should fill orders by using the LocalOrderFiller", () => {
     expect(spy2).toBeCalledWith(["BTC", "USD"], FX_HISTORICAL_CANDLES, interval);
 });
 
-test("Should update internal list of candles by using the RemoteOrderFiller", () => {
+it("Should update internal list of candles by using the RemoteOrderFiller", () => {
     const spy1 = jest.spyOn(orderFiller["remoteOrderFiller"], "onSnapshotCandles");
     const spy2 = jest.spyOn(orderFiller["remoteOrderFiller"], "onUpdateCandles");
 

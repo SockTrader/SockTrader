@@ -12,7 +12,7 @@ beforeEach(() => {
 });
 
 describe("cancelOrder", () => {
-    test("Should set cancel order as unconfirmed", () => {
+    it("Should set cancel order as unconfirmed", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         localOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
@@ -20,7 +20,7 @@ describe("cancelOrder", () => {
         expect(spy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
-    test("Should send order cancellation to orderTracker", () => {
+    it("Should send order cancellation to orderTracker", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "process");
 
         localOrderCreator.cancelOrder(FX_FILLED_BUY_ORDER);
@@ -36,7 +36,7 @@ describe("cancelOrder", () => {
 });
 
 describe("createOrder", () => {
-    test("Should set new order as unconfirmed", () => {
+    it("Should set new order as unconfirmed", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
@@ -44,7 +44,7 @@ describe("createOrder", () => {
         expect(spy).toBeCalledWith(expect.any(String));
     });
 
-    test("Should process newly created order by orderTracker", () => {
+    it("Should process newly created order by orderTracker", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "process");
 
         localOrderCreator.createOrder(["BTC", "USD"], 100, 1, OrderSide.BUY);
@@ -64,7 +64,7 @@ describe("createOrder", () => {
         });
     });
 
-    test("Should validate order in wallet", () => {
+    it("Should validate order in wallet", () => {
         const allowSpy = jest.spyOn(localOrderCreator["wallet"], "isOrderAllowed");
         const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
 
@@ -74,7 +74,7 @@ describe("createOrder", () => {
         expect(updateSpy).toBeCalledWith(expect.objectContaining({pair: ["BTC", "USD"], price: 100, quantity: 1}));
     });
 
-    test("Should block order creation if insufficient funds", () => {
+    it("Should block order creation if insufficient funds", () => {
         localOrderCreator["wallet"].isOrderAllowed = jest.fn(() => false);
         const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
 
@@ -85,7 +85,7 @@ describe("createOrder", () => {
 });
 
 describe("adjustOrder", () => {
-    test("Should process adjusted order by orderTracker", () => {
+    it("Should process adjusted order by orderTracker", () => {
         const exchangeSpy = jest.spyOn(localOrderCreator["orderTracker"], "process");
 
         localOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
@@ -106,7 +106,7 @@ describe("adjustOrder", () => {
         });
     });
 
-    test("Should set new order as unconfirmed", () => {
+    it("Should set new order as unconfirmed", () => {
         const spy = jest.spyOn(localOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         localOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
@@ -114,7 +114,7 @@ describe("adjustOrder", () => {
         expect(spy).toBeCalledWith(expect.any(String));
     });
 
-    test("Should validate order adjustment in wallet", () => {
+    it("Should validate order adjustment in wallet", () => {
         const allowSpy = jest.spyOn(localOrderCreator["wallet"], "isOrderAllowed");
         const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
 
@@ -127,7 +127,7 @@ describe("adjustOrder", () => {
         );
     });
 
-    test("Should block order adjustment if insufficient funds", () => {
+    it("Should block order adjustment if insufficient funds", () => {
         localOrderCreator["wallet"].isOrderAllowed = jest.fn(() => false);
         const updateSpy = jest.spyOn(localOrderCreator["wallet"], "updateAssets");
 
@@ -137,7 +137,7 @@ describe("adjustOrder", () => {
 });
 
 describe("getTimeOfOrder", () => {
-    test("Should return time of current candle", () => {
+    it("Should return time of current candle", () => {
         const currentTime = moment("2019-01-24 18:00");
         localOrderCreator.setCurrentCandle({timestamp: currentTime} as Candle);
 
@@ -146,7 +146,7 @@ describe("getTimeOfOrder", () => {
         expect(timestamp).toEqual(currentTime);
     });
 
-    test("Should return server time", () => {
+    it("Should return server time", () => {
         const timestamp = localOrderCreator["getTimeOfOrder"]();
         expect(timestamp.diff(moment(), "minutes")).toEqual(0);
     });

@@ -4,7 +4,7 @@ import stream from "stream";
 jest.mock("child_process");
 
 describe("createProcess", () => {
-    test("Should fork a new child process and pipe stdOut", async () => {
+    it("Should fork a new child process and pipe stdOut", async () => {
         const cp = BacktestCreator["createProcess"]("./DOESNT_EXIST.js", {
             candlePath: "FAKE_CANDLE_PATH",
             strategyPath: "FAKE_STRATEGY_PATH",
@@ -24,7 +24,7 @@ describe("createProcess", () => {
         expect(pipe).toHaveBeenLastCalledWith(expect.any(stream.Writable));
     });
 
-    test("Should kill previous process", async () => {
+    it("Should kill previous process", async () => {
         const prevProcess = jest.requireMock("child_process");
 
         BacktestCreator["createProcess"] = jest.fn();

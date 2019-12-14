@@ -34,35 +34,35 @@ jest.mock("data-forge-fs", () => {
 });
 
 describe("determineCandleInterval", () => {
-    test("Should determine smallest interval in a series of timestamps", async () => {
+    it("Should determine smallest interval in a series of timestamps", async () => {
         const result = normalizer["determineCandleInterval"](createDataFrame());
         expect(result).toEqual(60);
     });
 });
 
 describe("determinePriceDecimals", () => {
-    test("Should determine price decimals in a series of candles", async () => {
+    it("Should determine price decimals in a series of candles", async () => {
         const result = normalizer["determinePriceDecimals"](createDataFrame());
         expect(result).toEqual(10000);
     });
 });
 
 describe("determineVolumeDecimals", () => {
-    test("Should determine amount of volume decimals in a series of candles", async () => {
+    it("Should determine amount of volume decimals in a series of candles", async () => {
         const result = normalizer["determineVolumeDecimals"](createDataFrame());
         expect(result).toEqual(3);
     });
 });
 
 describe("validateColumns", () => {
-    test("Should throw if dataFrame does not contain the required columns", async () => {
+    it("Should throw if dataFrame does not contain the required columns", async () => {
         const df = createDataFrame().renameSeries({timestamp: "ts"});
         expect(() => normalizer["validateColumns"](df)).toThrow("Columns of DataFrame are not valid!");
     });
 });
 
 describe("normalize", () => {
-    test("Should run all individual normalize functions and return complete result", async () => {
+    it("Should run all individual normalize functions and return complete result", async () => {
         const result = await normalizer.normalize();
         expect(result).toEqual(expect.objectContaining({
             candleInterval: 60,
@@ -76,14 +76,14 @@ describe("normalize", () => {
 });
 
 describe("parseFileReader", () => {
-    test("Should parse a JSON file", async () => {
+    it("Should parse a JSON file", async () => {
         const mockFileReader = {parseJSON: jest.fn()};
         await CandleNormalizer.parseFileReader(mockFileReader as any, "json");
 
         expect(mockFileReader.parseJSON).toBeCalledTimes(1);
     });
 
-    test("Should parse a CSV file", async () => {
+    it("Should parse a CSV file", async () => {
         const mockFileReader = {parseCSV: jest.fn()};
         await CandleNormalizer.parseFileReader(mockFileReader as any, "csv");
 
@@ -91,7 +91,7 @@ describe("parseFileReader", () => {
         expect(mockFileReader.parseCSV).toBeCalledTimes(1);
     });
 
-    test("Should throw when invalid extension is given", () => {
+    it("Should throw when invalid extension is given", () => {
         const invalidFileReader = CandleNormalizer.parseFileReader({} as any, "exe");
         expect(invalidFileReader).rejects.toThrow("File extension is not valid! Expecting a CSV or JSON file.");
     });

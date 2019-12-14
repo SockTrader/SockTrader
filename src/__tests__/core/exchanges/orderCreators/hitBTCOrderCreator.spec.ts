@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 describe("cancelOrder", () => {
-    test("Should set cancel order as unconfirmed", () => {
+    it("Should set cancel order as unconfirmed", () => {
         const unconfirmedSpy = jest.spyOn(hitBTCOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         hitBTCOrderCreator.cancelOrder(FX_NEW_BUY_ORDER);
@@ -21,7 +21,7 @@ describe("cancelOrder", () => {
         expect(unconfirmedSpy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
-    test("Should send cancel command to connection", () => {
+    it("Should send cancel command to connection", () => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
         hitBTCOrderCreator.cancelOrder(FX_NEW_BUY_ORDER);
@@ -36,7 +36,7 @@ describe("cancelOrder", () => {
 });
 
 describe("createOrder", () => {
-    test("Should set new order as unconfirmed", () => {
+    it("Should set new order as unconfirmed", () => {
         const unconfirmedSpy = jest.spyOn(hitBTCOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         hitBTCOrderCreator.createOrder(["BTC", "USD"], 10, 2, OrderSide.BUY);
@@ -44,7 +44,7 @@ describe("createOrder", () => {
         expect(unconfirmedSpy).toBeCalledWith(expect.any(String));
     });
 
-    test("Should send create order command to connection", () => {
+    it("Should send create order command to connection", () => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
         hitBTCOrderCreator.createOrder(["BTC", "USD"], 10, 2, OrderSide.BUY);
@@ -66,7 +66,7 @@ describe("createOrder", () => {
 });
 
 describe("adjustOrder", () => {
-    test("Should set adjust order as unconfirmed", () => {
+    it("Should set adjust order as unconfirmed", () => {
         const unconfirmedSpy = jest.spyOn(hitBTCOrderCreator["orderTracker"], "setOrderUnconfirmed");
 
         hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
@@ -74,7 +74,7 @@ describe("adjustOrder", () => {
         expect(unconfirmedSpy).toBeCalledWith("NEW_BUY_ORDER_1");
     });
 
-    test("Should send adjust command to connection", () => {
+    it("Should send adjust command to connection", () => {
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
         hitBTCOrderCreator.adjustOrder(FX_NEW_BUY_ORDER, 10, 1);
@@ -93,7 +93,7 @@ describe("adjustOrder", () => {
         });
     });
 
-    test("Should not adjust when order is unconfirmed", () => {
+    it("Should not adjust when order is unconfirmed", () => {
         hitBTCOrderCreator["orderTracker"].isOrderUnconfirmed = jest.fn(() => true);
         const sendSpy = jest.spyOn(hitBTCOrderCreator["connection"], "send");
 
