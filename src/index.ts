@@ -3,8 +3,8 @@ import "source-map-support/register";
 import yargs from "yargs";
 import BackTest from "./sockTrader/cli/backtest";
 import {listCandles, listStrategies} from "./sockTrader/cli/directoryListing";
-import {startLiveTrading} from "./sockTrader/cli/liveTrading";
 import {listExchanges} from "./sockTrader/cli/exchangeListing";
+import LiveTrading from "./sockTrader/cli/liveTrading";
 import {normalize} from "./sockTrader/cli/normalize";
 import startWebServer from "./sockTrader/web/webServer";
 
@@ -65,7 +65,7 @@ yargs
             describe: "run strategy with live data without spending money",
             boolean: true,
         },
-    }, startLiveTrading)
+    }, args => new LiveTrading(args).start())
     .command(["normalize", "norm", "n"], "prepare static data files for backtesting", {}, normalize)
     .demandCommand(1, "")
     .argv;

@@ -58,8 +58,6 @@ export default class LiveTrading {
             const exchange = new ExchangeFactory().createExchange(this.exchange);
 
             const liveTrader = this.createLiveTrader(exchange, strategyFile, this.pair);
-            liveTrader.setPlugins([...config.plugins, WalletFactory.getInstance()]);
-
             await liveTrader.start();
         } catch (e) {
             console.error(e);
