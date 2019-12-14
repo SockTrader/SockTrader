@@ -3,8 +3,8 @@ import "source-map-support/register";
 import yargs from "yargs";
 import BackTest from "./sockTrader/cli/backtest";
 import {listCandles, listStrategies} from "./sockTrader/cli/directoryListing";
-import {listExchanges} from "./sockTrader/cli/exchange";
 import {startLiveTrading} from "./sockTrader/cli/liveTrading";
+import {listExchanges} from "./sockTrader/cli/exchangeListing";
 import {normalize} from "./sockTrader/cli/normalize";
 import startWebServer from "./sockTrader/web/webServer";
 

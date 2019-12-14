@@ -13,5 +13,5 @@ function getExchangeConfig({intervals}: ExchangeDefinition) {
         prevValue[index] = rest;
 
         return prevValue;
-    }, [] as any);
+    }, {} as any);
 }

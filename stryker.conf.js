@@ -15,6 +15,7 @@ module.exports = function(config) {
     ],
     mutate: [
       "src/**/*.ts",
+      "!src/**/__fixtures__/**/*.ts",
       "!src/**/__tests__/**/*.ts",
       "!src/**/__mocks__/**/*.ts",
       "!src/**/data/**/*.ts",
