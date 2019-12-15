@@ -1,4 +1,4 @@
-import BacktestProcessFactory from "../../sockTrader/web/backtest/backtestProcessFactory";
+import BacktestProcessFactory from "../../../sockTrader/web/backtest/backtestProcessFactory";
 import stream from "stream";
 
 jest.mock("child_process");

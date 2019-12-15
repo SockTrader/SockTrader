@@ -1,66 +1,58 @@
 import chokidar, {FSWatcher} from "chokidar";
 import path from "path";
 import {Socket} from "socket.io";
-import BacktestProcessFactory, {BacktestOptions} from "./backtest/backtestProcessFactory";
+import BacktestProcessFactory, {BacktestOptions} from "../backtest/backtestProcessFactory";
 
-/**
- * Path to entry script relative to current folder
- */
-const BASE_PATH = "../../../";
+export default class BacktestController {
 
-/**
- * Name of entry script
- */
-const BACKTEST_SCRIPT = "index.js";
+    private fileWatch?: FSWatcher;
+    private readonly backtestScript = "index.js"; // Name of entry script
+    private readonly strategiesFolder = "strategies";
+    private readonly spawn: (options: BacktestOptions) => void;
 
-/**
- * Name of strategies folder
- */
-const STRATEGIES_FOLDER = "strategies";
+    constructor(private socket: Socket) {
+        this.spawn = this.getBacktestProcessSpawner(socket, this.resolvePath(this.backtestScript));
+    }
 
-const creator: BacktestProcessFactory = new BacktestProcessFactory();
-let fileWatch: FSWatcher;
+    onNewBacktest() {
+        this.socket.on("new_backtest", ({candleFile, strategyFile, watch}) => {
+            const candleFileName = Buffer.from(candleFile, "base64").toString();
+            const strategyFileName = Buffer.from(strategyFile, "base64").toString();
 
-export function resolvePath(p: string[] | string): string {
-    const args = (typeof p === "string") ? [p] : p;
-    return path.resolve(__dirname, BASE_PATH, ...args);
-}
+            this.spawn({candlePath: candleFileName, strategyPath: strategyFileName});
 
-export function backtestProcessSpawner(socket: Socket, scriptPath: string) {
-    return (options: BacktestOptions) => {
-        const curProcess = creator.create(scriptPath, options);
-
-        curProcess.on("message", event => {
-            if (!event || !event.type) throw new Error("Event is not correct. Expecting: { type: string, payload: any }");
-
-            socket.emit(event.type, event.payload);
+            if (watch) this.watchStrategyFile(candleFileName, strategyFileName, this.spawn);
         });
+    }
 
-        curProcess.on("exit", (code, signal) => socket.emit("process_end", {code, signal}));
-        curProcess.on("error", msg => socket.emit("process_error", {msg}));
+    private getBacktestProcessSpawner(socket: Socket, scriptPath: string) {
+        return (options: BacktestOptions) => {
+            const backtestProcess = new BacktestProcessFactory().create(scriptPath, options);
 
-        socket.emit("process_start", {processId: process.pid});
-    };
+            backtestProcess.on("message", event => {
+                if (!event || !event.type) throw new Error("Event is not correct. Expecting: { type: string, payload: any }");
+
+                socket.emit(event.type, event.payload);
+            });
+
+            backtestProcess.on("exit", (code, signal) => socket.emit("process_end", {code, signal}));
+            backtestProcess.on("error", msg => socket.emit("process_error", {msg}));
+
+            socket.emit("process_start", {processId: process.pid});
+        };
+    }
+
+    private watchStrategyFile(candleFileName: string, strategyFileName: string, onChange: (opts: BacktestOptions) => void) {
+        const strategyFilePath = this.resolvePath([this.strategiesFolder, strategyFileName + ".js"]);
+        console.log("watching: ", strategyFilePath);
+
+        if (typeof this.fileWatch !== "undefined") this.fileWatch.removeAllListeners();
+        this.fileWatch = chokidar.watch(strategyFilePath);
+        this.fileWatch.on("change", () => onChange({candlePath: candleFileName, strategyPath: strategyFileName}));
+    }
+
+    private resolvePath(p: string[] | string): string {
+        const args = (typeof p === "string") ? [p] : p;
+        return path.resolve(__dirname, "../../../", ...args);
+    }
 }
-
-export default (socket: Socket) => {
-    const spawn = backtestProcessSpawner(socket, resolvePath(BACKTEST_SCRIPT));
-
-    socket.on("new_backtest", ({candleFile, strategyFile}) => {
-        const watch = true;
-
-        const candles = Buffer.from(candleFile, "base64").toString();
-        const strategy = Buffer.from(strategyFile, "base64").toString();
-
-        spawn({candlePath: candles, strategyPath: strategy});
-
-        if (watch) {
-            const strategyFilePath = resolvePath([STRATEGIES_FOLDER, strategy + ".js"]);
-            console.log("watching: ", strategyFilePath);
-
-            if (typeof fileWatch !== "undefined") fileWatch.removeAllListeners();
-            fileWatch = chokidar.watch(strategyFilePath);
-            fileWatch.on("change", () => spawn({candlePath: candles, strategyPath: strategy}));
-        }
-    });
-};

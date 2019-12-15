@@ -8,7 +8,7 @@ export interface BacktestOptions {
     strategyPath: string;
 }
 
-export default class BacktestCreator {
+export default class BacktestProcessFactory {
 
     /**
      * Only 1 concurrent process allowed
@@ -22,7 +22,7 @@ export default class BacktestCreator {
             this.process.kill("SIGKILL");
         }
 
-        this.process = BacktestCreator.createProcess(scriptPath, options);
+        this.process = BacktestProcessFactory.createProcess(scriptPath, options);
         return this.process;
     }
 

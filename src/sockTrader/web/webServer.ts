@@ -3,9 +3,9 @@ import express, {Express, NextFunction, Request, Response} from "express";
 import {Server} from "http";
 import socketIO, {Socket} from "socket.io";
 import config from "../../config";
-import backtestController from "./controllers/backtest";
-import dataController from "./controllers/data";
-import strategyController from "./controllers/strategy";
+import BacktestController from "./controllers/backtestController";
+import dataController from "./controllers/dataController";
+import strategyController from "./controllers/strategyController";
 
 export default function startWebServer() {
     const app: Express = express();
@@ -23,7 +23,8 @@ export default function startWebServer() {
     app.use((err: any, req: Request, res: Response, next: NextFunction) => next(res.status(err.output.statusCode).json(err.output.payload)));
 
     io.on("connection", (socket: Socket) => {
-        backtestController(socket);
+        const controller = new BacktestController(socket);
+        controller.onNewBacktest();
     });
 
     io.on("disconnect", (reason: any) => {

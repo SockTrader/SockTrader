@@ -1,4 +1,4 @@
-import BackTest from "../../sockTrader/cli/backtest";
+import Backtest from "../../sockTrader/cli/backtest";
 import {loadCandleFile, loadStrategy} from "../../sockTrader/cli/util";
 import {FX_CANDLE_LIST} from "../../__fixtures__/candles";
 import BackTester from "../../sockTrader/core/bot/backTester";
@@ -15,7 +15,7 @@ beforeEach(() => {
 
 describe("startBacktest", () => {
     it("Should be able to start a backtesting process", async () => {
-        const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
+        const bt = new Backtest("coinbase_btcusd_1h", "simpleMovingAverage");
         const start = jest.fn();
         bt.createBackTester = () => ({start}) as any;
 
@@ -28,7 +28,7 @@ describe("startBacktest", () => {
     it("Should log exceptions to console output", async () => {
         const spy = jest.spyOn(console, "error").mockImplementation();
 
-        const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
+        const bt = new Backtest("coinbase_btcusd_1h", "simpleMovingAverage");
         bt.createBackTester = () => {
             throw new Error("throw in unit test");
         };
@@ -42,7 +42,7 @@ describe("startBacktest", () => {
 
 describe("createBackTester", () => {
     it("Should create a configured BackTester instance", async () => {
-        const bt = new BackTest("coinbase_btcusd_1h", "simpleMovingAverage");
+        const bt = new Backtest("coinbase_btcusd_1h", "simpleMovingAverage");
 
         const {default: strategy} = await loadStrategy("");
         const {default: candleFile} = await loadCandleFile("");

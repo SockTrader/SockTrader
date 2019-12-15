@@ -4,7 +4,7 @@ import IPCReporter from "../core/plugins/IPCReporter";
 import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {loadCandleFile, loadStrategy} from "./util";
 
-export default class BackTest {
+export default class Backtest {
     constructor(private candleFile: string, private strategyFile: string) {
     }
 

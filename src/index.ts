@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import yargs from "yargs";
-import BackTest from "./sockTrader/cli/backtest";
+import Backtest from "./sockTrader/cli/backtest";
 import {listCandles, listStrategies} from "./sockTrader/cli/directoryListing";
 import {listExchanges} from "./sockTrader/cli/exchangeListing";
 import LiveTrading from "./sockTrader/cli/liveTrading";
@@ -28,7 +28,7 @@ yargs
             string: true,
             required: true,
         },
-    }, args => new BackTest(args.candles, args.strategy).start())
+    }, args => new Backtest(args.candles, args.strategy).start())
     .command(["live"], "start trading a strategy on a remote exchange", {
         strategy: {
             alias: "S",
