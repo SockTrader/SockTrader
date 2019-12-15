@@ -24,7 +24,7 @@ describe("emitCandles", () => {
         exchange.emitCandles(FX_CANDLE_LIST);
 
         expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(1, [...FX_CANDLE_2]);
-        expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(2, [...FX_HISTORICAL_CANDLES, ...FX_CANDLE_2]);
+        expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(2, [...FX_CANDLE_2, ...FX_HISTORICAL_CANDLES]);
     });
 
     it("Should notify orderCreator about the current candle", () => {
