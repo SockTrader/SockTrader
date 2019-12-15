@@ -34,7 +34,7 @@ export default class LocalExchange extends BaseExchange {
         let processedCandles: Candle[] = [];
 
         candles.forEach(value => {
-            processedCandles = [...processedCandles, value];
+            processedCandles = [value, ...processedCandles];
             (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
             (this.orderFiller as LocalOrderFiller).onProcessCandles(processedCandles);
             Events.emit("core.updateCandles", processedCandles);

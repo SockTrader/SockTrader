@@ -107,7 +107,7 @@ export default class CandleNormalizer {
         this.validateColumns(dataFrame);
 
         return {
-            candles: dataFrame.orderByDescending(row => row.timestamp.unix()).toArray(),
+            candles: dataFrame.orderBy(row => row.timestamp.unix()).toArray(),
             name: this.candleNormalizerConfig.name,
             symbol: this.candleNormalizerConfig.symbol,
             volumeDecimals: this.determineVolumeDecimals(dataFrame),
