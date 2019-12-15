@@ -1,4 +1,4 @@
-import {strategyListHandler} from "../../sockTrader/web/controllers/strategy";
+import {strategyListHandler} from "../../sockTrader/web/strategyController";
 
 jest.mock("fs");
 

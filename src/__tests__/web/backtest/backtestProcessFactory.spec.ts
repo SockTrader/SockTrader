@@ -1,11 +1,11 @@
-import BacktestCreator from "../../sockTrader/web/backtest/backtestCreator";
+import BacktestProcessFactory from "../../sockTrader/web/backtest/backtestProcessFactory";
 import stream from "stream";
 
 jest.mock("child_process");
 
 describe("createProcess", () => {
     it("Should fork a new child process and pipe stdOut", async () => {
-        const cp = BacktestCreator["createProcess"]("./DOESNT_EXIST.js", {
+        const cp = BacktestProcessFactory["createProcess"]("./DOESNT_EXIST.js", {
             candlePath: "FAKE_CANDLE_PATH",
             strategyPath: "FAKE_STRATEGY_PATH",
         });
@@ -27,8 +27,8 @@ describe("createProcess", () => {
     it("Should kill previous process", async () => {
         const prevProcess = jest.requireMock("child_process");
 
-        BacktestCreator["createProcess"] = jest.fn();
-        const creator = new BacktestCreator();
+        BacktestProcessFactory["createProcess"] = jest.fn();
+        const creator = new BacktestProcessFactory();
         creator.process = prevProcess;
         creator.create("./DOESNT_EXIST.js", {
             candlePath: "FAKE_CANDLE_PATH",
@@ -39,7 +39,7 @@ describe("createProcess", () => {
         expect(prevProcess.kill).toBeCalledTimes(1);
         expect(prevProcess.kill).toHaveBeenLastCalledWith("SIGKILL");
 
-        expect((BacktestCreator["createProcess"] as any).mock.calls[0]).toEqual([
+        expect((BacktestProcessFactory["createProcess"] as any).mock.calls[0]).toEqual([
             "./DOESNT_EXIST.js",
             {"candlePath": "FAKE_CANDLE_PATH", "strategyPath": "FAKE_STRATEGY_PATH"},
         ]);

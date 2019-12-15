@@ -1,4 +1,4 @@
-import {dataHandler, dataListHandler} from "../../sockTrader/web/controllers/data";
+import {dataHandler, dataListHandler} from "../../sockTrader/web/dataController";
 
 jest.mock("fs");
 
