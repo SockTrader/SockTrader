@@ -2,15 +2,6 @@ import IPCReporter from "../../../sockTrader/core/plugins/IPCReporter";
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 
 describe("send", () => {
-    it("Should throw an error if process is not spawned with an IPC channel", () => {
-        process.send = undefined;
-
-        const reporter = new IPCReporter();
-
-        expect(() => reporter["send"]({payload: "message", type: "unit_test"}))
-            .toThrow("Cannot use IPCReporter. SockTrader is not running as a child process.");
-    });
-
     it("Should send a message via the IPC channel", () => {
         process.send = jest.fn();
 

@@ -6,8 +6,7 @@ import {TradingBotAware} from "../types/plugins/tradingBotAware";
 export default class IPCReporter implements TradingBotAware, ReportAware {
 
     private send(message: { payload: any, type: string }): void {
-        if (!process.send) throw new Error("Cannot use IPCReporter. SockTrader is not running as a child process.");
-        process.send(message);
+        if (process.send) process.send(message);
     }
 
     onBotProgress(status: BotStatus) {
