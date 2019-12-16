@@ -10,6 +10,24 @@ const getTime = (start: Moment, action = "+", minutes = 0): Moment => {
     return start.clone()[method](minutes, "minutes");
 };
 
+let cm: any;
+beforeEach(() => {
+    cm = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
+});
+
+describe("candleEqualsTimestamp", () => {
+    it("Should return true if candle time is same or newer than the timestamp", () => {
+        const result1 = cm["candleEqualsTimestamp"]({timestamp: moment()} as Candle, moment());
+        const result2 = cm["candleEqualsTimestamp"]({timestamp: moment().add(5, "minutes")} as Candle, moment());
+        expect(result1).toEqual(true);
+        expect(result2).toEqual(true);
+    });
+
+    it("Should return false if candle time is older than the timestamp", () => {
+        const result = cm["candleEqualsTimestamp"]({timestamp: moment()} as Candle, moment().add(5, "minutes"));
+        expect(result).toEqual(false);
+    });
+});
 describe("CandleManager", () => {
     it("Should sort all candles, with the latest candle first and the last candle last", () => {
         const cc = new CandleManager({code: "M1", cron: "00 */1 * * * *"}, false);
