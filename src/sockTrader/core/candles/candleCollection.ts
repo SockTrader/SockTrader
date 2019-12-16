@@ -1,9 +1,9 @@
 import {Moment} from "moment";
-import {ICandle} from "../types/ICandle";
+import {Candle} from "../types/candle";
 
-export default class CandleCollection extends Array<ICandle> {
+export default class CandleCollection extends Array<Candle> {
 
-    constructor(...candles: ICandle[]) {
+    constructor(...candles: Candle[]) {
         super(...candles);
     }
 

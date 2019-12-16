@@ -1,52 +1,66 @@
 import inquirer from "inquirer";
 import config from "../../config";
 import LiveTrader from "../core/bot/liveTrader";
-import {exchanges} from "../core/exchanges";
-import {IExchange} from "../core/types/IExchange";
+import BaseExchange from "../core/exchanges/baseExchange";
+import ExchangeFactory from "../core/exchanges/exchangeFactory";
+import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {getExchangeInterval, loadStrategy} from "./util";
 
-export async function askForConfirmation(): Promise<boolean> {
-    const {confirmation} = await inquirer.prompt([{
-        type: "confirm",
-        name: "confirmation",
-        message: "Know that SockTrader cannot be held responsible for any losses. Are you sure you want to continue?",
-    }]);
+export default class LiveTrading {
+    private readonly paper: boolean;
+    private readonly force: boolean;
+    private readonly exchange: string;
+    private readonly pair: [string, string];
+    private readonly interval: string;
+    private readonly strategy: string;
 
-    return confirmation;
-}
-
-function createExchangeByName(exchangeName: string): IExchange {
-    const exchange = exchanges[exchangeName];
-    if (!exchange) throw new Error(`Could not find exchange: ${exchangeName}`);
-
-    return new exchange.class();
-}
-
-export async function startLiveTrading(args: any) {
-    const {strategy, pair, paper, exchange, interval, force} = args;
-    process.env.SOCKTRADER_TRADING_MODE = paper ? "PAPER" : "LIVE";
-
-    if (!(force || paper)) {
-        const isConfirmed = await askForConfirmation();
-        if (!isConfirmed) return console.log("We just saved you a few bucks. No harm is done, thank me later ;-)");
-        console.log("Enjoy trading! Hold on while we're preparing for a LIVE trading session.");
+    constructor(args: any) {
+        this.paper = args.paper;
+        this.force = args.force;
+        this.exchange = args.exchange;
+        this.pair = args.pair;
+        this.interval = args.interval;
+        this.strategy = args.strategy;
     }
 
-    try {
-        const {default: strategyFile} = await loadStrategy(strategy);
+    async askForConfirmation(): Promise<boolean> {
+        const {confirmation} = await inquirer.prompt([{
+            type: "confirm",
+            name: "confirmation",
+            message: "Know that SockTrader cannot be held responsible for any losses. Are you sure you want to continue?",
+        }]);
 
-        const liveTrader = new LiveTrader()
-            .setExchange(createExchangeByName(exchange))
+        return confirmation;
+    }
+
+    createLiveTrader(exchange: BaseExchange, strategy: any, pair: [string, string]) {
+        return new LiveTrader()
+            .setExchange(exchange)
+            .setPlugins([...config.plugins, WalletFactory.getInstance()])
             .addStrategy({
-                strategy: strategyFile,
+                strategy,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],
-                interval: getExchangeInterval(exchange, interval),
+                interval: getExchangeInterval(this.exchange, this.interval),
             });
+    }
 
-        liveTrader.setPlugins(config.plugins);
+    async start() {
+        process.env.SOCKTRADER_TRADING_MODE = this.paper ? "PAPER" : "LIVE";
 
-        await liveTrader.start();
-    } catch (e) {
-        console.error(e);
+        if (!(this.force || this.paper)) {
+            const isConfirmed = await this.askForConfirmation();
+            if (!isConfirmed) return console.log("We just saved you a few bucks. No harm is done, thank me later ;-)");
+            console.log("Enjoy trading! Hold on while we're preparing for a LIVE trading session.");
+        }
+
+        try {
+            const {default: strategyFile} = await loadStrategy(this.strategy);
+            const exchange = new ExchangeFactory().createExchange(this.exchange);
+
+            const liveTrader = this.createLiveTrader(exchange, strategyFile, this.pair);
+            await liveTrader.start();
+        } catch (e) {
+            console.error(e);
+        }
     }
 }

@@ -1,24 +1,25 @@
 import {EventEmitter} from "events";
 import moment from "moment";
-import {Data} from "../connection/webSocket";
+import {Data} from "../connection/wsConnection";
 import logger from "../logger";
-import {IHitBTCAuthenticateResponse} from "../types/exchanges/IHitBTCAuthenticateResponse";
-import {IHitBTCCandlesResponse} from "../types/exchanges/IHitBTCCandlesResponse";
-import {IHitBTCGetSymbolsResponse} from "../types/exchanges/IHitBTCGetSymbolsResponse";
-import {IHitBTCOrderbookResponse} from "../types/exchanges/IHitBTCOrderbookResponse";
-import {IHitBTCReportResponse} from "../types/exchanges/IHitBTCReportResponse";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {IResponseAdapter} from "../types/IResponseAdapter";
-import {ITradeablePair} from "../types/ITradeablePair";
+import OrderTrackerFactory from "../order/orderTrackerFactory";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {HitBTCAuthenticateResponse} from "../types/exchanges/hitBTCAuthenticateResponse";
+import {HitBTCCandlesResponse} from "../types/exchanges/hitBTCCandlesResponse";
+import {HitBTCGetSymbolsResponse} from "../types/exchanges/hitBTCGetSymbolsResponse";
+import {HitBTCOrderbookResponse} from "../types/exchanges/hitBTCOrderbookResponse";
+import {HitBTCReportResponse} from "../types/exchanges/hitBTCReportResponse";
 import {OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../types/order";
-import HitBTC, {CandleInterval} from "./hitBTC";
+import {OrderbookData} from "../types/orderbookData";
+import {ResponseAdapter} from "../types/responseAdapter";
+import {TradeablePair} from "../types/tradeablePair";
+import HitBTC, {HitBTCCandleInterval} from "./hitBTC";
 
 /**
  * The HitBTCAdapter maps incoming api events and wraps them with additional checks/logic
  */
-export default class HitBTCAdapter extends EventEmitter implements IResponseAdapter {
+export default class HitBTCAdapter extends EventEmitter implements ResponseAdapter {
 
     private readonly exchange: HitBTC;
 
@@ -60,11 +61,11 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
 
     /**
      * Maps HitBTC data to candle collection
-     * @param {IHitBTCCandlesResponse} data the date from hitBTC
-     * @returns {ICandle[]} the candle collection
+     * @param {HitBTCCandlesResponse} data the date from hitBTC
+     * @returns {Candle[]} the candle collection
      */
-    private mapCandles(data: IHitBTCCandlesResponse): ICandle[] {
-        return data.params.data.map<ICandle>(candle => ({
+    private mapCandles(data: HitBTCCandlesResponse): Candle[] {
+        return data.params.data.map<Candle>(candle => ({
             close: parseFloat(candle.close),
             high: parseFloat(candle.max),
             low: parseFloat(candle.min),
@@ -76,10 +77,10 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
 
     /**
      * Wraps the returning symbols (allowed pairs)
-     * @param {IHitBTCGetSymbolsResponse} response
+     * @param {HitBTCGetSymbolsResponse} response
      */
-    private onGetSymbols(response: IHitBTCGetSymbolsResponse): void {
-        const result = response.result.map<ITradeablePair>(({tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
+    private onGetSymbols(response: HitBTCGetSymbolsResponse): void {
+        const result = response.result.map<TradeablePair>(({tickSize, quantityIncrement, baseCurrency, quoteCurrency}) => ({
             id: [baseCurrency, quoteCurrency],
             quantityIncrement: parseFloat(quantityIncrement),
             tickSize: parseFloat(tickSize),
@@ -89,20 +90,21 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
 
     /**
      * Wraps login callback
-     * @param {IHitBTCAuthenticateResponse} data
+     * @param {HitBTCAuthenticateResponse} data
      */
-    private onLogin(data: IHitBTCAuthenticateResponse): void {
+    private onLogin(data: HitBTCAuthenticateResponse): void {
         this.exchange.isAuthenticated = data.result;
         this.exchange.isReady();
     }
 
     /**
      * Wraps incoming report (order updates)
-     * @param {IHitBTCReportResponse} data report data
+     * @param {HitBTCReportResponse} data report data
      */
-    private onReport(data: IHitBTCReportResponse): void {
+    private onReport(data: HitBTCReportResponse): void {
+        const orderTracker = OrderTrackerFactory.getInstance();
         data.params.forEach(report => {
-            this.exchange.onReport({
+            orderTracker.process({
                 id: report.clientOrderId,
                 originalId: (report.originalRequestClientOrderId) ? report.originalRequestClientOrderId : undefined,
                 createdAt: moment(report.createdAt),
@@ -120,16 +122,16 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
     }
 
     /**
-     * Tries to find a valid ICandleInterval in the response. Undefined will be returned if nothing was found
+     * Tries to find a valid CandleInterval in the response. Undefined will be returned if nothing was found
      * @param response
      */
-    private getIntervalFromResponse(response: IHitBTCCandlesResponse): ICandleInterval | undefined {
-        let interval: ICandleInterval | undefined;
+    private getIntervalFromResponse(response: HitBTCCandlesResponse): CandleInterval | undefined {
+        let interval: CandleInterval | undefined;
 
-        for (const key in CandleInterval) {
-            if (!CandleInterval.hasOwnProperty(key)) continue;
-            if (CandleInterval[key].code === response.params.period) {
-                interval = CandleInterval[key];
+        for (const key in HitBTCCandleInterval) {
+            if (!HitBTCCandleInterval.hasOwnProperty(key)) continue;
+            if (HitBTCCandleInterval[key].code === response.params.period) {
+                interval = HitBTCCandleInterval[key];
                 break;
             }
         }
@@ -138,33 +140,33 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
         return interval;
     }
 
-    private getPairFromResponse({params: {symbol}}: IHitBTCCandlesResponse) {
+    private getPairFromResponse({params: {symbol}}: HitBTCCandlesResponse) {
         return this.exchange.currencies[symbol].id;
     }
 
     /**
      * Converts candles coming from the HitBTC exchange into a generic data structure
-     * @param {IHitBTCCandlesResponse} response the candles
+     * @param {HitBTCCandlesResponse} response the candles
      */
-    private onSnapshotCandles(response: IHitBTCCandlesResponse) {
+    private onSnapshotCandles(response: HitBTCCandlesResponse) {
         const interval = this.getIntervalFromResponse(response);
         if (interval) this.exchange.onSnapshotCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
     }
 
     /**
      * Converts candles coming from the HitBTC exchange into a generic data structure
-     * @param {IHitBTCCandlesResponse} response the candles
+     * @param {HitBTCCandlesResponse} response the candles
      */
-    private onUpdateCandles(response: IHitBTCCandlesResponse) {
+    private onUpdateCandles(response: HitBTCCandlesResponse) {
         const interval = this.getIntervalFromResponse(response);
         if (interval) this.exchange.onUpdateCandles(this.getPairFromResponse(response), this.mapCandles(response), interval);
     }
 
     /**
-     * Converts the response into IOrderbookData
+     * Converts the response into OrderbookData
      * @param ob
      */
-    private mapOrderbook({params: ob}: IHitBTCOrderbookResponse): IOrderbookData {
+    private mapOrderbook({params: ob}: HitBTCOrderbookResponse): OrderbookData {
         return {
             ask: ob.ask.map(a => ({price: parseFloat(a.price), size: parseFloat(a.size)})),
             bid: ob.bid.map(a => ({price: parseFloat(a.price), size: parseFloat(a.size)})),
@@ -177,7 +179,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Converts the response and forward the result to the HitBTC exchange instance
      * @param response the orderbook
      */
-    private onSnapshotOrderbook(response: IHitBTCOrderbookResponse): void {
+    private onSnapshotOrderbook(response: HitBTCOrderbookResponse): void {
         this.exchange.onSnapshotOrderbook(this.mapOrderbook(response));
     }
 
@@ -185,7 +187,7 @@ export default class HitBTCAdapter extends EventEmitter implements IResponseAdap
      * Converts the response and forward the result to the HitBTC exchange instance
      * @param response the orderbook
      */
-    private onUpdateOrderbook(response: IHitBTCOrderbookResponse): void {
+    private onUpdateOrderbook(response: HitBTCOrderbookResponse): void {
         this.exchange.onUpdateOrderbook(this.mapOrderbook(response));
     }
 }

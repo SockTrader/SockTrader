@@ -1,33 +1,32 @@
 import moment, {Moment} from "moment";
-import Wallet from "../../assets/wallet";
-import {ICandle} from "../../types/ICandle";
-import {IOrder, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
+import OrderTracker from "../../order/orderTracker";
+import Wallet from "../../plugins/wallet/wallet";
+import {Candle} from "../../types/candle";
+import {Order, OrderSide, OrderStatus, OrderTimeInForce, OrderType, ReportType} from "../../types/order";
 import {OrderCreator} from "../../types/orderCreator";
 import {Pair} from "../../types/pair";
-import BaseExchange from "../baseExchange";
-import OrderTracker from "../utils/orderTracker";
-import {generateOrderId} from "../utils/utils";
+import {generateOrderId} from "../../utils/utils";
 
 export default class LocalOrderCreator implements OrderCreator {
 
-    currentCandle?: ICandle = undefined;
+    currentCandle?: Candle = undefined;
 
-    constructor(private readonly orderTracker: OrderTracker, private readonly exchange: BaseExchange, private readonly wallet: Wallet) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly wallet: Wallet) {
     }
 
-    setCurrentCandle(candle: ICandle) {
+    setCurrentCandle(candle: Candle) {
         this.currentCandle = candle;
     }
 
-    cancelOrder(order: IOrder) {
+    cancelOrder(order: Order) {
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport({...order, reportType: ReportType.CANCELED});
+        this.orderTracker.process({...order, status: OrderStatus.CANCELED, reportType: ReportType.CANCELED});
     }
 
     createOrder(pair: Pair, price: number, qty: number, side: OrderSide) {
         const candleTime = this.getTimeOfOrder();
 
-        const order: IOrder = {
+        const order: Order = {
             createdAt: candleTime,
             updatedAt: candleTime,
             status: OrderStatus.NEW,
@@ -41,30 +40,31 @@ export default class LocalOrderCreator implements OrderCreator {
             price,
         };
 
-        if (!this.wallet.isOrderAllowed(order)) return;
+        if (!this.wallet.isOrderAllowed(order)) return; // @TODO remove dependency
 
-        this.wallet.updateAssets(order);
+        this.wallet.updateAssets(order); // @TODO remove dependency
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport(order);
+        this.orderTracker.process(order);
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number) {
-        const newOrder: IOrder = {
+    adjustOrder(order: Order, price: number, qty: number) {
+        const newOrder: Order = {
             ...order,
             id: generateOrderId(order.pair),
             updatedAt: this.getTimeOfOrder(),
             reportType: ReportType.REPLACED,
+            status: OrderStatus.NEW,
             type: OrderType.LIMIT,
             originalId: order.id,
             quantity: qty,
             price,
         };
 
-        if (!this.wallet.isOrderAllowed(newOrder, order)) return;
+        if (!this.wallet.isOrderAllowed(newOrder)) return; // @TODO remove dependency
 
-        this.wallet.updateAssets(newOrder, order);
+        this.wallet.updateAssets(newOrder, order); // @TODO remove dependency
         this.orderTracker.setOrderUnconfirmed(order.id);
-        this.exchange.onReport(newOrder);
+        this.orderTracker.process(newOrder);
     }
 
     /**

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import {exchanges} from "../core/exchanges";
-import {ICandleInterval} from "../core/types/ICandleInterval";
+import {CandleInterval} from "../core/types/candleInterval";
 
 export async function loadStrategy(strategyFilename: string) {
     const strategyPath = path.resolve(__dirname, "./../../strategies", strategyFilename);
@@ -25,7 +25,7 @@ export function getBaseFilenames(files: string[]): string[] {
         .filter((value, index, self) => self.indexOf(value) === index);
 }
 
-export function getExchangeInterval(exchangeName: string, interval: string): ICandleInterval {
+export function getExchangeInterval(exchangeName: string, interval: string): CandleInterval {
     const exchangeConfig = exchanges[exchangeName];
     if (!exchangeConfig) throw new Error(`Could not find exchange: ${exchangeName}`);
 

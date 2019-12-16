@@ -1,14 +1,14 @@
 import {orderbookLogger} from "../../logger";
-import Orderbook, {IOrderbook, IOrderbookEntry, OrderbookSide} from "../../orderbook";
-import {IOrderbookAware} from "../../types/plugins/IOrderbookAware";
+import Orderbook, {OrderbookEntry, OrderbookSide} from "../../orderbook";
+import {OrderbookAware} from "../../types/plugins/orderbookAware";
 
-export default class SpreadLogger implements IOrderbookAware {
+export default class SpreadLogger implements OrderbookAware {
 
     private lastSpread = 0;
 
-    onUpdateOrderbook(orderbook: IOrderbook) {
-        const bidEntry: IOrderbookEntry = orderbook.getEntries(OrderbookSide.BID, 1)[0];
-        const askEntry: IOrderbookEntry = orderbook.getEntries(OrderbookSide.ASK, 1)[0];
+    onUpdateOrderbook(orderbook: Orderbook) {
+        const bidEntry: OrderbookEntry = orderbook.getEntries(OrderbookSide.BID, 1)[0];
+        const askEntry: OrderbookEntry = orderbook.getEntries(OrderbookSide.ASK, 1)[0];
         const incrPerc: number = Orderbook.getBidAskSpreadPerc(bidEntry.price, askEntry.price);
 
         if (incrPerc !== this.lastSpread) {

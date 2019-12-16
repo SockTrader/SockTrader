@@ -1,8 +1,8 @@
 import {orderLogger} from "../logger";
-import {IOrder, OrderSide, OrderStatus} from "../types/order";
-import {IReportAware} from "../types/plugins/IReportAware";
+import {Order, OrderSide, OrderStatus} from "../types/order";
+import {ReportAware} from "../types/plugins/reportAware";
 
-export default class TradeProfitCalculator implements IReportAware {
+export default class TradeProfitCalculator implements ReportAware {
 
     private remainingAssets = 0;
     private avgBuyPrice = 0;
@@ -11,7 +11,7 @@ export default class TradeProfitCalculator implements IReportAware {
         return ((quantity * price) + (this.remainingAssets * this.avgBuyPrice)) / (this.remainingAssets + quantity);
     }
 
-    onReport({side, quantity, price, status}: IOrder) {
+    onReport({side, quantity, price, status}: Order) {
         if ([OrderStatus.FILLED, OrderStatus.PARTIALLY_FILLED].indexOf(status) < 0) return;
 
         if (side === OrderSide.SELL) {

@@ -1,15 +1,13 @@
-import Local from "../connection/local";
+import LocalConnection from "../connection/localConnection";
 import Events from "../events";
-import {CandleProcessor} from "../types/candleProcessor";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {OrderCreator} from "../types/orderCreator";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {Connection} from "../types/connection";
+import {OrderbookData} from "../types/orderbookData";
 import {Pair} from "../types/pair";
 import BaseExchange from "./baseExchange";
-import LocalCandleProcessor from "./candleProcessors/localCandleProcessor";
 import LocalOrderCreator from "./orderCreators/localOrderCreator";
+import LocalOrderFiller from "./orderFillers/localOrderFiller";
 
 /**
  * The LocalExchange resembles a local dummy marketplace for
@@ -17,8 +15,11 @@ import LocalOrderCreator from "./orderCreators/localOrderCreator";
  */
 export default class LocalExchange extends BaseExchange {
 
-    protected createConnection(): IConnection {
-        return new Local();
+    isCurrenciesLoaded = true;
+    isAuthenticated = true;
+
+    protected createConnection(): Connection {
+        return new LocalConnection();
     }
 
     protected loadCurrencies(): void {
@@ -26,33 +27,27 @@ export default class LocalExchange extends BaseExchange {
     }
 
     /**
-     * Emits a collection of candles from a local file as if they were sent from a real exchange
-     * @param {ICandle[]} candles
-     * @returns {Promise<void>} promise
+     * Emits a collection of candles from a local file as if they were sent from a real exchange.
+     * Candles should be ordered during normalization process.
      */
-    async emitCandles(candles: ICandle[]) {
-        const processedCandles: ICandle[] = [];
+    emitCandles(candles: Candle[]) {
+        let processedCandles: Candle[] = [];
 
         candles.forEach(value => {
-            processedCandles.unshift(value);
+            processedCandles = [value, ...processedCandles];
             (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
-            (this.candleProcessor as LocalCandleProcessor).onProcessCandles(processedCandles);
+            (this.orderFiller as LocalOrderFiller).onProcessCandles(processedCandles);
             Events.emit("core.updateCandles", processedCandles);
         });
     }
 
-    isReady(): boolean {
-        this.emit("ready");
-        return true;
-    }
-
     // Method ignored by localExchange
-    onUpdateOrderbook(data: IOrderbookData): void {
+    onUpdateOrderbook(data: OrderbookData): void {
         return undefined;
     }
 
     // Method ignored by localExchange
-    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+    subscribeCandles(pair: Pair, interval: CandleInterval): void {
         return undefined;
     }
 
@@ -64,13 +59,5 @@ export default class LocalExchange extends BaseExchange {
     // Method ignored by localExchange
     subscribeReports(): void {
         return undefined;
-    }
-
-    protected getCandleProcessor(): CandleProcessor {
-        return new LocalCandleProcessor(this.orderTracker, this, this.wallet);
-    }
-
-    protected getOrderCreator(): OrderCreator {
-        return new LocalOrderCreator(this.orderTracker, this, this.wallet);
     }
 }

@@ -1,24 +1,19 @@
 import crypto from "crypto";
 import nanoid from "nanoid";
 import config from "../../../config";
-import WebSocket, {Data} from "../connection/webSocket";
+import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook";
-import {CandleProcessor} from "../types/candleProcessor";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {IResponseAdapter} from "../types/IResponseAdapter";
-import {OrderCreator} from "../types/orderCreator";
+import {CandleInterval} from "../types/candleInterval";
+import {OrderbookData} from "../types/orderbookData";
 import {Pair} from "../types/pair";
+import {ResponseAdapter} from "../types/responseAdapter";
 import BaseExchange from "./baseExchange";
-import RemoteCandleProcessor from "./candleProcessors/remoteCandleProcessor";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
-import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
 
-export const CandleInterval: Record<string, ICandleInterval> = {
+export const HitBTCCandleInterval: Record<string, CandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
     THREE_MINUTES: {code: "M3", cron: "00 */3 * * * *"},
     FIVE_MINUTES: {code: "M5", cron: "00 */5 * * * *"},
@@ -36,10 +31,12 @@ export const CandleInterval: Record<string, ICandleInterval> = {
  * @see https://hitbtc.com/
  */
 export default class HitBTC extends BaseExchange {
-    readonly adapter: IResponseAdapter = new HitBTCAdapter(this);
+    readonly adapter: ResponseAdapter = new HitBTCAdapter(this);
+    private publicKey: string = config.exchanges.hitbtc.publicKey;
+    private secretKey: string = config.exchanges.hitbtc.secretKey;
 
-    protected createConnection(): IConnection {
-        return new WebSocket("wss://api.hitbtc.com/api/2/ws", 40 * 1000);
+    protected createConnection(): WsConnection {
+        return new WsConnection("wss://api.hitbtc.com/api/2/ws", 40000);
     }
 
     loadCurrencies(): void {
@@ -63,21 +60,21 @@ export default class HitBTC extends BaseExchange {
         }));
     }
 
-    onSnapshotOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
+    onSnapshotOrderbook({pair, ask, bid, sequence}: OrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.setOrders(ask, bid, sequence);
 
         Events.emit("core.snapshotOrderbook", orderbook);
     }
 
-    onUpdateOrderbook({pair, ask, bid, sequence}: IOrderbookData) {
+    onUpdateOrderbook({pair, ask, bid, sequence}: OrderbookData) {
         const orderbook: Orderbook = this.getOrderbook(pair);
         orderbook.addIncrement(ask, bid, sequence);
 
         Events.emit("core.updateOrderbook", orderbook);
     }
 
-    subscribeCandles(pair: Pair, interval: ICandleInterval): void {
+    subscribeCandles(pair: Pair, interval: CandleInterval): void {
         const command = HitBTCCommand.createRestorable("subscribeCandles", {
             symbol: pair.join(""),
             period: interval.code,
@@ -102,18 +99,9 @@ export default class HitBTC extends BaseExchange {
         this.connection.on("message", (data: Data) => this.adapter.onReceive(data));
         this.loadCurrencies();
 
-        const auth = config.exchanges.hitbtc;
-        if (auth.publicKey !== "" && auth.secretKey !== "") {
+        if (this.publicKey !== "" && this.secretKey !== "") {
             logger.info("Live credentials are used!");
-            this.login(auth.publicKey, auth.secretKey);
+            this.login(this.publicKey, this.secretKey);
         }
-    }
-
-    protected getCandleProcessor(): CandleProcessor {
-        return new RemoteCandleProcessor();
-    }
-
-    protected getOrderCreator(): OrderCreator {
-        return new HitBTCOrderCreator(this.orderTracker, this.connection);
     }
 }

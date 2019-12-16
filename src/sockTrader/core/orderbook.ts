@@ -14,26 +14,18 @@ export enum OrderbookSide {
     ASK = "ask",
 }
 
-export interface IOrderbookEntry {
+export interface OrderbookEntry {
     price: number;
     size: number;
-}
-
-export interface IOrderbook {
-    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void;
-
-    getEntries(side: OrderbookSide, amount: number): IOrderbookEntry[];
-
-    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void;
 }
 
 /**
  * The Orderbook contains all the market making orders on the remote exchange.
  */
-export default class Orderbook implements IOrderbook {
+export default class Orderbook {
 
-    ask: IOrderbookEntry[] = [];
-    bid: IOrderbookEntry[] = [];
+    ask: OrderbookEntry[] = [];
+    bid: OrderbookEntry[] = [];
 
     sequenceId = 0;
 
@@ -54,11 +46,11 @@ export default class Orderbook implements IOrderbook {
     /**
      * Add increment to internal order book properties
      * sort the orders by value
-     * @param {IOrderbookEntry[]} ask the price asked
-     * @param {IOrderbookEntry[]} bid the price bid
+     * @param {OrderbookEntry[]} ask the price asked
+     * @param {OrderbookEntry[]} bid the price bid
      * @param sequenceId
      */
-    addIncrement(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void {
+    addIncrement(ask: OrderbookEntry[], bid: OrderbookEntry[], sequenceId: number): void {
         if (this.isValidSequence(sequenceId)) {
             this.sequenceId = sequenceId;
             this.ask = sortBy(this.applyIncrement(this.ask, ask), ["price"]);
@@ -89,9 +81,9 @@ export default class Orderbook implements IOrderbook {
      * Scans the in memory orderBook for the first x entries
      * @param {('bid'|'ask')} side
      * @param {number} amount
-     * @returns {IOrderbookEntry[]}
+     * @returns {OrderbookEntry[]}
      */
-    getEntries(side: OrderbookSide, amount = 1): IOrderbookEntry[] {
+    getEntries(side: OrderbookSide, amount = 1): OrderbookEntry[] {
         return this[side].slice(0, Math.abs(amount));
     }
 
@@ -121,11 +113,11 @@ export default class Orderbook implements IOrderbook {
 
     /**
      * Set all orders in order book
-     * @param {IOrderbookEntry[]} ask
-     * @param {IOrderbookEntry[]} bid
+     * @param {OrderbookEntry[]} ask
+     * @param {OrderbookEntry[]} bid
      * @param sequenceId
      */
-    setOrders(ask: IOrderbookEntry[], bid: IOrderbookEntry[], sequenceId: number): void {
+    setOrders(ask: OrderbookEntry[], bid: OrderbookEntry[], sequenceId: number): void {
         if (this.isValidSequence(sequenceId)) {
             this.sequenceId = sequenceId;
             this.ask = sortBy(ask, ["price"]);
@@ -135,11 +127,11 @@ export default class Orderbook implements IOrderbook {
 
     /**
      * Returns a new side of the orderBook with applied increment
-     * @param {IOrderbookEntry[]} oldBook
-     * @param {IOrderbookEntry[]} inc
+     * @param {OrderbookEntry[]} oldBook
+     * @param {OrderbookEntry[]} inc
      */
-    private applyIncrement(oldBook: IOrderbookEntry[], inc: IOrderbookEntry[] = []): IOrderbookEntry[] {
-        let newBook: IOrderbookEntry[] = oldBook.slice(0);
+    private applyIncrement(oldBook: OrderbookEntry[], inc: OrderbookEntry[] = []): OrderbookEntry[] {
+        let newBook: OrderbookEntry[] = oldBook.slice(0);
 
         inc.forEach(({price, size}) => {
 

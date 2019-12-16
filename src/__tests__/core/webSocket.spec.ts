@@ -1,15 +1,15 @@
-import WebSocket from "../../sockTrader/core/connection/webSocket";
+import WsConnection from "../../sockTrader/core/connection/wsConnection";
 import logger from "../../sockTrader/core/logger";
 import ws from "ws";
 import HitBTCCommand from "../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import {ICommand} from "../../sockTrader/core/types/IConnection";
+import {Command} from "../../sockTrader/core/types/connection";
 
 jest.mock("ws");
 jest.mock("../../sockTrader/core/logger");
 
-let websocket = new WebSocket("wss://api.does_not_exist.com/api/2/ws", 10000);
+let websocket = new WsConnection("wss://api.does_not_exist.com/api/2/ws", 10000);
 beforeEach(() => {
-    websocket = new WebSocket("wss://api.does_not_exist.com/api/2/ws", 10000);
+    websocket = new WsConnection("wss://api.does_not_exist.com/api/2/ws", 10000);
     jest.clearAllMocks();
 });
 
@@ -170,7 +170,7 @@ describe("addRestorable", () => {
     it("Should save commands for later usage", () => {
         websocket.addRestorable(HitBTCCommand.createRestorable("login"));
 
-        const command: ICommand = websocket["restoreCommands"][0];
+        const command: Command = websocket["restoreCommands"][0];
         expect(command).toBeInstanceOf(HitBTCCommand);
         expect(command.toCommand()).toEqual({id: "login", method: "login", params: {}});
     });
@@ -178,7 +178,7 @@ describe("addRestorable", () => {
 
 describe("send", () => {
     it("Should log error when connection is not available", () => {
-        websocket.send({} as ICommand);
+        websocket.send({} as Command);
         expect((logger.error as any)).toBeCalledWith("Could not send: {}. No connection available.");
     });
 

@@ -1,38 +1,30 @@
 import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
-import config from "../../../config";
-import Wallet from "../assets/wallet";
 import CandleManager from "../candles/candleManager";
-import Events from "../events";
 import Orderbook from "../orderbook";
-import {CandleProcessor} from "../types/candleProcessor";
-import {ICandle} from "../types/ICandle";
-import {ICandleInterval} from "../types/ICandleInterval";
-import {IConnection} from "../types/IConnection";
-import {ICurrencyMap} from "../types/ICurrencyMap";
-import {IExchange} from "../types/IExchange";
-import {IOrderbookData} from "../types/IOrderbookData";
-import {ITradeablePair} from "../types/ITradeablePair";
-import {IOrder, OrderSide} from "../types/order";
+import {Candle} from "../types/candle";
+import {CandleInterval} from "../types/candleInterval";
+import {Connection} from "../types/connection";
+import {CurrencyMap} from "../types/currencyMap";
+import {Exchange} from "../types/exchange";
+import {Order, OrderSide} from "../types/order";
+import {OrderbookData} from "../types/orderbookData";
 import {OrderCreator} from "../types/orderCreator";
+import {OrderFiller} from "../types/orderFiller";
 import {Pair} from "../types/pair";
-import PaperTradingCandleProcessor from "./candleProcessors/paperTradingCandleProcessor";
-import LocalOrderCreator from "./orderCreators/localOrderCreator";
-import OrderTracker from "./utils/orderTracker";
+import {TradeablePair} from "../types/tradeablePair";
 
 /**
  * The BaseExchange resembles common marketplace functionality
  */
-export default abstract class BaseExchange extends EventEmitter implements IExchange {
-    currencies: ICurrencyMap = {};
+export default abstract class BaseExchange extends EventEmitter implements Exchange {
+    currencies: CurrencyMap = {};
     isAuthenticated = false;
     isCurrenciesLoaded = false;
-    readonly orderTracker: OrderTracker = new OrderTracker();
     protected orderCreator!: OrderCreator;
-    protected candleProcessor!: CandleProcessor;
+    protected orderFiller!: OrderFiller;
     protected candles: Record<string, CandleManager> = {};
-    protected readonly connection: IConnection;
-    protected readonly wallet = new Wallet(config.assets);
+    protected readonly connection: Connection;
     private readonly orderbooks: Record<string, Orderbook> = {};
     private ready = false;
 
@@ -40,45 +32,36 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         super();
 
         this.connection = this.createConnection();
-        this.setExchangeBehaviour();
     }
 
-    abstract onUpdateOrderbook(data: IOrderbookData): void;
+    abstract onUpdateOrderbook(data: OrderbookData): void;
 
-    abstract subscribeCandles(pair: Pair, interval: ICandleInterval): void;
+    abstract subscribeCandles(pair: Pair, interval: CandleInterval): void;
 
     abstract subscribeOrderbook(pair: Pair): void;
 
     abstract subscribeReports(): void;
 
-    protected abstract createConnection(): IConnection;
-
-    protected abstract getCandleProcessor(): CandleProcessor;
-
-    protected abstract getOrderCreator(): OrderCreator;
+    protected abstract createConnection(): Connection;
 
     /**
      * Load trading pair configuration
      */
     protected abstract loadCurrencies(): void;
 
-    /**
-     * Dynamically change the behaviour of the exchange.
-     */
-    protected setExchangeBehaviour() {
-        const isLive = process.env.SOCKTRADER_TRADING_MODE === "LIVE";
-        const isPaper = process.env.SOCKTRADER_TRADING_MODE === "PAPER";
-
-        // Use LocalOrderCreator in case of: backtest & paper trading
-        this.orderCreator = isLive ? this.getOrderCreator() : new LocalOrderCreator(this.orderTracker, this, this.wallet);
-        this.candleProcessor = isPaper ? new PaperTradingCandleProcessor(this.orderTracker, this, this.wallet) : this.getCandleProcessor();
+    setOrderCreator(orderCreator: OrderCreator) {
+        this.orderCreator = orderCreator;
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number) {
+    setOrderFiller(orderFiller: OrderFiller) {
+        this.orderFiller = orderFiller;
+    }
+
+    adjustOrder(order: Order, price: number, qty: number) {
         return this.orderCreator.adjustOrder(order, price, qty);
     }
 
-    cancelOrder(order: IOrder) {
+    cancelOrder(order: Order) {
         return this.orderCreator.cancelOrder(order);
     }
 
@@ -86,12 +69,12 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.orderCreator.createOrder(pair, price, qty, side);
     }
 
-    onSnapshotCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.candleProcessor.onSnapshotCandles(pair, data, interval);
+    onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval) {
+        return this.orderFiller.onSnapshotCandles(pair, data, interval);
     }
 
-    onUpdateCandles(pair: Pair, data: ICandle[], interval: ICandleInterval) {
-        return this.candleProcessor.onUpdateCandles(pair, data, interval);
+    onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval) {
+        return this.orderFiller.onUpdateCandles(pair, data, interval);
     }
 
     buy(pair: Pair, price: number, qty: number): void {
@@ -111,6 +94,10 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         this.connection.removeAllListeners();
     }
 
+    /**
+     * @TODO refactor into orderbook factory
+     * @deprecated
+     */
     getOrderbook(pair: Pair): Orderbook {
         const ticker = pair.join("");
         if (this.orderbooks[ticker]) {
@@ -142,15 +129,10 @@ export default abstract class BaseExchange extends EventEmitter implements IExch
         return this.ready;
     }
 
-    onCurrenciesLoaded(currencies: ITradeablePair[]): void {
+    onCurrenciesLoaded(currencies: TradeablePair[]): void {
         currencies.forEach(currency => this.currencies[currency.id.join("")] = currency);
         this.isCurrenciesLoaded = true;
         this.isReady();
-    }
-
-    onReport(order: IOrder): void {
-        const {order: newOrder, oldOrder} = this.orderTracker.process(order);
-        Events.emit("core.report", newOrder, oldOrder);
     }
 
     sell(pair: Pair, price: number, qty: number): void {

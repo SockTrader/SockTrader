@@ -1,22 +1,22 @@
-import {IConnection} from "../../types/IConnection";
-import {IOrder, OrderSide} from "../../types/order";
+import OrderTracker from "../../order/orderTracker";
+import {Connection} from "../../types/connection";
+import {Order, OrderSide} from "../../types/order";
 import {OrderCreator} from "../../types/orderCreator";
 import {Pair} from "../../types/pair";
+import {generateOrderId} from "../../utils/utils";
 import HitBTCCommand from "../commands/hitBTCCommand";
-import OrderTracker from "../utils/orderTracker";
-import {generateOrderId} from "../utils/utils";
 
 export default class HitBTCOrderCreator implements OrderCreator {
 
-    constructor(private readonly orderTracker: OrderTracker, private readonly connection: IConnection) {
+    constructor(private readonly orderTracker: OrderTracker, private readonly connection: Connection) {
     }
 
-    cancelOrder(order: IOrder): IOrder | void {
+    cancelOrder(order: Order): Order | void {
         this.orderTracker.setOrderUnconfirmed(order.id);
         this.connection.send(new HitBTCCommand("cancelOrder", {clientOrderId: order.id}));
     }
 
-    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): IOrder | void {
+    createOrder(pair: Pair, price: number, qty: number, side: OrderSide): Order | void {
         const orderId = generateOrderId(pair);
         this.orderTracker.setOrderUnconfirmed(orderId);
 
@@ -30,7 +30,7 @@ export default class HitBTCOrderCreator implements OrderCreator {
         }));
     }
 
-    adjustOrder(order: IOrder, price: number, qty: number): IOrder | void {
+    adjustOrder(order: Order, price: number, qty: number): Order | void {
         if (this.orderTracker.isOrderUnconfirmed(order.id)) return;
         if (order.price === price && order.quantity === qty) return; // No need to replace!
 

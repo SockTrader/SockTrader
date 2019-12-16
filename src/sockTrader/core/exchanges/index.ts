@@ -1,26 +1,30 @@
-import {ICandleInterval} from "../types/ICandleInterval";
+import {CandleInterval} from "../types/candleInterval";
+import {OrderCreator} from "../types/orderCreator";
 import BaseExchange from "./baseExchange";
-import HitBTC, {CandleInterval} from "./hitBTC";
+import HitBTC, {HitBTCCandleInterval} from "./hitBTC";
+import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
 
-export interface IExchangeDefinition {
+export interface ExchangeDefinition {
     class: new() => BaseExchange;
-    intervals: Record<string, ICandleInterval>;
+    orderCreator: new(...args: any[]) => OrderCreator;
+    intervals: Record<string, CandleInterval>;
 }
 
-export const exchanges: Record<string, IExchangeDefinition> = {
+export const exchanges: Record<string, ExchangeDefinition> = {
     hitbtc: {
         class: HitBTC,
+        orderCreator: HitBTCOrderCreator,
         intervals: {
-            "1m": CandleInterval.ONE_MINUTE,
-            "3m": CandleInterval.THREE_MINUTES,
-            "5m": CandleInterval.FIVE_MINUTES,
-            "15m": CandleInterval.FIFTEEN_MINUTES,
-            "30m": CandleInterval.THIRTY_MINUTES,
-            "1h": CandleInterval.ONE_HOUR,
-            "4h": CandleInterval.FOUR_HOURS,
-            "1d": CandleInterval.ONE_DAY,
-            "7d": CandleInterval.SEVEN_DAYS,
-            "1M": CandleInterval.ONE_MONTH,
+            "1m": HitBTCCandleInterval.ONE_MINUTE,
+            "3m": HitBTCCandleInterval.THREE_MINUTES,
+            "5m": HitBTCCandleInterval.FIVE_MINUTES,
+            "15m": HitBTCCandleInterval.FIFTEEN_MINUTES,
+            "30m": HitBTCCandleInterval.THIRTY_MINUTES,
+            "1h": HitBTCCandleInterval.ONE_HOUR,
+            "4h": HitBTCCandleInterval.FOUR_HOURS,
+            "1d": HitBTCCandleInterval.ONE_DAY,
+            "7d": HitBTCCandleInterval.SEVEN_DAYS,
+            "1M": HitBTCCandleInterval.ONE_MONTH,
         },
     },
 };

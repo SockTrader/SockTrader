@@ -8,13 +8,14 @@ module.exports = function(config) {
     htmlReporter: {
       baseDir: 'test_results/mutation/html'
     },
-    mutator: { name: "typescript", excludedMutations: ["BooleanSubstitution", "StringLiteral"] },
+    mutator: { name: "typescript", excludedMutations: ["BooleanLiteral", "StringLiteral"] },
     tsconfigFile: "tsconfig.json",
     files: [
       "src/**/*.ts",
     ],
     mutate: [
       "src/**/*.ts",
+      "!src/**/__fixtures__/**/*.ts",
       "!src/**/__tests__/**/*.ts",
       "!src/**/__mocks__/**/*.ts",
       "!src/**/data/**/*.ts",

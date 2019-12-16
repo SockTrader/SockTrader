@@ -1,11 +1,12 @@
 import moment from "moment";
+import ExchangeFactory from "../exchanges/exchangeFactory";
 import LocalExchange from "../exchanges/localExchange";
-import {IBotStatus} from "../types/IBotStatus";
-import {ICandle} from "../types/ICandle";
-import {isTradingBotAware} from "../types/plugins/ITradingBotAware";
-import SockTrader, {IStrategyConfig} from "./sockTrader";
+import {BotStatus} from "../types/botStatus";
+import {Candle} from "../types/candle";
+import {isTradingBotAware} from "../types/plugins/tradingBotAware";
+import SockTrader, {StrategyConfig} from "./sockTrader";
 
-interface IInputCandle {
+interface InputCandle {
     close: number;
     high: number;
     low: number;
@@ -20,16 +21,16 @@ interface IInputCandle {
  */
 export default class BackTester extends SockTrader {
 
-    private readonly inputCandles: IInputCandle[];
+    private readonly inputCandles: InputCandle[];
 
     /**
      * Creates a new BackTester
-     * @param {IInputCandle} inputCandles
+     * @param {InputCandle} inputCandles
      */
-    constructor(inputCandles: IInputCandle[]) {
+    constructor(inputCandles: InputCandle[]) {
         super();
         this.inputCandles = inputCandles;
-        this.exchange = new LocalExchange();
+        this.exchange = new ExchangeFactory().createExchange();
     }
 
     async start(): Promise<void> {
@@ -56,19 +57,19 @@ export default class BackTester extends SockTrader {
         this.eventsBound = true;
     }
 
-    private hydrateCandles(candles: IInputCandle[]): ICandle[] {
+    private hydrateCandles(candles: InputCandle[]): Candle[] {
         return candles.map((c: any) => ({
             ...c,
             timestamp: moment(c.timestamp),
-        } as ICandle));
+        } as Candle));
     }
 
-    subscribeToExchangeEvents(config: IStrategyConfig[]): void {
+    subscribeToExchangeEvents(config: StrategyConfig[]): void {
         const exchange = this.exchange;
         exchange.once("ready", () => exchange.subscribeReports());
     }
 
-    private reportProgress(status: IBotStatus) {
+    private reportProgress(status: BotStatus) {
         this.plugins.forEach(p => {
             if (isTradingBotAware(p)) p.onBotProgress(status);
         });

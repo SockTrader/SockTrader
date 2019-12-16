@@ -1,10 +1,10 @@
-import {IAssetMap} from "../../assets/wallet";
 import {walletLogger} from "../../logger";
-import {IAssetAware} from "../../types/plugins/IAssetAware";
+import {AssetAware} from "../../types/plugins/assetAware";
+import {AssetMap} from "../wallet/wallet";
 
-export default class WalletLogger implements IAssetAware {
+export default class WalletLogger implements AssetAware {
 
-    onUpdateAssets(assets: IAssetMap, reservedAssets: IAssetMap) {
+    onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
         const assetsJSON = JSON.stringify(this.objectToArray(assets));
         const reservedAssetsJSON = JSON.stringify(this.objectToArray(reservedAssets));
 

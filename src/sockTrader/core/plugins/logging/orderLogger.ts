@@ -1,10 +1,10 @@
 import logger from "../../logger";
-import {IOrder} from "../../types/order";
-import {IReportAware} from "../../types/plugins/IReportAware";
+import {Order} from "../../types/order";
+import {ReportAware} from "../../types/plugins/reportAware";
 
-export default class OrderLogger implements IReportAware {
+export default class OrderLogger implements ReportAware {
 
-    onReport({side, quantity, price, status}: IOrder) {
+    onReport({side, quantity, price, status}: Order) {
         logger.info(`Order: ${JSON.stringify({side, quantity, price, status})}`);
     }
 

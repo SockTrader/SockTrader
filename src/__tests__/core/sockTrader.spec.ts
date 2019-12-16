@@ -1,6 +1,6 @@
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
-import {CandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
+import {HitBTCCandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
 import Events from "../../sockTrader/core/events";
 
@@ -17,7 +17,7 @@ const btcEthPair: Pair = ["BTC", "ETH"];
 const btcCovPair: Pair = ["BTC", "COV"];
 
 describe("subscribeToExchangeEvents", () => {
-    test("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
+    it("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -31,12 +31,12 @@ describe("subscribeToExchangeEvents", () => {
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FOUR_HOURS,
+                interval: HitBTCCandleInterval.FOUR_HOURS,
             },
         ]);
         hitBTC.emit("ready");
@@ -45,15 +45,15 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FOUR_HOURS);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FOUR_HOURS);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
+    it("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -65,12 +65,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
-            interval: CandleInterval.FIVE_MINUTES,
+            interval: HitBTCCandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcCovPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
         ]);
         hitBTC.emit("ready");
@@ -80,15 +80,15 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcCovPair);
         expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, HitBTCCandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
         mockSubscribeCandles.mockRestore();
     });
 
-    test("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
+    it("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
         const mockSubscribeReports = jest.fn();
         const mockSubscribeOrderbook = jest.fn();
         const mockSubscribeCandles = jest.fn();
@@ -100,12 +100,12 @@ describe("subscribeToExchangeEvents", () => {
         sockTrader.subscribeToExchangeEvents([{
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
-            interval: CandleInterval.FIVE_MINUTES,
+            interval: HitBTCCandleInterval.FIVE_MINUTES,
         },
             {
                 strategy: SimpleMovingAverage,
                 pair: btcEthPair,
-                interval: CandleInterval.FIVE_MINUTES,
+                interval: HitBTCCandleInterval.FIVE_MINUTES,
             },
         ]);
         hitBTC.emit("ready");
@@ -114,7 +114,7 @@ describe("subscribeToExchangeEvents", () => {
         expect(mockSubscribeOrderbook).toBeCalledTimes(1);
         expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
         expect(mockSubscribeCandles).toBeCalledTimes(1);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, CandleInterval.FIVE_MINUTES);
+        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
 
         mockSubscribeReports.mockRestore();
         mockSubscribeOrderbook.mockRestore();
@@ -124,7 +124,7 @@ describe("subscribeToExchangeEvents", () => {
 });
 
 describe("bindExchangeToStrategy", () => {
-    test("Should bind exchange events to strategy", () => {
+    it("Should bind exchange events to strategy", () => {
         const on = jest.spyOn(Events, "on");
 
         sockTrader["bindExchangeToStrategy"](new SimpleMovingAverage(btcEthPair, hitBTC));
@@ -135,7 +135,7 @@ describe("bindExchangeToStrategy", () => {
 });
 
 describe("bindStrategyToExchange", () => {
-    test("Should bind strategy events to exchange", () => {
+    it("Should bind strategy events to exchange", () => {
         const simpleMovingAverage: SimpleMovingAverage = new SimpleMovingAverage(btcEthPair, hitBTC);
         const spyOn = jest.spyOn(simpleMovingAverage, "on");
 

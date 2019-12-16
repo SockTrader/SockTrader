@@ -1,5 +1,5 @@
 import {Pair} from "../../sockTrader/core/types/pair";
-import {CandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
+import {HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
 import BackTester from "../../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
@@ -22,7 +22,7 @@ const emitCandlesMock = jest.fn();
 backTester.addStrategy({
     strategy: SimpleMovingAverage,
     pair: pair,
-    interval: CandleInterval.ONE_HOUR,
+    interval: HitBTCCandleInterval.ONE_HOUR,
 });
 
 beforeEach(() => {
@@ -35,7 +35,7 @@ afterEach(() => {
 
 
 describe("start", () => {
-    test("Should throw error with no candle loader", async () => {
+    it("Should throw error with no candle loader", async () => {
         try {
             await backTester.start();
         } catch (e) {
@@ -43,7 +43,7 @@ describe("start", () => {
         }
     });
 
-    test("Should bind events if not bound yet", async () => {
+    it("Should bind events if not bound yet", async () => {
         backTester["eventsBound"] = false;
         const subscribeToExchangeEventsMock = jest.fn();
         backTester.subscribeToExchangeEvents = subscribeToExchangeEventsMock;
@@ -55,7 +55,7 @@ describe("start", () => {
         expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
             strategy: SimpleMovingAverage,
             pair: pair,
-            interval: CandleInterval.ONE_HOUR,
+            interval: HitBTCCandleInterval.ONE_HOUR,
         }]));
 
         expect(bindStrategyToExchangeSpy).toHaveBeenCalledWith(expect.objectContaining({

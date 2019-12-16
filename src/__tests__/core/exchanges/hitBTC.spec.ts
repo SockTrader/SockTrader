@@ -1,28 +1,45 @@
 import {Pair} from "../../../sockTrader/core/types/pair";
-import HitBTC, {CandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
-import WebSocket from "../../../sockTrader/core/connection/webSocket";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import WsConnection from "../../../sockTrader/core/connection/wsConnection";
 import Events from "../../../sockTrader/core/events";
 import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import RemoteCandleProcessor from "../../../sockTrader/core/exchanges/candleProcessors/remoteCandleProcessor";
-import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
+import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
+import {FX_BTCUSD} from "../../../__fixtures__/currencies";
+import {FX_ASK, FX_ASK_UPDATE, FX_BID, FX_BID_UPDATE} from "../../../__fixtures__/orderbook";
+import Orderbook from "../../../sockTrader/core/orderbook";
 
 jest.mock("./../../../config");
-jest.mock("./../../../sockTrader/core/connection/webSocket");
+jest.mock("./../../../sockTrader/core/connection/wsConnection");
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
 const pair: Pair = ["BTC", "USD"];
 
-let exchange = new HitBTC();
+let exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
 beforeEach(() => {
-    (WebSocket as any).mockClear();
-    exchange = new HitBTC();
+    (WsConnection as any).mockClear();
+    exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
+});
+
+describe("HitBTCCandleInterval", () => {
+    it("Should have all possible candle intervals defined", () => {
+        expect(HitBTCCandleInterval.ONE_MINUTE).toEqual({code: "M1", cron: "00 */1 * * * *"});
+        expect(HitBTCCandleInterval.THREE_MINUTES).toEqual({code: "M3", cron: "00 */3 * * * *"});
+        expect(HitBTCCandleInterval.FIVE_MINUTES).toEqual({code: "M5", cron: "00 */5 * * * *"});
+        expect(HitBTCCandleInterval.FIFTEEN_MINUTES).toEqual({code: "M15", cron: "00 */15 * * * *"});
+        expect(HitBTCCandleInterval.THIRTY_MINUTES).toEqual({code: "M30", cron: "00 */30 * * * *"});
+        expect(HitBTCCandleInterval.ONE_HOUR).toEqual({code: "H1", cron: "00 00 */1 * * *"});
+        expect(HitBTCCandleInterval.FOUR_HOURS).toEqual({code: "H4", cron: "00 00 2,6,10,14,18,22 * * *"});
+        expect(HitBTCCandleInterval.ONE_DAY).toEqual({code: "D1", cron: "00 00 00 */1 * *"});
+        expect(HitBTCCandleInterval.SEVEN_DAYS).toEqual({code: "D7", cron: "00 00 00 */7 * *"});
+        expect(HitBTCCandleInterval.ONE_MONTH).toEqual({code: "1M", cron: "00 00 00 00 */1 *"});
+    });
 });
 
 describe("createConnection", () => {
     it("Should create a new websocket connection", () => {
         const connection = exchange["createConnection"]();
-        expect(connection).toBeInstanceOf(WebSocket);
+        expect(connection).toBeInstanceOf(WsConnection);
     });
 });
 
@@ -30,9 +47,8 @@ describe("loadCurrencies", () => {
     it("Should load currency configuration from the exchange", () => {
         exchange.loadCurrencies();
 
-        const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(arg1).toBeInstanceOf(HitBTCCommand);
-        expect(arg1).toEqual({
+        expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
+        expect(exchange["connection"].send).toBeCalledWith({
             restorable: false,
             method: "getSymbols",
             params: {},
@@ -41,12 +57,11 @@ describe("loadCurrencies", () => {
 });
 
 describe("login", () => {
-    test("Should authenticate user on exchange", () => {
+    it("Should authenticate user on exchange", () => {
         exchange.login("PUB_123", "PRIV_123");
 
-        const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(arg1).toBeInstanceOf(HitBTCCommand);
-        expect(arg1).toEqual({
+        expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
+        expect(exchange["connection"].send).toBeCalledWith({
             restorable: true,
             method: "login",
             params: {
@@ -61,64 +76,50 @@ describe("login", () => {
 
 describe("orderbook management", () => {
     beforeEach(() => {
-        exchange.currencies = {BTCUSD: {id: ["BTC", "USD"], quantityIncrement: 0.001, tickSize: 0.000001}};
+        exchange.currencies = {BTCUSD: FX_BTCUSD};
         exchange.onSnapshotOrderbook({
             sequence: 1,
             pair,
-            ask: [{price: 0.0015, size: 100}],
-            bid: [{price: 0.001391, size: 40}],
+            ask: FX_ASK,
+            bid: FX_BID,
         });
     });
 
     describe("onSnapshotOrderbook", () => {
-        test("Should emit incremental changes", () => {
-            const emitSpy = jest.spyOn(Events, "emit");
-            exchange.onSnapshotOrderbook({
-                sequence: 2,
-                pair,
-                ask: [{price: 0.0025, size: 100}],
-                bid: [{price: 0.002391, size: 40}],
-            });
+        it("Should emit orderbook instance when new orderbook snapshot has been received", () => {
+            const spy = jest.spyOn(Events, "emit");
+            exchange.onSnapshotOrderbook({sequence: 2, pair, ask: FX_ASK, bid: FX_BID});
+            expect(spy).toBeCalledWith("core.snapshotOrderbook", expect.any(Orderbook));
+        });
 
-            expect(emitSpy).toBeCalledWith("core.snapshotOrderbook", {
-                sequenceId: 2,
-                precision: 6,
-                pair: ["BTC", "USD"],
-                ask: [{price: 0.0025, size: 100}],
-                bid: [{price: 0.002391, size: 40}],
-            });
+        it("Should send snapshot to orderbook", () => {
+            const spy = jest.spyOn(Orderbook.prototype, "setOrders");
+            exchange.onSnapshotOrderbook({sequence: 2, pair, ask: FX_ASK, bid: FX_BID});
+            expect(spy).toBeCalledWith(FX_ASK, FX_BID, 2);
         });
     });
 
     describe("onUpdateOrderbook", () => {
-        test("Should emit incremental changes", () => {
-            const emitSpy = jest.spyOn(Events, "emit");
+        it("Should emit orderbook instance when orderbook update has been received", () => {
+            const spy = jest.spyOn(Events, "emit");
+            exchange.onUpdateOrderbook({sequence: 2, pair, ask: FX_ASK_UPDATE, bid: FX_BID_UPDATE});
+            expect(spy).toBeCalledWith("core.updateOrderbook", expect.any(Orderbook));
+        });
 
-            exchange.onUpdateOrderbook({
-                sequence: 2,
-                pair,
-                ask: [{price: 0.0015, size: 0}, {price: 0.0016, size: 10}],
-                bid: [{price: 0.001391, size: 50}],
-            });
-
-            expect(emitSpy).toBeCalledWith("core.updateOrderbook", {
-                sequenceId: 2,
-                precision: 6,
-                pair: ["BTC", "USD"],
-                ask: [{price: 0.0016, size: 10}],
-                bid: [{price: 0.001391, size: 50}],
-            });
+        it("Should send increment to orderbook", () => {
+            const spy = jest.spyOn(Orderbook.prototype, "addIncrement");
+            exchange.onUpdateOrderbook({sequence: 2, pair, ask: FX_ASK_UPDATE, bid: FX_BID_UPDATE});
+            expect(spy).toBeCalledWith(FX_ASK_UPDATE, FX_BID_UPDATE, 2);
         });
     });
 });
 
 describe("subscribeCandles", () => {
-    test("Should send out subscribe to candle events", () => {
-        exchange.subscribeCandles(pair, CandleInterval.FIVE_MINUTES);
+    it("Should send restorable subscribeCandles command to connection", () => {
+        exchange.subscribeCandles(pair, HitBTCCandleInterval.FIVE_MINUTES);
 
-        const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(arg1).toBeInstanceOf(HitBTCCommand);
-        expect(arg1).toEqual({
+        expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
+        expect(exchange["connection"].send).toBeCalledWith({
             restorable: true,
             method: "subscribeCandles",
             params: {period: "M5", symbol: "BTCUSD"},
@@ -127,12 +128,11 @@ describe("subscribeCandles", () => {
 });
 
 describe("subscribeOrderbook", () => {
-    test("Should send out a subscribe to orderbook events", () => {
+    it("Should send restorable subscribeOrderbook command to connection", () => {
         exchange.subscribeOrderbook(pair);
 
-        const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(arg1).toBeInstanceOf(HitBTCCommand);
-        expect(arg1).toEqual({
+        expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
+        expect(exchange["connection"].send).toBeCalledWith({
             restorable: true,
             method: "subscribeOrderbook",
             params: {symbol: "BTCUSD"},
@@ -141,12 +141,11 @@ describe("subscribeOrderbook", () => {
 });
 
 describe("subscribeReports", () => {
-    test("Should send out a subscribe to report events", () => {
+    it("Should send restorable subscribeReports command to connection", () => {
         exchange.subscribeReports();
 
-        const arg1 = (exchange["connection"].send as any).mock.calls[0][0] as HitBTCCommand;
-        expect(arg1).toBeInstanceOf(HitBTCCommand);
-        expect(arg1).toEqual({
+        expect(exchange["connection"].send).toBeCalledWith(expect.any(HitBTCCommand));
+        expect(exchange["connection"].send).toBeCalledWith({
             restorable: true,
             method: "subscribeReports",
             params: {},
@@ -155,37 +154,42 @@ describe("subscribeReports", () => {
 });
 
 describe("onConnect", () => {
-    test("Should initialize when exchange is connected", () => {
+    beforeEach(() => {
         exchange.login = jest.fn();
         exchange.loadCurrencies = jest.fn();
+    });
 
-        const onSpy = jest.spyOn(exchange["connection"], "on");
+    it("Should forward all messages to the adapter when connected", () => {
+        const spy = jest.spyOn(exchange["connection"], "on");
         const onReceiveSpy = jest.spyOn(exchange["adapter"], "onReceive");
 
         exchange["onConnect"]();
 
-        const [arg1, arg2] = onSpy.mock.calls[0];
-        expect(arg1).toEqual("message");
-        expect(arg2).toBeInstanceOf(Function);
+        const [, callback] = spy.mock.calls[0];
+        expect(spy).toBeCalledWith("message", expect.any(Function));
 
-        arg2(JSON.stringify({test: 123}));
+        callback(JSON.stringify({test: 123}));
 
         expect(onReceiveSpy).toBeCalledWith(JSON.stringify({test: 123}));
+    });
+
+    it("Should send command to load currency configuration", () => {
+        exchange["onConnect"]();
         expect(exchange.loadCurrencies).toBeCalledTimes(1);
-        expect(exchange.login).toBeCalledWith("pub_key", "sec_key");
     });
-});
 
-describe("getCandleProcessor", () => {
-    test("Should return a new candle processor instance", () => {
-        const instance = exchange["getCandleProcessor"]();
-        expect(instance).toBeInstanceOf(RemoteCandleProcessor);
+    it("Should call login when connected", () => {
+        exchange["onConnect"]();
+        expect(exchange.login).toBeCalledTimes(1);
     });
-});
 
-describe("getOrderCreator", () => {
-    test("Should return a new order creator instance", () => {
-        const instance = exchange["getOrderCreator"]();
-        expect(instance).toBeInstanceOf(HitBTCOrderCreator);
+    test.each([
+        ["", "secret"], ["public", ""], ["", ""],
+    ])("Should not call login when no credentials were given", (publicKey, secretKey) => {
+        exchange["publicKey"] = publicKey;
+        exchange["secretKey"] = secretKey;
+
+        exchange["onConnect"]();
+        expect(exchange.login).toBeCalledTimes(0);
     });
 });
