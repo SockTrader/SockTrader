@@ -78,6 +78,20 @@ export default abstract class SockTrader {
     }
 
     /**
+     * Initializes all communication between various systems in the trading bot.
+     */
+    protected initialize() {
+        const {strategy: Strategy, pair} = this.strategyConfig;
+
+        this.subscribeToExchangeEvents(this.strategyConfig);
+        this.bindEventsToPlugins(this.plugins);
+
+        const strategy = new Strategy(pair, this.exchange);
+        this.bindStrategyToExchange(strategy);
+        this.bindExchangeToStrategy(strategy);
+    }
+
+    /**
      * Registers plugins to listen to various tradingbot events:
      * @param plugins
      */

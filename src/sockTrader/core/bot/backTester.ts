@@ -39,15 +39,7 @@ export default class BackTester extends SockTrader {
         if (!this.inputCandles || this.inputCandles.length === 0) throw new Error("No candles found as input.");
         if (this.eventsBound) return;
 
-        const {strategy: Strategy, pair} = this.strategyConfig;
-
-        this.subscribeToExchangeEvents(this.strategyConfig);
-        this.bindEventsToPlugins(this.plugins);
-
-        const strategy = new Strategy(pair, this.exchange);
-        this.bindStrategyToExchange(strategy);
-        this.bindExchangeToStrategy(strategy);
-
+        this.initialize();
         const candles = this.hydrateCandles(this.inputCandles);
 
         this.reportProgress({type: "started", length: candles.length});
