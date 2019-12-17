@@ -19,7 +19,7 @@ const localExchange = new LocalExchange();
 backTester["exchange"] = localExchange;
 const emitCandlesMock = jest.fn();
 
-backTester.addStrategy({
+backTester.setStrategy({
     strategy: SimpleMovingAverage,
     pair: pair,
     interval: HitBTCCandleInterval.ONE_HOUR,
@@ -52,11 +52,11 @@ describe("start", () => {
         const bindExchangeToStrategySpy = jest.spyOn(backTester, "bindExchangeToStrategy" as any);
 
         await backTester.start();
-        expect(subscribeToExchangeEventsMock).toBeCalledWith(expect.arrayContaining([{
+        expect(subscribeToExchangeEventsMock).toBeCalledWith({
             strategy: SimpleMovingAverage,
             pair: pair,
             interval: HitBTCCandleInterval.ONE_HOUR,
-        }]));
+        });
 
         expect(bindStrategyToExchangeSpy).toHaveBeenCalledWith(expect.objectContaining({
             pair,

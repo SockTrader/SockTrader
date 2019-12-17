@@ -37,7 +37,7 @@ export default class LiveTrading {
         return new LiveTrader()
             .setExchange(exchange)
             .setPlugins([...config.plugins, WalletFactory.getInstance()])
-            .addStrategy({
+            .setStrategy({
                 strategy,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],
                 interval: getExchangeInterval(this.exchange, this.interval),

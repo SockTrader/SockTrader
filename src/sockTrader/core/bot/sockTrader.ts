@@ -1,5 +1,3 @@
-import uniqBy from "lodash.uniqby";
-import uniqWith from "lodash.uniqwith";
 import Events from "../events";
 import Orderbook from "../orderbook";
 import {AssetMap} from "../plugins/wallet/wallet";
@@ -29,7 +27,7 @@ export default abstract class SockTrader {
     protected eventsBound = false;
     protected plugins: any[] = [];
     protected exchange!: Exchange;
-    protected strategyConfigurations: StrategyConfig[] = [];
+    protected strategyConfig!: StrategyConfig;
 
     /**
      * Set plugins
@@ -43,12 +41,12 @@ export default abstract class SockTrader {
     }
 
     /**
-     * Adds a strategy
+     * Sets a strategy
      * @param {StrategyConfig} config strategy configuration
      * @returns {this}
      */
-    addStrategy(config: StrategyConfig): this {
-        this.strategyConfigurations.push(config);
+    setStrategy(config: StrategyConfig): this {
+        this.strategyConfig = config;
 
         return this;
     }
@@ -58,33 +56,39 @@ export default abstract class SockTrader {
      * @returns {Promise<void>} promise
      */
     async start(): Promise<void> {
-        if (this.strategyConfigurations.length < 1) {
+        if (!this.strategyConfig || !this.exchange) {
             throw new Error("SockTrader should have at least 1 strategy and at least 1 exchange.");
         }
     }
 
     /**
      * Registers the exchange to listen to api events:
-     * - new candles for a pair/interval combination found in given
-     *   configuration
+     * - new candles for a pair/interval combination found in given configuration
      * - orderbook changes of a pair found in given configuration
-     * @param {StrategyConfig[]} config strategy configuration
+     * @param {StrategyConfig} config strategy configuration
      */
-    subscribeToExchangeEvents(config: StrategyConfig[]): void {
+    subscribeToExchangeEvents({pair, interval}: StrategyConfig): void {
         const exchange = this.exchange;
 
-        exchange.once("ready", () => exchange.subscribeReports());
-
-        // Be sure to only subscribe once to a certain trading pair.
-        // Even if multiple strategyConfigurations are listening to the same events.
-        // Because we will dispatch the same data to each strategy.
-        const uniquePairs = uniqBy<StrategyConfig>(config, "pair");
-        uniquePairs.forEach(({pair}) => exchange.once("ready", () => exchange.subscribeOrderbook(pair)));
-
-        const uniquePairInterval = uniqWith<StrategyConfig>(config, (arr, oth) => arr.pair === oth.pair && arr.interval === oth.interval);
-        uniquePairInterval.forEach(({pair, interval}) => exchange.once("ready", () => {
+        exchange.once("ready", () => {
+            exchange.subscribeReports();
+            exchange.subscribeOrderbook(pair);
             if (interval) exchange.subscribeCandles(pair, interval);
-        }));
+        });
+    }
+
+    /**
+     * Initializes all communication between various systems in the trading bot.
+     */
+    protected initialize() {
+        const {strategy: Strategy, pair} = this.strategyConfig;
+
+        this.subscribeToExchangeEvents(this.strategyConfig);
+        this.bindEventsToPlugins(this.plugins);
+
+        const strategy = new Strategy(pair, this.exchange);
+        this.bindStrategyToExchange(strategy);
+        this.bindExchangeToStrategy(strategy);
     }
 
     /**

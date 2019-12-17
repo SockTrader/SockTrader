@@ -89,9 +89,7 @@ describe("createLiveTrader", () => {
         expect(instance).toBeInstanceOf(LiveTrader);
         expect(instance["plugins"]).toEqual(expect.arrayContaining([WalletFactory.getInstance()]));
         expect(instance["exchange"]).toBeInstanceOf(hitBTC);
-        expect(instance["strategyConfigurations"]).toEqual([
-            expect.objectContaining({pair: ["BTC", "USD"]}),
-        ]);
+        expect(instance["strategyConfig"]).toEqual(expect.objectContaining({pair: ["BTC", "USD"]}));
     });
 });
 
