@@ -4,7 +4,7 @@ import LocalExchange from "../exchanges/localExchange";
 import {BotStatus} from "../types/botStatus";
 import {Candle} from "../types/candle";
 import {isTradingBotAware} from "../types/plugins/tradingBotAware";
-import SockTrader, {StrategyConfig} from "./sockTrader";
+import SockTrader from "./sockTrader";
 
 interface InputCandle {
     close: number;
@@ -39,14 +39,14 @@ export default class BackTester extends SockTrader {
         if (!this.inputCandles || this.inputCandles.length === 0) throw new Error("No candles found as input.");
         if (this.eventsBound) return;
 
-        this.subscribeToExchangeEvents(this.strategyConfigurations);
+        const {strategy: Strategy, pair} = this.strategyConfig;
+
+        this.subscribeToExchangeEvents(this.strategyConfig);
         this.bindEventsToPlugins(this.plugins);
 
-        this.strategyConfigurations.forEach(c => {
-            const strategy = new c.strategy(c.pair, this.exchange);
-            this.bindStrategyToExchange(strategy);
-            this.bindExchangeToStrategy(strategy);
-        });
+        const strategy = new Strategy(pair, this.exchange);
+        this.bindStrategyToExchange(strategy);
+        this.bindExchangeToStrategy(strategy);
 
         const candles = this.hydrateCandles(this.inputCandles);
 
@@ -62,11 +62,6 @@ export default class BackTester extends SockTrader {
             ...c,
             timestamp: moment(c.timestamp),
         } as Candle));
-    }
-
-    subscribeToExchangeEvents(config: StrategyConfig[]): void {
-        const exchange = this.exchange;
-        exchange.once("ready", () => exchange.subscribeReports());
     }
 
     private reportProgress(status: BotStatus) {

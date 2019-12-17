@@ -18,7 +18,7 @@ const createStrategy = (): StrategyConfig => ({
 const createLiveTrader = (): LiveTrader => {
     const liveTrader = new LiveTrader();
     liveTrader.setExchange(createExchange());
-    liveTrader.addStrategy(createStrategy());
+    liveTrader.setStrategy(createStrategy());
     return liveTrader;
 };
 
@@ -52,14 +52,14 @@ describe("start", () => {
         expect.assertions(1);
         liveTrader["exchange"] = undefined as any;
 
-        await expect(liveTrader.start()).rejects.toThrow("No exchange defined!");
+        await expect(liveTrader.start()).rejects.toThrow("SockTrader should have at least 1 strategy and at least 1 exchange.");
     });
 
     it("Should subscribe to exchange events", async () => {
         const spy = jest.spyOn(liveTrader, "subscribeToExchangeEvents");
 
         await liveTrader.start();
-        expect(spy).toBeCalledWith([createStrategy()]);
+        expect(spy).toBeCalledWith(createStrategy());
     });
 
     it("Should connect to exchange", async () => {

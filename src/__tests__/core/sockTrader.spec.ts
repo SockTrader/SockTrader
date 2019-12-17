@@ -1,126 +1,49 @@
 import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
 import SockTrader from "../../sockTrader/core/bot/sockTrader";
-import {HitBTCCandleInterval, default as HitBTC} from "../../sockTrader/core/exchanges/hitBTC";
+import {default as HitBTC, HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
 import {Pair} from "../../sockTrader/core/types/pair";
 import Events from "../../sockTrader/core/events";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
-const hitBTC = new HitBTC();
-
 class ConcreteSockTrader extends SockTrader {
-    public exchange = hitBTC;
 }
 
-const sockTrader = new ConcreteSockTrader();
 const btcEthPair: Pair = ["BTC", "ETH"];
-const btcCovPair: Pair = ["BTC", "COV"];
+
+let hitBTC: HitBTC;
+let sockTrader: ConcreteSockTrader;
+
+beforeEach(() => {
+    jest.clearAllMocks();
+
+    hitBTC = new HitBTC();
+
+    sockTrader = new ConcreteSockTrader();
+    sockTrader["exchange"] = hitBTC;
+});
 
 describe("subscribeToExchangeEvents", () => {
-    it("Should subscribe to orderbook once with 2 configs: same pair, different interval", () => {
-        const mockSubscribeReports = jest.fn();
-        const mockSubscribeOrderbook = jest.fn();
-        const mockSubscribeCandles = jest.fn();
-
-        hitBTC.subscribeReports = mockSubscribeReports;
-        hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
-        hitBTC.subscribeCandles = mockSubscribeCandles;
-
-        // sockTrader.addExchange(hitBTC);
-        sockTrader.subscribeToExchangeEvents([
-            {
-                strategy: SimpleMovingAverage,
-                pair: btcEthPair,
-                interval: HitBTCCandleInterval.FIVE_MINUTES,
-            },
-            {
-                strategy: SimpleMovingAverage,
-                pair: btcEthPair,
-                interval: HitBTCCandleInterval.FOUR_HOURS,
-            },
-        ]);
-        hitBTC.emit("ready");
-
-        expect(mockSubscribeReports).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
-        expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FOUR_HOURS);
-
-        mockSubscribeReports.mockRestore();
-        mockSubscribeOrderbook.mockRestore();
-        mockSubscribeCandles.mockRestore();
+    beforeEach(() => {
+        hitBTC.subscribeReports = jest.fn();
+        hitBTC.subscribeOrderbook = jest.fn();
+        hitBTC.subscribeCandles = jest.fn();
     });
 
-    it("Should subscribe to orderbook twice with 2 configs: different pair, same interval", () => {
-        const mockSubscribeReports = jest.fn();
-        const mockSubscribeOrderbook = jest.fn();
-        const mockSubscribeCandles = jest.fn();
-
-        hitBTC.subscribeReports = mockSubscribeReports;
-        hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
-        hitBTC.subscribeCandles = mockSubscribeCandles;
-
-        sockTrader.subscribeToExchangeEvents([{
+    it("Should subscribe once to orderbook, reports and candles", () => {
+        sockTrader.subscribeToExchangeEvents({
             strategy: SimpleMovingAverage,
             pair: btcEthPair,
             interval: HitBTCCandleInterval.FIVE_MINUTES,
-        },
-            {
-                strategy: SimpleMovingAverage,
-                pair: btcCovPair,
-                interval: HitBTCCandleInterval.FIVE_MINUTES,
-            },
-        ]);
+        });
         hitBTC.emit("ready");
 
-        expect(mockSubscribeReports).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledTimes(2);
-        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
-        expect(mockSubscribeOrderbook).toBeCalledWith(btcCovPair);
-        expect(mockSubscribeCandles).toBeCalledTimes(2);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
-        expect(mockSubscribeCandles).toBeCalledWith(btcCovPair, HitBTCCandleInterval.FIVE_MINUTES);
-
-        mockSubscribeReports.mockRestore();
-        mockSubscribeOrderbook.mockRestore();
-        mockSubscribeCandles.mockRestore();
+        expect(hitBTC.subscribeReports).toBeCalledTimes(1);
+        expect(hitBTC.subscribeOrderbook).toBeCalledTimes(1);
+        expect(hitBTC.subscribeOrderbook).toBeCalledWith(btcEthPair);
+        expect(hitBTC.subscribeCandles).toBeCalledTimes(1);
+        expect(hitBTC.subscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
     });
-
-    it("Should subscribe to orderbook/candles once with 2 configs: same pair, same interval", () => {
-        const mockSubscribeReports = jest.fn();
-        const mockSubscribeOrderbook = jest.fn();
-        const mockSubscribeCandles = jest.fn();
-
-        hitBTC.subscribeReports = mockSubscribeReports;
-        hitBTC.subscribeOrderbook = mockSubscribeOrderbook;
-        hitBTC.subscribeCandles = mockSubscribeCandles;
-
-        sockTrader.subscribeToExchangeEvents([{
-            strategy: SimpleMovingAverage,
-            pair: btcEthPair,
-            interval: HitBTCCandleInterval.FIVE_MINUTES,
-        },
-            {
-                strategy: SimpleMovingAverage,
-                pair: btcEthPair,
-                interval: HitBTCCandleInterval.FIVE_MINUTES,
-            },
-        ]);
-        hitBTC.emit("ready");
-
-        expect(mockSubscribeReports).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledTimes(1);
-        expect(mockSubscribeOrderbook).toBeCalledWith(btcEthPair);
-        expect(mockSubscribeCandles).toBeCalledTimes(1);
-        expect(mockSubscribeCandles).toBeCalledWith(btcEthPair, HitBTCCandleInterval.FIVE_MINUTES);
-
-        mockSubscribeReports.mockRestore();
-        mockSubscribeOrderbook.mockRestore();
-        mockSubscribeCandles.mockRestore();
-    });
-
 });
 
 describe("bindExchangeToStrategy", () => {

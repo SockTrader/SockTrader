@@ -51,9 +51,7 @@ describe("createBackTester", () => {
 
         expect(instance).toBeInstanceOf(BackTester);
         expect(instance["inputCandles"]).toEqual(FX_CANDLE_LIST);
-        expect(instance["strategyConfigurations"]).toEqual([
-            expect.objectContaining({pair: ["BTC", "USD"]}),
-        ]);
+        expect(instance["strategyConfig"]).toEqual(expect.objectContaining({pair: ["BTC", "USD"]}));
         expect(instance["plugins"]).toEqual(expect.arrayContaining([
             WalletFactory.getInstance(),
             new IPCReporter(),

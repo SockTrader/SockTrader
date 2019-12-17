@@ -21,17 +21,16 @@ export default class LiveTrader extends SockTrader {
     async start(): Promise<void> {
         await super.start();
 
-        if (!this.exchange) throw new Error("No exchange defined!");
         if (this.eventsBound) return;
 
-        this.subscribeToExchangeEvents(this.strategyConfigurations);
+        const {strategy: Strategy, pair} = this.strategyConfig;
+
+        this.subscribeToExchangeEvents(this.strategyConfig);
         this.bindEventsToPlugins(this.plugins);
 
-        this.strategyConfigurations.forEach(c => {
-            const strategy = new c.strategy(c.pair, this.exchange);
-            this.bindStrategyToExchange(strategy);
-            this.bindExchangeToStrategy(strategy);
-        });
+        const strategy = new Strategy(pair, this.exchange);
+        this.bindStrategyToExchange(strategy);
+        this.bindExchangeToStrategy(strategy);
 
         this.eventsBound = true;
         this.exchange.connect();

@@ -11,7 +11,7 @@ export default class Backtest {
     createBackTester(candleFile: any, strategy: any) {
         return new BackTester(candleFile.candles)
             .setPlugins([...config.plugins, new IPCReporter(), WalletFactory.getInstance()])
-            .addStrategy({
+            .setStrategy({
                 strategy,
                 pair: candleFile.symbol,
             });
