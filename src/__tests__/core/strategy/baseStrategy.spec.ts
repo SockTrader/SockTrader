@@ -16,7 +16,7 @@ describe("_onUpdateCandles", () => {
         strategy._onUpdateCandles(FX_CANDLE_LIST);
 
         expect(spy).toBeCalledTimes(1);
-        expect(spy).toBeCalledWith(new CandleCollection(...FX_CANDLE_LIST));
+        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST));
     });
 });
 
@@ -26,7 +26,7 @@ describe("_onSnapshotCandles", () => {
         strategy._onSnapshotCandles(FX_CANDLE_LIST);
 
         expect(spy).toBeCalledTimes(1);
-        expect(spy).toBeCalledWith(new CandleCollection(...FX_CANDLE_LIST));
+        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST));
     });
 });
 

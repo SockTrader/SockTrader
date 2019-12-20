@@ -39,12 +39,12 @@ export default class SimpleMovingAverage extends BaseStrategy {
 
         if (up && this.canBuy) {
             this.canBuy = false;
-            return this.buy(this.pair, candles[0].close, 1);
+            return this.buy(this.pair, candles.first.close, 1);
         }
 
         if (down && this.canSell) {
             this.canSell = false;
-            return this.sell(this.pair, candles[0].close, 1);
+            return this.sell(this.pair, candles.first.close, 1);
         }
     }
 

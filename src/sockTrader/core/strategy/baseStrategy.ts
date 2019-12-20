@@ -54,7 +54,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param candles – candles coming from the remote exchange
      */
     _onUpdateCandles(candles: Candle[]): void {
-        this.updateCandles(new CandleCollection(...candles));
+        this.updateCandles(new CandleCollection(candles));
     }
 
     /**
@@ -63,7 +63,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param candles – candles coming from the remote exchange
      */
     _onSnapshotCandles(candles: Candle[]): void {
-        this.warmUpCandles(new CandleCollection(...candles));
+        this.warmUpCandles(new CandleCollection(candles));
     }
 
     /**
