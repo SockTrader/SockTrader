@@ -23,13 +23,17 @@ function getContext(level: string) {
 }
 
 function createLogger(category: string): winston.Logger {
-    const silent = process.env.NODE_ENV === "test";
+    const isTest = process.env.NODE_ENV === "test";
     return winston.loggers.add(category, {
         format: logFormat,
         transports: [
-            new winston.transports.Console({silent}),
-            new winston.transports.File({filename: `./src/logs/${category}.log`, silent}),
+            new winston.transports.Console({silent: isTest}),
+            new winston.transports.File({filename: `./src/logs/${category}.log`, silent: isTest}),
         ],
+        exceptionHandlers: [
+            new winston.transports.File({filename: `./src/logs/error.log`, silent: isTest}),
+        ],
+        exitOnError: false,
     });
 }
 

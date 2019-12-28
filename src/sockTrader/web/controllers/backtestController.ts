@@ -29,7 +29,7 @@ export default class BacktestController {
         return (options: BacktestOptions) => {
             const backtestProcess = new BacktestProcessFactory().create(scriptPath, options);
 
-            backtestProcess.on("message", event => {
+            backtestProcess.on("message", (event: {type?: string, payload?: any}) => {
                 if (!event || !event.type) throw new Error("Event is not correct. Expecting: { type: string, payload: any }");
 
                 socket.emit(event.type, event.payload);
