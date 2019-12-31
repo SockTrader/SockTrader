@@ -6,7 +6,7 @@ import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCom
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_BTCUSD} from "../../../__fixtures__/currencies";
 import {FX_ASK, FX_ASK_UPDATE, FX_BID, FX_BID_UPDATE} from "../../../__fixtures__/orderbook";
-import Orderbook from "../../../sockTrader/core/orderbook";
+import Orderbook from "../../../sockTrader/core/orderbook/orderbook";
 
 jest.mock("./../../../config");
 jest.mock("./../../../sockTrader/core/connection/wsConnection");

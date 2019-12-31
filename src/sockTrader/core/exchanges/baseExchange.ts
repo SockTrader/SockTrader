@@ -1,7 +1,5 @@
-import {Decimal} from "decimal.js-light";
 import {EventEmitter} from "events";
 import CandleManager from "../candles/candleManager";
-import Orderbook from "../orderbook";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";
 import {Connection} from "../types/connection";
@@ -25,7 +23,6 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
     protected orderFiller!: OrderFiller;
     protected candles: Record<string, CandleManager> = {};
     protected readonly connection: Connection;
-    private readonly orderbooks: Record<string, Orderbook> = {};
     private ready = false;
 
     constructor() {
@@ -92,25 +89,6 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
     destroy(): void {
         this.removeAllListeners();
         this.connection.removeAllListeners();
-    }
-
-    /**
-     * @TODO refactor into orderbook factory
-     * @deprecated
-     */
-    getOrderbook(pair: Pair): Orderbook {
-        const ticker = pair.join("");
-        if (this.orderbooks[ticker]) {
-            return this.orderbooks[ticker];
-        }
-
-        const currency = this.currencies[ticker];
-        if (!currency) throw new Error(`No configuration found for pair: "${ticker}"`);
-
-        const precision = new Decimal(currency.tickSize).decimalPlaces();
-
-        this.orderbooks[ticker] = new Orderbook(pair, precision);
-        return this.orderbooks[ticker];
     }
 
     /**

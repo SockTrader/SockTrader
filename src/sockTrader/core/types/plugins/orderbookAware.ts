@@ -1,4 +1,4 @@
-import Orderbook from "../../orderbook";
+import Orderbook from "../../orderbook/orderbook";
 
 export interface OrderbookAware {
     onUpdateOrderbook: (orderbook: Orderbook) => void;

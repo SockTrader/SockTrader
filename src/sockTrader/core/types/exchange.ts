@@ -1,7 +1,6 @@
 import {EventEmitter} from "events";
 import BaseExchange from "../exchanges/baseExchange";
 import LocalExchange from "../exchanges/localExchange";
-import Orderbook from "../orderbook";
 import {Candle} from "./candle";
 import {CandleInterval} from "./candleInterval";
 import {Order, OrderSide} from "./order";
@@ -59,14 +58,6 @@ export interface Exchange extends EventEmitter {
      * i.e. removes the event listeners
      */
     destroy(): void;
-
-    /**
-     * Gets all (of everyone) open buy and sell order for a given pair on the
-     * exchange
-     * @param pair crypto pair (BTC USD/BTC ETH)
-     * @returns {Orderbook} open buys and sells for pair
-     */
-    getOrderbook(pair: Pair): Orderbook;
 
     /**
      * Registers all tradeable currencies on exchange

@@ -5,7 +5,7 @@ import {Pair} from "../../sockTrader/core/types/pair";
 import Events from "../../sockTrader/core/events";
 import {FX_NEW_BUY_ORDER, FX_REPLACED_BUY_ORDER} from "../../__fixtures__/order";
 import {FX_ASK, FX_BID} from "../../__fixtures__/orderbook";
-import Orderbook from "../../sockTrader/core/orderbook";
+import Orderbook from "../../sockTrader/core/orderbook/orderbook";
 import {FX_CANDLE_LIST} from "../../__fixtures__/candles";
 import OrderLogger from "../../sockTrader/core/plugins/logging/orderLogger";
 import WalletLogger from "../../sockTrader/core/plugins/logging/walletLogger";

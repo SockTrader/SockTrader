@@ -4,7 +4,7 @@ import config from "../../../config";
 import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
 import logger from "../logger";
-import Orderbook from "../orderbook";
+import Orderbook from "../orderbook/orderbook";
 import {CandleInterval} from "../types/candleInterval";
 import {OrderbookData} from "../types/orderbookData";
 import {Pair} from "../types/pair";
@@ -12,6 +12,7 @@ import {ResponseAdapter} from "../types/responseAdapter";
 import BaseExchange from "./baseExchange";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
+import OrderbookFactory from "../orderbook/orderbookFactory";
 
 export const HitBTCCandleInterval: Record<string, CandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
@@ -61,14 +62,14 @@ export default class HitBTC extends BaseExchange {
     }
 
     onSnapshotOrderbook({pair, ask, bid, sequence}: OrderbookData) {
-        const orderbook: Orderbook = this.getOrderbook(pair);
+        const orderbook: Orderbook = OrderbookFactory.getInstance(pair);
         orderbook.setOrders(ask, bid, sequence);
 
         Events.emit("core.snapshotOrderbook", orderbook);
     }
 
     onUpdateOrderbook({pair, ask, bid, sequence}: OrderbookData) {
-        const orderbook: Orderbook = this.getOrderbook(pair);
+        const orderbook: Orderbook = OrderbookFactory.getInstance(pair);
         orderbook.addIncrement(ask, bid, sequence);
 
         Events.emit("core.updateOrderbook", orderbook);

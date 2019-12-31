@@ -1,4 +1,4 @@
-import {OrderbookEntry} from "../orderbook";
+import {OrderbookEntry} from "../orderbook/orderbook";
 import {Pair} from "./pair";
 
 export interface OrderbookData {

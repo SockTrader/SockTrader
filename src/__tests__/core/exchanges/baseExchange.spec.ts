@@ -1,19 +1,15 @@
-import {Pair} from "../../../sockTrader/core/types/pair";
-import Orderbook from "../../../sockTrader/core/orderbook";
 import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 import {OrderSide} from "../../../sockTrader/core/types/order";
 import {FX_CANDLE_1} from "../../../__fixtures__/candles";
-import {FX_ALL_CURRENCIES, FX_BTCUSD} from "../../../__fixtures__/currencies";
+import {FX_ALL_CURRENCIES} from "../../../__fixtures__/currencies";
 import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
 import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 
 jest.mock("../../../sockTrader/core/logger");
-
-const pair: Pair = ["BTC", "USD"];
 
 let exchange = new ExchangeFactory().createExchange();
 beforeEach(() => {
@@ -131,28 +127,6 @@ describe("connect", () => {
 
         expect(spy1).toBeCalledTimes(1);
         expect(spy2).toBeCalledTimes(2);
-    });
-});
-
-// @TODO test needs to be refactored into orderbook factory
-describe("getOrderbook", () => {
-    it("Should throw error if no configuration is found for given pair", () => {
-        expect(() => exchange.getOrderbook(pair)).toThrow("No configuration found for pair: \"BTCUSD\"");
-    });
-
-    it("Should get singleton exchange orderbook", () => {
-        const symbol = pair.join("");
-
-        exchange.currencies[symbol] = FX_BTCUSD;
-
-        // Returns a new empty orderbook
-        const orderbook = exchange.getOrderbook(pair);
-        expect(orderbook).toEqual({pair, precision: 2, ask: [], bid: [], sequenceId: 0});
-        expect(orderbook).toBeInstanceOf(Orderbook);
-        expect(exchange["orderbooks"][symbol]).toEqual(orderbook);
-
-        const orderbook2 = exchange.getOrderbook(pair);
-        expect(orderbook2).toBe(orderbook);
     });
 });
 

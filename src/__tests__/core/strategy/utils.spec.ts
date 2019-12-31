@@ -1,4 +1,4 @@
-import {crossDown, crossUp} from "../../../sockTrader/core/strategy/utils";
+import {crossDown, crossUp} from "../../../sockTrader/core/utils/strategyUtil";
 
 /**
  * NOTE THAT ARRAY VALUES ARE REVERSED! THIS IS THE EXPECTED BEHAVIOUR.

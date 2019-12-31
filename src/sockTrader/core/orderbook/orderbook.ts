@@ -1,13 +1,7 @@
-import {Decimal} from "decimal.js-light";
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
-import {orderbookLogger} from "./logger";
-import {Pair} from "./types/pair";
-
-export enum Operator {
-    PLUS = "+",
-    MINUS = "-",
-}
+import {orderbookLogger} from "../logger";
+import {Pair} from "../types/pair";
 
 export enum OrderbookSide {
     BID = "bid",
@@ -24,23 +18,14 @@ export interface OrderbookEntry {
  */
 export default class Orderbook {
 
+    private readonly sequenceThreshold = 1000;
+
     ask: OrderbookEntry[] = [];
     bid: OrderbookEntry[] = [];
 
     sequenceId = 0;
 
-    constructor(protected pair: Pair, protected precision = 8) {
-    }
-
-    /**
-     * Calculate bid/ask spread in %
-     * @param {number} bid price bid
-     * @param {number} ask price asked
-     * @returns {number} percentage spread bid/ask
-     */
-    static getBidAskSpreadPerc(bid: number, ask: number): number {
-        const increase: Decimal = new Decimal(ask).minus(bid);
-        return increase.dividedBy(bid).toNumber();
+    constructor(protected pair: Pair) {
     }
 
     /**
@@ -59,25 +44,6 @@ export default class Orderbook {
     }
 
     /**
-     * Calculate a price higher/lower then the given price
-     * @param {number} price
-     * @param {('+'|'-')} operator
-     * @param {number} [ticks=1]
-     * @returns {number}
-     */
-    getAdjustedPrice(price: number, operator: Operator, ticks = 1): number {
-        const decPrice: Decimal = new Decimal(price);
-
-        const func = (operator === Operator.PLUS)
-            ? (a: Decimal, b: Decimal | number) => a.plus(b)
-            : (a: Decimal, b: Decimal | number) => a.minus(b);
-
-        const m: number = Math.pow(10, this.precision);
-        const natNum: Decimal = decPrice.times(m);
-        return func(natNum, ticks).dividedBy(m).toNumber();
-    }
-
-    /**
      * Scans the in memory orderBook for the first x entries
      * @param {('bid'|'ask')} side
      * @param {number} amount
@@ -88,27 +54,19 @@ export default class Orderbook {
     }
 
     /**
-     * Returns absolute satoshi difference between num1 and num2
-     * @param {string|number} num1
-     * @param {string|number} num2
-     * @returns {number}
-     */
-    getSatDiff(num1: number, num2: number): number {
-        const multipl: number = Math.pow(10, this.precision);
-        return Math.abs(new Decimal(num1).times(multipl).toNumber() - new Decimal(num2).times(multipl).toNumber());
-    }
-
-    /**
      * Validates if the given sequence id is higher than the previous one
      * @param sequenceId
      */
     private isValidSequence(sequenceId: number): boolean {
-        if (sequenceId <= this.sequenceId) {
-            orderbookLogger.info(`Sequence dropped: ${sequenceId}, last one: ${this.sequenceId}`);
-            return false;
+        if (sequenceId > this.sequenceId) return true;
+
+        if (Math.abs(this.sequenceId - sequenceId) > this.sequenceThreshold) {
+            orderbookLogger.info(`Possible sequence reset? Prev: ${this.sequenceId}, current: ${sequenceId}`);
+            return true;
         }
 
-        return true;
+        orderbookLogger.info(`Sequence dropped: ${sequenceId}, last one: ${this.sequenceId}`);
+        return false;
     }
 
     /**

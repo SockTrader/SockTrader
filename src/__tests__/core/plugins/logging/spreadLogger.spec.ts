@@ -1,6 +1,6 @@
 import logger from "../../../../sockTrader/core/logger";
 import SpreadLogger from "../../../../sockTrader/core/plugins/logging/spreadLogger";
-import Orderbook from "../../../../sockTrader/core/orderbook";
+import Orderbook from "../../../../sockTrader/core/orderbook/orderbook";
 import {FX_ASK, FX_BID} from "../../../../__fixtures__/orderbook";
 
 jest.mock("../../../../sockTrader/core/logger");

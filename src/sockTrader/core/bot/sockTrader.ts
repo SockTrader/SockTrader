@@ -1,5 +1,5 @@
 import Events from "../events";
-import Orderbook from "../orderbook";
+import Orderbook from "../orderbook/orderbook";
 import {AssetMap} from "../plugins/wallet/wallet";
 import BaseStrategy, {AdjustSignal, IStrategyClass, Signal} from "../strategy/baseStrategy";
 import {Candle} from "../types/candle";

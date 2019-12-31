@@ -15,9 +15,6 @@ export default class ExchangeFactory {
         const def = this.getExchangeDefinition(exchangeName);
         const exchange = new def.class();
 
-        // Use LocalOrderCreator in case of: backtest & paper trading
-
-        // @TODO getOrderCreator doesn't work!
         exchange.setOrderCreator(this.getOrderCreator(def));
         exchange.setOrderFiller(this.getOrderFiller());
 
@@ -39,6 +36,11 @@ export default class ExchangeFactory {
         };
     }
 
+    /**
+     * In case of backtest & paper trading, return LocalOrderCreator
+     * In case of live trading, get order creator for given exchange
+     * @param config
+     */
     private getOrderCreator(config: ExchangeDefinition) {
         const isLive = process.env.SOCKTRADER_TRADING_MODE === "LIVE";
 
