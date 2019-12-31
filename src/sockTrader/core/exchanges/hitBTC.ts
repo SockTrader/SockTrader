@@ -5,6 +5,7 @@ import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
 import logger from "../logger";
 import Orderbook from "../orderbook/orderbook";
+import OrderbookFactory from "../orderbook/orderbookFactory";
 import {CandleInterval} from "../types/candleInterval";
 import {OrderbookData} from "../types/orderbookData";
 import {Pair} from "../types/pair";
@@ -12,7 +13,6 @@ import {ResponseAdapter} from "../types/responseAdapter";
 import BaseExchange from "./baseExchange";
 import HitBTCCommand from "./commands/hitBTCCommand";
 import HitBTCAdapter from "./hitBTCAdapter";
-import OrderbookFactory from "../orderbook/orderbookFactory";
 
 export const HitBTCCandleInterval: Record<string, CandleInterval> = {
     ONE_MINUTE: {code: "M1", cron: "00 */1 * * * *"},
