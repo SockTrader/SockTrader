@@ -3,21 +3,21 @@ import winston, {format} from "winston";
 const IS_TEST = process.env.NODE_ENV === "test";
 const logFormat = format.combine(
     format.timestamp(),
-    format.printf(({timestamp, level, message, ...args}) => {
-        const rest = Object.keys(args).length ? JSON.stringify(args, undefined, 2) : "";
-        return `${timestamp}${getContext(level)}${message} ${rest}`;
+    format.printf(({timestamp, message}) => {
+        const {type, payload, ...rest} = message as any;
+        const data = (payload) ? payload : rest;
+        return `${timestamp} ${getContext()} ${JSON.stringify({type, payload: data})}`;
     }),
 );
 
-function getContext(level: string) {
-    const colorizer = winston.format.colorize();
+function getContext() {
     switch (process.env.SOCKTRADER_TRADING_MODE) {
         case "BACKTEST":
-            return colorizer.colorize(level, " [BT] ");
+            return "[BT]";
         case "PAPER":
-            return colorizer.colorize(level, " [PT] ");
+            return "[PT]";
         case "LIVE":
-            return colorizer.colorize(level, " [LIVE] ");
+            return "[LIVE]";
         default :
             return " ";
     }

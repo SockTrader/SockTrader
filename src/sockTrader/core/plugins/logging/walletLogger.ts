@@ -5,11 +5,8 @@ import {AssetMap} from "../wallet/wallet";
 export default class WalletLogger implements AssetAware {
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
-        const assetsJSON = JSON.stringify(this.objectToArray(assets));
-        const reservedAssetsJSON = JSON.stringify(this.objectToArray(reservedAssets));
-
-        walletLogger.info(`wallet: ${assetsJSON}`);
-        walletLogger.info(`reservedWallet: ${reservedAssetsJSON}`);
+        walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
+        walletLogger.info({type: "Reserved wallet", payload: this.objectToArray(reservedAssets)});
     }
 
     objectToArray(object: Record<string, number>) {
