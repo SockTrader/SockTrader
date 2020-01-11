@@ -12,8 +12,8 @@ describe("onUpdateAssets", () => {
         const logger = new WalletLogger();
         logger.onUpdateAssets(assets, reserved);
 
-        expect(walletLogger.info).toBeCalledWith("wallet: [{\"asset\":\"BTC\",\"value\":1},{\"asset\":\"USD\",\"value\":10}]");
-        expect(walletLogger.info).toBeCalledWith("reservedWallet: [{\"asset\":\"USD\",\"value\":1000}]");
+        expect(walletLogger.info).toBeCalledWith({type: "Wallet", payload: [{asset: "BTC", value: 1}, {asset: "USD", "value": 10}]});
+        expect(walletLogger.info).toBeCalledWith({type: "Reserved wallet", payload: [{asset: "USD", value: 1000}]});
     });
 });
 

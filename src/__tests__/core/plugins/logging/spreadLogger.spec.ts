@@ -21,7 +21,12 @@ describe("onUpdateOrderbook", () => {
         const orderLogger = new SpreadLogger();
         orderLogger.onUpdateOrderbook(createOrderbook());
 
-        expect(logger.info).toBeCalledWith("-0.0016945986336464561 BID: 0.074944 ASK: 0.074817");
+        expect(logger.info).toBeCalledWith({
+            type: "Orderbook",
+            spread: -0.0016945986336464561,
+            bid: 0.074944,
+            ask: 0.074817,
+        });
     });
 
     it("Should not log if spread did not change", () => {

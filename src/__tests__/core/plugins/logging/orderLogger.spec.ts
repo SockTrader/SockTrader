@@ -9,6 +9,19 @@ describe("onReport", () => {
         const orderLogger = new OrderLogger();
         orderLogger.onReport(FX_NEW_BUY_ORDER);
 
-        expect(logger.info).toBeCalledWith("Order: {\"side\":\"buy\",\"quantity\":1,\"price\":100,\"status\":\"new\"}");
+        expect(logger.info).toBeCalledWith({
+            type: "Order",
+            payload: expect.objectContaining({
+                id: "NEW_BUY_ORDER_1",
+                pair: ["BTC", "USD"],
+                price: 100,
+                quantity: 1,
+                reportType: "new",
+                side: "buy",
+                status: "new",
+                timeInForce: "GTC",
+                type: "limit",
+            }),
+        });
     });
 });

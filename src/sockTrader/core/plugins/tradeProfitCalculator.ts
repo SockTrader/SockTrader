@@ -18,10 +18,10 @@ export default class TradeProfitCalculator implements ReportAware {
             if (quantity > this.remainingAssets) return;
             this.remainingAssets -= quantity;
 
-            const net = price - this.avgBuyPrice;
-            const perc = net / this.avgBuyPrice;
+            const abs = price - this.avgBuyPrice;
+            const perc = abs / this.avgBuyPrice;
 
-            orderLogger.info({type: "Profit", net, perc});
+            orderLogger.info({type: "Profit", abs, perc});
         }
 
         if (side === OrderSide.BUY) {

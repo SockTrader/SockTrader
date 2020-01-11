@@ -7,7 +7,6 @@ import {
     FX_NEW_SELL_ORDER,
     FX_REPLACED_BUY_ORDER,
 } from "../../../__fixtures__/order";
-import {orderLogger} from "../../../sockTrader/core/logger";
 import {OrderStatus, ReportType} from "../../../sockTrader/core/types/order";
 
 function createOrderTracker() {
@@ -67,15 +66,6 @@ describe("findOpenOrder", () => {
     it("Should return undefined when order could not be found", () => {
         const order = orderTracker["findOpenOrder"]("UNKNOWN");
         expect(order).toEqual(undefined);
-    });
-});
-
-describe("logOpenOrders", () => {
-    it("Should log a list of all open orders", () => {
-        const spy = jest.spyOn(orderLogger, "info");
-        orderTracker["logOpenOrders"]();
-
-        expect(spy).toBeCalledWith("Open orders: [{\"side\":\"buy\",\"price\":100,\"quantity\":1}]");
     });
 });
 
