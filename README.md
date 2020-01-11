@@ -62,17 +62,17 @@ Try it yourself:
 ### Local scripts
 1. Clone the repository locally: `git clone https://github.com/SockTrader/SockTrader`
 2. Install dependencies: `cd SockTrader && npm install`
-3. Add trading bot configuration: `cp src/config.ts.dist src/config.ts `
-4. (optional) Edit `src/config.ts`
-5. Build project: `npm run build`
-6. Run SockTrader: `node ./build/index.js --help`
+3. Create trading bot configuration file: `cp src/config.ts.dist src/config.ts `
+4. Build project: `npm run build`
 5. Transform our candle data (BTC/USD coinbase) from `src/data` to a readable format in `build/data`: `npm run normalize`
-6. Run backtest with the normalized candles and the simple moving average strategy! `npm run backtest -- --candles=coinbase_btcusd_1h --strategy=simpleMovingAverage`
+6. Run SockTrader: `node ./build/index.js --help`
 
-## Other available scripts
+## Other scripts
 - `npm run test` run jest test suite
 - `npm run web-dev` start development webserver with nodemon for quick & easy development 
 - `npm run web` start webserver. Can be used for "live reload" using websockets
+- `npm run socktrader -- backtest --candles=coinbase_btcusd_1h --strategy=simpleMovingAverage` start backtest trading session 
+- `npm run socktrader -- live --paper --pair btc usd --strategy simpleMovingAverage --exchange hitbtc --interval 1m` start paper trading session
 
 ## Advanced
 Load your own candle data of a trading pair of your interest: [Create a candle normalizer in "src/data" folder](#normalize-raw-candles)
