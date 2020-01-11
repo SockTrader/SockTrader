@@ -1,6 +1,7 @@
 import {IDataFrame} from "data-forge";
 import {IAsyncFileReader, readFile} from "data-forge-fs";
 import moment from "moment";
+import path from "path";
 import {Candle} from "../core/types/candle";
 import {Pair} from "../core/types/pair";
 import {getDecimals} from "./utils";
@@ -14,6 +15,11 @@ export interface CandleNormalizerConfig {
 export type Parser = (candles: IDataFrame) => IDataFrame<number, Candle>;
 
 /**
+ * Relative path to the root of the build folder
+ */
+const BUILD_ROOT = "../../";
+
+/**
  * The CandleNormalizer parses a file containing candles and returns
  * in data for in memory processing
  */
@@ -22,9 +28,9 @@ export default class CandleNormalizer {
     private readonly filePath: string;
     private readonly parser: Parser;
 
-    constructor(filePath: string, public candleNormalizerConfig: CandleNormalizerConfig, parser: Parser) {
+    constructor(filePath: string, private candleNormalizerConfig: CandleNormalizerConfig, parser: Parser) {
         this.parser = parser;
-        this.filePath = filePath;
+        this.filePath = this.resolveDataFile(filePath);
     }
 
     /**
@@ -43,6 +49,16 @@ export default class CandleNormalizer {
         }
 
         throw new Error("File extension is not valid! Expecting a CSV or JSON file.");
+    }
+
+    private resolveDataFile(fileName: string) {
+        const DATA_FOLDER = "../src/data";
+
+        const directory = (require.main)
+            ? path.dirname(require.main.filename) // Relative to entry file
+            : path.resolve(__dirname, BUILD_ROOT); // Relative to current file
+
+        return path.resolve(directory, DATA_FOLDER, fileName);
     }
 
     /**
@@ -80,7 +96,10 @@ export default class CandleNormalizer {
 
     private determineVolumeDecimals(df: IDataFrame): number {
         const {decimalSeparator: ds} = this.candleNormalizerConfig;
-        return df.aggregate(0, ((accum, candle) => Math.max(accum, getDecimals(candle.volume, ds))));
+        return df.aggregate(0, ((accum, candle) => Math.max(
+                accum,
+                getDecimals(candle.volume, ds))
+        ));
     }
 
     private validateColumns(df: IDataFrame) {
