@@ -3,10 +3,17 @@ import winston, {format} from "winston";
 const IS_TEST = process.env.NODE_ENV === "test";
 const logFormat = format.combine(
     format.timestamp(),
-    format.printf(({timestamp, message}) => {
-        const {type, payload, ...rest} = message as any;
-        const data = (payload) ? payload : rest;
-        return `${timestamp} ${getContext()} ${JSON.stringify({type, payload: data})}`;
+    format.printf((info: any) => {
+        let type = "message";
+        let payload = info.message;
+
+        if (typeof info.message === "object" && info.message.constructor === Object) {
+            const {type: msgType, payload: msgPayload, ...rest} = info.message;
+            type = msgType;
+            payload = msgPayload ? msgPayload : rest;
+        }
+
+        return `${info.timestamp} ${getContext()} ${JSON.stringify({type, payload})}`;
     }),
 );
 
