@@ -66,8 +66,8 @@ Try it yourself:
 4. (optional) Edit `src/config.ts`
 5. Build project: `npm run build`
 6. Run SockTrader: `node ./build/index.js --help`
-5. Transform our candle data (BTC/USD Bitstamp) from `src/data` to a readable format in `build/data`: `npm run normalize`
-6. Run backtest with the normalized candles and the simple moving average strategy! `npm run backtest -- --candles=bitstamp_btcusd_1h --strategy=simpleMovingAverage`
+5. Transform our candle data (BTC/USD coinbase) from `src/data` to a readable format in `build/data`: `npm run normalize`
+6. Run backtest with the normalized candles and the simple moving average strategy! `npm run backtest -- --candles=coinbase_btcusd_1h --strategy=simpleMovingAverage`
 
 ## Other available scripts
 - `npm run test` run jest test suite
@@ -102,44 +102,34 @@ Each row in the data frame should respect the following type definition:
 }
 ```
 
-Redundant properties which are not listed in the type definition above will be ignored by the trading bot.
-If you run into any issue, consider removing them as well by calling `.dropSeries(["REDUNDANT_PROPERTY"])` since we cannot
-guarantee that it will still work in the future. Data-forge and moment are already included as a dependency and they are
-used throughout the SockTrader codebase.
-
 The following example will give you a good idea of how you can create your own candle normalizer. Make sure to put this file
 into the `src/data` folder next to the raw candle files. Preferably with the same name as the candle file but with .ts extension.
 
 Example:
 ```typescript
-// src/data/bitstamp_btcusd_1h.ts
+// src/data/coinbase_btcusd_1h.ts
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
 import CandleNormalizer from "../sockTrader/core/candles/candleNormalizer";
 
-// Be sure to go back to the src folder, since this script will be executed from the build/data folder!!
-const SRC_PATH = "../../src/data";
-const PATH = path.resolve(__dirname, SRC_PATH, "bitstamp_btcusd_1h.csv");
+const candleMeta = {symbol: ["BTC", "USD"], name: "Bitcoin"};
+const parser = (dataFrame: IDataFrame<number, any>): IDataFrame<number, any> => dataFrame
+    .dropSeries(["Symbol", "Volume BTC"]) // Redundant properties
+    .renameSeries({
+        "Date": "timestamp",
+        "High": "high",
+        "Low": "low",
+        "Open": "open",
+        "Close": "close",
+        "Volume USD": "volume",
+    })
+    .select(row => ({
+        ...row,
+        timestamp: moment.utc(row.timestamp, "YYYY-MM-DD hh-A"),
+    }));
 
-const parser = (dataFrame: IDataFrame<number, any>): IDataFrame<number, any> => {
-    return dataFrame
-        .dropSeries(["Symbol"]) // Redundant property
-        .renameSeries({
-            "Date": "timestamp",
-            "High": "high",
-            "Low": "low",
-            "Open": "open",
-            "Close": "close",
-            "Volume To": "volume",
-        })
-        .select(row => {
-            row.timestamp = moment(row.timestamp, "YYYY-MM-DD hh-A");
-            return row;
-        })
-};
-
-export default new CandleNormalizer(PATH, parser);
+export default new CandleNormalizer("coinbase_btcusd_1h.csv", candleMeta, parser);
 ```
 
 ## Your own strategy?
