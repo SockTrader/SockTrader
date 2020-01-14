@@ -27,18 +27,18 @@ jobs:
           paths:
             - socktrader
 
-  analyze-code:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/project
-
-      - run: >-
-          sonar-scanner
-          -Dsonar.projectKey=SockTrader_SockTrader
-          -Dsonar.organization=socktrader
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.login=$SONAR_LOGIN
+#  analyze-code:
+#    <<: *defaults
+#    steps:
+#      - attach_workspace:
+#          at: ~/project
+#
+#      - run: >-
+#          sonar-scanner
+#          -Dsonar.projectKey=SockTrader_SockTrader
+#          -Dsonar.organization=socktrader
+#          -Dsonar.host.url=https://sonarcloud.io
+#          -Dsonar.login=$SONAR_LOGIN
 
   test-unit:
     <<: *defaults
@@ -74,6 +74,13 @@ jobs:
           path: test_results/jest/junit.xml
           destination: junit.xml
 
+      - run: >-
+          sonar-scanner
+          -Dsonar.projectKey=SockTrader_SockTrader
+          -Dsonar.organization=socktrader
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.login=$SONAR_LOGIN
+
 workflows:
   version: 2
   install-and-parallel-test:
@@ -84,6 +91,6 @@ workflows:
           requires:
             - install
 
-      - analyze-code:
-          requires:
-            - install
+#      - analyze-code:
+#          requires:
+#            - install
