@@ -1,8 +1,8 @@
-import {walletLogger} from "../../../../sockTrader/core/logger";
+import {walletLogger} from "../../../../sockTrader/core/loggerFactory";
 import WalletLogger from "../../../../sockTrader/core/plugins/logging/walletLogger";
 import {AssetMap} from "../../../../sockTrader/core/plugins/wallet/wallet";
 
-jest.mock("../../../../sockTrader/core/logger");
+jest.mock("../../../../sockTrader/core/loggerFactory");
 
 describe("onUpdateAssets", () => {
     it("Should log reserved and non reserved assets", () => {

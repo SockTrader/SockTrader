@@ -1,17 +1,17 @@
-import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
-import SockTrader from "../../sockTrader/core/bot/sockTrader";
-import {default as HitBTC, HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
-import {Pair} from "../../sockTrader/core/types/pair";
-import Events from "../../sockTrader/core/events";
-import {FX_NEW_BUY_ORDER, FX_REPLACED_BUY_ORDER} from "../../__fixtures__/order";
-import {FX_ASK, FX_BID} from "../../__fixtures__/orderbook";
-import Orderbook from "../../sockTrader/core/orderbook/orderbook";
-import {FX_CANDLE_LIST} from "../../__fixtures__/candles";
-import OrderLogger from "../../sockTrader/core/plugins/logging/orderLogger";
-import WalletLogger from "../../sockTrader/core/plugins/logging/walletLogger";
-import SpreadLogger from "../../sockTrader/core/plugins/logging/spreadLogger";
-import {Signal} from "../../sockTrader/core/strategy/baseStrategy";
-import {OrderSide} from "../../sockTrader/core/types/order";
+import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
+import SockTrader from "../../../sockTrader/core/bot/sockTrader";
+import {default as HitBTC, HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import {Pair} from "../../../sockTrader/core/types/pair";
+import Events from "../../../sockTrader/core/events";
+import {FX_NEW_BUY_ORDER, FX_REPLACED_BUY_ORDER} from "../../../__fixtures__/order";
+import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
+import Orderbook from "../../../sockTrader/core/orderbook/orderbook";
+import {FX_CANDLE_LIST} from "../../../__fixtures__/candles";
+import OrderLogger from "../../../sockTrader/core/plugins/logging/orderLogger";
+import WalletLogger from "../../../sockTrader/core/plugins/logging/walletLogger";
+import SpreadLogger from "../../../sockTrader/core/plugins/logging/spreadLogger";
+import {Signal} from "../../../sockTrader/core/strategy/baseStrategy";
+import {OrderSide} from "../../../sockTrader/core/types/order";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 

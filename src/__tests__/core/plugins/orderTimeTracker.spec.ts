@@ -1,5 +1,5 @@
 import {Order, OrderStatus} from "../../../sockTrader/core/types/order";
-import {orderLogger} from "../../../sockTrader/core/logger";
+import {orderLogger} from "../../../sockTrader/core/loggerFactory";
 import OrderTimeTracker from "../../../sockTrader/core/plugins/orderTimeTracker";
 import {
     FX_FILLED_BUY_ORDER,
@@ -9,7 +9,7 @@ import {
     FX_REPLACED_BUY_ORDER,
 } from "../../../__fixtures__/order";
 
-jest.mock("../../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/loggerFactory");
 
 let timeTracker = new OrderTimeTracker();
 

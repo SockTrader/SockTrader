@@ -1,4 +1,4 @@
-import {orderLogger} from "../logger";
+import {orderLogger} from "../loggerFactory";
 import {Order, OrderSide, OrderStatus} from "../types/order";
 import {ReportAware} from "../types/plugins/reportAware";
 

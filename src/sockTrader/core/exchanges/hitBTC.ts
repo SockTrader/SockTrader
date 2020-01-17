@@ -3,7 +3,7 @@ import nanoid from "nanoid";
 import config from "../../../config";
 import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
-import logger from "../logger";
+import logger from "../loggerFactory";
 import Orderbook from "../orderbook/orderbook";
 import OrderbookFactory from "../orderbook/orderbookFactory";
 import {CandleInterval} from "../types/candleInterval";

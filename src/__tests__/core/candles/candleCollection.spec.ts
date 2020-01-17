@@ -1,5 +1,5 @@
 import moment from "moment";
-import CandleCollection from "../../sockTrader/core/candles/candleCollection";
+import CandleCollection from "../../../sockTrader/core/candles/candleCollection";
 
 function createCandles() {
     return new CandleCollection([

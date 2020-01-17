@@ -1,4 +1,4 @@
-import {walletLogger} from "../../logger";
+import {walletLogger} from "../../loggerFactory";
 import {AssetAware} from "../../types/plugins/assetAware";
 import {AssetMap} from "../wallet/wallet";
 

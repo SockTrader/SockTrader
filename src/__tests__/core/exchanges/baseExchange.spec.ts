@@ -9,7 +9,7 @@ import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
 import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 
-jest.mock("../../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/loggerFactory");
 
 let exchange = new ExchangeFactory().createExchange();
 beforeEach(() => {

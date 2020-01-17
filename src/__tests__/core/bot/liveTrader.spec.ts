@@ -1,12 +1,12 @@
-import HitBTC, {HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
-import LiveTrader from "../../sockTrader/core/bot/liveTrader";
-import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
-import {StrategyConfig} from "../../sockTrader/core/bot/sockTrader";
-import {Exchange} from "../../sockTrader/core/types/exchange";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import LiveTrader from "../../../sockTrader/core/bot/liveTrader";
+import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
+import {StrategyConfig} from "../../../sockTrader/core/bot/sockTrader";
+import {Exchange} from "../../../sockTrader/core/types/exchange";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
-jest.mock("../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/loggerFactory");
 
 const createExchange = (): Exchange => new HitBTC();
 const createStrategy = (): StrategyConfig => ({

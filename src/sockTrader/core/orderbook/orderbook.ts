@@ -1,6 +1,6 @@
 import reverse from "lodash.reverse";
 import sortBy from "lodash.sortby";
-import {orderbookLogger} from "../logger";
+import {orderbookLogger} from "../loggerFactory";
 import {Pair} from "../types/pair";
 
 export enum OrderbookSide {

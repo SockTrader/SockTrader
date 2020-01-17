@@ -1,4 +1,4 @@
-import {orderbookLogger} from "../../logger";
+import {orderbookLogger} from "../../loggerFactory";
 import Orderbook, {OrderbookEntry, OrderbookSide} from "../../orderbook/orderbook";
 import {OrderbookAware} from "../../types/plugins/orderbookAware";
 import OrderbookUtil from "../../utils/orderbookUtil";

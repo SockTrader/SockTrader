@@ -1,9 +1,9 @@
 import TradeProfitCalculator from "../../../sockTrader/core/plugins/tradeProfitCalculator";
 import {Order, OrderSide, OrderStatus} from "../../../sockTrader/core/types/order";
-import {orderLogger} from "../../../sockTrader/core/logger";
+import {orderLogger} from "../../../sockTrader/core/loggerFactory";
 import {FX_FILLED_BUY_ORDER, FX_FILLED_SELL_ORDER, FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 
-jest.mock("../../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/loggerFactory");
 
 let calculator = new TradeProfitCalculator();
 
