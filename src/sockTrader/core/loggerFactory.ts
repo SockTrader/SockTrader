@@ -3,7 +3,7 @@ import winston, {format} from "winston";
 export class LoggerFactory {
 
     static IS_TEST = process.env.NODE_ENV === "test";
-    private static logFormat = format.combine(
+    private static readonly logFormat = format.combine(
         format.timestamp(),
         format.printf(LoggerFactory.format),
     );
