@@ -1,4 +1,4 @@
-import {orderLogger} from "../logger";
+import {orderLogger} from "../loggerFactory";
 import {Order, OrderSide, OrderStatus} from "../types/order";
 import {ReportAware} from "../types/plugins/reportAware";
 
@@ -18,17 +18,17 @@ export default class TradeProfitCalculator implements ReportAware {
             if (quantity > this.remainingAssets) return;
             this.remainingAssets -= quantity;
 
-            const net = price - this.avgBuyPrice;
-            const perc = net / this.avgBuyPrice;
+            const abs = price - this.avgBuyPrice;
+            const perc = abs / this.avgBuyPrice;
 
-            orderLogger.info(`Profit: ${net} ${perc}`);
+            orderLogger.info({type: "Profit", abs, perc});
         }
 
         if (side === OrderSide.BUY) {
             this.avgBuyPrice = this.getWeightedAverage(quantity, price);
             this.remainingAssets += quantity;
 
-            orderLogger.info(`Avg buy: ${this.avgBuyPrice}`);
+            orderLogger.info({type: "Avg buy", payload: this.avgBuyPrice});
         }
     }
 }

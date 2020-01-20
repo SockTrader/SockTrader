@@ -4,7 +4,7 @@ import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/hi
 import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFactory";
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_BTCUSD, FX_ETHUSD} from "../../../__fixtures__/currencies";
-import logger from "../../../sockTrader/core/logger";
+import logger from "../../../sockTrader/core/loggerFactory";
 import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";

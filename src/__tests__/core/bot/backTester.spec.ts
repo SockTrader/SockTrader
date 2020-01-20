@@ -1,8 +1,8 @@
-import {Pair} from "../../sockTrader/core/types/pair";
-import {HitBTCCandleInterval} from "../../sockTrader/core/exchanges/hitBTC";
-import LocalExchange from "../../sockTrader/core/exchanges/localExchange";
-import BackTester from "../../sockTrader/core/bot/backTester";
-import SimpleMovingAverage from "../../strategies/simpleMovingAverage";
+import {Pair} from "../../../sockTrader/core/types/pair";
+import {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import BackTester from "../../../sockTrader/core/bot/backTester";
+import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 

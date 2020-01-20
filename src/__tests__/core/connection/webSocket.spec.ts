@@ -1,11 +1,11 @@
-import WsConnection from "../../sockTrader/core/connection/wsConnection";
-import logger from "../../sockTrader/core/logger";
+import WsConnection from "../../../sockTrader/core/connection/wsConnection";
+import logger from "../../../sockTrader/core/loggerFactory";
 import ws from "ws";
-import HitBTCCommand from "../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import {Command} from "../../sockTrader/core/types/connection";
+import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
+import {Command} from "../../../sockTrader/core/types/connection";
 
 jest.mock("ws");
-jest.mock("../../sockTrader/core/logger");
+jest.mock("../../../sockTrader/core/loggerFactory");
 
 let websocket = new WsConnection("wss://api.does_not_exist.com/api/2/ws", 10000);
 beforeEach(() => {

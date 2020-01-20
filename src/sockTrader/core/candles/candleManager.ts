@@ -3,7 +3,7 @@ import parser from "cron-parser";
 import {EventEmitter} from "events";
 import moment, {Moment} from "moment";
 import config from "../../../config";
-import {candleLogger} from "../logger";
+import {candleLogger} from "../loggerFactory";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";
 

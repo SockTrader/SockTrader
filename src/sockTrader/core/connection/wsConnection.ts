@@ -1,6 +1,6 @@
 import {EventEmitter} from "events";
 import WSWebSocket from "ws";
-import logger from "../logger";
+import logger from "../loggerFactory";
 import {Command, Connection} from "../types/connection";
 
 export type Data = WSWebSocket.Data;

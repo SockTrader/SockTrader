@@ -1,9 +1,9 @@
-import logger from "../../../../sockTrader/core/logger";
+import {orderbookLogger} from "../../../../sockTrader/core/loggerFactory";
 import SpreadLogger from "../../../../sockTrader/core/plugins/logging/spreadLogger";
 import Orderbook from "../../../../sockTrader/core/orderbook/orderbook";
 import {FX_ASK, FX_BID} from "../../../../__fixtures__/orderbook";
 
-jest.mock("../../../../sockTrader/core/logger");
+jest.mock("../../../../sockTrader/core/loggerFactory");
 
 function createOrderbook() {
     const orderbook = new Orderbook(["BTC", "USD"]);
@@ -21,7 +21,12 @@ describe("onUpdateOrderbook", () => {
         const orderLogger = new SpreadLogger();
         orderLogger.onUpdateOrderbook(createOrderbook());
 
-        expect(logger.info).toBeCalledWith("-0.0016945986336464561 BID: 0.074944 ASK: 0.074817");
+        expect(orderbookLogger.info).toBeCalledWith({
+            type: "Orderbook",
+            spread: -0.0016945986336464561,
+            bid: 0.074944,
+            ask: 0.074817,
+        });
     });
 
     it("Should not log if spread did not change", () => {
@@ -29,6 +34,6 @@ describe("onUpdateOrderbook", () => {
         orderLogger.onUpdateOrderbook(createOrderbook());
         orderLogger.onUpdateOrderbook(createOrderbook());
 
-        expect(logger.info).toBeCalledTimes(1);
+        expect(orderbookLogger.info).toBeCalledTimes(1);
     });
 });

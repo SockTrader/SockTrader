@@ -1,8 +1,8 @@
-import {walletLogger} from "../../../../sockTrader/core/logger";
+import {walletLogger} from "../../../../sockTrader/core/loggerFactory";
 import WalletLogger from "../../../../sockTrader/core/plugins/logging/walletLogger";
 import {AssetMap} from "../../../../sockTrader/core/plugins/wallet/wallet";
 
-jest.mock("../../../../sockTrader/core/logger");
+jest.mock("../../../../sockTrader/core/loggerFactory");
 
 describe("onUpdateAssets", () => {
     it("Should log reserved and non reserved assets", () => {
@@ -12,8 +12,8 @@ describe("onUpdateAssets", () => {
         const logger = new WalletLogger();
         logger.onUpdateAssets(assets, reserved);
 
-        expect(walletLogger.info).toBeCalledWith("wallet: [{\"asset\":\"BTC\",\"value\":1},{\"asset\":\"USD\",\"value\":10}]");
-        expect(walletLogger.info).toBeCalledWith("reservedWallet: [{\"asset\":\"USD\",\"value\":1000}]");
+        expect(walletLogger.info).toBeCalledWith({type: "Wallet", payload: [{asset: "BTC", value: 1}, {asset: "USD", "value": 10}]});
+        expect(walletLogger.info).toBeCalledWith({type: "Reserved wallet", payload: [{asset: "USD", value: 1000}]});
     });
 });
 
