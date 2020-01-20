@@ -22,7 +22,7 @@ const createLiveTrader = (): LiveTrader => {
     return liveTrader;
 };
 
-let liveTrader = createLiveTrader();
+let liveTrader: LiveTrader;
 beforeEach(() => {
     liveTrader = createLiveTrader();
 });
