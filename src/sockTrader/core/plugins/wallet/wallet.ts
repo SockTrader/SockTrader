@@ -1,51 +1,20 @@
 import Events from "../../events";
 import {Order, OrderSide, OrderStatus, ReportType} from "../../types/order";
-
-export interface AssetMap {
-    [key: string]: number;
-}
-
-type AssetCalc = (asset: string, priceQty: number) => void;
+import {Pair} from "../../types/pair";
+import {AssetCalculator, AssetMap, OrderSideCalculator, OrderSideCalculators} from "../../types/wallet";
+import {SubWallet} from "./subWallet";
 
 /**
  * The wallet keeps track of all assets
- * strategy testing
  */
 export default class Wallet {
 
-    private readonly assets!: AssetMap;
-    private readonly reservedAssets!: AssetMap;
+    private readonly assets: SubWallet;
+    private readonly reservedAssets: SubWallet;
 
-    /**
-     * Creates a new LocalExchange
-     */
     constructor(assets: AssetMap) {
-        this.assets = this.getAssetProxy(assets);
-        this.reservedAssets = this.getAssetProxy({});
-
-        this.addAsset = this.addAsset.bind(this);
-        this.subtractAsset = this.subtractAsset.bind(this);
-        this.addReservedAsset = this.addReservedAsset.bind(this);
-        this.subtractReservedAsset = this.subtractReservedAsset.bind(this);
-    }
-
-    /**
-     * Checks if funds are sufficient for a buy
-     * @param {Order} order the order to verify
-     * @returns {boolean} is buy allowed
-     */
-    isBuyAllowed(order: Order): boolean {
-        return this.assets[order.pair[1]] >= this.getOrderPrice(order);
-    }
-
-    /**
-     * Checks if current quantity of currency in possession
-     * if sufficient for given sell order
-     * @param {Order} order the order to verify
-     * @returns {boolean} is sell allowed
-     */
-    isSellAllowed(order: Order): boolean {
-        return this.assets[order.pair[0]] >= order.quantity;
+        this.assets = new SubWallet(assets);
+        this.reservedAssets = new SubWallet({});
     }
 
     /**
@@ -53,96 +22,55 @@ export default class Wallet {
      * @param order
      */
     isOrderAllowed(order: Order): boolean {
-        return order.side === OrderSide.BUY ? this.isBuyAllowed(order) : this.isSellAllowed(order);
+        return order.side === OrderSide.BUY ? this.assets.isBuyAllowed(order) : this.assets.isSellAllowed(order);
     }
 
-    private getAssetProxy(assets: AssetMap) {
-        return new Proxy<AssetMap>(assets, {
-            get: (target: AssetMap, p: PropertyKey): any => {
-                return p in target ? target[p.toString()] : 0;
-            },
-        });
-    }
-
-    /**
-     * Calculates total price of order
-     * @param {Order} order the order
-     * @returns {number} total price
-     */
-    private getOrderPrice(order: Order) {
-        return order.price * order.quantity;
-    }
-
-    private createCalculator(orderSide: OrderSide, side: OrderSide) {
-        return (asset: string, calc: AssetCalc, priceQty: number) => {
+    private createOrderSideCalculator(orderSide: OrderSide, side: OrderSide): OrderSideCalculator {
+        return (asset: string, calc: AssetCalculator, priceQty: number) => {
             if (orderSide === side) calc(asset, priceQty);
         };
     }
 
-    private createCalculators(order: Order) {
+    private createCalculators(order: Order): OrderSideCalculators {
         return {
-            ifBuy: this.createCalculator(order.side, OrderSide.BUY),
-            ifSell: this.createCalculator(order.side, OrderSide.SELL),
+            ifBuy: this.createOrderSideCalculator(order.side, OrderSide.BUY),
+            ifSell: this.createOrderSideCalculator(order.side, OrderSide.SELL),
         };
     }
 
-    private addAsset(asset: string, priceQty: number): number {
-        return this.assets[asset] += priceQty;
-    }
-
-    private subtractAsset(asset: string, priceQty: number): number {
-        return this.assets[asset] -= priceQty;
-    }
-
-    private addReservedAsset(asset: string, priceQty: number): number {
-        return this.reservedAssets[asset] += priceQty;
-    }
-
-    private subtractReservedAsset(asset: string, priceQty: number): number {
-        return this.reservedAssets[asset] -= priceQty;
-    }
-
     /**
-     * Revert asset reservation
-     * @param order
+     * The reservation of assets will be reverted in case an order has been canceled / replaced.
      */
-    private revertAssetReservation(order: Order): void {
-        const [quote, base] = order.pair;
-        const {ifBuy, ifSell} = this.createCalculators(order);
-
-        ifBuy(base, this.addAsset, this.getOrderPrice(order));
-        ifSell(quote, this.addAsset, order.quantity);
-        ifBuy(base, this.subtractReservedAsset, this.getOrderPrice(order));
-        ifSell(quote, this.subtractReservedAsset, order.quantity);
+    private revertAssetReservation(price: number, quantity: number, [quote, base]: Pair, {ifBuy, ifSell}: OrderSideCalculators): void {
+        ifBuy(base, this.assets.addAsset, price * quantity);
+        ifSell(quote, this.assets.addAsset, quantity);
+        ifBuy(base, this.reservedAssets.subtractAsset, price * quantity);
+        ifSell(quote, this.reservedAssets.subtractAsset, quantity);
     }
 
     /**
      * Reserve assets. This will prevent a trader from spending the same amount twice.
      * Ofc the exchange would throw an error at some point.
-     * @param order
      */
-    private reserveAsset(order: Order): void {
-        const [quote, base] = order.pair;
-        const {ifBuy, ifSell} = this.createCalculators(order);
-
-        ifBuy(base, this.subtractAsset, this.getOrderPrice(order));
-        ifSell(quote, this.subtractAsset, order.quantity);
-        ifBuy(base, this.addReservedAsset, this.getOrderPrice(order));
-        ifSell(quote, this.addReservedAsset, order.quantity);
+    private reserveAsset(price: number, quantity: number, [quote, base]: Pair, {ifBuy, ifSell}: OrderSideCalculators): void {
+        ifBuy(base, this.assets.subtractAsset, price * quantity);
+        ifSell(quote, this.assets.subtractAsset, quantity);
+        ifBuy(base, this.reservedAssets.addAsset, price * quantity);
+        ifSell(quote, this.reservedAssets.addAsset, quantity);
     }
 
     /**
-     * Assets will be released on the other side of the trade.
-     * @param order
+     * The trade is considered to be filled and assets will be released on the other side.
      */
-    private releaseAsset(order: Order): void {
-        const [quote, base] = order.pair;
-        const {ifBuy, ifSell} = this.createCalculators(order);
+    private releaseAsset(price: number, quantity: number, [quote, base]: Pair, {ifBuy, ifSell}: OrderSideCalculators): void {
+        ifBuy(quote, this.assets.addAsset, quantity);
+        ifSell(base, this.assets.addAsset, price * quantity);
+        ifBuy(base, this.reservedAssets.subtractAsset, price * quantity);
+        ifSell(quote, this.reservedAssets.subtractAsset, quantity);
+    }
 
-        ifBuy(quote, this.addAsset, order.quantity);
-        ifSell(base, this.addAsset, this.getOrderPrice(order));
-        ifBuy(base, this.subtractReservedAsset, this.getOrderPrice(order));
-        ifSell(quote, this.subtractReservedAsset, order.quantity);
+    private emitUpdate() {
+        return Events.emit("core.updateAssets", this.assets.getAssets(), this.reservedAssets.getAssets());
     }
 
     /**
@@ -151,18 +79,30 @@ export default class Wallet {
      * @param {Order} oldOrder old order
      */
     updateAssets(order: Order, oldOrder?: Order) {
+        const calculators = this.createCalculators(order);
+
         if (ReportType.REPLACED === order.reportType && oldOrder) {
-            this.revertAssetReservation(oldOrder);
-            this.reserveAsset(order);
-        } else if (ReportType.NEW === order.reportType) {
-            this.reserveAsset(order);
-        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
-            // @TODO what if order is partially filled?
-            this.releaseAsset(order);
-        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
-            this.revertAssetReservation(order);
+            this.revertAssetReservation(oldOrder.price, oldOrder.quantity, oldOrder.pair, this.createCalculators(oldOrder));
+            this.reserveAsset(order.price, order.quantity, order.pair, calculators);
+            return this.emitUpdate();
         }
 
-        Events.emit("core.updateAssets", this.assets, this.reservedAssets);
+        if (ReportType.NEW === order.reportType) {
+            this.reserveAsset(order.price, order.quantity, order.pair, calculators);
+            return this.emitUpdate();
+        }
+
+        if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+            // @TODO what if order is partially filled?
+            this.releaseAsset(order.price, order.quantity, order.pair, calculators);
+            return this.emitUpdate();
+        }
+
+        if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
+            this.revertAssetReservation(order.price, order.quantity, order.pair, calculators);
+            return this.emitUpdate();
+        }
+
+        return undefined;
     }
 }
