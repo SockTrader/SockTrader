@@ -84,25 +84,17 @@ export default class Wallet {
         if (ReportType.REPLACED === order.reportType && oldOrder) {
             this.revertAssetReservation(oldOrder.price, oldOrder.quantity, oldOrder.pair, this.createCalculators(oldOrder));
             this.reserveAsset(order.price, order.quantity, order.pair, calculators);
-            return this.emitUpdate();
-        }
-
-        if (ReportType.NEW === order.reportType) {
+            this.emitUpdate();
+        } else if (ReportType.NEW === order.reportType) {
             this.reserveAsset(order.price, order.quantity, order.pair, calculators);
-            return this.emitUpdate();
-        }
-
-        if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+            this.emitUpdate();
+        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
             // @TODO what if order is partially filled?
             this.releaseAsset(order.price, order.quantity, order.pair, calculators);
-            return this.emitUpdate();
-        }
-
-        if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
+            this.emitUpdate();
+        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
             this.revertAssetReservation(order.price, order.quantity, order.pair, calculators);
-            return this.emitUpdate();
+            this.emitUpdate();
         }
-
-        return undefined;
     }
 }
