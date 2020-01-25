@@ -1,5 +1,5 @@
 import moment from "moment";
-import LocalOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
+import LocalOrderFiller from "../../../../sockTrader/core/exchange/orderFillers/localOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/wallet/wallet";

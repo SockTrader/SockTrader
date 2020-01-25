@@ -1,8 +1,8 @@
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
-import HitBTCOrderCreator from "../../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
+import HitBTCOrderCreator from "../../../../sockTrader/core/exchange/orderCreators/hitBTCOrderCreator";
 import {OrderSide} from "../../../../sockTrader/core/types/order";
 import LocalConnection from "../../../../sockTrader/core/connection/localConnection";
-import HitBTCCommand from "../../../../sockTrader/core/exchanges/commands/hitBTCCommand";
+import HitBTCCommand from "../../../../sockTrader/core/exchange/commands/hitBTCCommand";
 import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
 
 jest.mock("../../../../sockTrader/core/connection/localConnection");

@@ -1,6 +1,6 @@
 import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
 import SockTrader from "../../../sockTrader/core/bot/sockTrader";
-import {default as HitBTC, HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import {default as HitBTC, HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
 import {Pair} from "../../../sockTrader/core/types/pair";
 import Events from "../../../sockTrader/core/events";
 import {FX_NEW_BUY_ORDER, FX_REPLACED_BUY_ORDER} from "../../../__fixtures__/order";

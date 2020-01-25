@@ -1,14 +1,14 @@
-import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
-import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
+import LocalExchange from "../../../sockTrader/core/exchange/localExchange";
+import ExchangeFactory from "../../../sockTrader/core/exchange/exchangeFactory";
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 import {OrderSide} from "../../../sockTrader/core/types/order";
 import {FX_CANDLE_1} from "../../../__fixtures__/candles";
 import {FX_ALL_CURRENCIES} from "../../../__fixtures__/currencies";
-import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
+import LocalOrderFiller from "../../../sockTrader/core/exchange/orderFillers/localOrderFiller";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 import Wallet from "../../../sockTrader/core/wallet/wallet";
-import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
-import BaseExchange from "../../../sockTrader/core/exchanges/baseExchange";
+import LocalOrderCreator from "../../../sockTrader/core/exchange/orderCreators/localOrderCreator";
+import BaseExchange from "../../../sockTrader/core/exchange/baseExchange";
 
 jest.mock("../../../sockTrader/core/loggerFactory");
 

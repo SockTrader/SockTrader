@@ -1,9 +1,9 @@
 import {Pair} from "../../../sockTrader/core/types/pair";
-import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
 import WsConnection from "../../../sockTrader/core/connection/wsConnection";
 import Events from "../../../sockTrader/core/events";
-import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
-import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
+import HitBTCCommand from "../../../sockTrader/core/exchange/commands/hitBTCCommand";
+import ExchangeFactory from "../../../sockTrader/core/exchange/exchangeFactory";
 import {FX_BTCUSD} from "../../../__fixtures__/currencies";
 import {FX_ASK, FX_ASK_UPDATE, FX_BID, FX_BID_UPDATE} from "../../../__fixtures__/orderbook";
 import Orderbook from "../../../sockTrader/core/orderbook/orderbook";

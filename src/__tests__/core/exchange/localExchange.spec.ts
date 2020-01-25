@@ -1,8 +1,8 @@
 import {isLocalExchange} from "../../../sockTrader/core/types/exchange";
-import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
-import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
-import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
-import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import LocalOrderCreator from "../../../sockTrader/core/exchange/orderCreators/localOrderCreator";
+import ExchangeFactory from "../../../sockTrader/core/exchange/exchangeFactory";
+import LocalOrderFiller from "../../../sockTrader/core/exchange/orderFillers/localOrderFiller";
+import LocalExchange from "../../../sockTrader/core/exchange/localExchange";
 import {FX_CANDLE_2, FX_CANDLE_LIST, FX_HISTORICAL_CANDLES} from "../../../__fixtures__/candles";
 import LocalConnection from "../../../sockTrader/core/connection/localConnection";
 

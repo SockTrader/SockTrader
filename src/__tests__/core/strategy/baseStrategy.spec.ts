@@ -1,6 +1,6 @@
 import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
 import {FX_CANDLE_LIST} from "../../../__fixtures__/candles";
-import CandleCollection from "../../../sockTrader/core/candles/candleCollection";
+import CandleCollection from "../../../sockTrader/core/candle/candleCollection";
 import {OrderSide} from "../../../sockTrader/core/types/order";
 import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 

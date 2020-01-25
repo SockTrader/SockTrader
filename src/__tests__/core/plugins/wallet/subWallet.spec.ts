@@ -1,5 +1,5 @@
 import {FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
-import {SubWallet} from "../../../../sockTrader/core/plugins/wallet/subWallet";
+import {SubWallet} from "../../../../sockTrader/core/wallet/subWallet";
 
 let subWallet: SubWallet;
 beforeEach(() => {

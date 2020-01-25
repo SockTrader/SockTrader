@@ -1,11 +1,11 @@
-import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
-import RemoteOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
-import PaperTradingOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/paperTradingOrderFiller";
-import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
-import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
-import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
-import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
-import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import ExchangeFactory from "../../../sockTrader/core/exchange/exchangeFactory";
+import RemoteOrderFiller from "../../../sockTrader/core/exchange/orderFillers/remoteOrderFiller";
+import PaperTradingOrderFiller from "../../../sockTrader/core/exchange/orderFillers/paperTradingOrderFiller";
+import LocalOrderFiller from "../../../sockTrader/core/exchange/orderFillers/localOrderFiller";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
+import HitBTCOrderCreator from "../../../sockTrader/core/exchange/orderCreators/hitBTCOrderCreator";
+import LocalOrderCreator from "../../../sockTrader/core/exchange/orderCreators/localOrderCreator";
+import LocalExchange from "../../../sockTrader/core/exchange/localExchange";
 import Wallet from "../../../sockTrader/core/wallet/wallet";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 

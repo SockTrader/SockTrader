@@ -1,6 +1,6 @@
-import RemoteOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/remoteOrderFiller";
-import {HitBTCCandleInterval} from "../../../../sockTrader/core/exchanges/hitBTC";
-import CandleManager from "../../../../sockTrader/core/candles/candleManager";
+import RemoteOrderFiller from "../../../../sockTrader/core/exchange/orderFillers/remoteOrderFiller";
+import {HitBTCCandleInterval} from "../../../../sockTrader/core/exchange/hitBTC";
+import CandleManager from "../../../../sockTrader/core/candle/candleManager";
 import Events from "../../../../sockTrader/core/events";
 import {FX_HISTORICAL_CANDLES} from "../../../../__fixtures__/candles";
 

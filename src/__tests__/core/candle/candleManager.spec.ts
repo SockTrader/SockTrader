@@ -1,5 +1,5 @@
 import sinon from "sinon";
-import CandleManager from "../../../sockTrader/core/candles/candleManager";
+import CandleManager from "../../../sockTrader/core/candle/candleManager";
 import moment, {Moment} from "moment";
 import {Candle} from "../../../sockTrader/core/types/candle";
 

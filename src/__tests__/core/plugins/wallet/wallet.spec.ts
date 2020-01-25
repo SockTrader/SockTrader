@@ -1,5 +1,5 @@
 import {Order} from "../../../../sockTrader/core/types/order";
-import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
+import Wallet from "../../../../sockTrader/core/wallet/wallet";
 import {
     FX_CANCELLED_BUY_ORDER,
     FX_CANCELLED_SELL_ORDER,

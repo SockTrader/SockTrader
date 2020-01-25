@@ -1,9 +1,9 @@
 import {loadStrategy} from "../../sockTrader/cli/util";
 import LiveTrading from "../../sockTrader/cli/liveTrading";
-import WalletFactory from "../../sockTrader/core/plugins/wallet/walletFactory";
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";
-import ExchangeFactory from "../../sockTrader/core/exchanges/exchangeFactory";
-import hitBTC from "../../sockTrader/core/exchanges/hitBTC";
+import ExchangeFactory from "../../sockTrader/core/exchange/exchangeFactory";
+import hitBTC from "../../sockTrader/core/exchange/hitBTC";
+import TradeProfitCalculator from "../../sockTrader/core/plugins/tradeProfitCalculator";
 
 jest.mock("inquirer");
 jest.mock("../../sockTrader/cli/util");
@@ -87,7 +87,7 @@ describe("createLiveTrader", () => {
         const instance = lt.createLiveTrader(exchange, jest.fn(), ["BTC", "USD"]);
 
         expect(instance).toBeInstanceOf(LiveTrader);
-        expect(instance["plugins"]).toEqual(expect.arrayContaining([WalletFactory.getInstance()]));
+        expect(instance["plugins"][0]).toEqual(new TradeProfitCalculator());
         expect(instance["exchange"]).toBeInstanceOf(hitBTC);
         expect(instance["strategyConfig"]).toEqual(expect.objectContaining({pair: ["BTC", "USD"]}));
     });

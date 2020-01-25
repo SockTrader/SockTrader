@@ -1,11 +1,11 @@
 import moment from "moment";
-import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
+import HitBTCAdapter from "../../../sockTrader/core/exchange/hitBTCAdapter";
 import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/hitBTCCandlesResponse";
-import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
+import ExchangeFactory from "../../../sockTrader/core/exchange/exchangeFactory";
 import {FX_BTCUSD, FX_ETHUSD} from "../../../__fixtures__/currencies";
 import logger from "../../../sockTrader/core/loggerFactory";
 import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
-import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
+import HitBTC from "../../../sockTrader/core/exchange/hitBTC";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 

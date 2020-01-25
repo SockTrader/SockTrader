@@ -1,5 +1,5 @@
 import {isLocalExchange} from "../../../sockTrader/core/types/exchange";
-import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import LocalExchange from "../../../sockTrader/core/exchange/localExchange";
 
 describe("isLocalExchange", () => {
     it("Should return true when called with a localExchange",() => {
