@@ -1,7 +1,7 @@
-import Events from "../../events";
-import {Order, OrderSide, OrderStatus, ReportType} from "../../types/order";
-import {Pair} from "../../types/pair";
-import {AssetCalculator, AssetMap, OrderSideCalculator, OrderSideCalculators} from "../../types/wallet";
+import Events from "../events";
+import {Order, OrderSide, OrderStatus, ReportType} from "../types/order";
+import {Pair} from "../types/pair";
+import {AssetCalculator, AssetMap, OrderSideCalculator, OrderSideCalculators} from "../types/wallet";
 import {SubWallet} from "./subWallet";
 
 /**

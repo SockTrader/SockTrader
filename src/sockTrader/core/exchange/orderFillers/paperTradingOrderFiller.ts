@@ -1,9 +1,9 @@
 import OrderTracker from "../../order/orderTracker";
-import Wallet from "../../wallet/wallet";
 import {Candle} from "../../types/candle";
 import {CandleInterval} from "../../types/candleInterval";
 import {OrderFiller} from "../../types/orderFiller";
 import {Pair} from "../../types/pair";
+import Wallet from "../../wallet/wallet";
 import LocalOrderFiller from "./localOrderFiller";
 import RemoteOrderFiller from "./remoteOrderFiller";
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import util from "util";
-import {exchanges} from "../core/exchanges";
+import {exchanges} from "../core/exchange";
 import {CandleInterval} from "../core/types/candleInterval";
 
 export async function loadStrategy(strategyFilename: string) {

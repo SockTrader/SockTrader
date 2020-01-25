@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import CandleManager from "../candles/candleManager";
+import CandleManager from "../candle/candleManager";
 import OrderTracker from "../order/orderTracker";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";

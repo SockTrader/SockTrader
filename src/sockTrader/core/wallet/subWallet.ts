@@ -1,5 +1,5 @@
-import {Order} from "../../types/order";
-import {AssetMap} from "../../types/wallet";
+import {Order} from "../types/order";
+import {AssetMap} from "../types/wallet";
 
 export class SubWallet {
 

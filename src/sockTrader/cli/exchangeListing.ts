@@ -1,4 +1,4 @@
-import {ExchangeDefinition, exchanges} from "../core/exchanges";
+import {ExchangeDefinition, exchanges} from "../core/exchange";
 
 export function listExchanges() {
     for (const exchange of Object.keys(exchanges)) {

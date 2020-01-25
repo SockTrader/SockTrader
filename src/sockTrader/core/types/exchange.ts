@@ -1,6 +1,6 @@
 import {EventEmitter} from "events";
-import BaseExchange from "../exchanges/baseExchange";
-import LocalExchange from "../exchanges/localExchange";
+import BaseExchange from "../exchange/baseExchange";
+import LocalExchange from "../exchange/localExchange";
 import {Candle} from "./candle";
 import {CandleInterval} from "./candleInterval";
 import {Order, OrderSide} from "./order";

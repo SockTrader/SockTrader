@@ -1,4 +1,4 @@
-import CandleManager from "../../candles/candleManager";
+import CandleManager from "../../candle/candleManager";
 import Events from "../../events";
 import {Candle} from "../../types/candle";
 import {CandleInterval} from "../../types/candleInterval";

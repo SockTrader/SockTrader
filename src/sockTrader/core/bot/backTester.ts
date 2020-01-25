@@ -1,6 +1,6 @@
 import moment from "moment";
-import ExchangeFactory from "../exchanges/exchangeFactory";
-import LocalExchange from "../exchanges/localExchange";
+import ExchangeFactory from "../exchange/exchangeFactory";
+import LocalExchange from "../exchange/localExchange";
 import {BotStatus} from "../types/botStatus";
 import {Candle} from "../types/candle";
 import {isTradingBotAware} from "../types/plugins/tradingBotAware";
@@ -30,7 +30,7 @@ export default class BackTester extends SockTrader {
     constructor(inputCandles: InputCandle[]) {
         super();
         this.inputCandles = inputCandles;
-        this.exchange = new ExchangeFactory().createExchange();
+        this.exchange = new ExchangeFactory().createExchange("local");
     }
 
     async start(): Promise<void> {

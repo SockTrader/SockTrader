@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import CandleCollection from "../candles/candleCollection";
+import CandleCollection from "../candle/candleCollection";
 import Orderbook from "../orderbook/orderbook";
 import {Candle} from "../types/candle";
 import {Exchange} from "../types/exchange";
