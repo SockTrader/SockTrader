@@ -1,5 +1,6 @@
 import {EventEmitter} from "events";
 import CandleManager from "../candles/candleManager";
+import OrderTracker from "../order/orderTracker";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";
 import {Connection} from "../types/connection";
@@ -11,6 +12,7 @@ import {OrderCreator} from "../types/orderCreator";
 import {OrderFiller} from "../types/orderFiller";
 import {Pair} from "../types/pair";
 import {TradeablePair} from "../types/tradeablePair";
+import Wallet from "../wallet/wallet";
 
 /**
  * The BaseExchange resembles common marketplace functionality
@@ -21,6 +23,8 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
     isCurrenciesLoaded = false;
     protected orderCreator!: OrderCreator;
     protected orderFiller!: OrderFiller;
+    protected orderTracker!: OrderTracker;
+    protected wallet!: Wallet;
     protected candles: Record<string, CandleManager> = {};
     protected readonly connection: Connection;
     private ready = false;
@@ -52,6 +56,18 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
 
     setOrderFiller(orderFiller: OrderFiller) {
         this.orderFiller = orderFiller;
+    }
+
+    getOrderTracker() {
+        return this.orderTracker;
+    }
+
+    setOrderTracker(orderTracker: OrderTracker) {
+        this.orderTracker = orderTracker;
+    }
+
+    setWallet(wallet: Wallet) {
+        this.wallet = wallet;
     }
 
     adjustOrder(order: Order, price: number, qty: number) {
@@ -99,6 +115,7 @@ export default abstract class BaseExchange extends EventEmitter implements Excha
     isReady(): boolean {
         if (this.ready) return this.ready;
 
+        // @TODO is fee determined?
         if (this.isCurrenciesLoaded && this.isAuthenticated) {
             this.ready = true;
             this.emit("ready");

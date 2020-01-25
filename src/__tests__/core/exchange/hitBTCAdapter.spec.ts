@@ -1,23 +1,23 @@
 import moment from "moment";
 import HitBTCAdapter from "../../../sockTrader/core/exchanges/hitBTCAdapter";
 import {HitBTCCandlesResponse} from "../../../sockTrader/core/types/exchanges/hitBTCCandlesResponse";
-import OrderTrackerFactory from "../../../sockTrader/core/order/orderTrackerFactory";
 import ExchangeFactory from "../../../sockTrader/core/exchanges/exchangeFactory";
 import {FX_BTCUSD, FX_ETHUSD} from "../../../__fixtures__/currencies";
 import logger from "../../../sockTrader/core/loggerFactory";
 import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
+import HitBTC from "../../../sockTrader/core/exchanges/hitBTC";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
 function createExchange() {
-    const exchange = new ExchangeFactory().createExchange("hitbtc");
+    const exchange = new ExchangeFactory().createExchange("hitbtc") as HitBTC;
     exchange["currencies"] = {BTCUSD: FX_BTCUSD};
 
     return exchange;
 }
 
-let exchange: any = createExchange();
-let adapter: any = new HitBTCAdapter(exchange);
+let exchange: HitBTC;
+let adapter: HitBTCAdapter;
 
 beforeEach(() => {
     exchange = createExchange();
@@ -61,8 +61,8 @@ describe("onReceive", () => {
     it("Should ignore incoming messages which are not strings", () => {
         const spyEmit = jest.spyOn(adapter, "emit");
         adapter.onReceive([]);
-        adapter.onReceive(undefined);
-        adapter.onReceive({});
+        adapter.onReceive(undefined as any);
+        adapter.onReceive({} as any);
         expect(spyEmit).toBeCalledTimes(0);
     });
 });
@@ -136,7 +136,7 @@ describe("onLogin", () => {
 
 describe("onReport", () => {
     it("Should report order to OrderTracker", () => {
-        const spy = jest.spyOn(OrderTrackerFactory.getInstance(), "process");
+        const spy = jest.spyOn(exchange.getOrderTracker(), "process");
 
         exchange["currencies"] = {ETHUSD: FX_ETHUSD};
         adapter["onReport"]({
@@ -181,13 +181,13 @@ describe("onReport", () => {
 
 describe("getIntervalFromResponse", () => {
     it("Should convert HitBTCCandlesResponse to a CandleInterval", () => {
-        const interval = adapter["getIntervalFromResponse"]({params: {period: "M1"}});
+        const interval = adapter["getIntervalFromResponse"]({params: {period: "M1"}} as any);
         expect(interval).toEqual({code: "M1", cron: "00 */1 * * * *"});
     });
 
     it("Should return undefined if no interval could have been found", () => {
         const spy = jest.spyOn(logger, "warn");
-        const interval = adapter["getIntervalFromResponse"]({params: {period: "UNDEFINED"}});
+        const interval = adapter["getIntervalFromResponse"]({params: {period: "UNDEFINED"}} as any);
 
         expect(interval).toEqual(undefined);
         expect(spy).toBeCalledWith("Interval: \"UNDEFINED\" is not recognized by the system.");
@@ -196,7 +196,7 @@ describe("getIntervalFromResponse", () => {
 
 describe("getPairFromResponse", () => {
     it("Should convert HitBTCCandlesResponse to a Pair", () => {
-        const interval = adapter["getPairFromResponse"]({params: {symbol: "BTCUSD"}});
+        const interval = adapter["getPairFromResponse"]({params: {symbol: "BTCUSD"}} as any);
         expect(interval).toEqual(["BTC", "USD"]);
     });
 });
@@ -267,7 +267,7 @@ describe("onSnapshotOrderbook", () => {
                 sequence: 1,
                 symbol: "BTCUSD",
             },
-        });
+        } as any);
 
         expect(spy).toBeCalledWith({
             ask: FX_ASK,
@@ -290,7 +290,7 @@ describe("onUpdateOrderbook", () => {
                 sequence: 1,
                 symbol: "BTCUSD",
             },
-        });
+        } as any);
 
         expect(spy).toBeCalledWith({
             ask: FX_ASK,

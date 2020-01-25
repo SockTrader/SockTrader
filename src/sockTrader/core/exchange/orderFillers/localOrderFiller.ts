@@ -1,10 +1,10 @@
 import OrderTracker from "../../order/orderTracker";
-import Wallet from "../../plugins/wallet/wallet";
 import {Candle} from "../../types/candle";
 import {CandleInterval} from "../../types/candleInterval";
 import {Order, OrderSide, OrderStatus, ReportType} from "../../types/order";
 import {OrderFiller} from "../../types/orderFiller";
 import {Pair} from "../../types/pair";
+import Wallet from "../../wallet/wallet";
 
 export default class LocalOrderFiller implements OrderFiller {
 

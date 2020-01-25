@@ -8,9 +8,9 @@ import LocalConnection from "../../../sockTrader/core/connection/localConnection
 
 process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
-let exchange = new ExchangeFactory().createExchange() as LocalExchange;
+let exchange: LocalExchange;
 beforeEach(() => {
-    exchange = new ExchangeFactory().createExchange() as LocalExchange;
+    exchange = new ExchangeFactory().createExchange("local") as LocalExchange;
 });
 
 describe("emitCandles", () => {

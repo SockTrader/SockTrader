@@ -6,14 +6,15 @@ import {FX_CANDLE_1} from "../../../__fixtures__/candles";
 import {FX_ALL_CURRENCIES} from "../../../__fixtures__/currencies";
 import LocalOrderFiller from "../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../sockTrader/core/order/orderTracker";
-import Wallet from "../../../sockTrader/core/plugins/wallet/wallet";
+import Wallet from "../../../sockTrader/core/wallet/wallet";
 import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
+import BaseExchange from "../../../sockTrader/core/exchanges/baseExchange";
 
 jest.mock("../../../sockTrader/core/loggerFactory");
 
-let exchange = new ExchangeFactory().createExchange();
+let exchange: BaseExchange;
 beforeEach(() => {
-    exchange = new ExchangeFactory().createExchange();
+    exchange = new ExchangeFactory().createExchange("local");
 });
 
 describe("setOrderFiller", () => {

@@ -1,5 +1,5 @@
 import OrderTracker from "../../order/orderTracker";
-import Wallet from "../../plugins/wallet/wallet";
+import Wallet from "../../wallet/wallet";
 import {Candle} from "../../types/candle";
 import {CandleInterval} from "../../types/candleInterval";
 import {OrderFiller} from "../../types/orderFiller";

@@ -2,7 +2,6 @@ import {EventEmitter} from "events";
 import moment from "moment";
 import {Data} from "../connection/wsConnection";
 import logger from "../loggerFactory";
-import OrderTrackerFactory from "../order/orderTrackerFactory";
 import {Candle} from "../types/candle";
 import {CandleInterval} from "../types/candleInterval";
 import {HitBTCAuthenticateResponse} from "../types/exchanges/hitBTCAuthenticateResponse";
@@ -102,7 +101,7 @@ export default class HitBTCAdapter extends EventEmitter implements ResponseAdapt
      * @param {HitBTCReportResponse} data report data
      */
     private onReport(data: HitBTCReportResponse): void {
-        const orderTracker = OrderTrackerFactory.getInstance();
+        const orderTracker = this.exchange.getOrderTracker();
         data.params.forEach(report => {
             orderTracker.process({
                 id: report.clientOrderId,

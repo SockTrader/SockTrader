@@ -2,7 +2,9 @@ import {CandleInterval} from "../types/candleInterval";
 import {OrderCreator} from "../types/orderCreator";
 import BaseExchange from "./baseExchange";
 import HitBTC, {HitBTCCandleInterval} from "./hitBTC";
+import LocalExchange from "./localExchange";
 import HitBTCOrderCreator from "./orderCreators/hitBTCOrderCreator";
+import LocalOrderCreator from "./orderCreators/localOrderCreator";
 
 export interface ExchangeDefinition {
     class: new() => BaseExchange;
@@ -11,6 +13,11 @@ export interface ExchangeDefinition {
 }
 
 export const exchanges: Record<string, ExchangeDefinition> = {
+    local: {
+        class: LocalExchange,
+        orderCreator: LocalOrderCreator,
+        intervals: {},
+    },
     hitbtc: {
         class: HitBTC,
         orderCreator: HitBTCOrderCreator,

@@ -2,7 +2,7 @@ import moment from "moment";
 import LocalOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/localOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
-import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
+import Wallet from "../../../../sockTrader/core/wallet/wallet";
 import {FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
 import {FX_CANDLE_1, FX_HISTORICAL_CANDLES, FX_CANDLE_2} from "../../../../__fixtures__/candles";
 import {Candle} from "../../../../sockTrader/core/types/candle";

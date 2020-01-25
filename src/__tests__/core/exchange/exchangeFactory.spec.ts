@@ -6,6 +6,8 @@ import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/h
 import HitBTCOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/hitBTCOrderCreator";
 import LocalOrderCreator from "../../../sockTrader/core/exchanges/orderCreators/localOrderCreator";
 import LocalExchange from "../../../sockTrader/core/exchanges/localExchange";
+import Wallet from "../../../sockTrader/core/wallet/wallet";
+import OrderTracker from "../../../sockTrader/core/order/orderTracker";
 
 let factory = new ExchangeFactory();
 beforeEach(() => {
@@ -36,7 +38,7 @@ describe("createExchange", () => {
     it("Should return a properly Local exchange in PAPER trading mode", () => {
         process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
-        const exchange = factory.createExchange();
+        const exchange = factory.createExchange("local");
 
         expect(exchange).toBeInstanceOf(LocalExchange);
         expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
@@ -48,21 +50,21 @@ describe("getOrderFiller", () => {
     it("Should return RemoteOrderFiller when using LIVE trading mode", () => {
         process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
-        const orderFiller = factory["getOrderFiller"]();
+        const orderFiller = factory["getOrderFiller"](new Wallet({}), new OrderTracker());
         expect(orderFiller).toBeInstanceOf(RemoteOrderFiller);
     });
 
     it("Should return PaperTradingOrderFiller when using PAPER trading mode", () => {
         process.env.SOCKTRADER_TRADING_MODE = "PAPER";
 
-        const orderFiller = factory["getOrderFiller"]();
+        const orderFiller = factory["getOrderFiller"](new Wallet({}), new OrderTracker());
         expect(orderFiller).toBeInstanceOf(PaperTradingOrderFiller);
     });
 
     it("Should return LocalOrderFiller when using BACKTEST trading mode", () => {
         process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
-        const orderFiller = factory["getOrderFiller"]();
+        const orderFiller = factory["getOrderFiller"](new Wallet({}), new OrderTracker());
         expect(orderFiller).toBeInstanceOf(LocalOrderFiller);
     });
 });
@@ -72,7 +74,7 @@ describe("getOrderCreator", () => {
         process.env.SOCKTRADER_TRADING_MODE = "BACKTEST";
 
         const def = factory["getExchangeDefinition"]("hitbtc");
-        const orderCreator = factory["getOrderCreator"](def);
+        const orderCreator = factory["getOrderCreator"](def, new Wallet({}), new OrderTracker());
 
         expect(orderCreator).toBeInstanceOf(LocalOrderCreator);
     });
@@ -81,7 +83,7 @@ describe("getOrderCreator", () => {
         process.env.SOCKTRADER_TRADING_MODE = "PAPER";
 
         const def = factory["getExchangeDefinition"]("hitbtc");
-        const orderCreator = factory["getOrderCreator"](def);
+        const orderCreator = factory["getOrderCreator"](def, new Wallet({}), new OrderTracker());
 
         expect(orderCreator).toBeInstanceOf(LocalOrderCreator);
     });
@@ -90,7 +92,7 @@ describe("getOrderCreator", () => {
         process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
         const def = factory["getExchangeDefinition"]("hitbtc");
-        const orderCreator = factory["getOrderCreator"](def);
+        const orderCreator = factory["getOrderCreator"](def, new Wallet({}), new OrderTracker());
 
         expect(orderCreator).toBeInstanceOf(HitBTCOrderCreator);
     });
@@ -117,8 +119,8 @@ describe("getExchangeDefinition", () => {
         });
     });
 
-    it("Should return a local exchange definition when no exchange name is given", () => {
-        const definition = factory["getExchangeDefinition"]();
+    it("Should return a local exchange definition when local exchange name is given", () => {
+        const definition = factory["getExchangeDefinition"]("local");
         expect(definition).toEqual({
             class: LocalExchange,
             orderCreator: LocalOrderCreator,

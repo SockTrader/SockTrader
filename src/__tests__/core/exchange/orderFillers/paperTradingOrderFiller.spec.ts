@@ -3,7 +3,7 @@ import {FX_HISTORICAL_CANDLES} from "../../../../__fixtures__/candles";
 import PaperTradingOrderFiller from "../../../../sockTrader/core/exchanges/orderFillers/paperTradingOrderFiller";
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {FX_NEW_BUY_ORDER} from "../../../../__fixtures__/order";
-import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
+import Wallet from "../../../../sockTrader/core/wallet/wallet";
 
 function createOrderFiller() {
     const tracker = new OrderTracker();
