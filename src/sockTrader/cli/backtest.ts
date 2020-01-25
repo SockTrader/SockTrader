@@ -1,7 +1,6 @@
 import config from "../../config";
 import BackTester from "../core/bot/backTester";
 import IPCReporter from "../core/plugins/IPCReporter";
-import WalletFactory from "../core/plugins/wallet/walletFactory";
 import {loadCandleFile, loadStrategy} from "./util";
 
 export default class Backtest {
@@ -10,7 +9,7 @@ export default class Backtest {
 
     createBackTester(candleFile: any, strategy: any) {
         return new BackTester(candleFile.candles)
-            .setPlugins([...config.plugins, new IPCReporter(), WalletFactory.getInstance()])
+            .setPlugins([...config.plugins, new IPCReporter()])
             .setStrategy({
                 strategy,
                 pair: candleFile.symbol,
