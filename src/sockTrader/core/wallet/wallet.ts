@@ -2,19 +2,19 @@ import Events from "../events";
 import {Order, OrderSide, OrderStatus, ReportType} from "../types/order";
 import {Pair} from "../types/pair";
 import {AssetCalculator, AssetMap, OrderSideCalculator, OrderSideCalculators} from "../types/wallet";
-import {SubWallet} from "./subWallet";
+import {AssetCollection} from "./assetCollection";
 
 /**
  * The wallet keeps track of all assets
  */
 export default class Wallet {
 
-    private readonly assets: SubWallet;
-    private readonly reservedAssets: SubWallet;
+    private readonly assets: AssetCollection;
+    private readonly reservedAssets: AssetCollection;
 
     constructor(assets: AssetMap) {
-        this.assets = new SubWallet(assets);
-        this.reservedAssets = new SubWallet({});
+        this.assets = new AssetCollection(assets);
+        this.reservedAssets = new AssetCollection({});
     }
 
     /**

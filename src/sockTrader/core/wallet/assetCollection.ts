@@ -1,7 +1,7 @@
 import {Order} from "../types/order";
 import {AssetMap} from "../types/wallet";
 
-export class SubWallet {
+export class AssetCollection {
 
     private readonly assets: AssetMap;
 
