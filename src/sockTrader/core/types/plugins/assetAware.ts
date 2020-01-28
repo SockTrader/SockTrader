@@ -1,4 +1,4 @@
-import {AssetMap} from "../../plugins/wallet/wallet";
+import {AssetMap} from "../wallet";
 
 export interface AssetAware {
     onUpdateAssets: (assets: AssetMap, reservedAssets: AssetMap) => void;
