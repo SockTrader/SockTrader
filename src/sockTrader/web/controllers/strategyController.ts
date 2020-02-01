@@ -7,8 +7,8 @@ const BASE_PATH = "../../../strategies";
 const ext = ".js";
 
 type StrategyListing = Array<{
-    id: string,
-    strategy: string,
+    id: string;
+    strategy: string;
 }>;
 
 export const strategyListHandler: RequestHandler = async (req, res) => {

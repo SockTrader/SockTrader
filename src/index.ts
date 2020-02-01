@@ -8,7 +8,6 @@ import LiveTrading from "./sockTrader/cli/liveTrading";
 import {normalize} from "./sockTrader/cli/normalize";
 import startWebServer from "./sockTrader/web/webServer";
 
-// tslint:disable-next-line:no-unused-expression
 yargs
     .usage("Usage: $0 <command>")
     .command(["list-strategies", "ls"], "list all available strategies", {}, listStrategies)

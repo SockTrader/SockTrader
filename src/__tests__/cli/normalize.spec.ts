@@ -10,7 +10,7 @@ beforeEach(() => {
 
 describe("normalize", () => {
     it("Should show a waiting spinner", async () => {
-        const ora = require('ora');
+        const ora = require("ora");
 
         await normalize();
 
@@ -25,9 +25,9 @@ describe("normalize", () => {
     });
 
     it("Should log error if something goes wrong", async () => {
-        const ora = require('ora');
+        const ora = require("ora");
         const spy = jest.spyOn(console, "error").mockImplementation();
-        (normalizeDataFolder as any).mockImplementation(() => {throw new Error("Unknown file")})
+        (normalizeDataFolder as any).mockImplementation(() => {throw new Error("Unknown file");});
 
         await normalize();
 

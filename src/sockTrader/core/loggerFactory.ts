@@ -53,7 +53,7 @@ export const orderLogger = LoggerFactory.createLogger("order");
 
 export default LoggerFactory.createLogger("app")
     .add(new winston.transports.File({
-        filename: `./src/logs/error.log`,
+        filename: "./src/logs/error.log",
         silent: LoggerFactory.IS_TEST,
         handleExceptions: true,
     }));

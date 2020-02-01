@@ -10,7 +10,7 @@ export default class IPC extends BasePlugin {
         this.onEvent("core.report", this.onReport.bind(this));
     }
 
-    private send(message: { payload: any, type: string }): void {
+    private send(message: { payload: any; type: string }): void {
         if (process.send) process.send(message);
     }
 

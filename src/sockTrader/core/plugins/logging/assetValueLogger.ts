@@ -21,6 +21,7 @@ export default class AssetValueLogger extends BasePlugin {
     }
 
     onUpdateCandles(candles: Candle[]) {
+        // @TODO .. WIP
     }
 
 }

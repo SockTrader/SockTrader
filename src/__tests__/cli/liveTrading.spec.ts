@@ -41,7 +41,7 @@ describe("constructor", () => {
 describe("askForConfirmation", () => {
     const start = jest.fn();
     const spyConsole = jest.spyOn(console, "log").mockImplementation();
-    let inquirer = require("inquirer");
+    const inquirer = require("inquirer");
     let lt: any;
 
     beforeEach(() => {
