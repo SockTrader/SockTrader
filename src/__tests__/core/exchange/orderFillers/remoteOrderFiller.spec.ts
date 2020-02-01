@@ -49,7 +49,7 @@ describe("onSnapshotCandles", () => {
                 close: 102,
                 volume: 1000,
             }),
-        ]));
+        ]), ["BTC", "USD"]);
     });
 });
 
@@ -68,7 +68,7 @@ describe("onUpdateCandles", () => {
                 close: 102,
                 volume: 1000,
             }),
-        ]));
+        ]), ["BTC", "USD"]);
     });
 });
 

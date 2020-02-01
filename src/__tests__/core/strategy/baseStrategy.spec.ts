@@ -13,20 +13,20 @@ beforeEach(() => {
 describe("_onUpdateCandles", () => {
     it("Should wrap incoming candles in a CandleCollection", () => {
         const spy = jest.spyOn(strategy, "updateCandles");
-        strategy._onUpdateCandles(FX_CANDLE_LIST);
+        strategy._onUpdateCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spy).toBeCalledTimes(1);
-        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST));
+        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST), ["BTC", "USD"]);
     });
 });
 
 describe("_onSnapshotCandles", () => {
     it("Should wrap incoming candles in a CandleCollection", () => {
         const spy = jest.spyOn(strategy, "warmUpCandles" as any);
-        strategy._onSnapshotCandles(FX_CANDLE_LIST);
+        strategy._onSnapshotCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spy).toBeCalledTimes(1);
-        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST));
+        expect(spy).toBeCalledWith(new CandleCollection(FX_CANDLE_LIST), ["BTC", "USD"]);
     });
 });
 

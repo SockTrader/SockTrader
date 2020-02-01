@@ -167,20 +167,20 @@ describe("bindExchangeToStrategy", () => {
         const spyStrategy = jest.spyOn(strategy, "_onSnapshotCandles");
 
         sockTrader["bindExchangeToStrategy"](strategy);
-        Events.emit("core.snapshotCandles", FX_CANDLE_LIST);
+        Events.emit("core.snapshotCandles", FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spyOn).toBeCalledWith("core.snapshotCandles", expect.any(Function));
-        expect(spyStrategy).toBeCalledWith(FX_CANDLE_LIST);
+        expect(spyStrategy).toBeCalledWith(FX_CANDLE_LIST, ["BTC", "USD"]);
     });
 
     it("Should notify the strategy about core.updateCandles events", () => {
         const spyStrategy = jest.spyOn(strategy, "_onUpdateCandles");
 
         sockTrader["bindExchangeToStrategy"](strategy);
-        Events.emit("core.updateCandles", FX_CANDLE_LIST);
+        Events.emit("core.updateCandles", FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spyOn).toBeCalledWith("core.updateCandles", expect.any(Function));
-        expect(spyStrategy).toBeCalledWith(FX_CANDLE_LIST);
+        expect(spyStrategy).toBeCalledWith(FX_CANDLE_LIST, ["BTC", "USD"]);
     });
 });
 

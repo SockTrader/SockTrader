@@ -18,19 +18,19 @@ describe("emitCandles", () => {
         (exchange["orderFiller"] as LocalOrderFiller)["onProcessCandles"] = jest.fn();
     });
 
-    it("Should send processedCandles to the orderFiller", () => {
+    it("Should send processedCandles to the orderFiller", async () => {
         const orderFiller = exchange["orderFiller"] as LocalOrderFiller;
 
-        exchange.emitCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
+        await exchange.emitCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(1, [...FX_CANDLE_2]);
         expect(orderFiller["onProcessCandles"]).toHaveBeenNthCalledWith(2, [...FX_HISTORICAL_CANDLES, ...FX_CANDLE_2]);
     });
 
-    it("Should notify orderCreator about the current candle", () => {
+    it("Should notify orderCreator about the current candle", async () => {
         const spy = jest.spyOn(exchange["orderCreator"] as LocalOrderCreator, "setCurrentCandle");
 
-        if (isLocalExchange(exchange)) exchange.emitCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
+        if (isLocalExchange(exchange)) await exchange.emitCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spy).toHaveBeenNthCalledWith(1, FX_CANDLE_2[0]);
         expect(spy).toHaveBeenNthCalledWith(2, FX_HISTORICAL_CANDLES[0]);
