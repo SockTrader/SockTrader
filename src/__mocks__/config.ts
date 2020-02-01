@@ -1,5 +1,5 @@
 import OrderLogger from "../sockTrader/core/plugins/logging/orderLogger";
-import WalletLogger from "../sockTrader/core/plugins/logging/walletLogger";
+import AssetValueLogger from "../sockTrader/core/plugins/logging/assetValueLogger";
 import ProfitCalculator from "../sockTrader/core/plugins/order/profitCalculator";
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
 
     plugins: [
         new ProfitCalculator(),
-        new WalletLogger(),
+        new AssetValueLogger(),
         new OrderLogger(),
     ],
 };

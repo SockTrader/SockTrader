@@ -1,15 +1,14 @@
 import {orderbookLogger} from "../../loggerFactory";
 import Orderbook, {OrderbookEntry, OrderbookSide} from "../../orderbook/orderbook";
 import OrderbookUtil from "../../utils/orderbookUtil";
-import BasePlugin from "../basePlugin";
+import Events from "../../events";
 
-export default class SpreadLogger extends BasePlugin {
+export default class SpreadLogger {
 
     private lastSpread = 0;
 
     constructor() {
-        super();
-        this.onEvent("core.updateOrderbook", this.onUpdateOrderbook.bind(this));
+        Events.on("core.updateOrderbook", this.onUpdateOrderbook.bind(this));
     }
 
     onUpdateOrderbook(orderbook: Orderbook) {

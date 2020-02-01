@@ -1,13 +1,12 @@
 import {BotStatus} from "../../types/botStatus";
 import {Order} from "../../types/order";
-import BasePlugin from "../basePlugin";
+import Events from "../../events";
 
-export default class IPC extends BasePlugin {
+export default class IPC {
 
     constructor() {
-        super();
-        this.onEvent("core.botStatus", this.onBotProgress.bind(this));
-        this.onEvent("core.report", this.onReport.bind(this));
+        Events.on("core.botStatus", this.onBotProgress.bind(this));
+        Events.on("core.report", this.onReport.bind(this));
     }
 
     private send(message: { payload: any; type: string }): void {

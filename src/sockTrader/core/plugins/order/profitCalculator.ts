@@ -1,15 +1,14 @@
 import {orderLogger} from "../../loggerFactory";
 import {Order, OrderSide, OrderStatus} from "../../types/order";
-import BasePlugin from "../basePlugin";
+import Events from "../../events";
 
-export default class ProfitCalculator extends BasePlugin {
+export default class ProfitCalculator {
 
     private remainingAssets = 0;
     private avgBuyPrice = 0;
 
     constructor() {
-        super();
-        this.onEvent("core.report", this.onReport.bind(this));
+        Events.on("core.report", this.onReport.bind(this));
     }
 
     private getWeightedAverage(quantity: number, price: number) {

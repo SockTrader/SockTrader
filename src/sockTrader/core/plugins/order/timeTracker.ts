@@ -1,14 +1,13 @@
 import {orderLogger} from "../../loggerFactory";
 import {Order, OrderStatus, ReportType} from "../../types/order";
-import BasePlugin from "../basePlugin";
+import Events from "../../events";
 
-export default class TimeTracker extends BasePlugin {
+export default class TimeTracker {
 
     private orders: Record<string, number> = {};
 
     constructor() {
-        super();
-        this.onEvent("core.report", this.onReport.bind(this));
+        Events.on("core.report", this.onReport.bind(this));
     }
 
     private getCurrentTime() {

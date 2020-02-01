@@ -1,15 +1,14 @@
 import {walletLogger} from "../../loggerFactory";
 import {Candle} from "../../types/candle";
 import {AssetMap} from "../../types/wallet";
-import BasePlugin from "../basePlugin";
 import {Pair} from "../../types/pair";
+import Events from "../../events";
 
-export default class AssetValueLogger extends BasePlugin {
+export default class AssetValueLogger {
 
     constructor() {
-        super();
-        this.onEvent("core.updateAssets", this.onUpdateAssets.bind(this));
-        this.onEvent("core.updateCandles", this.onUpdateCandles.bind(this));
+        Events.on("core.updateAssets", this.onUpdateAssets.bind(this));
+        Events.on("core.updateCandles", this.onUpdateCandles.bind(this));
     }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {

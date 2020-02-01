@@ -1,12 +1,11 @@
 import {orderLogger} from "../../loggerFactory";
 import {Order} from "../../types/order";
-import BasePlugin from "../basePlugin";
+import Events from "../../events";
 
-export default class OrderLogger extends BasePlugin {
+export default class OrderLogger {
 
     constructor() {
-        super();
-        this.onEvent("core.report", this.onReport.bind(this));
+        Events.on("core.report", this.onReport.bind(this));
     }
 
     onReport(order: Order) {
