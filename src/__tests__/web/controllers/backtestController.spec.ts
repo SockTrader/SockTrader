@@ -82,8 +82,8 @@ describe("getBacktestProcessSpawner", () => {
     });
 
     it("Should throw if message from backtest process is incorrect", () => {
-        expect(() => process.emit("message")).toThrowError("Event is not correct. Expecting: { type: string, payload: any }")
-        expect(() => process.emit("message", {})).toThrowError("Event is not correct. Expecting: { type: string, payload: any }")
+        expect(() => process.emit("message")).toThrowError("Event is not correct. Expecting: { type: string, payload: any }");
+        expect(() => process.emit("message", {})).toThrowError("Event is not correct. Expecting: { type: string, payload: any }");
     });
 
     it("Should forward messages from backtest process to socket", () => {

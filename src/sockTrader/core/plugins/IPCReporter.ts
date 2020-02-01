@@ -5,7 +5,7 @@ import {TradingBotAware} from "../types/plugins/tradingBotAware";
 
 export default class IPCReporter implements TradingBotAware, ReportAware {
 
-    private send(message: { payload: any, type: string }): void {
+    private send(message: { payload: any; type: string }): void {
         if (process.send) process.send(message);
     }
 

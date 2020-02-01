@@ -13,12 +13,6 @@ const buildPath = resolver("../../../build");
 export const normalizeCandles = async (candleNormalizer: CandleNormalizer): Promise<any> => candleNormalizer.normalize();
 
 /**
- * Normalize a single file in the "build/data" folder
- * @param file
- */
-export const normalizeDataFile = async (file: string): Promise<void> => normalizeDataFiles([file]);
-
-/**
  * Import multiple JavaScript files from the "build/data" folder and store
  * the parsed result of each file into a JSON file. This resulting JSON file
  * should be consumable by the frontend and the BackTesting engine.
@@ -37,6 +31,12 @@ export async function normalizeDataFiles(files: string[]): Promise<void> {
         }
     }
 }
+
+/**
+ * Normalize a single file in the "build/data" folder
+ * @param file
+ */
+export const normalizeDataFile = async (file: string): Promise<void> => normalizeDataFiles([file]);
 
 /**
  * Normalizes all the files in the "build/data" folder

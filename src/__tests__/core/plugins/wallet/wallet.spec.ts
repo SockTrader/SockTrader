@@ -35,7 +35,7 @@ describe("isOrderAllowed", () => {
 
 describe("updateAssets", () => {
 
-    let spy = jest.fn();
+    const spy = jest.fn();
     let wallet: Wallet;
 
     beforeEach(() => {

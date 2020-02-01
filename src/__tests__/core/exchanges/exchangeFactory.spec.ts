@@ -42,7 +42,7 @@ describe("createExchange", () => {
         expect(exchange["orderCreator"]).toBeInstanceOf(LocalOrderCreator);
         expect(exchange["orderFiller"]).toBeInstanceOf(LocalOrderFiller);
     });
-})
+});
 
 describe("getOrderFiller", () => {
     it("Should return RemoteOrderFiller when using LIVE trading mode", () => {

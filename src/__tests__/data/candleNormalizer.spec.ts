@@ -1,4 +1,3 @@
-/* tslint:disable */
 import "jest";
 import CandleNormalizer, {CandleNormalizerConfig} from "../../sockTrader/data/candleNormalizer";
 import {DataFrame, IDataFrame} from "data-forge";

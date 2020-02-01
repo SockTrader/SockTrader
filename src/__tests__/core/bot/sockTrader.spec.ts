@@ -35,12 +35,12 @@ beforeEach(() => {
 afterEach(() => {
     hitBTC.destroy();
     Events.removeAllListeners();
-})
+});
 
 describe("constructor", () => {
     it("Should have an empty array of plugins when created", () => {
         expect(sockTrader["plugins"]).toEqual([]);
-    })
+    });
 });
 
 describe("subscribeToExchangeEvents", () => {
@@ -83,7 +83,7 @@ describe("bindEventsToPlugins", () => {
     afterEach(() => {
         hitBTC.destroy();
         Events.removeAllListeners();
-    })
+    });
 
     it("Should notify plugins about core.report events", () => {
         const plugin = new OrderLogger();
@@ -131,7 +131,7 @@ describe("bindExchangeToStrategy", () => {
     afterEach(() => {
         hitBTC.destroy();
         Events.removeAllListeners();
-    })
+    });
 
     it("Should notify the strategy about core.report events", () => {
         const spyStrategy = jest.spyOn(strategy, "notifyOrder");

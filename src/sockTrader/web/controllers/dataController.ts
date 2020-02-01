@@ -9,8 +9,8 @@ const BASE_PATH = "../../../data";
 const ext = ".json";
 
 type FileListing = Array<{
-    file: string,
-    id: string,
+    file: string;
+    id: string;
 }>;
 
 export const dataHandler: RequestHandler = async (req, res, next) => {

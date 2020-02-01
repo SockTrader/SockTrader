@@ -7,9 +7,9 @@ export interface HitBTCOrderbookResponse {
     jsonrpc: string;
     method: string;
     params: {
-        ask: HitBTCOrderbookEntry[],
-        bid: HitBTCOrderbookEntry[],
-        sequence: number,
-        symbol: string,
+        ask: HitBTCOrderbookEntry[];
+        bid: HitBTCOrderbookEntry[];
+        sequence: number;
+        symbol: string;
     };
 }

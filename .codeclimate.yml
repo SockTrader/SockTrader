@@ -5,9 +5,8 @@ plugins:
     nodesecurity:
         enabled: true
 
-    tslint:
+    eslint:
         enabled: true
-        config: tslint.json
 
 exclude_patterns:
 - "**/*.spec.ts"

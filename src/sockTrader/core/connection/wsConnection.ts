@@ -75,7 +75,7 @@ export default class WsConnection extends EventEmitter implements Connection {
     }
 
     private onOpen() {
-        logger.info(`Connection established!`);
+        logger.info("Connection established!");
         this.emit("open");
 
         // Restore state as before the connection was closed
@@ -121,6 +121,6 @@ export default class WsConnection extends EventEmitter implements Connection {
         this.connection.on("pong", () => this.onPong());
         this.connection.on("error", error => this.onError(error));
         this.connection.on("message", data => this.onMessage(data));
-        this.connection.on("unexpected-response", () => logger.info(`Unexpected response`));
+        this.connection.on("unexpected-response", () => logger.info("Unexpected response"));
     }
 }

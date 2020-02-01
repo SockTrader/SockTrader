@@ -10,7 +10,7 @@ let calculator = new TradeProfitCalculator();
 beforeEach(() => {
     jest.clearAllMocks();
     calculator = new TradeProfitCalculator();
-})
+});
 
 describe("onReport", () => {
 
