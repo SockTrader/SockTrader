@@ -3,18 +3,22 @@ import {HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
 import LocalExchange from "../../../sockTrader/core/exchange/localExchange";
 import BackTester from "../../../sockTrader/core/bot/backTester";
 import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
+import {CandleFile} from "../../../sockTrader/core/types/candle";
 
 process.env.SOCKTRADER_TRADING_MODE = "LIVE";
 
-const backTester = new BackTester([{
-    "timestamp": "2018-11-15T15:00:00.000Z",
-    "high": 5456.74,
-    "low": 5413.16,
-    "open": 5456.14,
-    "close": 5424.16,
-    "volume": 1160455.58,
-}]);
 const pair: Pair = ["BTC", "USD"];
+const backTester = new BackTester({
+    symbol: pair,
+    candles: [{
+        "timestamp": "2018-11-15T15:00:00.000Z",
+        "high": 5456.74,
+        "low": 5413.16,
+        "open": 5456.14,
+        "close": 5424.16,
+        "volume": 1160455.58,
+    }],
+} as CandleFile);
 const localExchange = new LocalExchange();
 backTester["exchange"] = localExchange;
 const emitCandlesMock = jest.fn();

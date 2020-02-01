@@ -16,6 +16,7 @@ export default class Wallet {
     constructor(assets: AssetMap) {
         this.assets = new AssetCollection(assets);
         this.reservedAssets = new AssetCollection({});
+        this.emitUpdate();
     }
 
     /**

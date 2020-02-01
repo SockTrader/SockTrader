@@ -2,6 +2,7 @@ import {walletLogger} from "../../loggerFactory";
 import {Candle} from "../../types/candle";
 import {AssetMap} from "../../types/wallet";
 import BasePlugin from "../basePlugin";
+import {Pair} from "../../types/pair";
 
 export default class AssetValueLogger extends BasePlugin {
 
@@ -20,7 +21,7 @@ export default class AssetValueLogger extends BasePlugin {
         return Object.entries(object).map(([asset, value]) => ({asset, value}));
     }
 
-    onUpdateCandles(candles: Candle[]) {
+    onUpdateCandles(candles: Candle[], pair: Pair) {
         // @TODO .. WIP
     }
 

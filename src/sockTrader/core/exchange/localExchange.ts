@@ -30,14 +30,14 @@ export default class LocalExchange extends BaseExchange {
      * Emits a collection of candles from a local file as if they were sent from a real exchange.
      * Candles should be ordered during normalization process.
      */
-    emitCandles(candles: Candle[]) {
+    emitCandles(candles: Candle[], pair: Pair) {
         let processedCandles: Candle[] = [];
 
         candles.forEach(value => {
             processedCandles = [value, ...processedCandles];
             (this.orderCreator as LocalOrderCreator).setCurrentCandle(value);
             (this.orderFiller as LocalOrderFiller).onProcessCandles(processedCandles);
-            Events.emit("core.updateCandles", processedCandles);
+            Events.emit("core.updateCandles", processedCandles, pair);
         });
     }
 

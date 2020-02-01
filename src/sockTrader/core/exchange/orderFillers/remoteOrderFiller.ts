@@ -28,12 +28,12 @@ export default class RemoteOrderFiller implements OrderFiller {
     }
 
     onSnapshotCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
-        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles))
+        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles, pair))
             .set(data);
     }
 
     onUpdateCandles(pair: Pair, data: Candle[], interval: CandleInterval): void {
-        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles))
+        this.getCandleManager(pair, interval, candles => Events.emit("core.updateCandles", candles, pair))
             .update(data);
     }
 }
