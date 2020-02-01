@@ -3,13 +3,10 @@ import SockTrader from "../../../sockTrader/core/bot/sockTrader";
 import {default as HitBTC, HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
 import {Pair} from "../../../sockTrader/core/types/pair";
 import Events from "../../../sockTrader/core/events";
-import {FX_NEW_BUY_ORDER, FX_REPLACED_BUY_ORDER} from "../../../__fixtures__/order";
+import {FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 import {FX_ASK, FX_BID} from "../../../__fixtures__/orderbook";
 import Orderbook from "../../../sockTrader/core/orderbook/orderbook";
 import {FX_CANDLE_LIST} from "../../../__fixtures__/candles";
-import OrderLogger from "../../../sockTrader/core/plugins/logging/orderLogger";
-import WalletLogger from "../../../sockTrader/core/plugins/logging/walletLogger";
-import SpreadLogger from "../../../sockTrader/core/plugins/logging/spreadLogger";
 import {Signal} from "../../../sockTrader/core/strategy/baseStrategy";
 import {OrderSide} from "../../../sockTrader/core/types/order";
 
@@ -70,52 +67,6 @@ describe("subscribeToExchangeEvents", () => {
         hitBTC.emit("ready");
 
         expect(hitBTC.subscribeCandles).toBeCalledTimes(0);
-    });
-});
-
-describe("bindEventsToPlugins", () => {
-    const orderbook = new Orderbook(["BTC", "USD"]).setOrders(FX_ASK, FX_BID, 1);
-    let spyOn: any;
-    beforeEach(() => {
-        spyOn = jest.spyOn(Events, "on");
-    });
-
-    afterEach(() => {
-        hitBTC.destroy();
-        Events.removeAllListeners();
-    });
-
-    it("Should notify plugins about core.report events", () => {
-        const plugin = new OrderLogger();
-        const spy = jest.spyOn(plugin, "onReport").mockImplementation();
-
-        sockTrader["bindEventsToPlugins"]([plugin]);
-        Events.emit("core.report", FX_NEW_BUY_ORDER);
-
-        expect(spyOn).toBeCalledWith("core.report", expect.any(Function));
-        expect(spy).toBeCalledWith(FX_NEW_BUY_ORDER);
-    });
-
-    it("Should notify plugins about core.updateAssets events", () => {
-        const plugin = new WalletLogger();
-        const spy = jest.spyOn(plugin, "onUpdateAssets").mockImplementation();
-
-        sockTrader["bindEventsToPlugins"]([plugin]);
-        Events.emit("core.updateAssets", FX_REPLACED_BUY_ORDER, FX_NEW_BUY_ORDER);
-
-        expect(spyOn).toBeCalledWith("core.updateAssets", expect.any(Function));
-        expect(spy).toBeCalledWith(FX_REPLACED_BUY_ORDER, FX_NEW_BUY_ORDER);
-    });
-
-    it("Should notify plugins about core.updateOrderbook events", () => {
-        const plugin = new SpreadLogger();
-        const spy = jest.spyOn(plugin, "onUpdateOrderbook").mockImplementation();
-
-        sockTrader["bindEventsToPlugins"]([plugin]);
-        Events.emit("core.updateOrderbook", orderbook);
-
-        expect(spyOn).toBeCalledWith("core.updateOrderbook", expect.any(Function));
-        expect(spy).toBeCalledWith(orderbook);
     });
 });
 
