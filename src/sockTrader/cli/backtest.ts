@@ -1,6 +1,6 @@
 import config from "../../config";
 import BackTester from "../core/bot/backTester";
-import IPCReporter from "../core/plugins/IPCReporter";
+import IPC from "../core/plugins/reporter/IPC";
 import {loadCandleFile, loadStrategy} from "./util";
 
 export default class Backtest {
@@ -9,7 +9,7 @@ export default class Backtest {
 
     createBackTester(candleFile: any, strategy: any) {
         return new BackTester(candleFile.candles)
-            .setPlugins([...config.plugins, new IPCReporter()])
+            .setPlugins([...config.plugins, new IPC()])
             .setStrategy({
                 strategy,
                 pair: candleFile.symbol,

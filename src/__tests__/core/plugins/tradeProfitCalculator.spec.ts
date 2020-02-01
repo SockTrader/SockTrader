@@ -1,15 +1,15 @@
-import TradeProfitCalculator from "../../../sockTrader/core/plugins/tradeProfitCalculator";
+import ProfitCalculator from "../../../sockTrader/core/plugins/order/profitCalculator";
 import {Order, OrderSide, OrderStatus} from "../../../sockTrader/core/types/order";
 import {orderLogger} from "../../../sockTrader/core/loggerFactory";
 import {FX_FILLED_BUY_ORDER, FX_FILLED_SELL_ORDER, FX_NEW_BUY_ORDER} from "../../../__fixtures__/order";
 
 jest.mock("../../../sockTrader/core/loggerFactory");
 
-let calculator = new TradeProfitCalculator();
+let calculator = new ProfitCalculator();
 
 beforeEach(() => {
     jest.clearAllMocks();
-    calculator = new TradeProfitCalculator();
+    calculator = new ProfitCalculator();
 })
 
 describe("onReport", () => {

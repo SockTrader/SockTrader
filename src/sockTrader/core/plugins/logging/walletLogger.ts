@@ -1,8 +1,13 @@
 import {walletLogger} from "../../loggerFactory";
-import {AssetAware} from "../../types/plugins/assetAware";
 import {AssetMap} from "../../types/wallet";
+import BasePlugin from "../basePlugin";
 
-export default class WalletLogger implements AssetAware {
+export default class WalletLogger extends BasePlugin {
+
+    constructor() {
+        super();
+        this.onEvent("core.updateAssets", this.onUpdateAssets.bind(this));
+    }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});

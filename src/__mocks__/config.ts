@@ -1,6 +1,6 @@
 import OrderLogger from "../sockTrader/core/plugins/logging/orderLogger";
 import WalletLogger from "../sockTrader/core/plugins/logging/walletLogger";
-import TradeProfitCalculator from "../sockTrader/core/plugins/tradeProfitCalculator";
+import ProfitCalculator from "../sockTrader/core/plugins/order/profitCalculator";
 
 module.exports = {
     timezone: "Europe/Brussels",
@@ -21,7 +21,7 @@ module.exports = {
     },
 
     plugins: [
-        new TradeProfitCalculator(),
+        new ProfitCalculator(),
         new WalletLogger(),
         new OrderLogger(),
     ],

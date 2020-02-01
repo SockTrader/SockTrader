@@ -1,11 +1,16 @@
-import {orderLogger} from "../loggerFactory";
-import {Order, OrderSide, OrderStatus} from "../types/order";
-import {ReportAware} from "../types/plugins/reportAware";
+import {orderLogger} from "../../loggerFactory";
+import {Order, OrderSide, OrderStatus} from "../../types/order";
+import BasePlugin from "../basePlugin";
 
-export default class TradeProfitCalculator implements ReportAware {
+export default class ProfitCalculator extends BasePlugin {
 
     private remainingAssets = 0;
     private avgBuyPrice = 0;
+
+    constructor() {
+        super();
+        this.onEvent("core.report", this.onReport.bind(this));
+    }
 
     private getWeightedAverage(quantity: number, price: number) {
         return ((quantity * price) + (this.remainingAssets * this.avgBuyPrice)) / (this.remainingAssets + quantity);

@@ -1,10 +1,15 @@
-import {orderLogger} from "../loggerFactory";
-import {Order, OrderStatus, ReportType} from "../types/order";
-import {ReportAware} from "../types/plugins/reportAware";
+import {orderLogger} from "../../loggerFactory";
+import {Order, OrderStatus, ReportType} from "../../types/order";
+import BasePlugin from "../basePlugin";
 
-export default class OrderTimeTracker implements ReportAware {
+export default class TimeTracker extends BasePlugin {
 
     private orders: Record<string, number> = {};
+
+    constructor() {
+        super();
+        this.onEvent("core.report", this.onReport.bind(this));
+    }
 
     private getCurrentTime() {
         return Math.floor(Date.now() / 1000);

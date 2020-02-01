@@ -3,7 +3,7 @@ import LiveTrading from "../../sockTrader/cli/liveTrading";
 import LiveTrader from "../../sockTrader/core/bot/liveTrader";
 import ExchangeFactory from "../../sockTrader/core/exchange/exchangeFactory";
 import hitBTC from "../../sockTrader/core/exchange/hitBTC";
-import TradeProfitCalculator from "../../sockTrader/core/plugins/tradeProfitCalculator";
+import ProfitCalculator from "../../sockTrader/core/plugins/order/profitCalculator";
 
 jest.mock("inquirer");
 jest.mock("../../sockTrader/cli/util");
@@ -87,7 +87,7 @@ describe("createLiveTrader", () => {
         const instance = lt.createLiveTrader(exchange, jest.fn(), ["BTC", "USD"]);
 
         expect(instance).toBeInstanceOf(LiveTrader);
-        expect(instance["plugins"][0]).toEqual(new TradeProfitCalculator());
+        expect(instance["plugins"][0]).toEqual(new ProfitCalculator());
         expect(instance["exchange"]).toBeInstanceOf(hitBTC);
         expect(instance["strategyConfig"]).toEqual(expect.objectContaining({pair: ["BTC", "USD"]}));
     });

@@ -1,6 +1,6 @@
 import {Order, OrderStatus} from "../../../sockTrader/core/types/order";
 import {orderLogger} from "../../../sockTrader/core/loggerFactory";
-import OrderTimeTracker from "../../../sockTrader/core/plugins/orderTimeTracker";
+import TimeTracker from "../../../sockTrader/core/plugins/order/timeTracker";
 import {
     FX_FILLED_BUY_ORDER,
     FX_FILLED_SELL_ORDER,
@@ -11,11 +11,11 @@ import {
 
 jest.mock("../../../sockTrader/core/loggerFactory");
 
-let timeTracker = new OrderTimeTracker();
+let timeTracker = new TimeTracker();
 
 beforeEach(() => {
     jest.clearAllMocks();
-    timeTracker = new OrderTimeTracker();
+    timeTracker = new TimeTracker();
     jest.spyOn(Date, "now").mockImplementation(() => 1479427200000);
 });
 

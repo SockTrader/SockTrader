@@ -6,11 +6,6 @@ import {CandleInterval} from "../types/candleInterval";
 import {Exchange} from "../types/exchange";
 import {Order} from "../types/order";
 import {Pair} from "../types/pair";
-import {isAssetAware} from "../types/plugins/assetAware";
-import {isCandleAware} from "../types/plugins/candleAware";
-import {isOrderbookAware} from "../types/plugins/orderbookAware";
-import {isReportAware} from "../types/plugins/reportAware";
-import {AssetMap} from "../types/wallet";
 
 export interface StrategyConfig {
     interval?: CandleInterval;

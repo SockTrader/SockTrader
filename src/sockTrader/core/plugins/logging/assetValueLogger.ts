@@ -1,10 +1,15 @@
 import {walletLogger} from "../../loggerFactory";
 import {Candle} from "../../types/candle";
-import {AssetAware} from "../../types/plugins/assetAware";
-import {CandleAware} from "../../types/plugins/candleAware";
 import {AssetMap} from "../../types/wallet";
+import BasePlugin from "../basePlugin";
 
-export default class AssetValueLogger implements AssetAware, CandleAware {
+export default class AssetValueLogger extends BasePlugin {
+
+    constructor() {
+        super();
+        this.onEvent("core.updateAssets", this.onUpdateAssets.bind(this));
+        this.onEvent("core.updateCandles", this.onUpdateCandles.bind(this));
+    }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
