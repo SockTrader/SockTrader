@@ -5,6 +5,7 @@ src/config.ts
 src/strategies/*
 !src/strategies/.gitkeep
 !src/strategies/simpleMovingAverage.ts
+!src/strategies/empty.ts
 
 # Logs produced by the user & framework
 src/logs/*
