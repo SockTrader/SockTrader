@@ -22,7 +22,7 @@ module.exports = {
 
     plugins: [
         new ProfitCalculator(),
-        new AssetValueLogger(),
+        new AssetValueLogger("USD"),
         new OrderLogger(),
     ],
 };
