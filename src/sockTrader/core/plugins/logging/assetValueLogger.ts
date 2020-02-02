@@ -3,28 +3,41 @@ import {Candle} from "../../types/candle";
 import {AssetMap} from "../../types/wallet";
 import {Pair} from "../../types/pair";
 import Events from "../../events";
-import BasePlugin, {PluginConfig} from "../basePlugin";
 
-export default class AssetValueLogger extends BasePlugin {
+export default class AssetValueLogger {
 
-    private assets: AssetMap = {};
-    private reservedAssets: AssetMap = {};
+    private priceMap: Record<string, Candle> = {};
 
-    constructor(config?: PluginConfig) {
-        super(config);
-
-        this.setLogger(walletLogger);
-
+    constructor(private target: string) {
         Events.on("core.updateAssets", this.onUpdateAssets.bind(this));
         Events.on("core.updateCandles", this.onUpdateCandles.bind(this));
     }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
-        this.assets = assets;
-        this.reservedAssets = reservedAssets;
-
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
         walletLogger.info({type: "Reserved wallet", payload: this.objectToArray(reservedAssets)});
+
+        Object.keys(this.priceMap).forEach(key => {
+            const candle = this.priceMap[key];
+
+            const totalWalletValue = this.totalAssetPrice(candle, key, assets);
+            const totalReservedValue = this.totalAssetPrice(candle, key, reservedAssets);
+
+            walletLogger.info({
+                type: "Wallet value",
+                payload: {
+                    wallet: totalWalletValue,
+                    reserved: totalReservedValue,
+                    total: totalWalletValue + totalReservedValue,
+                },
+            });
+        });
+    }
+
+    totalAssetPrice(candle: Candle, asset: string, assets: AssetMap) {
+        const source = assets[asset] ? assets[asset] : 0;
+        const target = assets[this.target] ? assets[this.target] : 0;
+        return target + (source * candle.close);
     }
 
     objectToArray(object: Record<string, number>) {
@@ -32,18 +45,7 @@ export default class AssetValueLogger extends BasePlugin {
     }
 
     onUpdateCandles(candles: Candle[], pair: Pair) {
-        // @TODO .. WIP
-        const totalWalletValue = this.assets[pair[1]] + (this.assets[pair[0]] * candles[0].close);
-        const totalReservedValue = this.reservedAssets[pair[1]] + (this.reservedAssets[pair[0]] * candles[0].close);
-
-        this.log({
-            type: "Wallet value",
-            payload: {
-                wallet: totalWalletValue,
-                reserved: totalReservedValue,
-                total: totalWalletValue + totalReservedValue,
-            },
-        });
+        this.priceMap[pair[0]] = candles[0];
     }
 
 }

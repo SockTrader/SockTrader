@@ -1,4 +1,4 @@
-import CandleCollection from "../sockTrader/core/candles/candleCollection";
+import CandleCollection from "../sockTrader/core/candle/candleCollection";
 import Orderbook from "../sockTrader/core/orderbook/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {Exchange} from "../sockTrader/core/types/exchange";
