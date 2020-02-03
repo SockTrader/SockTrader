@@ -10,7 +10,7 @@ describe("onUpdateCandles", () => {
         const assets: AssetMap = {BTC: 3, USD: 10};
         const reserved: AssetMap = {USD: 1000};
 
-        const plugin = new AssetValueLogger("USD");
+        const plugin = new AssetValueLogger({toAsset: "USD"});
         plugin.onUpdateCandles(FX_CANDLE_1, ["BTC", "USD"]);
         plugin.onUpdateAssets(assets, reserved);
 
@@ -30,7 +30,7 @@ describe("onUpdateAssets", () => {
         const assets: AssetMap = {BTC: 1, USD: 10};
         const reserved: AssetMap = {USD: 1000};
 
-        const logger = new AssetValueLogger("USD");
+        const logger = new AssetValueLogger({toAsset: "USD"});
         logger.onUpdateAssets(assets, reserved);
 
         expect(walletLogger.info).toBeCalledWith({
@@ -45,7 +45,7 @@ describe("objectToArray", () => {
     it("Should convert AssetMap to Array", () => {
         const assets: AssetMap = {BTC: 1, USD: 10};
 
-        const logger = new AssetValueLogger("USD");
+        const logger = new AssetValueLogger({toAsset: "USD"});
         const result = logger.objectToArray(assets);
 
         expect(result).toEqual([{asset: "BTC", value: 1}, {asset: "USD", value: 10}]);
