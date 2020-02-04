@@ -10,7 +10,7 @@ describe("onUpdateCandles", () => {
         const assets: AssetMap = {BTC: 3, USD: 10};
         const reserved: AssetMap = {USD: 1000};
 
-        const plugin = new AssetValueLogger({toAsset: "USD", logOnUpdate: true});
+        const plugin = new AssetValueLogger({toAsset: "USD", logOnUpdateAssets: true});
         plugin.onUpdateCandles(FX_CANDLE_1, ["BTC", "USD"]);
         plugin.onUpdateAssets(assets, reserved);
 

@@ -7,7 +7,7 @@ import Events from "../../events";
 export interface AssetValueConfig {
     toAsset: string;
     logInterval?: number;
-    logOnUpdate?: boolean;
+    logOnUpdateAssets?: boolean;
 }
 
 export default class AssetValueLogger {
@@ -30,7 +30,7 @@ export default class AssetValueLogger {
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
         walletLogger.info({type: "Reserved wallet", payload: this.objectToArray(reservedAssets)});
 
-        if (this.config.logOnUpdate) this.logAssetValue();
+        if (this.config.logOnUpdateAssets) this.logAssetValue();
     }
 
     logAssetValue() {
