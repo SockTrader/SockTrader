@@ -1,7 +1,7 @@
 import WsConnection from "../../../sockTrader/core/connection/wsConnection";
 import logger from "../../../sockTrader/core/loggerFactory";
 import ws from "ws";
-import HitBTCCommand from "../../../sockTrader/core/exchanges/commands/hitBTCCommand";
+import HitBTCCommand from "../../../sockTrader/core/exchange/commands/hitBTCCommand";
 import {Command} from "../../../sockTrader/core/types/connection";
 
 jest.mock("ws");

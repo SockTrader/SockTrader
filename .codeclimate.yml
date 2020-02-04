@@ -6,7 +6,8 @@ plugins:
         enabled: true
 
     eslint:
-        enabled: true
+        enabled: false
+        channel: "eslint-6"
 
 exclude_patterns:
 - "**/*.spec.ts"

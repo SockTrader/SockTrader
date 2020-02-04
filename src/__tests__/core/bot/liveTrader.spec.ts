@@ -1,4 +1,4 @@
-import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchanges/hitBTC";
+import HitBTC, {HitBTCCandleInterval} from "../../../sockTrader/core/exchange/hitBTC";
 import LiveTrader from "../../../sockTrader/core/bot/liveTrader";
 import SimpleMovingAverage from "../../../strategies/simpleMovingAverage";
 import {StrategyConfig} from "../../../sockTrader/core/bot/sockTrader";

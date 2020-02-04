@@ -1,5 +1,5 @@
 import {Order} from "../../../../sockTrader/core/types/order";
-import Wallet from "../../../../sockTrader/core/plugins/wallet/wallet";
+import Wallet from "../../../../sockTrader/core/wallet/wallet";
 import {
     FX_CANCELLED_BUY_ORDER,
     FX_CANCELLED_SELL_ORDER,
@@ -112,26 +112,26 @@ describe("updateAssets", () => {
         const invalidOrder3 = {...FX_NEW_BUY_ORDER, reportType: "INVALID", status: "filled"} as any;
         wallet.updateAssets(invalidOrder3, invalidOrder3);
 
-        expect(spy).toBeCalledTimes(0);
+        expect(spy).toBeCalledTimes(1);
     });
 
     it("Should do nothing when trying to replace and oldOrder which is undefined", () => {
         wallet.updateAssets(FX_REPLACED_BUY_ORDER, undefined);
 
-        expect(spy).toBeCalledTimes(0);
+        expect(spy).toBeCalledTimes(1);
     });
 
     it("Should update asset amount when sell order is replaced", () => {
         const wallet = new Wallet({BTC: 10});
 
         wallet.updateAssets(FX_NEW_SELL_ORDER);
-        expect(spy).toHaveBeenNthCalledWith(1, {BTC: 9}, {BTC: 1});
+        expect(spy).toHaveBeenNthCalledWith(2, {BTC: 9}, {BTC: 1});
 
         const oldOrder2: Order = FX_REPLACED_SELL_ORDER;
         wallet.updateAssets(oldOrder2, FX_NEW_SELL_ORDER);
-        expect(spy).toHaveBeenNthCalledWith(2, {BTC: 8}, {BTC: 2});
+        expect(spy).toHaveBeenNthCalledWith(3, {BTC: 8}, {BTC: 2});
 
         wallet.updateAssets({...FX_REPLACED_SELL_ORDER, price: 10, quantity: 1}, oldOrder2);
-        expect(spy).toHaveBeenNthCalledWith(3, {BTC: 9}, {BTC: 1});
+        expect(spy).toHaveBeenNthCalledWith(4, {BTC: 9}, {BTC: 1});
     });
 });

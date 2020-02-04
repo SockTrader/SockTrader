@@ -1,9 +1,8 @@
 import inquirer from "inquirer";
 import config from "../../config";
 import LiveTrader from "../core/bot/liveTrader";
-import BaseExchange from "../core/exchanges/baseExchange";
-import ExchangeFactory from "../core/exchanges/exchangeFactory";
-import WalletFactory from "../core/plugins/wallet/walletFactory";
+import BaseExchange from "../core/exchange/baseExchange";
+import ExchangeFactory from "../core/exchange/exchangeFactory";
 import {getExchangeInterval, loadStrategy} from "./util";
 
 export default class LiveTrading {
@@ -36,7 +35,7 @@ export default class LiveTrading {
     createLiveTrader(exchange: BaseExchange, strategy: any, pair: [string, string]) {
         return new LiveTrader()
             .setExchange(exchange)
-            .setPlugins([...config.plugins, WalletFactory.getInstance()])
+            .setPlugins([...config.plugins])
             .setStrategy({
                 strategy,
                 pair: [pair[0].toUpperCase(), pair[1].toUpperCase()],

@@ -1,8 +1,12 @@
 import {orderLogger} from "../../loggerFactory";
 import {Order} from "../../types/order";
-import {ReportAware} from "../../types/plugins/reportAware";
+import Events from "../../events";
 
-export default class OrderLogger implements ReportAware {
+export default class OrderLogger {
+
+    constructor() {
+        Events.on("core.report", this.onReport.bind(this));
+    }
 
     onReport(order: Order) {
         orderLogger.info({type: "Order", payload: order});

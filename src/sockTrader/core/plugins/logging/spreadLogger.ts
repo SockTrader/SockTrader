@@ -1,11 +1,15 @@
 import {orderbookLogger} from "../../loggerFactory";
 import Orderbook, {OrderbookEntry, OrderbookSide} from "../../orderbook/orderbook";
-import {OrderbookAware} from "../../types/plugins/orderbookAware";
 import OrderbookUtil from "../../utils/orderbookUtil";
+import Events from "../../events";
 
-export default class SpreadLogger implements OrderbookAware {
+export default class SpreadLogger {
 
     private lastSpread = 0;
+
+    constructor() {
+        Events.on("core.updateOrderbook", this.onUpdateOrderbook.bind(this));
+    }
 
     onUpdateOrderbook(orderbook: Orderbook) {
         const bid: OrderbookEntry = orderbook.getEntries(OrderbookSide.BID, 1)[0];

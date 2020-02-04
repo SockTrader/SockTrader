@@ -1,19 +1,10 @@
 import moment from "moment";
-import ExchangeFactory from "../exchanges/exchangeFactory";
-import LocalExchange from "../exchanges/localExchange";
-import {BotStatus} from "../types/botStatus";
-import {Candle} from "../types/candle";
-import {isTradingBotAware} from "../types/plugins/tradingBotAware";
+import Events from "../events";
+import ExchangeFactory from "../exchange/exchangeFactory";
+import LocalExchange from "../exchange/localExchange";
+import {Candle, CandleFile, InputCandle} from "../types/candle";
 import SockTrader from "./sockTrader";
-
-interface InputCandle {
-    close: number;
-    high: number;
-    low: number;
-    open: number;
-    timestamp: string;
-    volume: number;
-}
+import {Pair} from "../types/pair";
 
 /**
  * The BackTester enables you to test your strategy against a fake dummy exchange
@@ -22,15 +13,17 @@ interface InputCandle {
 export default class BackTester extends SockTrader {
 
     private readonly inputCandles: InputCandle[];
+    private readonly pair: Pair;
 
     /**
      * Creates a new BackTester
-     * @param {InputCandle} inputCandles
+     * @param candleFile
      */
-    constructor(inputCandles: InputCandle[]) {
+    constructor(candleFile: CandleFile) {
         super();
-        this.inputCandles = inputCandles;
-        this.exchange = new ExchangeFactory().createExchange();
+        this.inputCandles = candleFile.candles;
+        this.pair = candleFile.symbol;
+        this.exchange = new ExchangeFactory().createExchange("local");
     }
 
     async start(): Promise<void> {
@@ -42,9 +35,9 @@ export default class BackTester extends SockTrader {
         this.initialize();
         const candles = this.hydrateCandles(this.inputCandles);
 
-        this.reportProgress({type: "started", length: candles.length});
-        await (this.exchange as LocalExchange).emitCandles(candles);
-        this.reportProgress({type: "finished"});
+        Events.emit("core.botStatus", {type: "started", length: candles.length});
+        await (this.exchange as LocalExchange).emitCandles(candles, this.pair);
+        Events.emit("core.botStatus", {type: "finished"});
 
         this.eventsBound = true;
     }
@@ -54,11 +47,5 @@ export default class BackTester extends SockTrader {
             ...c,
             timestamp: moment(c.timestamp),
         } as Candle));
-    }
-
-    private reportProgress(status: BotStatus) {
-        this.plugins.forEach(p => {
-            if (isTradingBotAware(p)) p.onBotProgress(status);
-        });
     }
 }

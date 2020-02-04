@@ -1,4 +1,4 @@
-import {ExchangeDefinition, exchanges} from "../core/exchanges";
+import {ExchangeDefinition, exchanges} from "../core/exchange";
 
 function getExchangeConfig({intervals}: ExchangeDefinition) {
     return Object.keys(intervals).reduce((prevValue, index) => {

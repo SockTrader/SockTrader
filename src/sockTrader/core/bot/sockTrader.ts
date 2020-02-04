@@ -6,10 +6,6 @@ import {CandleInterval} from "../types/candleInterval";
 import {Exchange} from "../types/exchange";
 import {Order} from "../types/order";
 import {Pair} from "../types/pair";
-import {isAssetAware} from "../types/plugins/assetAware";
-import {isOrderbookAware} from "../types/plugins/orderbookAware";
-import {isReportAware} from "../types/plugins/reportAware";
-import {AssetMap} from "../types/wallet";
 
 export interface StrategyConfig {
     interval?: CandleInterval;
@@ -84,29 +80,10 @@ export default abstract class SockTrader {
         const {strategy: Strategy, pair} = this.strategyConfig;
 
         this.subscribeToExchangeEvents(this.strategyConfig);
-        this.bindEventsToPlugins(this.plugins);
 
         const strategy = new Strategy(pair, this.exchange);
         this.bindStrategyToExchange(strategy);
         this.bindExchangeToStrategy(strategy);
-    }
-
-    /**
-     * Registers plugins to listen to various tradingbot events:
-     * @param plugins
-     */
-    protected bindEventsToPlugins(plugins: any[]): void {
-        Events.on("core.report", (order: Order) => plugins.forEach(p => {
-            if (isReportAware(p)) p.onReport(order);
-        }));
-
-        Events.on("core.updateAssets", (assets: AssetMap, reservedAssets: AssetMap) => plugins.forEach(p => {
-            if (isAssetAware(p)) p.onUpdateAssets(assets, reservedAssets);
-        }));
-
-        Events.on("core.updateOrderbook", (orderbook: Orderbook) => plugins.forEach(p => {
-            if (isOrderbookAware(p)) p.onUpdateOrderbook(orderbook);
-        }));
     }
 
     /**
@@ -120,8 +97,8 @@ export default abstract class SockTrader {
         Events.on("core.report", (order: Order) => strategy.notifyOrder(order));
         Events.on("core.snapshotOrderbook", (orderbook: Orderbook) => strategy.updateOrderbook(orderbook));
         Events.on("core.updateOrderbook", (orderbook: Orderbook) => strategy.updateOrderbook(orderbook));
-        Events.on("core.snapshotCandles", (candles: Candle[]) => strategy._onSnapshotCandles(candles));
-        Events.on("core.updateCandles", (candles: Candle[]) => strategy._onUpdateCandles(candles));
+        Events.on("core.snapshotCandles", (candles: Candle[], pair: Pair) => strategy._onSnapshotCandles(candles, pair));
+        Events.on("core.updateCandles", (candles: Candle[], pair: Pair) => strategy._onUpdateCandles(candles, pair));
     }
 
     /**

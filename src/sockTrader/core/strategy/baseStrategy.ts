@@ -1,5 +1,5 @@
 import {EventEmitter} from "events";
-import CandleCollection from "../candles/candleCollection";
+import CandleCollection from "../candle/candleCollection";
 import Orderbook from "../orderbook/orderbook";
 import {Candle} from "../types/candle";
 import {Exchange} from "../types/exchange";
@@ -45,32 +45,35 @@ export default abstract class BaseStrategy extends EventEmitter {
     /**
      * Called on each new candle coming from the exchange
      * @param {CandleCollection} candles – raw exchange candles wrapped in a CandleCollection
+     * @param pair
      */
-    protected abstract updateCandles(candles: CandleCollection): void;
+    protected abstract updateCandles(candles: CandleCollection, pair: Pair): void;
 
     /**
      * Receives the candles coming from the exchange. It wraps the candles in a CandleCollection
      * so that the resulting strategy has some extra utility methods to manipulate the candles.
      * @param candles – candles coming from the remote exchange
+     * @param pair
      */
-    _onUpdateCandles(candles: Candle[]): void {
-        this.updateCandles(new CandleCollection(candles));
+    _onUpdateCandles(candles: Candle[], pair: Pair): void {
+        this.updateCandles(new CandleCollection(candles), pair);
     }
 
     /**
      * Receives the "warm-up" candles coming from the exchange. It wraps the candles in a CandleCollection
      * so that the resulting strategy has some extra utility methods to manipulate the candles.
      * @param candles – candles coming from the remote exchange
+     * @param pair
      */
-    _onSnapshotCandles(candles: Candle[]): void {
-        this.warmUpCandles(new CandleCollection(candles));
+    _onSnapshotCandles(candles: Candle[], pair: Pair): void {
+        this.warmUpCandles(new CandleCollection(candles), pair);
     }
 
     /**
      * Optional hook that a strategy can override to do something with the warm-up candles.
      * Note: its not guaranteed that this hook will be triggered on all exchanges.
      */
-    protected warmUpCandles(candleCollection: CandleCollection) {
+    protected warmUpCandles(candleCollection: CandleCollection, pair: Pair) {
         // Optional hook
     }
 
