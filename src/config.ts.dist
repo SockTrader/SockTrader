@@ -1,7 +1,7 @@
-import OrderLogger from "./sockTrader/core/plugins/logging/orderLogger";
-import SpreadLogger from "./sockTrader/core/plugins/logging/spreadLogger";
-import AssetValueLogger from "./sockTrader/core/plugins/logging/assetValueLogger";
-import ProfitCalculator from "./sockTrader/core/plugins/order/profitCalculator";
+// import OrderLogger from "./sockTrader/core/plugins/logging/orderLogger";
+// import SpreadLogger from "./sockTrader/core/plugins/logging/spreadLogger";
+// import AssetValueLogger from "./sockTrader/core/plugins/logging/assetValueLogger";
+// import ProfitCalculator from "./sockTrader/core/plugins/order/profitCalculator";
 
 export default {
     timezone: "Europe/Brussels",
@@ -21,10 +21,10 @@ export default {
         },
     },
 
-    plugins: [
+    plugins: [/*
         new ProfitCalculator(),
         new AssetValueLogger("USD"),
         new OrderLogger(),
         new SpreadLogger(),
-    ],
+    */],
 };

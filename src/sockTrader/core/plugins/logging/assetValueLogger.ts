@@ -24,6 +24,9 @@ export default class AssetValueLogger {
     }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
+        this.assetMap = assets;
+        this.reservedAssetMap = reservedAssets;
+
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
         walletLogger.info({type: "Reserved wallet", payload: this.objectToArray(reservedAssets)});
 
