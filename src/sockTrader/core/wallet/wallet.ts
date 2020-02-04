@@ -1,9 +1,10 @@
 import Events from "../events";
-import {Order, OrderSide, OrderStatus, ReportType} from "../types/order";
+import {Order, OrderSide} from "../types/order";
 import {AssetMap} from "../types/wallet";
 import {AssetCollection} from "./assetCollection";
 import {ReleaseCommand} from "./command/releaseCommand";
 import {ReserveCommand} from "./command/reserveCommand";
+import {isCanceled, isFilled, isNew, isReplaced} from "../utils/order";
 
 /**
  * The wallet keeps track of all assets
@@ -37,18 +38,18 @@ export default class Wallet {
      * @param {Order} oldOrder old order
      */
     updateAssets(order: Order, oldOrder?: Order) {
-        if (ReportType.REPLACED === order.reportType && oldOrder) {
+        if (isReplaced(order) && oldOrder) {
             new ReserveCommand(this.assets, this.reservedAssets).revert(oldOrder);
             new ReserveCommand(this.assets, this.reservedAssets).apply(order);
             this.emitUpdate();
-        } else if (ReportType.NEW === order.reportType) {
+        } else if (isNew(order)) {
             new ReserveCommand(this.assets, this.reservedAssets).apply(order);
             this.emitUpdate();
-        } else if (ReportType.TRADE === order.reportType && OrderStatus.FILLED === order.status) {
+        } else if (isFilled(order)) {
             // @TODO what if order is partially filled?
             new ReleaseCommand(this.assets, this.reservedAssets).apply(order);
             this.emitUpdate();
-        } else if ([ReportType.CANCELED, ReportType.EXPIRED, ReportType.SUSPENDED].indexOf(order.reportType) > -1) {
+        } else if (isCanceled(order)) {
             new ReserveCommand(this.assets, this.reservedAssets).revert(order);
             this.emitUpdate();
         }
