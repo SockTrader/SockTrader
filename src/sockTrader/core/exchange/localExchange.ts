@@ -63,7 +63,7 @@ export default class LocalExchange extends BaseExchange {
     protected reportProgress(current: number, total: number) {
         Events.emit("core.botStatus", {
             current: current,
-            length: total,
+            chunks: total,
             type: "progress",
         } as BotStatus);
     }
@@ -74,6 +74,7 @@ export default class LocalExchange extends BaseExchange {
      */
     async emitCandles(candles: Candle[], pair: Pair) {
         const candleChunks = this.prepareCandleChunks(candles);
+        Events.emit("core.botStatus", {type: "started", chunks: candleChunks.length});
 
         return new Promise((resolve, reject) => {
             candleChunks.forEach((chunk, index) => {
@@ -81,7 +82,10 @@ export default class LocalExchange extends BaseExchange {
                     this.reportProgress(index, candleChunks.length);
                     this.processChunk(chunk, pair);
 
-                    if (index === (candleChunks.length - 1)) resolve(true);
+                    if (index === (candleChunks.length - 1)) {
+                        Events.emit("core.botStatus", {type: "finished"});
+                        resolve(true);
+                    }
                 });
             });
         });

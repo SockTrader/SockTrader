@@ -1,5 +1,4 @@
 import moment from "moment";
-import Events from "../events";
 import ExchangeFactory from "../exchange/exchangeFactory";
 import LocalExchange from "../exchange/localExchange";
 import {Candle, CandleFile, InputCandle} from "../types/candle";
@@ -34,10 +33,7 @@ export default class BackTester extends SockTrader {
 
         this.initialize();
         const candles = this.hydrateCandles(this.inputCandles);
-
-        Events.emit("core.botStatus", {type: "started", length: candles.length});
         await (this.exchange as LocalExchange).emitCandles(candles, this.pair);
-        Events.emit("core.botStatus", {type: "finished"});
 
         this.eventsBound = true;
     }

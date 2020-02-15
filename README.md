@@ -32,7 +32,7 @@ that one can act very quickly in a changing market with low latency.
 - 🔫 Mutation testing for better testing quality
 - 📝 Paper trading a strategy on LIVE exchange data.
 - 🏡 Backtesting engine with local data.
-- ⚡️ Test & live reload your strategy in [our online dashboard](https://cryptocointrader.be/)!
+- ⚡️ Test & live reload your strategy in [our online dashboard](https://socktrader.io/)!
 - 🚢 Run SockTrader inside a docker container.
 - More features soon..
 
@@ -44,7 +44,7 @@ will be shown on the chart as you can see in the screenshot.
 Try it yourself:
 1. Follow our [Quick Start guide](#quick-start)
 2. Run `npm run web` and leave all settings as default. 
-3. Go to [our online dashboard](https://cryptocointrader.be/) and test your strategies! 
+3. Go to [our online dashboard](https://socktrader.io/) and test your strategies! 
 
 ![SockTraderDashboard](docs/assets/dashboard.png)
 
