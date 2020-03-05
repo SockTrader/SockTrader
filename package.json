@@ -100,7 +100,7 @@
     "ora": "^4.0.3",
     "socket.io": "^2.3.0",
     "source-map-support": "^0.5.16",
-    "technicalindicators": "^3.0.0",
+    "technicalindicators": "git+https://github.com/cwouter/technicalindicators.git#cross-over",
     "typescript": "^3.7.5",
     "winston": "^3.2.1",
     "ws": "^7.2.1",

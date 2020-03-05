@@ -1,11 +1,10 @@
-import {SMA} from "technicalindicators";
+import {SMA, CrossUp, CrossDown} from "technicalindicators";
 import CandleCollection from "../sockTrader/core/candle/candleCollection";
 import Orderbook from "../sockTrader/core/orderbook/orderbook";
 import BaseStrategy from "../sockTrader/core/strategy/baseStrategy";
 import {Exchange} from "../sockTrader/core/types/exchange";
 import {Order, OrderSide, OrderStatus} from "../sockTrader/core/types/order";
 import {Pair} from "../sockTrader/core/types/pair";
-import {crossDown, crossUp} from "../sockTrader/core/utils/strategyUtil";
 
 /**
  * Simple moving average strategy.
@@ -19,12 +18,17 @@ export default class SimpleMovingAverage extends BaseStrategy {
 
     private fastSMA: SMA;
     private slowSMA: SMA;
+    private crossUp: CrossUp;
+    private crossDown: CrossDown;
 
     constructor(pair: Pair, exchange: Exchange) {
         super(pair, exchange);
 
         this.fastSMA = new SMA({period: 12, values: [], reversedInput: true});
         this.slowSMA = new SMA({period: 24, values: [], reversedInput: true});
+
+        this.crossUp = new CrossUp({lineA: [], lineB: []});
+        this.crossDown = new CrossDown({lineA: [], lineB: []});
     }
 
     notifyOrder(order: Order): void {
@@ -38,8 +42,8 @@ export default class SimpleMovingAverage extends BaseStrategy {
         const fastSMA = this.fastSMA.nextValue(candles.first.close);
         const slowSMA = this.slowSMA.nextValue(candles.first.close);
 
-        const up = fastSMA !== undefined ? crossUp(fastSMA, slowSMA) : false;
-        const down = fastSMA !== undefined ? crossDown(fastSMA, slowSMA) : false;
+        const up = fastSMA !== undefined ? this.crossUp.nextValue(fastSMA, slowSMA ? slowSMA : 0) : false;
+        const down = fastSMA !== undefined ? this.crossDown.nextValue(fastSMA, slowSMA ? slowSMA : 0) : false;
 
         if (up && this.canBuy) {
             this.canBuy = false;
