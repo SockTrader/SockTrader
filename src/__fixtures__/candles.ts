@@ -30,7 +30,7 @@ export const FX_FIXED_CANDLES: Candle[] = [
         low: 95,
         close: 105,
         volume: 1000,
-        timestamp: moment("2020-01-01 19:00:00"),
+        timestamp: moment("2020-01-01 19:00:00+01:00"),
     },
     {
         open: 101,
@@ -38,7 +38,7 @@ export const FX_FIXED_CANDLES: Candle[] = [
         low: 101,
         close: 105,
         volume: 1000,
-        timestamp: moment("2020-01-01 18:00:00"),
+        timestamp: moment("2020-01-01 18:00:00+01:00"),
     },
 ];
 
