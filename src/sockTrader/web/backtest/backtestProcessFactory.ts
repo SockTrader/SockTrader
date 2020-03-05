@@ -39,6 +39,7 @@ export default class BacktestProcessFactory {
         ], {stdio: ["ipc"]});
 
         if (childProcess.stdout) childProcess.stdout.pipe(process.stdout);
+        if (childProcess.stderr) childProcess.stderr.pipe(process.stderr);
 
         return childProcess;
     }

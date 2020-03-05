@@ -19,7 +19,7 @@ export default class Empty extends BaseStrategy {
         // Ignore
     }
 
-    updateCandles(candles: CandleCollection): void {
+    updateCandle(candles: CandleCollection): void {
         // Ignore method
     }
 

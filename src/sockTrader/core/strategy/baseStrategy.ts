@@ -47,7 +47,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param {CandleCollection} candles – raw exchange candles wrapped in a CandleCollection
      * @param pair
      */
-    protected abstract updateCandles(candles: CandleCollection, pair: Pair): void;
+    protected abstract updateCandle(candles: CandleCollection, pair: Pair): void;
 
     /**
      * Receives the candles coming from the exchange. It wraps the candles in a CandleCollection
@@ -56,7 +56,7 @@ export default abstract class BaseStrategy extends EventEmitter {
      * @param pair
      */
     _onUpdateCandles(candles: Candle[], pair: Pair): void {
-        this.updateCandles(new CandleCollection(candles), pair);
+        this.updateCandle(new CandleCollection(candles), pair);
     }
 
     /**
