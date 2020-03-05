@@ -113,7 +113,7 @@ describe("onProcessCandles", () => {
         }));
 
         const {createdAt, updatedAt} = spy.mock.calls[0][0];
-        expect(createdAt.format()).toEqual("2020-01-01T17:00:00+01:00");
-        expect(updatedAt.format()).toEqual("2020-01-01T19:00:00+01:00");
+        expect(createdAt.format()).toEqual("2020-01-01T17:00:00Z");
+        expect(updatedAt.format()).toEqual("2020-01-01T19:00:00Z");
     });
 });

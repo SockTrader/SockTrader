@@ -44,12 +44,12 @@ export const FX_NEW_BUY_ORDER: Order = {
 };
 
 export const FX_FIXED_TIME_BUY_ORDER: Order = {
-    createdAt: moment("2020-01-01 17:00:00+01:00"),
+    createdAt: moment.utc("2020-01-01 17:00:00"),
     side: OrderSide.BUY,
     status: OrderStatus.NEW,
     timeInForce: OrderTimeInForce.GOOD_TILL_CANCEL,
     type: OrderType.LIMIT,
-    updatedAt: moment("2020-01-01 17:00:00+01:00"),
+    updatedAt: moment.utc("2020-01-01 17:00:00"),
     reportType: ReportType.NEW,
     id: "NEW_BUY_ORDER_1",
     pair: ["BTC", "USD"],

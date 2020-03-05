@@ -12,7 +12,7 @@ beforeEach(() => {
 
 describe("_onUpdateCandles", () => {
     it("Should wrap incoming candles in a CandleCollection", () => {
-        const spy = jest.spyOn(strategy, "updateCandles");
+        const spy = jest.spyOn(strategy, "updateCandle");
         strategy._onUpdateCandles(FX_CANDLE_LIST, ["BTC", "USD"]);
 
         expect(spy).toBeCalledTimes(1);
