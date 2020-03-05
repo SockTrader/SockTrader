@@ -27,7 +27,7 @@ export default class LocalOrderFiller implements OrderFiller {
                 return openOrders.push(openOrder); // Candle should be newer than order!
             }
 
-            const order = {...openOrder, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
+            const order = {...openOrder, updatedAt: candle.timestamp, reportType: ReportType.TRADE, status: OrderStatus.FILLED};
 
             if (this.isOrderWithinCandle(openOrder, candle)) {
                 this.wallet.updateAssets(order);

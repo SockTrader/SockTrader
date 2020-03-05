@@ -3,8 +3,8 @@ import LocalOrderFiller from "../../../../sockTrader/core/exchange/orderFillers/
 import OrderTracker from "../../../../sockTrader/core/order/orderTracker";
 import {OrderSide, OrderStatus, ReportType} from "../../../../sockTrader/core/types/order";
 import Wallet from "../../../../sockTrader/core/wallet/wallet";
-import {FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
-import {FX_CANDLE_1, FX_HISTORICAL_CANDLES, FX_CANDLE_2} from "../../../../__fixtures__/candles";
+import {FX_FIXED_TIME_BUY_ORDER, FX_NEW_BUY_ORDER, FX_NEW_SELL_ORDER} from "../../../../__fixtures__/order";
+import {FX_CANDLE_1, FX_CANDLE_2, FX_FIXED_CANDLES, FX_HISTORICAL_CANDLES} from "../../../../__fixtures__/candles";
 import {Candle} from "../../../../sockTrader/core/types/candle";
 
 function createOrderFiller() {
@@ -100,14 +100,20 @@ describe("onProcessCandles", () => {
     it("Should process order by orderTracker", () => {
         const spy = jest.spyOn(orderFiller["orderTracker"], "process");
 
-        orderFiller.onProcessCandles(FX_CANDLE_1);
+        orderFiller["orderTracker"].setOpenOrders([FX_FIXED_TIME_BUY_ORDER]);
+
+        orderFiller.onProcessCandles([FX_FIXED_CANDLES[1]]);
+        orderFiller.onProcessCandles([FX_FIXED_CANDLES[0]]);
         expect(spy).toBeCalledWith(expect.objectContaining({
-            createdAt: expect.any(moment),
             id: "NEW_BUY_ORDER_1",
             price: 100,
             side: OrderSide.BUY,
             reportType: ReportType.TRADE,
             status: OrderStatus.FILLED,
         }));
+
+        const {createdAt, updatedAt} = spy.mock.calls[0][0];
+        expect(createdAt.format()).toEqual("2020-01-01T17:00:00+01:00");
+        expect(updatedAt.format()).toEqual("2020-01-01T19:00:00+01:00");
     });
 });
