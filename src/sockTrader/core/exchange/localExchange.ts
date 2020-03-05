@@ -72,22 +72,17 @@ export default class LocalExchange extends BaseExchange {
      * Emits a collection of candles from a local file as if they were sent from a real exchange.
      * Candles should be ordered during normalization process.
      */
-    async emitCandles(candles: Candle[], pair: Pair) {
+    emitCandles(candles: Candle[], pair: Pair) {
         const candleChunks = this.prepareCandleChunks(candles);
         Events.emit("core.botStatus", {type: "started", chunks: candleChunks.length});
 
-        return new Promise((resolve, reject) => {
-            candleChunks.forEach((chunk, index) => {
-                setImmediate(() => {
-                    this.reportProgress(index, candleChunks.length);
-                    this.processChunk(chunk, pair);
+        candleChunks.forEach((chunk, index) => {
+            this.reportProgress(index, candleChunks.length);
+            this.processChunk(chunk, pair);
 
-                    if (index === (candleChunks.length - 1)) {
-                        Events.emit("core.botStatus", {type: "finished"});
-                        resolve(true);
-                    }
-                });
-            });
+            if (index === (candleChunks.length - 1)) {
+                Events.emit("core.botStatus", {type: "finished"});
+            }
         });
     }
 
