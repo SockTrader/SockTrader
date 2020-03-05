@@ -113,7 +113,7 @@
     "@stryker-mutator/typescript": "^2.5.0",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
-    "codecov": "^3.6.4",
+    "codecov": "^3.6.5",
     "concurrently": "^5.1.0",
     "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
