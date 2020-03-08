@@ -111,11 +111,13 @@ Example:
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import path from "path";
+import {Candle} from "../sockTrader/core/types/candle";
 import CandleNormalizer from "../sockTrader/core/candles/candleNormalizer";
+import CandleNormalizer, {CandleMetaInfo} from "../sockTrader/data/candleNormalizer";
 
-const candleMeta = {symbol: ["BTC", "USD"], name: "Bitcoin"};
-const parser = (dataFrame: IDataFrame<number, any>): IDataFrame<number, any> => dataFrame
-    .dropSeries(["Symbol", "Volume BTC"]) // Redundant properties
+const candleMeta: CandleMetaInfo = {symbol: ["BTC", "USD"], name: "Bitcoin"};
+
+const parser = (dataFrame: IDataFrame): IDataFrame<number, Candle> => dataFrame
     .renameSeries({
         "Date": "timestamp",
         "High": "high",

@@ -1,5 +1,5 @@
 import "jest";
-import CandleNormalizer, {CandleNormalizerConfig} from "../../sockTrader/data/candleNormalizer";
+import CandleNormalizer, {CandleMetaInfo} from "../../sockTrader/data/candleNormalizer";
 import {DataFrame, IDataFrame} from "data-forge";
 import moment from "moment";
 
@@ -15,7 +15,7 @@ function createDataFrame() {
 
 function createNormalizer() {
     const file = "./coinbase_btcusd_1h.csv";
-    const config = {symbol: ["BTC", "USD"], name: "Bitcoin"} as CandleNormalizerConfig;
+    const config = {symbol: ["BTC", "USD"], name: "Bitcoin"} as CandleMetaInfo;
     return new CandleNormalizer(file, config, (candles: IDataFrame) => candles);
 }
 

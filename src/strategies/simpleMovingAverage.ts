@@ -24,8 +24,8 @@ export default class SimpleMovingAverage extends BaseStrategy {
     constructor(pair: Pair, exchange: Exchange) {
         super(pair, exchange);
 
-        this.fastSMA = new SMA({period: 12, values: [], reversedInput: true});
-        this.slowSMA = new SMA({period: 24, values: [], reversedInput: true});
+        this.fastSMA = new SMA({period: 12, values: []});
+        this.slowSMA = new SMA({period: 24, values: []});
 
         this.crossUp = new CrossUp({lineA: [], lineB: []});
         this.crossDown = new CrossDown({lineA: [], lineB: []});

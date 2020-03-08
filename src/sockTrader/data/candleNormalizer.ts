@@ -6,7 +6,7 @@ import {Candle} from "../core/types/candle";
 import {Pair} from "../core/types/pair";
 import {getDecimals} from "./utils";
 
-export interface CandleNormalizerConfig {
+export interface CandleMetaInfo {
     decimalSeparator?: string;
     name: string;
     symbol: Pair;
@@ -28,7 +28,7 @@ export default class CandleNormalizer {
     private readonly filePath: string;
     private readonly parser: Parser;
 
-    constructor(filePath: string, private candleNormalizerConfig: CandleNormalizerConfig, parser: Parser) {
+    constructor(filePath: string, private candleNormalizerConfig: CandleMetaInfo, parser: Parser) {
         this.parser = parser;
         this.filePath = this.resolveDataFile(filePath);
     }

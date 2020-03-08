@@ -1,7 +1,9 @@
 import {IDataFrame} from "data-forge";
 import moment from "moment";
 import {Candle} from "../sockTrader/core/types/candle";
-import CandleNormalizer from "../sockTrader/data/candleNormalizer";
+import CandleNormalizer, {CandleMetaInfo} from "../sockTrader/data/candleNormalizer";
+
+const candleMeta: CandleMetaInfo = {symbol: ["BTC", "USD"], name: "Bitcoin"};
 
 const normalize = (dataFrame: IDataFrame): IDataFrame<number, Candle> => dataFrame
     .dropSeries(["Symbol", "Volume BTC"])
@@ -19,4 +21,4 @@ const normalize = (dataFrame: IDataFrame): IDataFrame<number, Candle> => dataFra
     }));
 
 // noinspection JSUnusedGlobalSymbols
-export default new CandleNormalizer("coinbase_btcusd_1h.csv", {symbol: ["BTC", "USD"], name: "Bitcoin"}, normalize);
+export default new CandleNormalizer("coinbase_btcusd_1h.csv", candleMeta, normalize);
