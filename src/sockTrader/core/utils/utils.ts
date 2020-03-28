@@ -1,5 +1,5 @@
 import {lowercase, numbers, uppercase} from "nanoid-dictionary";
-import generate from "nanoid/generate";
+import {customAlphabet} from "nanoid";
 import {Pair} from "../types/pair";
 
 /**
@@ -11,6 +11,7 @@ import {Pair} from "../types/pair";
 export function generateOrderId(pair: Pair): string {
     const alphabet = `${lowercase}${uppercase}${numbers}_-.|`;
     const orderId = `${pair}${new Date().getTime()}`;
+    const nanoId = customAlphabet(alphabet, 32 - orderId.length);
 
-    return orderId + generate(alphabet, 32 - orderId.length);
+    return orderId + nanoId();
 }
