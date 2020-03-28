@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import nanoid from "nanoid";
+import {nanoid} from "nanoid";
 import config from "../../../config";
 import WsConnection, {Data} from "../connection/wsConnection";
 import Events from "../events";
