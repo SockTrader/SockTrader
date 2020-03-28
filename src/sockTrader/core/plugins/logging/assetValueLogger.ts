@@ -6,8 +6,6 @@ import Events from "../../events";
 
 export interface AssetValueConfig {
     toAsset: string;
-    logInterval?: number;
-    logOnUpdateAssets?: boolean;
 }
 
 export default class AssetValueLogger {
@@ -19,8 +17,6 @@ export default class AssetValueLogger {
     constructor(private config: AssetValueConfig) {
         Events.on("core.updateAssets", this.onUpdateAssets.bind(this));
         Events.on("core.updateCandles", this.onUpdateCandles.bind(this));
-
-        if (config.logInterval) setInterval(() => this.logAssetValue(), config.logInterval * 1000);
     }
 
     onUpdateAssets(assets: AssetMap, reservedAssets: AssetMap) {
@@ -30,7 +26,7 @@ export default class AssetValueLogger {
         walletLogger.info({type: "Wallet", payload: this.objectToArray(assets)});
         walletLogger.info({type: "Reserved wallet", payload: this.objectToArray(reservedAssets)});
 
-        if (this.config.logOnUpdateAssets) this.logAssetValue();
+        this.logAssetValue();
     }
 
     logAssetValue() {
