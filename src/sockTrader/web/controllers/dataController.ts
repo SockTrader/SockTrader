@@ -17,7 +17,7 @@ export const dataHandler: RequestHandler = async (req, res, next) => {
     if (!req.query.file) return next(boom.badRequest("'file' argument is not defined"));
 
     try {
-        const file = resolve(__dirname, BASE_PATH, (Buffer.from(req.query.file, "base64")).toString() + ext);
+        const file = resolve(__dirname, BASE_PATH, (Buffer.from(req.query.file as string, "base64")).toString() + ext);
         const stats = await (promisify(fs.stat))(file);
 
         if (stats.isFile()) return res.sendFile(file);
