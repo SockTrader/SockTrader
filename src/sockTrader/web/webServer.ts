@@ -4,8 +4,8 @@ import {Server} from "http";
 import socketIO, {Socket} from "socket.io";
 import config from "../../config";
 import BacktestController from "./controllers/backtestController";
-import dataController from "./controllers/dataController";
 import strategyController from "./controllers/strategyController";
+import udfController from "./controllers/udfController";
 
 export default function startWebServer() {
     const app: Express = express();
@@ -17,8 +17,8 @@ export default function startWebServer() {
     app.use(express.json());
     app.use(cors());
 
-    app.use("/data", dataController);
     app.use("/strategy", strategyController);
+    app.use("/udf", udfController);
 
     app.use((err: any, req: Request, res: Response, next: NextFunction) => next(res.status(err.output.statusCode).json(err.output.payload)));
 
