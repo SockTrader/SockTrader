@@ -23,7 +23,7 @@ export default {
 
     plugins: [/*
         new ProfitCalculator(),
-        new AssetValueLogger("USD"),
+        new AssetValueLogger({ toAsset: "USD" }),
         new OrderLogger(),
         new SpreadLogger(),
     */],
