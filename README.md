@@ -173,7 +173,9 @@ Let us know if you have great ideas to improve the project!
 Feel free to open a pull request.
 
 ## Contributors
-[<img alt="cwouter" src="https://avatars3.githubusercontent.com/u/1439383?v=4&s=117" width="117">](https://github.com/cwouter)[<img alt="thijs-raets" src="https://avatars1.githubusercontent.com/u/1255632?v=4&s=117" width="117">](https://github.com/thijs-raets)
+<a href="https://github.com/SockTrader/SockTrader/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=SockTrader/SockTrader" />
+</a>
 
 ## DISCLAIMER
     Using a trading bot does not mean guaranteed profit. 
