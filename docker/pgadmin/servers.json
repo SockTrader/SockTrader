@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Socktrader",
+      "Group": "Servers",
+      "Port": 5432,
+      "Username": "socktrader",
+      "Host": "postgresql",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}

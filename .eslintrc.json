@@ -1,42 +1,68 @@
 {
   "env": {
-    "es6": true,
+    "es2021": true,
     "node": true
   },
+  "ignorePatterns": [
+    "**/*.js",
+    "__mocks__",
+    "coverage",
+    "build",
+    "src/strategies/**/*"
+  ],
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "project": "./tsconfig.eslint.json"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "rxjs"
   ],
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/camelcase": "off",
+    "no-unused-vars": "off",
+    "brace-style": [
+      "warn",
+      "1tbs"
+    ],
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-useless-constructor": [
+      "error"
+    ],
     "@typescript-eslint/no-unused-vars": [
-      1,
+      "error",
       {
-        "ignoreRestSiblings": true,
-        "args": "none"
+        "argsIgnorePattern": "^_"
       }
     ],
-    "no-constant-condition": "warn",
-    "no-prototype-builtins": "warn",
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "no-public"
+      }
+    ],
+    "lines-between-class-members": ["error", "always"],
+    "padded-blocks": ["error", {"blocks":  "never", "classes":  "always", "switches": "never"}],
+    "no-warning-comments": [
+      "warn",
+      {
+        "terms": [
+          "TODO",
+          "fix"
+        ],
+        "location": "anywhere"
+      }
+    ],
     "indent": [
       "error",
-      4,
-      {"SwitchCase":  1}
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "linebreak-style": [
       "error",
@@ -44,9 +70,39 @@
     ],
     "quotes": [
       "error",
-      "double"
+      "single"
     ],
     "semi": [
+      "error",
+      "always"
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-single"
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "rxjs/no-async-subscribe": "error",
+    "rxjs/no-nested-subscribe": "error",
+    "rxjs/no-unbound-methods": "error",
+    "rxjs/throw-error": "error",
+    "rxjs/no-unsafe-takeuntil": "error",
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "no-trailing-spaces": "error",
+    "eol-last": [
       "error",
       "always"
     ]

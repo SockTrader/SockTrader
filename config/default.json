@@ -1,0 +1,18 @@
+{
+  "exchanges": {
+    "binanceLocal": {
+      "httpBase": "http://localhost:8000",
+      "wsBase": "http://localhost:8000"
+    },
+    "binance": {
+      "wsBase": "",
+      "apiSecret": "",
+      "apiKey": ""
+    },
+    "local": {
+      "slippage": 0,
+      "feeMaker": 0.001,
+      "feeTaker": 0.001
+    }
+  }
+}
