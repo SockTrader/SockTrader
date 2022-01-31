@@ -32,8 +32,8 @@ export default class Worker {
     try {
       require.resolve('ts-node');
       this._tsNodeAvailable = true;
-    } catch (e: any) {
-      if (e && e.code === 'MODULE_NOT_FOUND') {
+    } catch (e: unknown) {
+      if (e && (e as { code?: string })?.code === 'MODULE_NOT_FOUND') {
         this._tsNodeAvailable = false;
       } else {
         throw e;
