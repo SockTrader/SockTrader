@@ -181,7 +181,7 @@ export default class LocalExchange implements Exchange {
   private emitNewOrder(openOrder: OpenOrder, candle: Candle, pair: Pair) {
     if (openOrder.type === OrderType.LIMIT) {
       const orderPrice = calculateOrderPrice(openOrder, candle);
-      const order = mapOpenOrderToOrder(openOrder, candle, pair, orderPrice)
+      const order = mapOpenOrderToOrder(openOrder, candle, pair, orderPrice);
       this.orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
     }
   }

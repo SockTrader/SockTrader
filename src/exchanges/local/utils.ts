@@ -20,7 +20,7 @@ export const calculateOrderPrice = (order: OpenOrder, candle: Candle): number =>
   const applied = (order.side === OrderSide.BUY) ? +slippage : -slippage;
 
   return candle.close * (1 + applied);
-}
+};
 
 /**
  * Determines if the order can be filled within the given candle
@@ -33,7 +33,7 @@ export const canBeFilled = (candle: Candle, order: OpenOrder): boolean => {
 
   //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return ((order.side === OrderSide.BUY && candle.low <= order.price!) || (order.side === OrderSide.SELL && candle.high >= order.price!));
-}
+};
 
 /**
  * Returns a Trade object if the given order can be filled in the given candle.
@@ -47,7 +47,7 @@ export const createTradeFromOpenOrder = (order: OpenOrder, candle: Candle, pair:
   if (canBeFilled(candle, order)) {
     return mapOpenOrderToTrade(order, candle, pair, orderPrice);
   }
-}
+};
 
 /**
  * Returns an Order object if the given order can be filled in the given candle.
@@ -61,4 +61,4 @@ export const createOrderFromOpenOrder = (order: OpenOrder, candle: Candle, pair:
   if (canBeFilled(candle, order)) {
     return mapOpenOrderToOrder(order, candle, pair, orderPrice);
   }
-}
+};

@@ -17,7 +17,7 @@ export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: C
     type: orderCommand.type,
     createTime: candle.start,
   };
-}
+};
 
 export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Omit<Order, 'status'> => {
   return ({
@@ -30,7 +30,7 @@ export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair
     type: order.type,
     createTime: order.createTime
   });
-}
+};
 
 export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Trade => {
   const fee: number = order.type === OrderType.MARKET
@@ -57,4 +57,4 @@ export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair
     // or else the trade would be created in the ‘past'
     createTime: candle.start
   });
-}
+};
