@@ -22,18 +22,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Build
-        run: |
-          npm ci
-          npm run build
-          npm run lint
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run unit tests
-        run: |
-          npm run test
+      - name: Build
+        run: npm run build -- --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
 
       - name: Upload codecoverage report
         uses: codecov/codecov-action@v2
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '16.x'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/coverage-final.json
