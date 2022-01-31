@@ -1,11 +1,9 @@
-import { of, switchMapTo } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import { localExchangeCandlesMock as candleMock } from '../../../__mocks__/localExchange.mock';
-import TestStrategy from '../../../__mocks__/testStrategy.mock';
-import { OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
+import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock';
+import TestStrategy from '../../__mocks__/testStrategy.mock';
+import { OrderCommand, OrderType } from '../../core/order.interfaces';
 import { exchangeTestSuite } from '../exchanges.spec';
 import LocalExchange from './localExchange';
-import { OpenOrder } from './localExchange.interfaces';
 
 describe('Generic exchange test suite', () => {
   const suite = exchangeTestSuite('LocalExchange', LocalExchange);
@@ -74,9 +72,9 @@ describe('LocalExchange', () => {
 
   it('should sort reversed candles', () => {
     scheduler.run(({ expectObservable }) => {
-      localExchange.addCandles(['BTC', 'USDT'], [candleMock[2], candleMock[1], candleMock[0]]);
+      localExchange.addCandles(['ETH', 'USDT'], [candleMock[2], candleMock[1], candleMock[0]]);
 
-      expectObservable(localExchange.candles('BTCUSDT')).toBe('(abc)', {
+      expectObservable(localExchange.candles('ETHUSDT')).toBe('(abc)', {
         a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') }),
         b: expect.objectContaining({ start: new Date('2020-02-24T12:00:00') }),
         c: expect.objectContaining({ start: new Date('2020-02-24T13:00:00') }),
@@ -88,88 +86,15 @@ describe('LocalExchange', () => {
     expect(() => localExchange.candles('DOES_NOT_EXIST')).toThrowError('No candles added to local exchange for "DOES_NOT_EXIST"');
   });
 
+  it('should throw if candles already have been added', () => {
+    expect(() => localExchange.addCandles(['BTC', 'USDT'], candleMock)).toThrowError('A set of candles has already been added for BTCUSDT');
+  });
+
   it('should be able to set assets', () => {
     const setInitialWalletSpy = jest.spyOn(localExchange.wallet, 'setInitialWallet');
 
     localExchange.setAssets([{ asset: 'BTC', available: 1 }]);
     expect(setInitialWalletSpy).toHaveBeenCalledWith([{ asset: 'BTC', available: 1 }]);
-  });
-
-  it('should create an open order', () => {
-    scheduler.run(({ expectObservable }) => {
-      const src$ = of(strategy.onStart()).pipe(
-        switchMapTo(localExchange.openOrders$)
-      );
-
-      expectObservable(src$).toBe('(abcdefg)', {
-        a: [],
-        b: [
-          <OpenOrder>{
-            clientOrderId: expect.any(String),
-            createTime: new Date('2020-02-24T12:00:00'),
-            quantity: 1,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: 'BTCUSDT',
-            type: OrderType.MARKET
-          }
-        ],
-        c: [],
-        d: [
-          <OpenOrder>{
-            clientOrderId: expect.any(String),
-            createTime: new Date('2020-02-24T13:00:00'),
-            quantity: 1,
-            side: OrderSide.SELL,
-            status: OrderStatus.NEW,
-            symbol: 'BTCUSDT',
-            type: OrderType.MARKET
-          }
-        ],
-        e: [
-          <OpenOrder>{
-            clientOrderId: expect.any(String),
-            createTime: new Date('2020-02-24T14:00:00'),
-            price: 9700,
-            quantity: 1,
-            side: OrderSide.BUY,
-            status: OrderStatus.NEW,
-            symbol: 'BTCUSDT',
-            type: OrderType.LIMIT
-          }
-        ],
-        f: [
-          <OpenOrder>{
-            clientOrderId: expect.any(String),
-            createTime: new Date('2020-02-24T15:00:00'),
-            price: 9800,
-            quantity: 1,
-            side: OrderSide.SELL,
-            status: OrderStatus.NEW,
-            symbol: 'BTCUSDT',
-            type: OrderType.LIMIT
-          }
-        ],
-        g: [],
-      });
-    });
-  });
-
-  it('should not create an open order if insufficient funds', () => {
-    scheduler.run(({ expectObservable }) => {
-      localExchange.setAssets(([
-        { asset: 'USDT', available: 1 },
-        { asset: 'BTC', available: 0.001 }
-      ]));
-
-      const src$ = of(strategy.onStart()).pipe(
-        switchMapTo(localExchange.openOrders$)
-      );
-
-      expectObservable(src$).toBe('(a)', {
-        a: expect.arrayContaining([]),
-      });
-    });
   });
 
   it('should throw if LIMIT buy is performed without price', async () => {
@@ -195,4 +120,7 @@ describe('LocalExchange', () => {
   it('should throw when trying to add an empty list of candles', async () => {
     expect(() => localExchange.addCandles(['BTC', 'USDT'], [])).toThrowError('Candle array should contain at least 1 candle');
   });
+
+  // @TODO test it should not be possible to fill an open order with a candle from a different pair
+  // Ex: "BUY 1 BTC" getting filled with ETHUSDT candles
 });

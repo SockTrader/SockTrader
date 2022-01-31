@@ -1,5 +1,3 @@
-import config from 'config';
-import { nanoid } from 'nanoid';
 import { asyncScheduler, BehaviorSubject, combineLatest, distinctUntilChanged, from, map, Observable, scheduled, Subject, tap } from 'rxjs';
 import { Candle } from '../../core/candle.interfaces';
 import { Exchange } from '../../core/exchange.interfaces';
@@ -9,6 +7,8 @@ import { Trade } from '../../core/trade.interfaces';
 import { Asset } from '../../core/wallet.interfaces';
 import WalletService from '../../core/wallet/wallet.service';
 import { OpenOrder } from './localExchange.interfaces';
+import { mapOpenOrderToOrder, mapOrderCommandToOpenOrder } from './mapper';
+import { calculateOrderPrice, createOrderFromOpenOrder, createTradeFromOpenOrder } from './utils';
 
 export default class LocalExchange implements Exchange {
 
@@ -18,17 +18,27 @@ export default class LocalExchange implements Exchange {
 
   readonly wallet: WalletService = new WalletService();
 
-  _candleCollections: Map<string, Candle[]> = new Map<string, Candle[]>();
+  /**
+   * Contains a mapping of all registered candles per asset.
+   * Only 1 set of candles per asset can be registered.
+   * @type {Map<string, Candle[]>}
+   */
+  readonly _symbolWithCandles: Map<string, Candle[]> = new Map<string, Candle[]>();
 
-  _symbolWithPair: Map<string, Pair> = new Map<string, Pair>();
+  /**
+   * Translation table between "BTCUSDT" and ["BTC", "USDT"]
+   * @type {Map<string, Pair>}
+   */
+  readonly _symbolWithPair: Map<string, Pair> = new Map<string, Pair>();
 
-  _symbolWithCandle: Map<string, Candle> = new Map<string, Candle>();
+  /**
+   * Keeps track of the current candle for each trading pair when iterating
+   * Note: this could potentially lead to async issues
+   * @type {Map<string, Candle>}
+   */
+  readonly _symbolWithCurrentCandle: Map<string, Candle> = new Map<string, Candle>();
 
-  private readonly _openOrders$: BehaviorSubject<OpenOrder[]> = new BehaviorSubject<OpenOrder[]>([]);
-
-  readonly openOrders$: Observable<OpenOrder[]> = this._openOrders$.pipe(
-    distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-  );
+  private readonly openOrders$: BehaviorSubject<OpenOrder[]> = new BehaviorSubject<OpenOrder[]>([]);
 
   constructor() {
     this.trades$.subscribe((trade: Trade) => {
@@ -38,7 +48,7 @@ export default class LocalExchange implements Exchange {
   }
 
   candles(symbol: string): Observable<Candle> {
-    const candles = this._candleCollections.get(symbol);
+    const candles = this._symbolWithCandles.get(symbol);
 
     if (candles == null) {
       throw new Error(`No candles added to local exchange for "${symbol}"`);
@@ -46,10 +56,10 @@ export default class LocalExchange implements Exchange {
 
     return combineLatest([
       scheduled(from(candles), asyncScheduler),
-      this._openOrders$
+      this.openOrders$.pipe(map(orderList => orderList.filter(o => o.symbol === symbol))),
     ]).pipe(
       tap(([candle, openOrders]) => this.fillOpenOrders(openOrders, candle)),
-      tap(([candle]) => this._symbolWithCandle.set(symbol, candle)),
+      tap(([candle]) => this._symbolWithCurrentCandle.set(symbol, candle)),
       map(([candle]) => candle),
       // The distinctUntilChanged would prevent similar candles from leaking into the stream. Since OpenOrders$ could emit multiple times
       distinctUntilChanged((prev, curr) => prev.start.getTime() === curr.start.getTime())
@@ -81,17 +91,16 @@ export default class LocalExchange implements Exchange {
   }
 
   addCandles(pair: Pair, candles: Candle[]): void {
-    if (candles.length <= 0) {
-      throw new Error('Candle array should contain at least 1 candle');
-    }
+    const symbol: string = pair[0] + pair[1];
+
+    if (candles.length <= 0) throw new Error('Candle array should contain at least 1 candle');
+    if (this._symbolWithCandles.get(symbol)) throw new Error(`A set of candles has already been added for ${symbol}`);
 
     const first = candles[0]?.start?.getTime();
     const last = candles[candles.length - 1].start.getTime();
 
-    const symbol: string = pair[0] + pair[1];
     this._symbolWithPair.set(symbol, pair);
-
-    this._candleCollections.set(symbol, first > last ? candles.reverse() : candles);
+    this._symbolWithCandles.set(symbol, first > last ? candles.reverse() : candles);
   }
 
   setAssets(initialWallet: Asset[]): void {
@@ -101,113 +110,15 @@ export default class LocalExchange implements Exchange {
   private getPair(symbol: string): Pair {
     const pair = this._symbolWithPair.get(symbol);
 
-    if (pair == null) {
-      throw new Error(`No pair could be found for ${symbol}`);
-    }
-
+    if (pair == null) throw new Error(`No pair could be found for ${symbol}`);
     return pair;
   }
 
   private getCandle(symbol: string): Candle {
-    const candle = this._symbolWithCandle.get(symbol);
+    const candle = this._symbolWithCurrentCandle.get(symbol);
 
-    if (candle == null) {
-      throw new Error(`No active candle could be found for ${symbol}`);
-    }
-
+    if (candle == null) throw new Error(`No active candle could be found for ${symbol}`);
     return candle;
-  }
-
-  /**
-   * Determines if the order can be filled within the given candle
-   * @param {Candle} candle
-   * @param {OpenOrder} order
-   * @returns {boolean}
-   * @private
-   */
-  private canBeFilled(candle: Candle, order: OpenOrder): boolean {
-    if (order.type === OrderType.MARKET) return true; // market order
-
-    //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return ((order.side === OrderSide.BUY && candle.low <= order.price!) || (order.side === OrderSide.SELL && candle.high >= order.price!));
-  }
-
-  /**
-   * Returns a Trade object if the given order can be filled in the given candle.
-   * @param {Order} order
-   * @param {Candle} candle
-   * @returns {Trade | undefined}
-   * @private
-   */
-  private createTradeFromOpenOrder(order: OpenOrder, candle: Candle): Trade | void {
-    if (this.canBeFilled(candle, order)) {
-      return this.mapOpenOrderToTrade(order, candle);
-    }
-  }
-
-  /**
-   * Returns an Order object if the given order can be filled in the given candle.
-   * @param {Order} order
-   * @param {Candle} candle
-   * @returns {Trade | undefined}
-   * @private
-   */
-  private createOrderFromOpenOrder(order: OpenOrder, candle: Candle): Order | void {
-    if (this.canBeFilled(candle, order)) {
-      return this.mapOpenOrderToOrder(order, candle);
-    }
-  }
-
-  private getOrderPrice(order: OpenOrder, candle: Candle): number {
-    if (order.type !== OrderType.MARKET) return <number>order.price;
-
-    const slippage = parseFloat(config.get('exchanges.local.slippage'));
-    const applied = (order.side === OrderSide.BUY) ? +slippage : -slippage;
-
-    return candle.close * (1 + applied);
-  }
-
-  private mapOpenOrderToOrder(order: OpenOrder, candle: Candle): Order {
-    return ({
-      clientOrderId: order.clientOrderId,
-      originalClientOrderId: order.originalClientOrderId,
-      price: this.getOrderPrice(order, candle),
-      quantity: order.quantity,
-      side: order.side,
-      status: OrderStatus.FILLED,
-      symbol: order.symbol,
-      type: order.type,
-      createTime: order.createTime
-    });
-  }
-
-  private mapOpenOrderToTrade(order: OpenOrder, candle: Candle): Trade {
-    const pair: Pair = this.getPair(order.symbol);
-    const fee: number = order.type === OrderType.MARKET
-      ? config.get('exchanges.local.feeTaker')
-      : config.get('exchanges.local.feeMaker');
-
-    const price = this.getOrderPrice(order, candle);
-    const commission = order.side === OrderSide.BUY
-      ? order.quantity * fee
-      : order.quantity * (fee * price);
-
-    return ({
-      clientOrderId: order.clientOrderId,
-      originalClientOrderId: order.originalClientOrderId,
-      price: price,
-      quantity: order.quantity,
-      side: order.side,
-      status: OrderStatus.FILLED,
-      symbol: order.symbol,
-      tradeQuantity: order.quantity,
-      commission: commission,
-      commissionAsset: order.side === OrderSide.BUY ? pair[0] : pair[1],
-      // @todo:
-      // It would be better to increment createTime with 1 interval or wait for the next candle to use `candle.start`.
-      // or else the trade would be created in the ‘past'
-      createTime: candle.start
-    });
   }
 
   /**
@@ -221,14 +132,17 @@ export default class LocalExchange implements Exchange {
     const scheduleForRemoval: string[] = [];
 
     orders.forEach((openOrder) => {
-      const trade = this.createTradeFromOpenOrder(openOrder, candle);
-      if (trade) this.trades$.next(trade);
+      const pair: Pair = this.getPair(openOrder.symbol);
+      const orderPrice: number = calculateOrderPrice(openOrder, candle);
 
-      const order = this.createOrderFromOpenOrder(openOrder, candle);
+      const order = createOrderFromOpenOrder(openOrder, candle, pair, orderPrice);
       if (order) {
-        this.orders$.next(order);
+        this.orders$.next(<Order>{ ...order, status: OrderStatus.FILLED });
         scheduleForRemoval.push(order.clientOrderId);
       }
+
+      const trade = createTradeFromOpenOrder(openOrder, candle, pair, orderPrice);
+      if (trade) this.trades$.next(trade);
     });
 
     if (scheduleForRemoval.length > 0) this.removeOpenOrderByOrderIds(scheduleForRemoval);
@@ -242,10 +156,10 @@ export default class LocalExchange implements Exchange {
   private removeOpenOrderByOrderIds(clientOrderIds: string[]): void {
     if (clientOrderIds.length === 0) return;
 
-    const orders = this._openOrders$.getValue();
+    const orders = this.openOrders$.getValue();
     const newOrders = orders.filter(o => !clientOrderIds.includes(o.originalClientOrderId ?? '') && !clientOrderIds.includes(o.clientOrderId));
 
-    if (orders.length !== newOrders.length) this._openOrders$.next(newOrders);
+    if (orders.length !== newOrders.length) this.openOrders$.next(newOrders);
   }
 
   private createOpenOrder(orderCommand: OrderCommand): void {
@@ -256,25 +170,20 @@ export default class LocalExchange implements Exchange {
     const pair: Pair = this.getPair(orderCommand.symbol);
     const candle: Candle = this.getCandle(orderCommand.symbol);
 
-    const price: number = orderCommand.type === OrderType.LIMIT
-      ? <number>orderCommand.price
-      : candle.close;
+    this.wallet.updateSpotByOrderCommand(pair, orderCommand, candle);
 
-    this.wallet.updateSpotByOrderCommand(pair, orderCommand, price);
+    const openOrder = mapOrderCommandToOpenOrder(orderCommand, candle);
 
-    this._openOrders$.next([
-      ...this._openOrders$.getValue(),
-      {
-        clientOrderId: orderCommand.clientOrderId ? orderCommand.clientOrderId : nanoid(),
-        price: orderCommand.type === OrderType.LIMIT ? orderCommand.price : undefined,
-        quantity: orderCommand.quantity,
-        side: orderCommand.side,
-        status: OrderStatus.NEW,
-        symbol: orderCommand.symbol,
-        type: orderCommand.type,
-        createTime: candle.start,
-      }
-    ]);
+    this.emitNewOrder(openOrder, candle, pair);
+    this.openOrders$.next([...this.openOrders$.getValue(), openOrder]);
+  }
+
+  private emitNewOrder(openOrder: OpenOrder, candle: Candle, pair: Pair) {
+    if (openOrder.type === OrderType.LIMIT) {
+      const orderPrice = calculateOrderPrice(openOrder, candle);
+      const order = mapOpenOrderToOrder(openOrder, candle, pair, orderPrice)
+      this.orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
+    }
   }
 
 }

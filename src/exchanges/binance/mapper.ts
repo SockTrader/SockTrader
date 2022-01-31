@@ -83,7 +83,7 @@ export const mapOrderResponse = (order: BinanceOrder): { order: Order, trades: T
   };
 };
 
-export const _mapBinanceOrderToOrder = (order: BinanceOrder): Order => {
+const _mapBinanceOrderToOrder = (order: BinanceOrder): Order => {
   return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: undefined,
@@ -97,7 +97,7 @@ export const _mapBinanceOrderToOrder = (order: BinanceOrder): Order => {
   };
 };
 
-export const _mapBinanceOrderToTrades = (order: BinanceOrder): Trade[] => {
+const _mapBinanceOrderToTrades = (order: BinanceOrder): Trade[] => {
   if (!order.fills) return [];
 
   return order.fills.map(fill => ({

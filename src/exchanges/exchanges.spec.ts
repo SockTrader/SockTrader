@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Observable, of, switchMapTo, tap } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
-import TestStrategy from '../../__mocks__/testStrategy.mock';
+import TestStrategy from '../__mocks__/testStrategy.mock';
 import { Candle } from '../core/candle.interfaces';
 import { Exchange } from '../core/exchange.interfaces';
 import { Order, OrderSide, OrderStatus, OrderType } from '../core/order.interfaces';
@@ -149,7 +149,7 @@ export const exchangeTestSuite = <T extends Exchange>(exchangeName: string, Exch
             switchMapTo(instance.orders$)
           );
 
-          expectObservable(src$).toBe('(abcd)', {
+          expectObservable(src$).toBe('(abcdef)', {
             a: <Order>{
               clientOrderId: expect.any(String),
               createTime: new Date('2020-02-24T12:00:00'),
@@ -170,43 +170,50 @@ export const exchangeTestSuite = <T extends Exchange>(exchangeName: string, Exch
               symbol: 'BTCUSDT',
               type: OrderType.MARKET
             },
-            // @TODO expected to see
-            // c1: {
-            //    side: OrderSide.BUY,
-            //    createTime: new Date('2020-02-24T14:00:00')
-            //    status: OrderStatus.NEW,
-            //    symbol: 'BTCUSDT',
-            //    type: OrderType.LIMIT
-            // }
-            // c2: {
-            //    side: OrderSide.BUY,
-            //    createTime: new Date('2020-02-24T15:00:00')
-            //    status: OrderStatus.FILLED,
-            //    symbol: 'BTCUSDT',
-            //    type: OrderType.LIMIT
-            // }
-            c: <Order>{
+            c: {
               clientOrderId: expect.any(String),
-              // note: order.create != trade.create
+              // order.create != trade.create
+              createTime: new Date('2020-02-24T14:00:00'),
+              price: 9700,
+              quantity: 1,
+              side: OrderSide.BUY,
+              status: OrderStatus.NEW,
+              symbol: 'BTCUSDT',
+              type: OrderType.LIMIT
+            },
+            d: {
+              clientOrderId: expect.any(String),
+              // order.create != trade.create
               createTime: new Date('2020-02-24T14:00:00'),
               price: 9700,
               quantity: 1,
               side: OrderSide.BUY,
               status: OrderStatus.FILLED,
               symbol: 'BTCUSDT',
+              type: OrderType.LIMIT,
+            },
+            e: {
+              clientOrderId: expect.any(String),
+              // order.create != trade.create
+              createTime: new Date('2020-02-24T15:00:00'),
+              price: 9800,
+              quantity: 1,
+              side: OrderSide.SELL,
+              status: OrderStatus.NEW,
+              symbol: 'BTCUSDT',
               type: OrderType.LIMIT
             },
-            d: <Order>{
+            f: {
               clientOrderId: expect.any(String),
-              // note: order.create != trade.create
+              // order.create != trade.create
               createTime: new Date('2020-02-24T15:00:00'),
               price: 9800,
               quantity: 1,
               side: OrderSide.SELL,
               status: OrderStatus.FILLED,
               symbol: 'BTCUSDT',
-              type: OrderType.LIMIT
-            }
+              type: OrderType.LIMIT,
+            },
           });
         });
       });

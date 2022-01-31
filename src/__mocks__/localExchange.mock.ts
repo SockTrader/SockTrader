@@ -1,4 +1,4 @@
-import { Candle } from '../src/core/candle.interfaces';
+import { Candle } from '../core/candle.interfaces';
 
 export const localExchangeCandlesMock: Candle[] = [
   {

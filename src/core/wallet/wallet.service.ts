@@ -1,5 +1,6 @@
 import { applyTransaction } from '@datorama/akita';
-import { OrderCommand, OrderSide } from '../order.interfaces';
+import { Candle } from '../candle.interfaces';
+import { OrderCommand, OrderSide, OrderType } from '../order.interfaces';
 import { Pair } from '../pair.interfaces';
 import SpotWalletQuery from '../stores/spotWallet.query';
 import { SpotWalletStore } from '../stores/spotWallet.store';
@@ -40,7 +41,11 @@ export default class WalletService {
     this.store.updateAsset(asset, assetDelta);
   }
 
-  updateSpotByOrderCommand(pair: Pair, orderCommand: OrderCommand, price: number): void {
+  updateSpotByOrderCommand(pair: Pair, orderCommand: OrderCommand, candle: Candle): void {
+    const price: number = orderCommand.type === OrderType.LIMIT
+      ? <number>orderCommand.price
+      : candle.close;
+
     if (orderCommand.side === OrderSide.BUY) {
       this.store.reserveAsset(
         pair[1],
@@ -52,13 +57,6 @@ export default class WalletService {
         orderCommand.quantity
       );
     }
-  }
-
-  /**
-   * Releases the assetDelta from assetToRelease into assetDelta from assetToMakeAvailable
-   */
-  releaseAsset(assetToRelease: AssetDeltaUpdate, assetToMakeAvailable: AssetDeltaUpdate): void {
-    this.store.releaseAsset(assetToRelease.asset, assetToMakeAvailable.asset, assetToRelease.assetDelta, assetToMakeAvailable.assetDelta);
   }
 
   updateSpotByTrade(trade: Trade, pair: Pair): void {

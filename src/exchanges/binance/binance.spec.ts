@@ -1,9 +1,9 @@
 //@ts-ignore
 import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
-import { __setCandles } from '../../../__mocks__/binance-api-node';
-import { binanceCandlesMock } from '../../../__mocks__/binance.mock';
-import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder, mockFillLimitBuyOrder, mockFillMarketSellOrder, mockPartiallyFilledLimitBuyOrderPart1 } from '../../../__mocks__/binanceExecutionReport.mock';
+import { __setCandles } from '../../__mocks__/binance-api-node';
+import { binanceCandlesMock } from '../../__mocks__/binance.mock';
+import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder, mockFillLimitBuyOrder, mockFillMarketSellOrder, mockPartiallyFilledLimitBuyOrderPart1 } from '../../__mocks__/binanceExecutionReport.mock';
 import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { feedObservable } from '../../helpers/feedObservable.helper';
 import { exchangeTestSuite } from '../exchanges.spec';
