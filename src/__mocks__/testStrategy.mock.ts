@@ -45,7 +45,7 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
   async updateCandle(candle: Candle): Promise<void> {
     this.candleNr += 1;
 
-    if (this.candleNr === 2) {
+    if (this.candleNr === 2) { // '2020-02-24T12:00:00'
       await this._exchange.buy({
         symbol: 'BTCUSDT',
         type: OrderType.MARKET,
@@ -53,7 +53,7 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
       }).catch(this.onError);
     }
 
-    if (this.candleNr === 3) {
+    if (this.candleNr === 3) { // '2020-02-24T13:00:00'
       await this._exchange.sell({
         symbol: 'BTCUSDT',
         type: OrderType.MARKET,
@@ -61,7 +61,7 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
       }).catch(this.onError);
     }
 
-    if (this.candleNr === 4) {
+    if (this.candleNr === 4) { // '2020-02-24T14:00:00'
       await this._exchange.buy({
         symbol: 'BTCUSDT',
         type: OrderType.LIMIT,
@@ -70,7 +70,7 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
       }).catch(this.onError);
     }
 
-    if (this.candleNr === 5) {
+    if (this.candleNr === 5) { // '2020-02-24T15:00:00'
       await this._exchange.sell({
         symbol: 'BTCUSDT',
         type: OrderType.LIMIT,

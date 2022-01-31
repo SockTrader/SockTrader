@@ -4,18 +4,19 @@ module.exports = {
             tsconfig: 'tsconfig.test.json'
         }
     },
-    preset: "ts-jest",
+    roots: ['<rootDir>/src/'],
+    preset: 'ts-jest',
     testEnvironment: 'node',
     transform: {
-        "^.+\\.tsx?$": "ts-jest"
+        '^.+\\.tsx?$': 'ts-jest'
     },
     moduleFileExtensions: [
-        "ts",
-        "tsx",
-        "js",
-        "jsx",
-        "json",
-        "node",
+        'ts',
+        'tsx',
+        'js',
+        'jsx',
+        'json',
+        'node',
     ],
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/'],
     testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|js)x?$',
