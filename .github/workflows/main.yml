@@ -36,7 +36,7 @@ jobs:
 
       - name: Upload codecoverage report
         uses: codecov/codecov-action@v2
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '16.x'
+        if: matrix.node-version == '14.x'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/coverage-final.json
