@@ -13,7 +13,7 @@
 </p>
 
 <p align="center"><b>Join the community <a href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img valign="middle" src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a></b></p>
-<p align="center"><b>Checkout <a href="https://github.com/SockTrader/SockTrader/tree/socktrader-v2">SockTrader v2!</a></b></p>
+<p align="center"><b>Check out <a href="https://github.com/SockTrader/SockTrader/tree/socktrader-v2">SockTrader v2!</a></b></p>
 
 ## What is "SockTrader"?
 SockTrader is an open source cryptocurrency trading bot. You can use it to automatically buy and/or sell cryptocurrencies based on a strategy that you've programmed.
