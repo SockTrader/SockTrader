@@ -3,6 +3,8 @@ coverage
 .idea
 node_modules
 
+*.iml
+
 # Application config
 config/local*
 
