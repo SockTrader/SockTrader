@@ -1,6 +1,6 @@
 <p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/SockTraderLogo.png" alt="SockTrader logo" /></p>
 
-<h1 align="center">SockTrader</h1>
+<h1 align="center">SockTrader v2</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
 
 <p align="center">
@@ -10,11 +10,9 @@
   <a href="https://sonarcloud.io/dashboard?id=SockTrader_SockTrader"><img src="https://sonarcloud.io/api/project_badges/measure?project=SockTrader_SockTrader&metric=sqale_rating" /></a>
   <a href="https://circleci.com/gh/SockTrader"><img src="https://circleci.com/gh/SockTrader/SockTrader/tree/master.svg?style=shield" alt="Build status"></a>
   <a href="https://codeclimate.com/github/SockTrader/SockTrader/maintainability"><img src="https://api.codeclimate.com/v1/badges/19589f9237d31ca9dcf6/maintainability" /></a>
-  <a href="https://david-dm.org/SockTrader/SockTrader"><img src="https://david-dm.org/SockTrader/SockTrader.svg" alt="Dependencies"></a>
-  <a href="https://gitter.im/SockTrader/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge"><img src="https://badges.gitter.im/SockTrader/community.svg" alt="Gitter"></a>
 </p>
 
-<p align="center"><b>🚧 Project is currently under development! 🚧</b></p>
+<p align="center"><b>Join the community <a valign="center" href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a></b></p>
 
 ## What is "SockTrader"?
 SockTrader is an open source cryptocurrency trading bot. You can use it to automatically buy and/or sell cryptocurrencies based on a strategy that you've programmed.
@@ -39,7 +37,8 @@ that one can act very quickly in a changing market with low latency.
 # Quickstart
 
 1. Install NodeJS dependencies. `npm i`
-2. Run the entry script. `npm start`
+2. Copy `config/default.json` to `config/local.json` and edit.
+3. Run the MovingAverageStrategy on LocalExchange. `npm start`
 
 ## Additional scripts
 
@@ -48,47 +47,49 @@ that one can act very quickly in a changing market with low latency.
 - Build and execute production build. `npm run start:prod`
 - Run test suite. `npm test`
 
-# Infrastructure
 
-## Database
+## Use CLI
 
-The database can be started by running `docker-compose up`. This will start a `PostgresQl` database on port `5432`.
+1. Make sure to install project dependencies. `npm i`
+2. Run cli tool. `ts-node src/cli.ts`
 
-## PgAdmin
+You will see the following output:
+```
+Usage: socktrader [options] [command]
 
-Pgadmin can be used to administer the database. This will be accessible using `localhost:5050` once docker compose is up and running.
+Options:
+  -V, --version   output the version number
+  -h, --help      display help for command
 
-## Connection details
+Commands:
+  run [options]
+  help [command]  display help for command
 
-### Postgresql
+```
 
-    Host: localhost
-    Port: 5432
-    Database: socktrader
-    Username: socktrader
-    Password: socktrader
+To start a strategy using the cli run:
+```ts-node src/cli.ts run -s src/strategies/localMovingaverageStrategy.ts```
 
-### PgAdmin
+## Connect your Binance account
 
-    Host: localhost
-    Port: 5050
-    Password: socktrader
+You feel like your strategy is production ready?
+Good! We'll help you to connect your SockTrader strategy to your Binance account.
 
-## Connecting to your Binance account
-
-Since you do not want your API key and API secret to be pushed by accident, the actual configuration file has been ignored from the repository.
-But you can start from an example file and fill in the necessary details:
-1. copy config/default.json to config/local.json
-2. go to your Binance account under API Management, create a new API key
-3. provide the apiSecret and apiKey in config/local.json and you're good to go!
+1. Copy `config/default.json` to `config/local.json`
+2. Go to your Binance account under API Management, create a new API key
+3. Provide the apiSecret and apiKey in `config/local.json`
+4. Don't forget to change the exchange in your strategy to `new Binance()` and you're good to go!
 
 ### API key restrictions
 
-By default the newly created API key does not allow you to place orders, only reads are allowed.
+By default, the newly created API key does not allow you to place orders, only reads are allowed.
 To get started:
 
-1. go to your Binance account
-2. under API restrictions enable 'Enable Spot & Margin Trading'
+1. Go to your Binance account
+2. Under API restrictions enable 'Enable Spot & Margin Trading'
+
+## Join the community
+<a href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a>
 
 ## Contributors
 <a href="https://github.com/SockTrader/SockTrader/graphs/contributors">
