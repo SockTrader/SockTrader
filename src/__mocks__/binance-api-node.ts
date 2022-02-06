@@ -1,6 +1,7 @@
 import { Candle, CandleChartInterval, ExchangeInfo, NewOrderSpot, Order, UserDataStreamEvent, OrderType } from 'binance-api-node';
 import { OrderStatus } from '../core/order.interfaces';
-import { binanceExchangeInfoMock, binanceOrderMock } from './binance.mock';
+import { binanceExchangeInfoMock } from '../exchanges/binance/__mocks__/binanceExchangeInfo.mock';
+import { binanceOrderMock } from '../exchanges/binance/__mocks__/binanceOrderResponse.mock';
 
 let candleMap = new Map<string, Candle[]>();
 let userDataStream: undefined | ((cb: UserDataStreamEvent) => void) = undefined;

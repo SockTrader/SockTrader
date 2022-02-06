@@ -1,15 +1,14 @@
 import { Subscription } from 'rxjs';
 import { Candle } from '../core/candle.interfaces';
 import { Exchange } from '../core/exchange.interfaces';
-import { Order, OrderType } from '../core/order.interfaces';
+import { OrderType } from '../core/order.interfaces';
 import { Strategy } from '../core/strategy.interfaces';
-import { Trade } from '../core/trade.interfaces';
 
 export default class TestStrategy<T extends Exchange> implements Strategy {
 
   public onError = console.log;
 
-  private readonly _exchange: T;
+  readonly _exchange: T;
 
   private _candleSub: Subscription | undefined;
 
@@ -23,16 +22,16 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
     this._exchange = exchange;
   }
 
-  onStart(): void {
+  //@ts-ignore
+  onStart(candleOptions: unknown): void {
+    const noop = () => null;
+
     this._candleSub = this._exchange
-      .candles('BTCUSDT')
+      .candles(candleOptions)
       .subscribe(candle => this.updateCandle(candle));
 
-    this._orderSub = this._exchange.orders$
-      .subscribe(order => this.updateOrder(order));
-
-    this._tradeSub = this._exchange.trades$
-      .subscribe(trade => this.updateTrades(trade));
+    this._orderSub = this._exchange.orders$.subscribe(noop);
+    this._tradeSub = this._exchange.trades$.subscribe(noop);
   }
 
   onStop(): void {
@@ -80,17 +79,9 @@ export default class TestStrategy<T extends Exchange> implements Strategy {
     }
   }
 
-  //noinspection JSUnusedLocalSymbols
-  updateOrder(order: Order): void {
-  }
-
-  //noinspection JSUnusedLocalSymbols
-  updateTrades(trade: Trade): void {
-  }
-
   setDebug(debug = true) {
     debug
       ? this.onError = console.log
-      : this.onError = () => {};
+      : this.onError = () => null;
   }
 }

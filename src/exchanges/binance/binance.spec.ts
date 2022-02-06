@@ -1,47 +1,12 @@
 //@ts-ignore
 import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
-import { __setCandles } from '../../__mocks__/binance-api-node';
-import { binanceCandlesMock } from '../../__mocks__/binance.mock';
 import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder, mockFillLimitBuyOrder, mockFillMarketSellOrder, mockPartiallyFilledLimitBuyOrderPart1 } from '../../__mocks__/binanceExecutionReport.mock';
 import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { feedObservable } from '../../helpers/feedObservable.helper';
-import { exchangeTestSuite } from '../exchanges.spec';
 import Binance from './binance';
 
 jest.mock('binance-api-node');
-
-describe('Generic exchange test suite', () => {
-  const suite = exchangeTestSuite('BinanceExchange', Binance);
-  const candleMockSet1 = [binanceCandlesMock[0], binanceCandlesMock[1], binanceCandlesMock[2]];
-  const candleMockSet2 = [binanceCandlesMock[0]];
-
-  suite.testCandles(exchange => {
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet1);
-
-    return exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
-  });
-
-  suite.testCandleSeries(exchange => {
-    __setCandles('ETHUSDT', <CandleChartInterval>'1h', candleMockSet1);
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet2);
-
-    return [
-      exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' }),
-      exchange.candles({ symbol: 'ETHUSDT', interval: <CandleChartInterval>'1h' }),
-    ];
-  });
-
-  // @todo
-  //suite.testTradeStream(() => {
-  //  __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
-  //});
-
-  // @todo
-  //suite.testOrderStream(() => {
-  //  __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
-  //});
-});
 
 describe('Binance', () => {
   let binance: Binance;

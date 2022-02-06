@@ -2,45 +2,7 @@ import { TestScheduler } from 'rxjs/testing';
 import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
 import { OrderCommand, OrderType } from '../../core/order.interfaces';
-import { exchangeTestSuite } from '../exchanges.spec';
 import LocalExchange from './localExchange';
-
-describe('Generic exchange test suite', () => {
-  const suite = exchangeTestSuite('LocalExchange', LocalExchange);
-  const candleMockSet1 = [candleMock[0], candleMock[1], candleMock[2]];
-  const candleMockSet2 = [candleMock[0]];
-
-  suite.testCandles(exchange => {
-    exchange.addCandles(['BTC', 'USDT'], candleMockSet1);
-    return exchange.candles('BTCUSDT');
-  });
-
-  suite.testCandleSeries(exchange => {
-    exchange.addCandles(['ETH', 'USDT'], candleMockSet1);
-    exchange.addCandles(['BTC', 'USDT'], candleMockSet2);
-
-    return [
-      exchange.candles('BTCUSDT'),
-      exchange.candles('ETHUSDT')
-    ];
-  });
-
-  suite.testTradeStream(exchange => {
-    exchange.addCandles(['BTC', 'USDT'], candleMock);
-    exchange.setAssets(([
-      { asset: 'USDT', available: 10000 },
-      { asset: 'BTC', available: 1 }
-    ]));
-  });
-
-  suite.testOrderStream(exchange => {
-    exchange.addCandles(['BTC', 'USDT'], candleMock);
-    exchange.setAssets(([
-      { asset: 'USDT', available: 10000 },
-      { asset: 'BTC', available: 1 }
-    ]));
-  });
-});
 
 describe('LocalExchange', () => {
   let strategy: TestStrategy<LocalExchange>;

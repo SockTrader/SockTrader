@@ -1,150 +1,247 @@
 //@ts-ignore
 import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
-import { RunHelpers, TestScheduler } from 'rxjs/testing';
+import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
+import { of, switchMapTo, tap } from 'rxjs';
+import { TestScheduler } from 'rxjs/testing';
 import { __setCandles } from '../../__mocks__/binance-api-node';
-import { binanceCandlesMock } from '../../__mocks__/binance.mock';
-import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder, mockFillLimitBuyOrder, mockFillMarketSellOrder, mockPartiallyFilledLimitBuyOrderPart1 } from '../../__mocks__/binanceExecutionReport.mock';
-import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { feedObservable } from '../../helpers/feedObservable.helper';
-import { exchangeTestSuite } from '../exchanges.spec';
+import { binanceCandlesMock } from './__mocks__/binanceCandles.mock';
+import TestStrategy from '../../__mocks__/testStrategy.mock';
+import { Trade } from '../../core/trade.interfaces';
 import Binance from './binance';
 
-jest.mock('binance-api-node');
+describe('Binance common', () => {
 
-describe('Generic exchange test suite', () => {
-  const suite = exchangeTestSuite('BinanceExchange', Binance);
   const candleMockSet1 = [binanceCandlesMock[0], binanceCandlesMock[1], binanceCandlesMock[2]];
   const candleMockSet2 = [binanceCandlesMock[0]];
 
-  suite.testCandles(exchange => {
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet1);
-
-    return exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
-  });
-
-  suite.testCandleSeries(exchange => {
-    __setCandles('ETHUSDT', <CandleChartInterval>'1h', candleMockSet1);
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet2);
-
-    return [
-      exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' }),
-      exchange.candles({ symbol: 'ETHUSDT', interval: <CandleChartInterval>'1h' }),
-    ];
-  });
-
-  // @todo
-  //suite.testTradeStream(() => {
-  //  __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
-  //});
-
-  // @todo
-  suite.testOrderStream((exchange: Binance, strategy) => {
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
-  });
-});
-
-describe('Binance', () => {
-  let binance: Binance;
+  let strategy: TestStrategy<Binance>;
   let scheduler: TestScheduler;
+  let exchange: Binance;
 
   beforeEach(() => {
+    exchange = new Binance();
+    strategy = new TestStrategy(exchange);
     scheduler = new TestScheduler((received, expected) => {
       expect(received).toEqual(expected);
     });
   });
 
-  it('Should provide an Order stream', () => {
-    scheduler.run(({ cold, expectObservable, }) => {
-      binance = new Binance();
+  afterEach(() => {
+    strategy.onStop();
+  });
 
-      const detailsVisibleMarble = 'a-b';
-      const triggerMarble = 'a-b';
+  it(`#Binance should listen to candle events`, () => {
+    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet1);
+    const candles$ = exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
 
-      const toggleEvents$ = cold(triggerMarble, {
-        a: mockCreateLimitBuyOrder(),
-        b: mockCancelLimitBuyOrder()
-      });
-
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.orders$);
-
-      expectObservable(src$).toBe(detailsVisibleMarble, {
-        a: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'NEW' }),
-        b: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'CANCELED' }),
+    scheduler.run(({ expectObservable }) => {
+      expectObservable(candles$).toBe('(abc)', {
+        a: {
+          open: 9755.86,
+          high: 9850.26,
+          low: 9676.22,
+          close: 9820.01,
+          volume: 528.06,
+          start: new Date('2020-02-24T11:00:00'),
+        },
+        b: {
+          open: 9820.01,
+          high: 9847.63,
+          low: 9787.32,
+          close: 9800,
+          volume: 159,
+          start: new Date('2020-02-24T12:00:00'),
+        },
+        c: {
+          open: 9800,
+          high: 9815.86,
+          low: 9745,
+          close: 9750.42,
+          volume: 285.34,
+          start: new Date('2020-02-24T13:00:00'),
+        }
       });
     });
   });
 
-  // @TODO this test scenario should be refactored
-  // Note: it is not convenient to test this scenario by using the user data stream.
-  // since a market order should be triggered by a binance.sell and binance.buy action instead of a UserDataStreamEvent
-  //
-  // We should extract Trade & Order stream updates directly from the OrderResponse for MARKET orders.
-  // Since Binance is not returning a proper response in the UserDataStreamEvent for MARKET orders.
-  // eg: it's missing correct price data and individual trades
-  xit('Should filter out trade events in the Order stream', () => {
-    scheduler.run(({ cold, expectObservable }: RunHelpers) => {
-      binance = new Binance();
+  it(`#Binance should listen to multiple candle events simultaneously`, () => {
+    __setCandles('ETHUSDT', <CandleChartInterval>'1h', candleMockSet1);
+    __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet2);
+    const candles1 = exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
+    const candles2 = exchange.candles({ symbol: 'ETHUSDT', interval: <CandleChartInterval>'1h' });
 
-      const toggleEvents$ = cold('a', {
-        a: mockFillMarketSellOrder(),
-        b: mockPartiallyFilledLimitBuyOrderPart1(),
+    scheduler.run(({ expectObservable }) => {
+      expectObservable(candles1).toBe('(a)', {
+        a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') })
       });
 
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.orders$);
+      expectObservable(candles2).toBe('(abc)', {
+        a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') }),
+        b: expect.objectContaining({ start: new Date('2020-02-24T12:00:00') }),
+        c: expect.objectContaining({ start: new Date('2020-02-24T13:00:00') }),
+      });
+    });
+  });
 
-      expectObservable(src$).toBe('a', {
-        // FILL events are allowed in orders$ stream
-        a: expect.objectContaining(<Partial<Order>>{
-          price: 0,
-          quantity: 0.00216,
-          side: <OrderSide>'SELL',
-          status: <OrderStatus>'FILLED',
-          type: <OrderType>'MARKET',
+  it(`#Binance should provide a Trades stream`, () => {
+    __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
+
+    scheduler.run(({ expectObservable }) => {
+      const src$ = of(null).pipe(
+        tap(() => strategy.onStart({ symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR })),
+        switchMapTo(exchange.trades$)
+      );
+
+      expectObservable(src$).toBe('(abcd)', {
+        a: <Trade>{
+          clientOrderId: expect.any(String),
+          originalClientOrderId: undefined,
+          commission: 0.001,
+          commissionAsset: 'BTC',
+          createTime: new Date('2020-02-24T12:00:00'),
+          price: 9800,
+          quantity: 1,
+          side: OrderSide.BUY,
+          status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-        }),
+          tradeQuantity: 1
+        },
+        b: <Trade>{
+          clientOrderId: expect.any(String),
+          originalClientOrderId: undefined,
+          commission: 9.75042,
+          commissionAsset: 'USDT',
+          createTime: new Date('2020-02-24T13:00:00'),
+          price: 9750.42,
+          quantity: 1,
+          side: OrderSide.SELL,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          tradeQuantity: 1
+        },
+        c: <Trade>{
+          clientOrderId: expect.any(String),
+          originalClientOrderId: undefined,
+          commission: 0.001,
+          commissionAsset: 'BTC',
+          createTime: new Date('2020-02-24T15:00:00'),
+          price: 9700,
+          quantity: 1,
+          side: OrderSide.BUY,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          tradeQuantity: 1
+        },
+        d: <Trade>{
+          clientOrderId: expect.any(String),
+          originalClientOrderId: undefined,
+          commission: 9.8,
+          commissionAsset: 'USDT',
+          createTime: new Date('2020-02-24T16:00:00'),
+          price: 9800,
+          quantity: 1,
+          side: OrderSide.SELL,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          tradeQuantity: 1
+        }
       });
     });
   });
 
-  // @TODO this test scenario should be refactored
-  // Note: it is not convenient to test this scenario by using the user data stream.
-  // since a market order should be triggered by a binance.sell and binance.buy action instead of a UserDataStreamEvent
-  //
-  // We should extract Trade & Order stream updates directly from the OrderResponse for MARKET orders.
-  // Since Binance is not returning a proper response in the UserDataStreamEvent for MARKET orders.
-  // eg: it's missing correct price data and individual trades
-  xit('Should provide a Trades stream', () => {
-    scheduler.run(({ cold, expectObservable }: RunHelpers) => {
-      binance = new Binance();
+  it(`#Binance should provide an Order stream`, () => {
+    scheduler.run(({ expectObservable }) => {
+      __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
 
-      const detailsVisibleMarble = 'a-b';
-      const triggerMarble = 'a-b';
+      const src$ = of(null).pipe(
+        tap(() => strategy.onStart({ symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR })),
+        switchMapTo(exchange.orders$),
+      );
 
-      const toggleEvents$ = cold(triggerMarble, {
-        a: mockFillLimitBuyOrder(),
-        b: mockFillMarketSellOrder()
-      });
+      exchange.buy = (order: Omit<OrderCommand, 'side'>) => {
+        if (order.type === OrderType.MARKET) {
+          __emitUserDataStreamEvents({});
+        } else if (order.type === OrderType.LIMIT) {
+          __emitUserDataStreamEvents({});
+        }
+        return Promise.resolve();
+      };
 
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.trades$);
+      exchange.sell = (order: Omit<OrderCommand, 'side'>) => {
+        if (order.type === OrderType.MARKET) {
+          __emitUserDataStreamEvents({});
+        } else if (order.type === OrderType.LIMIT) {
+          __emitUserDataStreamEvents({});
+        }
+        return Promise.resolve();
+      };
 
-      expectObservable(src$).toBe(detailsVisibleMarble, {
-        a: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'FILLED' }),
-        b: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'SELL', status: 'FILLED' }),
+      expectObservable(src$).toBe('(abcdef)', {
+        a: <Order>{
+          clientOrderId: expect.any(String),
+          createTime: new Date('2020-02-24T12:00:00'),
+          price: 9800,
+          quantity: 1,
+          side: OrderSide.BUY,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          type: OrderType.MARKET
+        },
+        b: <Order>{
+          clientOrderId: expect.any(String),
+          createTime: new Date('2020-02-24T13:00:00'),
+          price: 9750.42,
+          quantity: 1,
+          side: OrderSide.SELL,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          type: OrderType.MARKET
+        },
+        c: {
+          clientOrderId: expect.any(String),
+          // order.create != trade.create
+          createTime: new Date('2020-02-24T14:00:00'),
+          price: 9700,
+          quantity: 1,
+          side: OrderSide.BUY,
+          status: OrderStatus.NEW,
+          symbol: 'BTCUSDT',
+          type: OrderType.LIMIT
+        },
+        d: {
+          clientOrderId: expect.any(String),
+          // order.create != trade.create
+          createTime: new Date('2020-02-24T14:00:00'),
+          price: 9700,
+          quantity: 1,
+          side: OrderSide.BUY,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          type: OrderType.LIMIT,
+        },
+        e: {
+          clientOrderId: expect.any(String),
+          // order.create != trade.create
+          createTime: new Date('2020-02-24T15:00:00'),
+          price: 9800,
+          quantity: 1,
+          side: OrderSide.SELL,
+          status: OrderStatus.NEW,
+          symbol: 'BTCUSDT',
+          type: OrderType.LIMIT
+        },
+        f: {
+          clientOrderId: expect.any(String),
+          // order.create != trade.create
+          createTime: new Date('2020-02-24T15:00:00'),
+          price: 9800,
+          quantity: 1,
+          side: OrderSide.SELL,
+          status: OrderStatus.FILLED,
+          symbol: 'BTCUSDT',
+          type: OrderType.LIMIT,
+        },
       });
     });
-  });
-
-  it('Should filter out order events in the Trades stream', () => {
-    scheduler.run(({ cold, expectObservable }: RunHelpers) => {
-      binance = new Binance();
-
-      const toggleEvents$ = cold('a', {
-        a: mockCreateMarketSellOrder(),
-      });
-
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.trades$);
-
-      expectObservable(src$).toBe('', {});
-    });
-  });
+  })
 });

@@ -1,26 +1,51 @@
-import { BalanceUpdate, EventType } from "binance-api-node"
+import { ExchangeInfo, TradingType, OrderType } from "binance-api-node";
 
-/**
- * Balance update
- * =======================================
- * - Deposits or withdrawals from the account
- * - Transfer of funds between accounts (e.g. Spot to Margin)
- */
-
-// Margin to spot transaction
-export const balanceUpdateMarginToSpot: BalanceUpdate = {
-  asset: 'USDT',
-  balanceDelta: '100.00000000',
-  clearTime: 1631472686037,
-  eventTime: 1631472686037,
-  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate'
-}
-
-// Spot to margin transaction
-export const balanceUpdateSpotToMargin: BalanceUpdate = {
-  asset: 'USDT',
-  balanceDelta: '-100.00000000',
-  clearTime: 1631472738674,
-  eventTime: 1631472738675,
-  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate'
+export const binanceExchangeInfoMock: ExchangeInfo = {
+  timezone: 'UTC',
+  serverTime: 1565246363776,
+  rateLimits: [
+    // {
+    //   These are defined in the `ENUM definitions` section under `Rate Limiters (rateLimitType)`.
+    //  All limits are optional
+    // }
+  ],
+  exchangeFilters: [
+    //These are the defined filters in the `Filters` section.
+    //All filters are optional.
+  ],
+  symbols: [
+    {
+      baseAsset: 'BTC',
+      baseAssetPrecision: 8,
+      baseCommissionPrecision: 8,
+      quoteCommissionPrecision: 8,
+      quoteOrderQtyMarketAllowed: true,
+      symbol: 'BTCUSDT',
+      status: 'TRADING',
+      quoteAsset: 'USDT',
+      quotePrecision: 8,
+      quoteAssetPrecision: 8,
+      orderTypes: [
+        <OrderType>'LIMIT',
+        <OrderType>'LIMIT_MAKER',
+        <OrderType>'MARKET',
+        <OrderType>'STOP_MARKET',
+        <OrderType>'STOP_LOSS_LIMIT',
+        <OrderType>'TAKE_PROFIT_MARKET',
+        <OrderType>'TAKE_PROFIT_LIMIT',
+      ],
+      icebergAllowed: true,
+      ocoAllowed: true,
+      isSpotTradingAllowed: true,
+      isMarginTradingAllowed: true,
+      filters: [
+        //These are defined in the Filters section.
+        //All filters are optional
+      ],
+      permissions: [
+        <TradingType>'SPOT',
+        <TradingType>'MARGIN',
+      ]
+    }
+  ]
 }
