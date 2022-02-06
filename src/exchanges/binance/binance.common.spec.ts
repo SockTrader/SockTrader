@@ -7,6 +7,7 @@ import { __setCandles } from '../../__mocks__/binance-api-node';
 import { binanceCandlesMock } from './__mocks__/binanceCandles.mock';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
 import { Trade } from '../../core/trade.interfaces';
+import { mockCommonMarketBuyOrderResponse } from './__mocks__/binanceCommon.mock';
 import Binance from './binance';
 
 describe('Binance common', () => {
@@ -158,20 +159,21 @@ describe('Binance common', () => {
         switchMapTo(exchange.orders$),
       );
 
+      // @TODO continue with unit test
       exchange.buy = (order: Omit<OrderCommand, 'side'>) => {
         if (order.type === OrderType.MARKET) {
-          __emitUserDataStreamEvents({});
+          (exchange as any)._data.extractStreamUpdatesFromMarketOrder(mockCommonMarketBuyOrderResponse);
         } else if (order.type === OrderType.LIMIT) {
-          __emitUserDataStreamEvents({});
+          //__emitUserDataStreamEvents({});
         }
         return Promise.resolve();
       };
 
       exchange.sell = (order: Omit<OrderCommand, 'side'>) => {
         if (order.type === OrderType.MARKET) {
-          __emitUserDataStreamEvents({});
+          //(exchange as any)._data.extractStreamUpdatesFromMarketOrder(mockCommonMarketBuyOrderResponse);
         } else if (order.type === OrderType.LIMIT) {
-          __emitUserDataStreamEvents({});
+          //__emitUserDataStreamEvents({});
         }
         return Promise.resolve();
       };

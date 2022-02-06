@@ -1,4 +1,4 @@
-import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, Order as BinanceOrder, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node';
+import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, Order as BinanceOrder, OrderFill, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node';
 import { Candle } from '../../core/candle.interfaces';
 import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { Trade } from '../../core/trade.interfaces';
@@ -50,13 +50,19 @@ export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
 export const mapOrderCommand = (order: OrderCommand): NewOrderMarketBase | NewOrderLimit => {
   if (!Object.values(OrderType).includes(order.type)) throw new Error('Given \'type\' in order is not supported.');
 
-  return {
+  const orderBase = {
     symbol: order.symbol,
     side: order.side,
     type: order.type as unknown as NewOrderMarketBase['type'] | NewOrderLimit['type'],
-    price: (<number>order.price)?.toString(),
     quantity: order.quantity.toString(),
   };
+
+  return (!order.price)
+    ? <NewOrderMarketBase>orderBase
+    : <NewOrderLimit>{
+      ...orderBase,
+      price: (<number>order.price)?.toString(),
+    };
 };
 
 export const mapWalletUpdate = (accountPosition: OutboundAccountPosition): WalletUpdate[] => {
@@ -83,11 +89,23 @@ export const mapOrderResponse = (order: BinanceOrder): { order: Order, trades: T
   };
 };
 
+/**
+ * Calculate dollar cost average price of all fills to determine a "true" price.
+ * @param {[]} orderFills
+ * @returns {number}
+ */
+export const dca = (orderFills: OrderFill[]): number => {
+  const totalCost = orderFills.reduce((prev, current) => prev + (parseFloat(current.price) * parseFloat(current.qty)), 0);
+  const totalAmount = orderFills.reduce(((prev, current) => prev + parseFloat(current.qty)), 0);
+
+  return totalCost / totalAmount;
+}
+
 const _mapBinanceOrderToOrder = (order: BinanceOrder): Order => {
   return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: undefined,
-    price: parseFloat(order.price),
+    price: order.fills ? dca(order.fills) : 0,
     quantity: parseFloat(order.origQty),
     side: <OrderSide>order.side,
     status: <OrderStatus>order.status,

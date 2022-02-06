@@ -1,12 +1,9 @@
 //@ts-ignore
 import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
+import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder } from './__mocks__/binanceExecutionReport.mock';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
-import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder, mockFillLimitBuyOrder, mockFillMarketSellOrder, mockPartiallyFilledLimitBuyOrderPart1 } from '../../__mocks__/binanceExecutionReport.mock';
-import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { feedObservable } from '../../helpers/feedObservable.helper';
 import Binance from './binance';
-
-jest.mock('binance-api-node');
 
 describe('Binance', () => {
   let binance: Binance;
@@ -35,66 +32,6 @@ describe('Binance', () => {
       expectObservable(src$).toBe(detailsVisibleMarble, {
         a: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'NEW' }),
         b: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'CANCELED' }),
-      });
-    });
-  });
-
-  // @TODO this test scenario should be refactored
-  // Note: it is not convenient to test this scenario by using the user data stream.
-  // since a market order should be triggered by a binance.sell and binance.buy action instead of a UserDataStreamEvent
-  //
-  // We should extract Trade & Order stream updates directly from the OrderResponse for MARKET orders.
-  // Since Binance is not returning a proper response in the UserDataStreamEvent for MARKET orders.
-  // eg: it's missing correct price data and individual trades
-  xit('Should filter out trade events in the Order stream', () => {
-    scheduler.run(({ cold, expectObservable }: RunHelpers) => {
-      binance = new Binance();
-
-      const toggleEvents$ = cold('a', {
-        a: mockFillMarketSellOrder(),
-        b: mockPartiallyFilledLimitBuyOrderPart1(),
-      });
-
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.orders$);
-
-      expectObservable(src$).toBe('a', {
-        // FILL events are allowed in orders$ stream
-        a: expect.objectContaining(<Partial<Order>>{
-          price: 0,
-          quantity: 0.00216,
-          side: <OrderSide>'SELL',
-          status: <OrderStatus>'FILLED',
-          type: <OrderType>'MARKET',
-          symbol: 'BTCUSDT',
-        }),
-      });
-    });
-  });
-
-  // @TODO this test scenario should be refactored
-  // Note: it is not convenient to test this scenario by using the user data stream.
-  // since a market order should be triggered by a binance.sell and binance.buy action instead of a UserDataStreamEvent
-  //
-  // We should extract Trade & Order stream updates directly from the OrderResponse for MARKET orders.
-  // Since Binance is not returning a proper response in the UserDataStreamEvent for MARKET orders.
-  // eg: it's missing correct price data and individual trades
-  xit('Should provide a Trades stream', () => {
-    scheduler.run(({ cold, expectObservable }: RunHelpers) => {
-      binance = new Binance();
-
-      const detailsVisibleMarble = 'a-b';
-      const triggerMarble = 'a-b';
-
-      const toggleEvents$ = cold(triggerMarble, {
-        a: mockFillLimitBuyOrder(),
-        b: mockFillMarketSellOrder()
-      });
-
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.trades$);
-
-      expectObservable(src$).toBe(detailsVisibleMarble, {
-        a: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'FILLED' }),
-        b: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'SELL', status: 'FILLED' }),
       });
     });
   });

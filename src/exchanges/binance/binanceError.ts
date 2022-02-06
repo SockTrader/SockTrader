@@ -7,20 +7,29 @@ export default class BinanceError implements Error {
   name: string = 'Binance Error';
 
   errorMap = new Map([
-    ['PERCENT_PRICE', (order: OrderCommand) => `[PERCENT_PRICE] The price must be within its boundaries see: multiplierDown * currentPrice < ${order.price} < multiplierUp * currentPrice \nFor more information try calling exchange.info('${order.symbol}')`],
-    ['MIN_NOTIONAL', (order: OrderCommand) => `[MIN_NOTIONAL] The total price must meet a minimum see ${order.quantity} * ${order.price} >= minNotional\nFor more information try calling exchange.info('${order.symbol}')`]
+    ['PERCENT_PRICE', (order: OrderCommand) => `The price must be within its boundaries see: multiplierDown * currentPrice < ${order.price} < multiplierUp * currentPrice`],
+    ['MIN_NOTIONAL', (order: OrderCommand) => `The total price must meet a minimum see ${order.quantity} * ${order.price} >= minNotional`],
+    ['LOT_SIZE', (order: OrderCommand) => `Quantity '${order.quantity}' must be within its boundaries and should be a multiple of stepSize.`]
   ]);
 
   constructor(
     private _error: unknown,
     private _orderCommand: OrderCommand
   ) {
-    if (this._error instanceof Error) {
-      const gen = this.errorMap.get(this.getErrorKey(this._error.message));
-      this.message = gen ? gen(this._orderCommand) : `Unknown error encountered: ${this._error.stack}`;
-    } else {
-      this.message = `Unknown error encountered: ${this._error}`;
-    }
+    this.message = (this._error instanceof Error)
+      ? this.createErrorMsg(this._error)
+      : `Unknown error encountered: ${this._error}`;
+  }
+
+  moreInfo = (order: OrderCommand) => `\nFor more information try calling exchange.getSymbol('${order.symbol}')`;
+
+  createErrorMsg(error: Error) {
+    const key = this.getErrorKey(error.message);
+    const gen = this.errorMap.get(key)
+
+    return gen
+      ? `[${key}] ${gen(this._orderCommand)} ${this.moreInfo(this._orderCommand)}`
+      : `Unknown error encountered: ${error.stack}`;
   }
 
   getErrorKey(msg: string): string {
