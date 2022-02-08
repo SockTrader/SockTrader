@@ -1,13 +1,13 @@
 //@ts-ignore
-import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
-import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { of, switchMapTo, tap } from 'rxjs';
+import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport, Order as BinanceOrder } from 'binance-api-node';
 import { TestScheduler } from 'rxjs/testing';
 import { __setCandles } from '../../__mocks__/binance-api-node';
-import { binanceCandlesMock } from './__mocks__/binanceCandles.mock';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
+import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { Trade } from '../../core/trade.interfaces';
-import { mockCommonMarketBuyOrderResponse } from './__mocks__/binanceCommon.mock';
+import { feedObservable } from '../../helpers/feedObservable.helper';
+import { binanceCandlesMock } from './__mocks__/binanceCandles.mock';
+import { mockCommonLimitFilledBuyOrder, mockCommonLimitFilledSellOrder, mockCommonLimitNewBuyOrder, mockCommonLimitNewSellOrder, mockCommonMarketBuyOrderResponse, mockCommonMarketSellOrderResponse } from './__mocks__/binanceCommon.mock';
 import Binance from './binance';
 
 describe('Binance common', () => {
@@ -85,13 +85,25 @@ describe('Binance common', () => {
   });
 
   it(`#Binance should provide a Trades stream`, () => {
-    __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
+    scheduler.run(({ cold, expectObservable }) => {
+      __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
 
-    scheduler.run(({ expectObservable }) => {
-      const src$ = of(null).pipe(
-        tap(() => strategy.onStart({ symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR })),
-        switchMapTo(exchange.trades$)
-      );
+      const toggleEvents$ = cold('(abcdef)', {
+        a: [false, mockCommonMarketBuyOrderResponse],
+        b: [false, mockCommonMarketSellOrderResponse],
+        c: [true, mockCommonLimitNewBuyOrder()],
+        d: [true, mockCommonLimitFilledBuyOrder()],
+        e: [true, mockCommonLimitNewSellOrder()],
+        f: [true, mockCommonLimitFilledSellOrder()],
+      })
+
+      const src$ = feedObservable(toggleEvents$, ([emit, eventData]) => {
+        if (emit) {
+          __emitUserDataStreamEvents(eventData);
+        } else {
+          (exchange as any)._data.extractStreamUpdatesFromMarketOrder(eventData);
+        }
+      }, exchange.trades$);
 
       expectObservable(src$).toBe('(abcd)', {
         a: <Trade>{
@@ -151,32 +163,25 @@ describe('Binance common', () => {
   });
 
   it(`#Binance should provide an Order stream`, () => {
-    scheduler.run(({ expectObservable }) => {
+    scheduler.run(({ cold, expectObservable }) => {
       __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
 
-      const src$ = of(null).pipe(
-        tap(() => strategy.onStart({ symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR })),
-        switchMapTo(exchange.orders$),
-      );
+      const toggleEvents$ = cold('(abcdef)', {
+        a: [false, mockCommonMarketBuyOrderResponse],
+        b: [false, mockCommonMarketSellOrderResponse],
+        c: [true, mockCommonLimitNewBuyOrder()],
+        d: [true, mockCommonLimitFilledBuyOrder()],
+        e: [true, mockCommonLimitNewSellOrder()],
+        f: [true, mockCommonLimitFilledSellOrder()],
+      })
 
-      // @TODO continue with unit test
-      exchange.buy = (order: Omit<OrderCommand, 'side'>) => {
-        if (order.type === OrderType.MARKET) {
-          (exchange as any)._data.extractStreamUpdatesFromMarketOrder(mockCommonMarketBuyOrderResponse);
-        } else if (order.type === OrderType.LIMIT) {
-          //__emitUserDataStreamEvents({});
+      const src$ = feedObservable(toggleEvents$, ([emit, eventData]) => {
+        if (emit) {
+          __emitUserDataStreamEvents(eventData);
+        } else {
+          (exchange as any)._data.extractStreamUpdatesFromMarketOrder(eventData);
         }
-        return Promise.resolve();
-      };
-
-      exchange.sell = (order: Omit<OrderCommand, 'side'>) => {
-        if (order.type === OrderType.MARKET) {
-          //(exchange as any)._data.extractStreamUpdatesFromMarketOrder(mockCommonMarketBuyOrderResponse);
-        } else if (order.type === OrderType.LIMIT) {
-          //__emitUserDataStreamEvents({});
-        }
-        return Promise.resolve();
-      };
+      }, exchange.orders$);
 
       expectObservable(src$).toBe('(abcdef)', {
         a: <Order>{

@@ -1,8 +1,9 @@
-import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, Order as BinanceOrder, OrderFill, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node';
+import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, NewOrderRespType_LT, Order as BinanceOrder, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node';
 import { Candle } from '../../core/candle.interfaces';
 import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
 import { Trade } from '../../core/trade.interfaces';
 import { AssetDeltaUpdate, WalletUpdate } from '../../core/wallet.interfaces';
+import { dollarCostAverage } from '../../utils/price';
 
 export const mapCandle = (candle: CandleChartResult | BinanceCandle): Candle => ({
   open: parseFloat(candle.open),
@@ -18,7 +19,7 @@ export const mapExecutionReportToOrder = (report: ExecutionReport): Order => {
 
   return {
     clientOrderId: report.newClientOrderId,
-    originalClientOrderId: report.originalClientOrderId ?? undefined,
+    originalClientOrderId: !report.originalClientOrderId || report.originalClientOrderId === '' ? undefined : report.originalClientOrderId,
     price: parseFloat(report.price),
     quantity: parseFloat(report.quantity),
     side: <OrderSide>report.side,
@@ -34,7 +35,7 @@ export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
 
   return {
     clientOrderId: report.newClientOrderId,
-    originalClientOrderId: report.originalClientOrderId ?? undefined,
+    originalClientOrderId: !report.originalClientOrderId || report.originalClientOrderId === '' ? undefined : report.originalClientOrderId,
     price: parseFloat(report.price),
     quantity: parseFloat(report.quantity),
     side: <OrderSide>report.side,
@@ -55,6 +56,7 @@ export const mapOrderCommand = (order: OrderCommand): NewOrderMarketBase | NewOr
     side: order.side,
     type: order.type as unknown as NewOrderMarketBase['type'] | NewOrderLimit['type'],
     quantity: order.quantity.toString(),
+    newOrderRespType: <NewOrderRespType_LT>'FULL'
   };
 
   return (!order.price)
@@ -89,29 +91,22 @@ export const mapOrderResponse = (order: BinanceOrder): { order: Order, trades: T
   };
 };
 
-/**
- * Calculate dollar cost average price of all fills to determine a "true" price.
- * @param {[]} orderFills
- * @returns {number}
- */
-export const dca = (orderFills: OrderFill[]): number => {
-  const totalCost = orderFills.reduce((prev, current) => prev + (parseFloat(current.price) * parseFloat(current.qty)), 0);
-  const totalAmount = orderFills.reduce(((prev, current) => prev + parseFloat(current.qty)), 0);
-
-  return totalCost / totalAmount;
-}
-
 const _mapBinanceOrderToOrder = (order: BinanceOrder): Order => {
+  const basicOrderList = order.fills?.map((fill) => ({
+    price: parseFloat(fill.price),
+    quantity: parseFloat(fill.qty)
+  }));
+
   return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: undefined,
-    price: order.fills ? dca(order.fills) : 0,
+    price: basicOrderList ? dollarCostAverage(basicOrderList) : 0,
     quantity: parseFloat(order.origQty),
     side: <OrderSide>order.side,
     status: <OrderStatus>order.status,
     symbol: order.symbol,
     type: <OrderType>(order.type),
-    createTime: new Date(order.time),
+    createTime: new Date(order.time ?? order.transactTime),
   };
 };
 
@@ -125,7 +120,6 @@ const _mapBinanceOrderToTrades = (order: BinanceOrder): Trade[] => {
     side: <OrderSide>order.side,
     status: <OrderStatus>order.status,
     symbol: order.symbol,
-    type: <OrderType>(order.type),
     createTime: new Date(order.time),
     price: parseFloat(fill.price),
     tradeQuantity: parseFloat(fill.qty),

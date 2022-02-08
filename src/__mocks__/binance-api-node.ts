@@ -1,7 +1,5 @@
-import { Candle, CandleChartInterval, ExchangeInfo, NewOrderSpot, Order, UserDataStreamEvent, OrderType } from 'binance-api-node';
-import { OrderStatus } from '../core/order.interfaces';
+import { Candle, CandleChartInterval, ExchangeInfo, NewOrderSpot, Order, UserDataStreamEvent } from 'binance-api-node';
 import { binanceExchangeInfoMock } from '../exchanges/binance/__mocks__/binanceExchangeInfo.mock';
-import { binanceOrderMock } from '../exchanges/binance/__mocks__/binanceOrderResponse.mock';
 
 let candleMap = new Map<string, Candle[]>();
 let userDataStream: undefined | ((cb: UserDataStreamEvent) => void) = undefined;
@@ -20,6 +18,10 @@ export const __emitUserDataStreamEvents = (event: UserDataStreamEvent) => {
   }
 };
 
+export const __orderResponse = jest.fn((options: NewOrderSpot): Order => {
+  return {} as Order;
+});
+
 export default () => {
   return {
     ws: {
@@ -30,24 +32,7 @@ export default () => {
         userDataStream = cb;
       }
     },
-    exchangeInfo: async (): Promise<ExchangeInfo> => {
-      return binanceExchangeInfoMock;
-    },
-    order: async (options: NewOrderSpot): Promise<Order> => {
-      if (options.type === OrderType.LIMIT) {
-        return {
-          ...binanceOrderMock,
-          type: OrderType.LIMIT,
-          status: OrderStatus.NEW,
-          side: options.side,
-          price: options.price,
-          executedQty: options.quantity,
-          origQty: options.quantity,
-        };
-      }
-
-      return binanceOrderMock;
-    },
+    exchangeInfo: jest.fn(async (): Promise<ExchangeInfo> => binanceExchangeInfoMock),
+    order: __orderResponse,
   }
-
 }

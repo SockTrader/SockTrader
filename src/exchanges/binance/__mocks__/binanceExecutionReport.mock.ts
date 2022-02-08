@@ -33,7 +33,7 @@ export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
   ...report
-})
+});
 
 // Create market sell order
 export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({

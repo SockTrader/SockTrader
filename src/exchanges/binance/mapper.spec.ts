@@ -1,6 +1,6 @@
 import { OrderSide, OrderType } from '../../core/order.interfaces';
 import { mockCommonMarketBuyOrderResponse } from './__mocks__/binanceCommon.mock';
-import { dca, mapOrderCommand, mapOrderResponse } from './mapper';
+import { mapOrderCommand, mapOrderResponse } from './mapper';
 
 describe('Mapper', () => {
 
@@ -13,7 +13,8 @@ describe('Mapper', () => {
 
   it('should not contain price when mapping a market OrderCommand', () => {
     expect(mapOrderCommand(order)).toEqual({
-      quantity: '0.00241100',
+      quantity: '0.002411',
+      newOrderRespType: "FULL",
       symbol: 'BTCUSDT',
       type: 'MARKET',
       side: 'BUY',
@@ -23,7 +24,7 @@ describe('Mapper', () => {
   it('should calculate average executed price for market order', () => {
     expect(mapOrderResponse(mockCommonMarketBuyOrderResponse)).toEqual(expect.objectContaining({
       order: expect.objectContaining({
-        price: 41638,
+        price: 9800,
         quantity: 1,
         side: 'BUY',
         status: 'FILLED',
@@ -32,11 +33,4 @@ describe('Mapper', () => {
       })
     }));
   });
-
-  it('should calculate dollar cost average price', () => {
-    expect(dca([
-      { price: '200', qty: '1', commission: '', commissionAsset: 'USDT', tradeId: 1 },
-      { price: '100', qty: '1', commission: '', commissionAsset: 'USDT', tradeId: 1 },
-    ])).toEqual(150)
-  })
 });

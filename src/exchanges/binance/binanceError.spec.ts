@@ -14,7 +14,7 @@ describe('BinanceError', () => {
     const binanceError: BinanceError = new BinanceError(error, orderCommand);
 
     expect(binanceError.message).toEqual('[PERCENT_PRICE] The price must be within its boundaries see: multiplierDown * currentPrice < 1000 < ' +
-      'multiplierUp * currentPrice \nFor more information try calling exchange.info(\'BTCUSDT\')');
+      'multiplierUp * currentPrice \nFor more information try calling exchange.getSymbol(\'BTCUSDT\')');
   });
 
   it('Should provide \'MIN_NOTIONAL\' error details with relevant data', () => {
@@ -29,6 +29,6 @@ describe('BinanceError', () => {
     const binanceError: BinanceError = new BinanceError(error, orderCommand);
 
     expect(binanceError.message).toEqual('[MIN_NOTIONAL] The total price must meet a minimum see 0.001 * 1000 >= ' +
-      'minNotional\nFor more information try calling exchange.info(\'BTCUSDT\')');
+      'minNotional \nFor more information try calling exchange.getSymbol(\'BTCUSDT\')');
   });
 });
