@@ -22,8 +22,8 @@ export const mockCommonMarketBuyOrderResponse: Order = {
       tradeId: 1,
       price: '9800.00000000',
       qty: '1.00000000',
-      commission: '9.80000000',
-      commissionAsset: 'USDT'
+      commission: '0.00100000',
+      commissionAsset: 'BTC'
     }
   ]
 };
@@ -50,7 +50,7 @@ export const mockCommonMarketSellOrderResponse: Order = {
       tradeId: 1,
       price: '9750.42000000',
       qty: '1.00000000',
-      commission: '9.80000000',
+      commission: '9.75042000',
       commissionAsset: 'USDT'
     }
   ]
@@ -73,7 +73,7 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
   orderStatus: <OrderStatus>'NEW',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602299,
-  orderTime: 1582549200000,
+  orderTime: 1582552800000,
   lastTradeQuantity: '0.00000000',
   totalTradeQuantity: '0.00000000',
   priceLastTrade: '0.00000000',
@@ -82,7 +82,7 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
   tradeId: -1,
   isOrderWorking: true,
   isBuyerMaker: false,
-  creationTime: 1582549200000,
+  creationTime: 1582552800000,
   totalQuoteTradeQuantity: '0.00000000',
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
@@ -107,7 +107,7 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
   orderStatus: <OrderStatus>'FILLED',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602299,
-  orderTime: 1582549200000,
+  orderTime: 1582552800000,
   lastTradeQuantity: '1.00000000',
   totalTradeQuantity: '0.00000000',
   priceLastTrade: '0.00000000',
@@ -116,7 +116,7 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
   tradeId: -1,
   isOrderWorking: true,
   isBuyerMaker: false,
-  creationTime: 1582549200000,
+  creationTime: 1582552800000,
   totalQuoteTradeQuantity: '0.00000000',
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
@@ -160,7 +160,7 @@ export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): 
 
 export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <EventType.EXECUTION_REPORT>'executionReport',
-  eventTime: 1582552860000,
+  eventTime: 1582556400000,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',

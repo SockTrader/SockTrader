@@ -18,7 +18,7 @@ export default class BinanceError implements Error {
   ) {
     this.message = (this._error instanceof Error)
       ? this.createErrorMsg(this._error)
-      : `Unknown error encountered: ${this._error}`;
+      : `Error encountered: ${this._error}`;
   }
 
   moreInfo = (order: OrderCommand) => `\nFor more information try calling exchange.getSymbol('${order.symbol}')`;
@@ -29,7 +29,7 @@ export default class BinanceError implements Error {
 
     return gen
       ? `[${key}] ${gen(this._orderCommand)} ${this.moreInfo(this._orderCommand)}`
-      : `Unknown error encountered: ${error.stack}`;
+      : `Error encountered: ${error.stack}`;
   }
 
   getErrorKey(msg: string): string {

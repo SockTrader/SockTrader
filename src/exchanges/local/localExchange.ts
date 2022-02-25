@@ -6,6 +6,7 @@ import { Pair } from '../../core/pair.interfaces';
 import { Trade } from '../../core/trade.interfaces';
 import { Asset } from '../../core/wallet.interfaces';
 import WalletService from '../../core/wallet/wallet.service';
+import { debugLog } from '../../utils/debugLog';
 import { OpenOrder } from './localExchange.interfaces';
 import { mapOpenOrderToOrder, mapOrderCommandToOpenOrder } from './mapper';
 import { calculateOrderPrice, createOrderFromOpenOrder, createTradeFromOpenOrder } from './utils';
@@ -62,7 +63,8 @@ export default class LocalExchange implements Exchange {
       tap(([candle]) => this._symbolWithCurrentCandle.set(symbol, candle)),
       map(([candle]) => candle),
       // The distinctUntilChanged would prevent similar candles from leaking into the stream. Since OpenOrders$ could emit multiple times
-      distinctUntilChanged((prev, curr) => prev.start.getTime() === curr.start.getTime())
+      distinctUntilChanged((prev, curr) => prev.start.getTime() === curr.start.getTime()),
+      debugLog(`${symbol} candles`)
     );
   }
 

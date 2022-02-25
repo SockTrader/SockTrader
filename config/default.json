@@ -14,5 +14,6 @@
       "feeMaker": 0.001,
       "feeTaker": 0.001
     }
-  }
+  },
+  "debug": false
 }
