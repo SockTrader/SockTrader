@@ -4,7 +4,7 @@ import { Trade } from 'src/core/trade.interfaces';
 import { Candle } from '../../core/candle.interfaces';
 import { Order } from '../../core/order.interfaces';
 import { AssetDeltaUpdate, WalletUpdate } from '../../core/wallet.interfaces';
-import { debugLog } from '../../utils/debugLog';
+import { LOG, log } from '../../utils/log';
 import { CandleOptions, isAssetUpdate, isExecutionReport, isMarketOrder, isOrder, isTrade, isWalletUpdate } from './binance.interfaces';
 import { mapAssetUpdate, mapCandle, mapExecutionReportToOrder, mapExecutionReportToTrade, mapOrderResponse, mapWalletUpdate } from './mapper';
 
@@ -16,7 +16,7 @@ export default class BinanceData {
   readonly _userInfo$ = new Observable<UserDataStreamEvent>(subscriber => {
     this._binance.ws.user((msg: UserDataStreamEvent) => subscriber.next(msg));
   }).pipe(
-    debugLog('User info'),
+    log('User info'),
     share()
   );
 
@@ -41,7 +41,7 @@ export default class BinanceData {
       filter(trade => !isMarketOrder(trade)),
       map(mapExecutionReportToOrder),
     )
-  ).pipe(debugLog('Orders'));
+  ).pipe(log('Orders'));
 
   private readonly _marketTrades$ = new BehaviorSubject<Trade | undefined>(undefined);
 
@@ -52,7 +52,7 @@ export default class BinanceData {
       filter(trade => !isMarketOrder(trade)),
       map(mapExecutionReportToTrade),
     )
-  ).pipe(debugLog('Trades'));
+  ).pipe(log('Trades'));
 
   constructor(
     private readonly _binance: BinanceInstance,
@@ -98,7 +98,7 @@ export default class BinanceData {
     }).pipe(
       filter(c => c.isFinal),
       map(candle => mapCandle(candle)),
-      debugLog(`${options.symbol} candles ${options.interval}`)
+      log(`${options.symbol} candles ${options.interval}`, LOG.verbose)
     );
   }
 

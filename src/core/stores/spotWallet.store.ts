@@ -1,4 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Subscription } from 'rxjs';
+import { log } from '../../utils/log';
 import { AssetMap } from './spotWallet.interfaces';
 
 export interface SpotWalletState {
@@ -16,8 +18,16 @@ function createInitialState(): SpotWalletState {
 @StoreConfig({ name: 'spotWallet', resettable: true })
 export class SpotWalletStore extends Store<SpotWalletState> {
 
+  private logSubscription: Subscription;
+
   constructor() {
     super(createInitialState());
+    this.logSubscription = this._select(v => v).pipe(log('Wallet')).subscribe();
+  }
+
+  destroy() {
+    super.destroy();
+    this.logSubscription.unsubscribe();
   }
 
   setAsset(asset: string, quantity: number): void {

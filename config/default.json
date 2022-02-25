@@ -15,5 +15,5 @@
       "feeTaker": 0.001
     }
   },
-  "debug": false
+  "debug": "info"
 }

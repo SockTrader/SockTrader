@@ -6,16 +6,36 @@ import { Pair } from '../../core/pair.interfaces';
 import { Trade } from '../../core/trade.interfaces';
 import { Asset } from '../../core/wallet.interfaces';
 import WalletService from '../../core/wallet/wallet.service';
-import { debugLog } from '../../utils/debugLog';
+import { log, LOG } from '../../utils/log';
 import { OpenOrder } from './localExchange.interfaces';
 import { mapOpenOrderToOrder, mapOrderCommandToOpenOrder } from './mapper';
 import { calculateOrderPrice, createOrderFromOpenOrder, createTradeFromOpenOrder } from './utils';
 
 export default class LocalExchange implements Exchange {
 
-  readonly trades$: Subject<Trade> = new Subject<Trade>();
+  /**
+   * Internal Trade stream (cannot be piped)
+   * @type {<Order>}
+   */
+  private readonly _trades$: Subject<Trade> = new Subject<Trade>();
 
-  readonly orders$: Subject<Order> = new Subject<Order>();
+  /**
+   * Public Trade stream
+   * @type {<Order>}
+   */
+  readonly trades$: Observable<Trade> = this._trades$.pipe(log('Trades'));
+
+  /**
+   * Internal Order stream (cannot be piped)
+   * @type {<Order>}
+   */
+  private readonly _orders$: Subject<Order> = new Subject<Order>();
+
+  /**
+   * Public Order stream
+   * @type {<Order>}
+   */
+  readonly orders$: Observable<Order> = this._orders$.pipe(log('Orders'));
 
   readonly wallet: WalletService = new WalletService();
 
@@ -64,7 +84,7 @@ export default class LocalExchange implements Exchange {
       map(([candle]) => candle),
       // The distinctUntilChanged would prevent similar candles from leaking into the stream. Since OpenOrders$ could emit multiple times
       distinctUntilChanged((prev, curr) => prev.start.getTime() === curr.start.getTime()),
-      debugLog(`${symbol} candles`)
+      log(`${symbol} candles`, LOG.verbose)
     );
   }
 
@@ -139,12 +159,12 @@ export default class LocalExchange implements Exchange {
 
       const order = createOrderFromOpenOrder(openOrder, candle, pair, orderPrice);
       if (order) {
-        this.orders$.next(<Order>{ ...order, status: OrderStatus.FILLED });
+        this._orders$.next(<Order>{ ...order, status: OrderStatus.FILLED });
         scheduleForRemoval.push(order.clientOrderId);
       }
 
       const trade = createTradeFromOpenOrder(openOrder, candle, pair, orderPrice);
-      if (trade) this.trades$.next(trade);
+      if (trade) this._trades$.next(trade);
     });
 
     if (scheduleForRemoval.length > 0) this.removeOpenOrderByOrderIds(scheduleForRemoval);
@@ -184,7 +204,7 @@ export default class LocalExchange implements Exchange {
     if (openOrder.type === OrderType.LIMIT) {
       const orderPrice = calculateOrderPrice(openOrder, candle);
       const order = mapOpenOrderToOrder(openOrder, candle, pair, orderPrice);
-      this.orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
+      this._orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
     }
   }
 
