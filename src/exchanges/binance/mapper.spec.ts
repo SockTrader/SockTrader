@@ -3,7 +3,6 @@ import { mockCommonMarketBuyOrderResponse } from './__mocks__/binanceCommon.mock
 import { mapOrderCommand, mapOrderResponse } from './mapper';
 
 describe('Mapper', () => {
-
   const order = {
     side: OrderSide.BUY,
     type: OrderType.MARKET,
@@ -14,7 +13,7 @@ describe('Mapper', () => {
   it('should not contain price when mapping a market OrderCommand', () => {
     expect(mapOrderCommand(order)).toEqual({
       quantity: '0.002411',
-      newOrderRespType: "FULL",
+      newOrderRespType: 'FULL',
       symbol: 'BTCUSDT',
       type: 'MARKET',
       side: 'BUY',

@@ -27,7 +27,8 @@ export const log = <T>(tag: string, level: LOG = LOG.info): MonoTypeOperatorFunc
     const configIdx = LEVELS.findIndex(l => l === config.get('debug'));
 
     if (configIdx >= lvlIdx) {
+      //eslint-disable-next-line no-console
       console.log(`\x1b[33m${tag}\x1b[0m: ${JSON.stringify(v)}`);
     }
   }));
-}
+};

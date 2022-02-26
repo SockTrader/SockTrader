@@ -5,6 +5,6 @@ describe('Price', () => {
     expect(dollarCostAverage([
       { price: 200, quantity: 1 },
       { price: 100, quantity: 1 },
-    ])).toEqual(150)
+    ])).toEqual(150);
   });
 });

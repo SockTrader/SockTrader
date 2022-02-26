@@ -10,4 +10,4 @@ export const dollarCostAverage = (order: BasicOrder[]): number => {
   const totalAmount = order.reduce(((prev, current) => prev + current.quantity), 0);
 
   return totalCost / totalAmount;
-}
+};

@@ -1,5 +1,5 @@
 //@ts-ignore
-import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport } from 'binance-api-node';
+import { __emitUserDataStreamEvents, ExecutionReport } from 'binance-api-node';
 import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder } from './__mocks__/binanceExecutionReport.mock';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
 import { feedObservable } from '../../helpers/feedObservable.helper';

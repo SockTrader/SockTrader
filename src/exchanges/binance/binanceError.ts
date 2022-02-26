@@ -25,7 +25,7 @@ export default class BinanceError implements Error {
 
   createErrorMsg(error: Error) {
     const key = this.getErrorKey(error.message);
-    const gen = this.errorMap.get(key)
+    const gen = this.errorMap.get(key);
 
     return gen
       ? `[${key}] ${gen(this._orderCommand)} ${this.moreInfo(this._orderCommand)}`

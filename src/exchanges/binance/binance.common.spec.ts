@@ -1,5 +1,5 @@
 //@ts-ignore
-import { __emitUserDataStreamEvents, CandleChartInterval, ExecutionReport, Order as BinanceOrder } from 'binance-api-node';
+import { __emitUserDataStreamEvents, CandleChartInterval } from 'binance-api-node';
 import { TestScheduler } from 'rxjs/testing';
 import { __setCandles } from '../../__mocks__/binance-api-node';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
@@ -11,7 +11,6 @@ import { mockCommonLimitFilledBuyOrder, mockCommonLimitFilledSellOrder, mockComm
 import Binance from './binance';
 
 describe('Binance common', () => {
-
   const candleMockSet1 = [binanceCandlesMock[0], binanceCandlesMock[1], binanceCandlesMock[2]];
   const candleMockSet2 = [binanceCandlesMock[0]];
 
@@ -31,7 +30,7 @@ describe('Binance common', () => {
     strategy.onStop();
   });
 
-  it(`#Binance should listen to candle events`, () => {
+  it('#Binance should listen to candle events', () => {
     __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet1);
     const candles$ = exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
 
@@ -65,7 +64,7 @@ describe('Binance common', () => {
     });
   });
 
-  it(`#Binance should listen to multiple candle events simultaneously`, () => {
+  it('#Binance should listen to multiple candle events simultaneously', () => {
     __setCandles('ETHUSDT', <CandleChartInterval>'1h', candleMockSet1);
     __setCandles('BTCUSDT', <CandleChartInterval>'1h', candleMockSet2);
     const candles1 = exchange.candles({ symbol: 'BTCUSDT', interval: <CandleChartInterval>'1h' });
@@ -84,7 +83,7 @@ describe('Binance common', () => {
     });
   });
 
-  it(`#Binance should provide a Trades stream`, () => {
+  it('#Binance should provide a Trades stream', () => {
     scheduler.run(({ cold, expectObservable }) => {
       __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
 
@@ -95,7 +94,7 @@ describe('Binance common', () => {
         d: [true, mockCommonLimitFilledBuyOrder()],
         e: [true, mockCommonLimitNewSellOrder()],
         f: [true, mockCommonLimitFilledSellOrder()],
-      })
+      });
 
       const src$ = feedObservable(toggleEvents$, ([emit, eventData]) => {
         if (emit) {
@@ -162,7 +161,7 @@ describe('Binance common', () => {
     });
   });
 
-  it(`#Binance should provide an Order stream`, () => {
+  it('#Binance should provide an Order stream', () => {
     scheduler.run(({ cold, expectObservable }) => {
       __setCandles('BTCUSDT', <CandleChartInterval>'1h', binanceCandlesMock);
 
@@ -173,7 +172,7 @@ describe('Binance common', () => {
         d: [true, mockCommonLimitFilledBuyOrder()],
         e: [true, mockCommonLimitNewSellOrder()],
         f: [true, mockCommonLimitFilledSellOrder()],
-      })
+      });
 
       const src$ = feedObservable(toggleEvents$, ([emit, eventData]) => {
         if (emit) {
@@ -250,5 +249,5 @@ describe('Binance common', () => {
         },
       });
     });
-  })
+  });
 });

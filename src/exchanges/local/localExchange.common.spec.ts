@@ -7,7 +7,6 @@ import LocalExchange from './localExchange';
 import { of, switchMapTo, tap } from 'rxjs';
 
 describe('LocalExchange common', () => {
-
   const candleMockSet1 = [candleMock[0], candleMock[1], candleMock[2]];
   const candleMockSet2 = [candleMock[0]];
 
@@ -27,7 +26,7 @@ describe('LocalExchange common', () => {
     strategy.onStop();
   });
 
-  it(`#LocalExchange should listen to candle events`, () => {
+  it('#LocalExchange should listen to candle events', () => {
     instance.addCandles(['BTC', 'USDT'], candleMockSet1);
 
     scheduler.run(({ expectObservable }) => {
@@ -60,7 +59,7 @@ describe('LocalExchange common', () => {
     });
   });
 
-  it(`#LocalExchange should listen to multiple candle events simultaneously`, () => {
+  it('#LocalExchange should listen to multiple candle events simultaneously', () => {
     instance.addCandles(['ETH', 'USDT'], candleMockSet1);
     instance.addCandles(['BTC', 'USDT'], candleMockSet2);
 
@@ -77,7 +76,7 @@ describe('LocalExchange common', () => {
     });
   });
 
-  it(`#LocalExchange should provide a Trades stream`, () => {
+  it('#LocalExchange should provide a Trades stream', () => {
     instance.addCandles(['BTC', 'USDT'], candleMock);
     instance.setAssets(([
       { asset: 'USDT', available: 10000 },
@@ -147,7 +146,7 @@ describe('LocalExchange common', () => {
     });
   });
 
-  it(`#LocalExchange should provide an Order stream`, () => {
+  it('#LocalExchange should provide an Order stream', () => {
     instance.addCandles(['BTC', 'USDT'], candleMock);
     instance.setAssets(([
       { asset: 'USDT', available: 10000 },
@@ -227,5 +226,5 @@ describe('LocalExchange common', () => {
         },
       });
     });
-  })
+  });
 });
