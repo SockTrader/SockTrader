@@ -44,7 +44,7 @@ export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
     tradeQuantity: parseFloat(report.lastTradeQuantity),
     commission: parseFloat(report.commission),
     commissionAsset: report.commissionAsset ?? undefined,
-    createTime: new Date(report.creationTime),
+    createTime: new Date(report.orderTime),
   };
 };
 
