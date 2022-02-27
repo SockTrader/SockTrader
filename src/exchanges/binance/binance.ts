@@ -1,10 +1,10 @@
 import config from 'config';
 import { Binance as BinanceInstance, default as BinanceExchange, Symbol as SymbolInfo } from 'binance-api-node';
 import { Observable } from 'rxjs';
-import { Candle } from '../../core/candle.interfaces';
-import { Exchange } from '../../core/exchange.interfaces';
-import { Order, OrderCommand, OrderSide } from '../../core/order.interfaces';
-import { Trade } from '../../core/trade.interfaces';
+import { Candle } from '../../core/interfaces/candle.interfaces';
+import { Exchange } from '../../core/interfaces/exchange.interfaces';
+import { Order, OrderCommand, OrderSide } from '../../core/interfaces/order.interfaces';
+import { Trade } from '../../core/interfaces/trade.interfaces';
 import WalletService from '../../core/wallet/wallet.service';
 import { CandleOptions } from './binance.interfaces';
 import BinanceData from './binanceData';

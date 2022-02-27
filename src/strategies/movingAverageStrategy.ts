@@ -1,8 +1,8 @@
 import { CandleChartInterval } from 'binance-api-node';
 import { CrossDown, CrossUp, SMA } from 'technicalindicators';
-import { Candle } from '../core/candle.interfaces';
-import { Order, OrderSide, OrderStatus, OrderType } from '../core/order.interfaces';
-import { Strategy } from '../core/strategy.interfaces';
+import { Candle } from '../core/interfaces/candle.interfaces';
+import { Order, OrderSide, OrderStatus, OrderType } from '../core/interfaces/order.interfaces';
+import { Strategy } from '../core/interfaces/strategy.interfaces';
 import Binance from '../exchanges/binance/binance';
 
 export default class MovingAverageStrategy implements Strategy {

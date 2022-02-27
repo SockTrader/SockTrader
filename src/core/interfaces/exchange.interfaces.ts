@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Candle } from './candle.interfaces';
 import { Order, OrderCommand } from './order.interfaces';
 import { Trade } from './trade.interfaces';
-import WalletService from './wallet/wallet.service';
+import WalletService from '../wallet/wallet.service';
 
 export interface Exchange {
 

@@ -1,4 +1,4 @@
-import { OrderCommand, OrderSide, OrderType } from '../../core/order.interfaces';
+import { OrderCommand, OrderSide, OrderType } from '../../core/interfaces/order.interfaces';
 import BinanceError from './binanceError';
 
 describe('BinanceError', () => {

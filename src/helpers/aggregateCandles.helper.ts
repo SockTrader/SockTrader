@@ -1,6 +1,6 @@
 import { add, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, set } from 'date-fns';
 import { Observable, OperatorFunction } from 'rxjs';
-import { Candle } from '../core/candle.interfaces';
+import { Candle } from '../core/interfaces/candle.interfaces';
 
 type TimeFrame = 'days' | 'hours' | 'minutes';
 type diffFn = (dateLeft: Date, dateRight: Date) => number;

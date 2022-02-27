@@ -1,41 +1,16 @@
 import { asyncScheduler, BehaviorSubject, combineLatest, distinctUntilChanged, from, map, Observable, scheduled, Subject, tap } from 'rxjs';
-import { Candle } from '../../core/candle.interfaces';
-import { Exchange } from '../../core/exchange.interfaces';
-import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { Pair } from '../../core/pair.interfaces';
-import { Trade } from '../../core/trade.interfaces';
-import { Asset } from '../../core/wallet.interfaces';
+import { Candle } from '../../core/interfaces/candle.interfaces';
+import { Exchange } from '../../core/interfaces/exchange.interfaces';
+import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/interfaces/order.interfaces';
+import { Pair } from '../../core/interfaces/pair.interfaces';
+import { Trade } from '../../core/interfaces/trade.interfaces';
+import { Asset } from '../../core/interfaces/wallet.interfaces';
 import WalletService from '../../core/wallet/wallet.service';
-import { log, LOG } from '../../utils/log';
 import { OpenOrder } from './localExchange.interfaces';
 import { mapOpenOrderToOrder, mapOrderCommandToOpenOrder } from './mapper';
 import { calculateOrderPrice, createOrderFromOpenOrder, createTradeFromOpenOrder } from './utils';
 
 export default class LocalExchange implements Exchange {
-
-  /**
-   * Internal Trade stream (cannot be piped)
-   * @type {<Order>}
-   */
-  private readonly _trades$: Subject<Trade> = new Subject<Trade>();
-
-  /**
-   * Public Trade stream
-   * @type {<Order>}
-   */
-  readonly trades$: Observable<Trade> = this._trades$.pipe(log('Trades'));
-
-  /**
-   * Internal Order stream (cannot be piped)
-   * @type {<Order>}
-   */
-  private readonly _orders$: Subject<Order> = new Subject<Order>();
-
-  /**
-   * Public Order stream
-   * @type {<Order>}
-   */
-  readonly orders$: Observable<Order> = this._orders$.pipe(log('Orders'));
 
   readonly wallet: WalletService = new WalletService();
 
@@ -58,6 +33,19 @@ export default class LocalExchange implements Exchange {
    * @type {Map<string, Candle>}
    */
   readonly _symbolWithCurrentCandle: Map<string, Candle> = new Map<string, Candle>();
+
+  /**
+   * Trade stream
+   * @type {Observable<Trade>}
+   */
+  readonly trades$: Subject<Trade> = new Subject<Trade>();
+
+  /**
+   * Order stream
+   * @type {Observable<Order>}
+   * @type {<Order>}
+   */
+  readonly orders$: Subject<Order> = new Subject<Order>();
 
   private readonly openOrders$: BehaviorSubject<OpenOrder[]> = new BehaviorSubject<OpenOrder[]>([]);
 
@@ -84,7 +72,6 @@ export default class LocalExchange implements Exchange {
       map(([candle]) => candle),
       // The distinctUntilChanged would prevent similar candles from leaking into the stream. Since OpenOrders$ could emit multiple times
       distinctUntilChanged((prev, curr) => prev.start.getTime() === curr.start.getTime()),
-      log(`${symbol} candles`, LOG.verbose)
     );
   }
 
@@ -159,12 +146,12 @@ export default class LocalExchange implements Exchange {
 
       const order = createOrderFromOpenOrder(openOrder, candle, pair, orderPrice);
       if (order) {
-        this._orders$.next(<Order>{ ...order, status: OrderStatus.FILLED });
+        this.orders$.next(<Order>{ ...order, status: OrderStatus.FILLED });
         scheduleForRemoval.push(order.clientOrderId);
       }
 
       const trade = createTradeFromOpenOrder(openOrder, candle, pair, orderPrice);
-      if (trade) this._trades$.next(trade);
+      if (trade) this.trades$.next(trade);
     });
 
     if (scheduleForRemoval.length > 0) this.removeOpenOrderByOrderIds(scheduleForRemoval);
@@ -204,7 +191,7 @@ export default class LocalExchange implements Exchange {
     if (openOrder.type === OrderType.LIMIT) {
       const orderPrice = calculateOrderPrice(openOrder, candle);
       const order = mapOpenOrderToOrder(openOrder, candle, pair, orderPrice);
-      this._orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
+      this.orders$.next(<Order>{ ...order, status: OrderStatus.NEW });
     }
   }
 

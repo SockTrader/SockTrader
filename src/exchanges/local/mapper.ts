@@ -1,9 +1,9 @@
 import config from 'config';
 import { nanoid } from 'nanoid';
-import { Candle } from '../../core/candle.interfaces';
-import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { Pair } from '../../core/pair.interfaces';
-import { Trade } from '../../core/trade.interfaces';
+import { Candle } from '../../core/interfaces/candle.interfaces';
+import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/interfaces/order.interfaces';
+import { Pair } from '../../core/interfaces/pair.interfaces';
+import { Trade } from '../../core/interfaces/trade.interfaces';
 import { OpenOrder } from './localExchange.interfaces';
 
 export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: Candle): OpenOrder => {

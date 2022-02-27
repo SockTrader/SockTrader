@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   postgresql:
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     restart: always
     ports:
       - 5432:5432
     volumes:
       - './docker/database:/docker-entrypoint-initdb.d/'
-      - './docker/database/data:/var/lib/postgresql/data'
+      - 'dbdata:/var/lib/postgresql/data'
     environment:
       POSTGRES_USER: socktrader
       POSTGRES_PASSWORD: socktrader
@@ -26,10 +26,13 @@ services:
       - './docker/pgadmin/servers.json:/pgadmin4/servers.json'
 
     ports:
-      - '5050:80'
+      - '8000:80'
     networks:
       - postgres
     restart: unless-stopped
+
+volumes:
+  dbdata:
 
 networks:
   postgres:

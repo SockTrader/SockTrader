@@ -1,4 +1,4 @@
-import { Order } from '../../core/order.interfaces';
+import { Order } from '../../core/interfaces/order.interfaces';
 
 export interface OpenOrder extends Omit<Order, 'price'> {
   price?: number

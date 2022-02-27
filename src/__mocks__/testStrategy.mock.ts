@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs';
-import { Candle } from '../core/candle.interfaces';
-import { Exchange } from '../core/exchange.interfaces';
-import { OrderType } from '../core/order.interfaces';
-import { Strategy } from '../core/strategy.interfaces';
+import { Candle } from '../core/interfaces/candle.interfaces';
+import { Exchange } from '../core/interfaces/exchange.interfaces';
+import { OrderType } from '../core/interfaces/order.interfaces';
+import { Strategy } from '../core/interfaces/strategy.interfaces';
 
 export default class TestStrategy<T extends Exchange> implements Strategy {
 

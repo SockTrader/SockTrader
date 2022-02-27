@@ -1,4 +1,4 @@
-import { AssetDeltaUpdate, WalletUpdate } from '../wallet.interfaces';
+import { AssetDeltaUpdate, WalletUpdate } from '../interfaces/wallet.interfaces';
 import WalletService from './wallet.service';
 
 describe('WalletService', () => {

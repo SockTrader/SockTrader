@@ -1,4 +1,10 @@
 {
+  "database": {
+    "username": "",
+    "password": "",
+    "host": "localhost",
+    "port": 5432
+  },
   "exchanges": {
     "binanceLocal": {
       "httpBase": "http://localhost:8000",

@@ -1,6 +1,6 @@
 import { add } from 'date-fns';
 import { TestScheduler } from 'rxjs/testing';
-import { Candle } from '../core/candle.interfaces';
+import { Candle } from '../core/interfaces/candle.interfaces';
 import { aggregateCandles, combineCandleUpdates, getStartOfNextInterval } from './aggregateCandles.helper';
 
 const createCandles = (amount: number, gap: number) => Array.from({ length: amount }).map((val, idx) => ({

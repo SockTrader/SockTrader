@@ -3,8 +3,8 @@ import { __emitUserDataStreamEvents, CandleChartInterval } from 'binance-api-nod
 import { TestScheduler } from 'rxjs/testing';
 import { __setCandles } from '../../__mocks__/binance-api-node';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
-import { Order, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { Trade } from '../../core/trade.interfaces';
+import { Order, OrderSide, OrderStatus, OrderType } from '../../core/interfaces/order.interfaces';
+import { Trade } from '../../core/interfaces/trade.interfaces';
 import { feedObservable } from '../../helpers/feedObservable.helper';
 import { binanceCandlesMock } from './__mocks__/binanceCandles.mock';
 import { mockCommonLimitFilledBuyOrder, mockCommonLimitFilledSellOrder, mockCommonLimitNewBuyOrder, mockCommonLimitNewSellOrder, mockCommonMarketBuyOrderResponse, mockCommonMarketSellOrderResponse } from './__mocks__/binanceCommon.mock';

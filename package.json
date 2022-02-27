@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "web": "ts-node ./src/web.ts",
     "start": "ts-node ./src/index.ts",
     "watch": "./node_modules/nodemon/bin/nodemon.js",
     "start:prod": "npm run build @@ node ./dist/src/index.js",
@@ -22,8 +23,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/config": "0.0.41",
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.21",
+    "@types/pg": "^8.6.4",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.10.0",
@@ -41,7 +44,9 @@
     "commander": "^9.0.0",
     "config": "^3.3.7",
     "date-fns": "^2.28.0",
+    "express": "^4.17.3",
     "nanoid": "^3.3.1",
+    "pg": "^8.7.3",
     "rxjs": "^7.5.4",
     "technicalindicators": "^3.1.0"
   }

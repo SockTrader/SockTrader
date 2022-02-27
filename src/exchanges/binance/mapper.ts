@@ -1,8 +1,8 @@
 import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, NewOrderRespType_LT, Order as BinanceOrder, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node';
-import { Candle } from '../../core/candle.interfaces';
-import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/order.interfaces';
-import { Trade } from '../../core/trade.interfaces';
-import { AssetDeltaUpdate, WalletUpdate } from '../../core/wallet.interfaces';
+import { Candle } from '../../core/interfaces/candle.interfaces';
+import { Order, OrderCommand, OrderSide, OrderStatus, OrderType } from '../../core/interfaces/order.interfaces';
+import { Trade } from '../../core/interfaces/trade.interfaces';
+import { AssetDeltaUpdate, WalletUpdate } from '../../core/interfaces/wallet.interfaces';
 import { dollarCostAverage } from '../../utils/price';
 
 export const mapCandle = (candle: CandleChartResult | BinanceCandle): Candle => ({

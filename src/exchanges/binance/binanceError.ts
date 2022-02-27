@@ -1,4 +1,4 @@
-import { OrderCommand } from '../../core/order.interfaces';
+import { OrderCommand } from '../../core/interfaces/order.interfaces';
 
 export default class BinanceError implements Error {
 

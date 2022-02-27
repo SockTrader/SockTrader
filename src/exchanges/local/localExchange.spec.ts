@@ -1,7 +1,7 @@
 import { TestScheduler } from 'rxjs/testing';
 import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock';
 import TestStrategy from '../../__mocks__/testStrategy.mock';
-import { OrderCommand, OrderType } from '../../core/order.interfaces';
+import { OrderCommand, OrderType } from '../../core/interfaces/order.interfaces';
 import LocalExchange from './localExchange';
 
 describe('LocalExchange', () => {

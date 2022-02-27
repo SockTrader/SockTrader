@@ -1,7 +1,7 @@
 import { access } from 'fs';
 import { resolve } from 'path';
 import { workerData } from 'worker_threads';
-import { Strategy } from '../strategy.interfaces';
+import { Strategy } from '../interfaces/strategy.interfaces';
 import { WorkerData } from './worker.interfaces';
 
 class ExecutionScript {

@@ -1,11 +1,11 @@
 import { applyTransaction } from '@datorama/akita';
-import { Candle } from '../candle.interfaces';
-import { OrderCommand, OrderSide, OrderType } from '../order.interfaces';
-import { Pair } from '../pair.interfaces';
+import { Candle } from '../interfaces/candle.interfaces';
+import { OrderCommand, OrderSide, OrderType } from '../interfaces/order.interfaces';
+import { Pair } from '../interfaces/pair.interfaces';
 import SpotWalletQuery from '../stores/spotWallet.query';
 import { SpotWalletStore } from '../stores/spotWallet.store';
-import { Trade } from '../trade.interfaces';
-import { Asset, AssetDeltaUpdate, WalletUpdate } from '../wallet.interfaces';
+import { Trade } from '../interfaces/trade.interfaces';
+import { Asset, AssetDeltaUpdate, WalletUpdate } from '../interfaces/wallet.interfaces';
 
 export default class WalletService {
 

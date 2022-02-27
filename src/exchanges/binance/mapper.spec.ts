@@ -1,4 +1,4 @@
-import { OrderSide, OrderType } from '../../core/order.interfaces';
+import { OrderSide, OrderType } from '../../core/interfaces/order.interfaces';
 import { mockCommonMarketBuyOrderResponse } from './__mocks__/binanceCommon.mock';
 import { mapOrderCommand, mapOrderResponse } from './mapper';
 

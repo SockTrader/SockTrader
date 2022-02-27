@@ -1,5 +1,5 @@
 import { Order, TimeInForce } from "binance-api-node";
-import { OrderSide, OrderStatus, OrderType } from '../../../core/order.interfaces';
+import { OrderSide, OrderStatus, OrderType } from '../../../core/interfaces/order.interfaces';
 
 export const binanceOrderMock: Order = {
   symbol: 'BTCUSDT',
