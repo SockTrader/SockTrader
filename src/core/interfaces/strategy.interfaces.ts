@@ -1,4 +1,4 @@
 export interface Strategy {
   onStart(): void;
-  onStop(): void;
+  onStop?(): void;
 }

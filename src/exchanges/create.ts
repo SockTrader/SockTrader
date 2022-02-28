@@ -1,21 +1,17 @@
 import { Exchange } from '../core/interfaces/exchange.interfaces';
+import { Order } from '../core/interfaces/order.interfaces';
 import { Strategy } from '../core/interfaces/strategy.interfaces';
-import { pool } from '../core/pool';
+import { Trade } from '../core/interfaces/trade.interfaces';
+import { insertOrder } from '../core/repositories/orders';
+import { insertTrade } from '../core/repositories/trades';
 import { LOG, log } from '../utils/log';
+import { noop } from '../utils/noop';
 
 const persistActions = <T extends Exchange>(exchange: T, strategy: Strategy) => {
-  const originalOnStop = strategy.onStop.bind(strategy);
-  const orderSubs = exchange.orders$.subscribe((order) => {
-    //eslint-disable-next-line no-console
-    console.log('save order', order);
-    const result = pool.query('SELECT NOW()');
-    console.log('result: ', result);
-  });
+  const originalOnStop = strategy.onStop?.bind(strategy) ?? noop;
 
-  const tradesSubs = exchange.trades$.subscribe((trade) => {
-    //eslint-disable-next-line no-console
-    console.log('save trade', trade);
-  });
+  const orderSubs = exchange.orders$.subscribe((o: Order) => insertOrder(o));
+  const tradesSubs = exchange.trades$.subscribe((t: Trade) => insertTrade(t));
 
   strategy.onStop = () => {
     orderSubs.unsubscribe();
