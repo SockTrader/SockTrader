@@ -1,117 +1,63 @@
-export class UDFError extends Error {
-}
-
-export class SymbolNotFound extends UDFError {
-}
-
-export class InvalidResolution extends UDFError {
-}
+import { toTable } from '../../utils/toTable';
+import { getCandles, getLastCandle } from '../repositories/candle';
+import { getCandleSets } from '../repositories/candleSet';
+import { getUniqueExchanges } from '../repositories/exchange';
+import { UDFSymbol } from './udf.interfaces';
 
 export class UDF {
 
-  private supportedResolutions: string[] = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M'];
+  supportedResolutions: string[] = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M'];
+
+  symbols: UDFSymbol[] = [];
 
   constructor() {
-    setInterval(() => {
-      this.loadSymbols();
-    }, 30000);
     this.loadSymbols();
   }
 
-  loadSymbols() {
-    function pricescale(symbol) {
-      for (const filter of symbol.filters) {
-        if (filter.filterType == 'PRICE_FILTER') {
-          return Math.round(1 / parseFloat(filter.tickSize));
-        }
-      }
-      return 1;
-    }
-
-    const promise = this.binance.exchangeInfo().catch(err => {
-      console.error(err);
-      setTimeout(() => {
-        this.loadSymbols();
-      }, 1000);
-    });
-
-    this.symbols = promise.then(info => {
-      return info.symbols.map(symbol => {
-        return {
-          symbol: symbol.symbol,
-          ticker: symbol.symbol,
-          name: symbol.symbol,
-          full_name: symbol.symbol,
-          description: `${symbol.baseAsset} / ${symbol.quoteAsset}`,
-          exchange: 'BINANCE',
-          listed_exchange: 'BINANCE',
-          type: 'crypto',
-          currency_code: symbol.quoteAsset,
-          session: '24x7',
-          timezone: 'UTC',
-          minmovement: 1,
-          minmov: 1,
-          minmovement2: 0,
-          minmov2: 0,
-          pricescale: pricescale(symbol),
-          supported_resolutions: this.supportedResolutions,
-          has_intraday: true,
-          has_daily: true,
-          has_weekly_and_monthly: true,
-          data_status: 'streaming'
-        };
-      });
-    });
-    this.allSymbols = promise.then(info => {
-      const set = new Set();
-      for (const symbol of info.symbols) {
-        set.add(symbol.symbol);
-      }
-      return set;
+  async loadSymbols() {
+    const sets = await getCandleSets();
+    this.symbols = sets.map(symbol => {
+      return {
+        symbol: symbol.symbol.toUpperCase(),
+        ticker: symbol.symbol,
+        name: symbol.symbol,
+        full_name: symbol.symbol,
+        description: `${symbol.baseAsset} / ${symbol.quoteAsset}`,
+        exchange: symbol.exchange.toUpperCase(),
+        listed_exchange: symbol.exchange.toUpperCase(),
+        type: 'crypto',
+        currency_code: symbol.quoteAsset,
+        session: '24x7',
+        timezone: 'UTC',
+        minmovement: 1,
+        minmov: 1,
+        minmovement2: 0,
+        minmov2: 0,
+        pricescale: Math.round(1 / parseFloat(symbol.tickSize)),
+        supported_resolutions: ['60'],
+        has_intraday: true,
+        has_daily: true,
+        has_weekly_and_monthly: true,
+        data_status: 'streaming'
+      };
     });
   }
 
-  async checkSymbol(symbol) {
-    const symbols = await this.allSymbols;
-    return symbols.has(symbol);
-  }
-
-  /**
-   * Convert items to response-as-a-table format.
-   * @param {array} items - Items to convert.
-   * @returns {object} Response-as-a-table formatted items.
-   */
-  asTable(items) {
-    const result = {};
-    for (const item of items) {
-      for (const key in item) {
-        if (!result[key]) {
-          result[key] = [];
-        }
-        result[key].push(item[key]);
-      }
-    }
-    for (const key in result) {
-      const values = [...new Set(result[key])];
-      if (values.length === 1) {
-        result[key] = values[0];
-      }
-    }
-    return result;
+  hasSymbol(symbol: string): boolean {
+    return !!this.symbols.find(s => s.symbol === symbol);
   }
 
   /**
    * Data feed configuration data.
    */
   async config() {
+    const exchanges = await getUniqueExchanges();
     return {
-      exchanges: [
-        {
-          value: 'BINANCE',
-          name: 'Binance',
-          desc: 'Binance Exchange'
-        }
-      ],
+      exchanges: exchanges.map(e => ({
+        value: e.exchange.toUpperCase(),
+        name: e.exchange,
+        desc: e.description,
+      })),
       symbols_types: [
         {
           value: 'crypto',
@@ -128,12 +74,11 @@ export class UDF {
   }
 
   /**
-   * Symbols.
-   * @returns {object} Response-as-a-table formatted symbols.
+   * Returns symbol info as a table
+   * eg: { a: [1,2,3], b: [4,5,6] }
    */
-  async symbolInfo() {
-    const symbols = await this.symbols;
-    return this.asTable(symbols);
+  symbolInfo() {
+    return toTable(this.symbols);
   }
 
   /**
@@ -141,19 +86,14 @@ export class UDF {
    * @param {string} symbol Symbol name or ticker.
    * @returns {object} Symbol.
    */
-  async symbol(symbol) {
-    const symbols = await this.symbols;
+  async symbol(symbol: string) {
+    const result = this.symbols.find(s => s.symbol === symbol);
 
-    const comps = symbol.split(':');
-    const s = (comps.length > 1 ? comps[1] : symbol).toUpperCase();
-
-    for (const symbol of symbols) {
-      if (symbol.symbol === s) {
-        return symbol;
-      }
+    if (!result) {
+      throw new Error('Symbol not found');
     }
 
-    throw new SymbolNotFound();
+    return result;
   }
 
   /**
@@ -164,13 +104,15 @@ export class UDF {
    * @param {number} limit The maximum number of symbols in a response.
    * @returns {array} Array of symbols.
    */
-  async search(query, type, exchange, limit) {
-    let symbols = await this.symbols;
+  async search(query: string, type: string, exchange: string, limit: number) {
+    let symbols = this.symbols;
+
     if (type) {
       symbols = symbols.filter(s => s.type === type);
     }
+
     if (exchange) {
-      symbols = symbols.filter(s => s.exchange === exchange);
+      symbols = symbols.filter(s => s.exchange === s.exchange);
     }
 
     query = query.toUpperCase();
@@ -179,6 +121,7 @@ export class UDF {
     if (limit) {
       symbols = symbols.slice(0, limit);
     }
+
     return symbols.map(s => ({
       symbol: s.symbol,
       full_name: s.full_name,
@@ -190,70 +133,40 @@ export class UDF {
   }
 
   /**
-   * Bars.
+   * Get chart history
    * @param {string} symbol - Symbol name or ticker.
    * @param {number} from - Unix timestamp (UTC) of leftmost required bar.
    * @param {number} to - Unix timestamp (UTC) of rightmost required bar.
    * @param {string} resolution
+   * @param {number} countBack
    */
-  async history(symbol, from, to, resolution) {
-    const hasSymbol = await this.checkSymbol(symbol);
-    if (!hasSymbol) {
-      throw new SymbolNotFound();
+  async history(symbol: string, from: number, to: number, resolution: string, countBack: number) {
+    if (!this.hasSymbol(symbol)) {
+      throw new Error('Symbol not found');
     }
 
-    const RESOLUTIONS_INTERVALS_MAP = {
-      '1': '1m',
-      '3': '3m',
-      '5': '5m',
-      '15': '15m',
-      '30': '30m',
-      '60': '1h',
-      '120': '2h',
-      '240': '4h',
-      '360': '6h',
-      '480': '8h',
-      '720': '12h',
-      'D': '1d',
-      '1D': '1d',
-      '3D': '3d',
-      'W': '1w',
-      '1W': '1w',
-      'M': '1M',
-      '1M': '1M',
+    const candles = (await getCandles(symbol, new Date(from * 1000), new Date(to * 1000), countBack)).map(c => ({
+      ...c,
+      start: c.start.getTime() / 1000
+    }));
+
+    if (candles.length <= 0) {
+      const lastCandle = await getLastCandle(symbol, new Date(from * 1000));
+      return lastCandle
+        ? { s: 'no_data', nextTime: lastCandle.start.getTime() / 1000 }
+        : { s: 'no_data' };
+    }
+
+    const table = toTable(candles);
+    return {
+      s: 'ok',
+      t: table.start,
+      c: table.close,
+      o: table.open,
+      h: table.high,
+      l: table.low,
+      v: table.volume,
     };
-
-    const interval = RESOLUTIONS_INTERVALS_MAP[resolution];
-    if (!interval) {
-      throw new InvalidResolution();
-    }
-
-    let totalKlines = [];
-
-    from *= 1000;
-    to *= 1000;
-
-    while (true) {
-      const klines = await this.binance.klines(symbol, interval, from, to, 500);
-      totalKlines = totalKlines.concat(klines);
-      if (klines.length == 500) {
-        from = klines[klines.length - 1][0] + 1;
-      } else {
-        if (totalKlines.length === 0) {
-          return { s: 'no_data' };
-        } else {
-          return {
-            s: 'ok',
-            t: totalKlines.map(b => Math.floor(b[0] / 1000)),
-            c: totalKlines.map(b => parseFloat(b[4])),
-            o: totalKlines.map(b => parseFloat(b[1])),
-            h: totalKlines.map(b => parseFloat(b[2])),
-            l: totalKlines.map(b => parseFloat(b[3])),
-            v: totalKlines.map(b => parseFloat(b[5]))
-          };
-        }
-      }
-    }
   }
 
 }

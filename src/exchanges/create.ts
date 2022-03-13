@@ -2,8 +2,8 @@ import { Exchange } from '../core/interfaces/exchange.interfaces';
 import { Order } from '../core/interfaces/order.interfaces';
 import { Strategy } from '../core/interfaces/strategy.interfaces';
 import { Trade } from '../core/interfaces/trade.interfaces';
-import { insertOrder } from '../core/repositories/orders';
-import { insertTrade } from '../core/repositories/trades';
+import { insertOrder } from '../core/repositories/order';
+import { insertTrade } from '../core/repositories/trade';
 import { LOG, log } from '../utils/log';
 import { noop } from '../utils/noop';
 

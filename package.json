@@ -23,6 +23,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/config": "0.0.41",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.21",
@@ -43,6 +44,7 @@
     "binance-api-node": "^0.11.31",
     "commander": "^9.0.0",
     "config": "^3.3.7",
+    "cors": "^2.8.5",
     "date-fns": "^2.28.0",
     "express": "^4.17.3",
     "nanoid": "^3.3.1",

@@ -8,12 +8,14 @@ services:
       - 5432:5432
     volumes:
       - './docker/database:/docker-entrypoint-initdb.d/'
-      - 'dbdata:/var/lib/postgresql/data'
+# Uncomment if you want to persist data
+#      - 'dbdata:/var/lib/postgresql/data'
     environment:
       POSTGRES_USER: socktrader
       POSTGRES_PASSWORD: socktrader
     networks:
       - postgres
+    command: ["postgres", "-c", "log_statement=all"]
 
   pgadmin:
     image: dpage/pgadmin4
