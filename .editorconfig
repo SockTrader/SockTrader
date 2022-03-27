@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset = utf-8
 end_of_line = lf
@@ -23,26 +25,7 @@ ij_editorconfig_space_before_colon = false
 ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
-[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.pom,*.rng,*.tld,*.wadl,*.wsdd,*.wsdl,*.xjb,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
-ij_xml_align_attributes = true
-ij_xml_align_text = false
-ij_xml_attribute_wrap = normal
-ij_xml_block_comment_at_first_column = true
-ij_xml_keep_blank_lines = 2
-ij_xml_keep_indents_on_empty_lines = false
-ij_xml_keep_line_breaks = true
-ij_xml_keep_line_breaks_in_text = true
-ij_xml_keep_whitespaces = false
-ij_xml_keep_whitespaces_around_cdata = preserve
-ij_xml_keep_whitespaces_inside_cdata = false
-ij_xml_line_comment_at_first_column = true
-ij_xml_space_after_tag_name = false
-ij_xml_space_around_equals_in_attribute = false
-ij_xml_space_inside_empty_tag = false
-ij_xml_text_wrap = normal
-ij_xml_use_custom_settings = false
-
-[{*.ats,*.ts}]
+[*.ts]
 indent_size = 2
 max_line_length = 140
 tab_width = 2
@@ -204,10 +187,10 @@ ij_typescript_ternary_operation_wrap = off
 ij_typescript_union_types_wrap = on_every_item
 ij_typescript_use_chained_calls_group_indents = false
 ij_typescript_use_double_quotes = false
-ij_typescript_use_explicit_js_extension = global
+ij_typescript_use_explicit_js_extension = false
 ij_typescript_use_path_mapping = always
 ij_typescript_use_public_modifier = false
-ij_typescript_use_semicolon_after_statement = true
+ij_typescript_use_semicolon_after_statement = false
 ij_typescript_var_declaration_wrap = normal
 ij_typescript_while_brace_force = never
 ij_typescript_while_on_new_line = false
@@ -223,8 +206,8 @@ ij_shell_redirect_followed_by_space = false
 ij_shell_switch_cases_indented = false
 ij_shell_use_unix_line_separator = true
 
-[{*.cjs,*.js}]
-ij_continuation_indent_size = 4
+[*.js]
+ij_continuation_indent_size = 2
 ij_javascript_align_imports = false
 ij_javascript_align_multiline_array_initializer_expression = false
 ij_javascript_align_multiline_binary_operation = false
@@ -379,16 +362,16 @@ ij_javascript_ternary_operation_wrap = off
 ij_javascript_union_types_wrap = on_every_item
 ij_javascript_use_chained_calls_group_indents = false
 ij_javascript_use_double_quotes = false
-ij_javascript_use_explicit_js_extension = global
+ij_javascript_use_explicit_js_extension = false
 ij_javascript_use_path_mapping = always
 ij_javascript_use_public_modifier = false
-ij_javascript_use_semicolon_after_statement = true
+ij_javascript_use_semicolon_after_statement = false
 ij_javascript_var_declaration_wrap = normal
 ij_javascript_while_brace_force = never
 ij_javascript_while_on_new_line = false
 ij_javascript_wrap_comments = false
 
-[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
+[{*.json,.babelrc,.eslintrc,.stylelintrc,jest.config}]
 indent_size = 2
 ij_json_keep_blank_lines_in_code = 0
 ij_json_keep_indents_on_empty_lines = false
@@ -401,7 +384,7 @@ ij_json_spaces_within_braces = false
 ij_json_spaces_within_brackets = false
 ij_json_wrap_long_lines = false
 
-[{*.htm,*.html,*.ng,*.sht,*.shtm,*.shtml}]
+[{*.htm,*.html}]
 ij_html_add_new_line_before_tags = body,div,p,form,h1,h2,h3
 ij_html_align_attributes = true
 ij_html_align_text = false
@@ -428,7 +411,9 @@ ij_html_space_around_equality_in_attribute = false
 ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 
-[{*.markdown,*.md}]
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
 ij_markdown_force_one_space_after_blockquote_symbol = true
 ij_markdown_force_one_space_after_header_symbol = true
 ij_markdown_force_one_space_after_list_bullet = true
@@ -440,16 +425,3 @@ ij_markdown_max_lines_between_paragraphs = 1
 ij_markdown_min_lines_around_block_elements = 1
 ij_markdown_min_lines_around_header = 1
 ij_markdown_min_lines_between_paragraphs = 1
-
-[{*.yaml,*.yml}]
-indent_size = 2
-ij_yaml_align_values_properties = do_not_align
-ij_yaml_autoinsert_sequence_marker = true
-ij_yaml_block_mapping_on_new_line = false
-ij_yaml_indent_sequence_value = true
-ij_yaml_keep_indents_on_empty_lines = false
-ij_yaml_keep_line_breaks = true
-ij_yaml_sequence_on_new_line = false
-ij_yaml_space_before_colon = false
-ij_yaml_spaces_within_braces = true
-ij_yaml_spaces_within_brackets = true

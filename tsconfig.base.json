@@ -1,21 +1,27 @@
 {
-  "include": [
-    "src"
-  ],
+  "compileOnSave": false,
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "baseUrl": ".",
-    "target": "es2020",
-    "module": "commonjs",
-    "outDir": "build",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "rootDir": ".",
     "sourceMap": true,
-    "strict": true,
-  }
+    "declaration": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@socktrader/cli": ["packages/cli/src/index.ts"],
+      "@socktrader/core": ["packages/core/src/index.ts"],
+      "@socktrader/udf": ["packages/udf/src/index.ts"],
+      "@socktrader/web": ["packages/web/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
 }

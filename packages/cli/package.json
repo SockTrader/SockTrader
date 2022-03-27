@@ -1,0 +1,8 @@
+{
+  "name": "@socktrader/cli",
+  "version": "0.0.1",
+  "dependencies": {
+    "@socktrader/core": "^0.0.1",
+    "commander": "^9.1.0"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@socktrader/udf",
+  "version": "0.0.1",
+  "dependencies": {
+    "@socktrader/core": "^0.0.1"
+  }
+}
