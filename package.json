@@ -4,22 +4,35 @@
   "description": "Websocket based trading bot for cryptocurrencies",
   "repository": "https://github.com/SockTrader/SockTrader",
   "license": "GPL-3.0",
-  "authors": [
-    "wouter cleymans",
-    "thijs raets"
+  "workspaces": [
+    "packages/**",
+    "apps/**"
   ],
-  "engines": {
-    "node": ">=16.14.0"
-  },
   "scripts": {
+    "build": "nx build",
+    "build:affected": "nx affected:build",
+    "clean": "nx reset; npx rimraf dist node_modules **/node_modules",
+    "lint": "nx lint --fix",
+    "lint:affected": "nx affected:lint --fix",
     "start:backtest": "nx serve demo",
     "start:web": "nx serve web",
     "test": "TZ=UTC nx run-many --verbose --all --target=test --parallel",
-    "test:affected": "TZ=UTC nx affected:test --verbose",
-    "lint": "nx lint --fix",
-    "lint:affected": "nx affected:lint --fix",
-    "build": "nx build",
-    "build:affected": "nx affected:build"
+    "test:affected": "TZ=UTC nx affected:test --verbose"
+  },
+  "dependencies": {
+    "@ngneat/elf": "^1.5.6",
+    "@ngneat/elf-entities": "^4.2.1",
+    "binance-api-node": "^0.11.31",
+    "commander": "^9.1.0",
+    "config": "^3.3.7",
+    "cors": "^2.8.5",
+    "date-fns": "^2.28.0",
+    "express": "^4.17.3",
+    "nanoid": "^3.3.1",
+    "pg": "^8.7.3",
+    "rxjs": "7.4.0",
+    "technicalindicators": "^3.1.0",
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@nrwl/cli": "13.9.5",
@@ -30,8 +43,11 @@
     "@nrwl/node": "^13.9.5",
     "@nrwl/workspace": "13.9.5",
     "@types/config": "0.0.41",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
     "@types/node": "16.11.7",
+    "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "~5.10.0",
     "@typescript-eslint/parser": "~5.10.0",
     "eslint": "~8.7.0",
@@ -40,18 +56,15 @@
     "jest": "27.5.1",
     "nx": "13.9.5",
     "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.1.4",
     "typescript": "~4.5.2"
   },
-  "dependencies": {
-    "tslib": "^2.0.0",
-    "binance-api-node": "^0.11.31",
-    "config": "^3.3.7",
-    "date-fns": "^2.28.0",
-    "technicalindicators": "^3.1.0"
+  "engines": {
+    "node": ">=16.14.0"
   },
-  "workspaces": [
-    "packages/**",
-    "apps/**"
+  "authors": [
+    "wouter cleymans",
+    "thijs raets"
   ]
 }

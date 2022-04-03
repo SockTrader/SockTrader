@@ -1,4 +1,4 @@
-import { applyTransaction } from '@datorama/akita'
+import { emitOnce } from '@ngneat/elf'
 import { Asset, AssetDeltaUpdate, Candle, OrderCommand, OrderSide, OrderType, Pair, Trade, WalletUpdate } from '../interfaces'
 import { SpotWalletQuery, SpotWalletStore } from '../stores'
 
@@ -13,7 +13,7 @@ export class WalletService {
    * @param {WalletUpdate[]} walletUpdates
    */
   updateSpotByWalletUpdate(walletUpdates: WalletUpdate[]): void {
-    applyTransaction(() => {
+    emitOnce(() => {
       walletUpdates.forEach(update => {
         this.store.setAsset(update.asset, update.available)
         this.store.setReservedAsset(update.asset, update.reserved)

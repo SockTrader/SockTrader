@@ -7,6 +7,7 @@
       "executor": "@nrwl/node:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "generatePackageJson": true,
         "outputPath": "dist/apps/demo",
         "tsConfig": "apps/demo/tsconfig.app.json",
         "main": "apps/demo/src/main.ts"
@@ -27,6 +28,12 @@
     },
     "serve": {
       "executor": "@nrwl/node:node",
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ],
       "options": {
         "buildTarget": "demo:build"
       }

@@ -1,5 +1,5 @@
 import config from 'config'
-import { MonoTypeOperatorFunction, pipe, tap } from 'rxjs'
+import { Observable, OperatorFunction, tap } from 'rxjs'
 
 export enum LOG {
   error = 'error',
@@ -19,8 +19,8 @@ export const LEVELS = [
   LOG.silly,
 ] as const
 
-export const log = <T>(tag: string, level: LOG = LOG.info): MonoTypeOperatorFunction<T> => {
-  return pipe(tap(v => {
+export const log = <T>(tag: string, level: LOG = LOG.info): OperatorFunction<T, any> => {
+  return (source) => source.pipe(tap(v => {
     if (!config.get('debug')) return
 
     const lvlIdx = LEVELS.findIndex(l => l === level)
