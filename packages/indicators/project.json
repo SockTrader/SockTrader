@@ -1,0 +1,44 @@
+{
+  "root": "packages/indicators",
+  "sourceRoot": "packages/indicators/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/packages/indicators",
+        "tsConfig": "packages/indicators/tsconfig.lib.json",
+        "packageJson": "packages/indicators/package.json",
+        "main": "packages/indicators/src/index.ts",
+        "assets": [
+          "packages/indicators/*.md"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/indicators/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/packages/indicators"
+      ],
+      "options": {
+        "jestConfig": "packages/indicators/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
