@@ -12,7 +12,9 @@ plugins:
 exclude_patterns:
 - "**/*.spec.ts"
 - "**/*.mock.ts"
+- "**/jest.config.js"
 - "**/node_modules"
+- "apps/demo/**/*"
 - "docs/"
 - "build/"
 - "dist/"
