@@ -5,7 +5,7 @@
     "date-fns": "^2.28.0",
     "technicalindicators": "^3.1.0",
     "binance-api-node": "^0.11.31",
-    "@socktrader/core": "0.0.1",
+    "@socktrader/core": "0.0.1"
   },
   "main": "main.js"
 }
