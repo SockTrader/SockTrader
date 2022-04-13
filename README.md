@@ -1,4 +1,4 @@
-<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/SockTraderLogo.png" alt="SockTrader logo" /></p>
+<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader-logo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader v2</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
@@ -21,6 +21,10 @@ or you could simply tell the bot to buy/sell at certain price levels. In fact, i
 
 The name "SockTrader" comes from web**sock**et based trading bot. Which means that SockTrader will try to make use of a realtime connection with the exchange. This has the advantage
 that one can act very quickly in a changing market with low latency.
+
+## Looking for SockTrader v1?
+The dashboard is currently incompatible with SockTrader v2. 
+Use [SockTrader v1](https://github.com/SockTrader/SockTrader/tree/socktrader-v1) instead
 
 ## Features
 - 🚀 Realtime super-fast websocket trading.
