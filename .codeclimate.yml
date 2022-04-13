@@ -11,7 +11,10 @@ plugins:
 
 exclude_patterns:
 - "**/*.spec.ts"
+- "**/*.mock.ts"
 - "**/node_modules"
 - "docs/"
 - "build/"
+- "dist/"
+- "tmp/"
 - ".idea"
