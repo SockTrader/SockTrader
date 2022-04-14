@@ -1,4 +1,5 @@
-import { Mode, annualReturn } from '../performance'
+import { annualReturn } from '../performance'
+import { Mode } from '../performance/annualReturn'
 import { kurtosis, skewness } from '../statistics'
 import { Frequency } from '../type/frequency'
 import { annualRisk } from './annualRisk'
