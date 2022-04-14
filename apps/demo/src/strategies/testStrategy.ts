@@ -26,7 +26,7 @@ export class TestStrategy implements Strategy {
     this._exchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
     this._exchange.setAssets([{
       asset: 'USDT',
-      available: 10000
+      quantity: 10000
     }])
   }
 

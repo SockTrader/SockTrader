@@ -23,7 +23,7 @@ export class WalletService {
 
   setInitialWallet(assets: Asset[]): void {
     assets.forEach(asset => {
-      this.store.setAsset(asset.asset, asset.available)
+      this.store.setAsset(asset.asset, asset.quantity)
     })
   }
 

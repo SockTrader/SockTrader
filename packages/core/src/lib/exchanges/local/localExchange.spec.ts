@@ -16,8 +16,8 @@ describe('LocalExchange', () => {
     localExchange = new LocalExchange()
     localExchange.addCandles(['BTC', 'USDT'], candleMock)
     localExchange.setAssets(([
-      { asset: 'USDT', available: 10000 },
-      { asset: 'BTC', available: 1 }
+      { asset: 'USDT', quantity: 10000 },
+      { asset: 'BTC', quantity: 1 }
     ]))
 
     scheduler = new TestScheduler((received, expected) => {
@@ -55,8 +55,8 @@ describe('LocalExchange', () => {
   it('should be able to set assets', () => {
     const setInitialWalletSpy = jest.spyOn(localExchange.wallet, 'setInitialWallet')
 
-    localExchange.setAssets([{ asset: 'BTC', available: 1 }])
-    expect(setInitialWalletSpy).toHaveBeenCalledWith([{ asset: 'BTC', available: 1 }])
+    localExchange.setAssets([{ asset: 'BTC', quantity: 1 }])
+    expect(setInitialWalletSpy).toHaveBeenCalledWith([{ asset: 'BTC', quantity: 1 }])
   })
 
   it('should throw if LIMIT buy is performed without price', async () => {

@@ -1,12 +1,8 @@
 import { createStore, select, Store } from '@ngneat/elf'
 import { entitiesPropsFactory, getAllEntities, getEntity, upsertEntitiesById } from '@ngneat/elf-entities';
 import { Subscription } from 'rxjs'
+import { Asset } from '../interfaces'
 import { log } from '../utils'
-
-export interface Asset {
-  asset: string;
-  quantity: number;
-}
 
 const { availableAssetEntitiesRef, withAvailableAssetEntities } = entitiesPropsFactory('availableAsset');
 const { reservedAssetsEntitiesRef, withReservedAssetsEntities } = entitiesPropsFactory('reservedAssets');

@@ -11,5 +11,5 @@ export interface AssetDeltaUpdate {
 
 export interface Asset {
   asset: string;
-  available: number;
+  quantity: number;
 }

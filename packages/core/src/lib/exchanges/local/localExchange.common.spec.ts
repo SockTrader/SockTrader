@@ -78,8 +78,8 @@ describe('LocalExchange common', () => {
   it('#LocalExchange should provide a Trades stream', () => {
     instance.addCandles(['BTC', 'USDT'], candleMock)
     instance.setAssets(([
-      { asset: 'USDT', available: 10000 },
-      { asset: 'BTC', available: 1 }
+      { asset: 'USDT', quantity: 10000 },
+      { asset: 'BTC', quantity: 1 }
     ]))
 
     scheduler.run(({ expectObservable }) => {
@@ -148,8 +148,8 @@ describe('LocalExchange common', () => {
   it('#LocalExchange should provide an Order stream', () => {
     instance.addCandles(['BTC', 'USDT'], candleMock)
     instance.setAssets(([
-      { asset: 'USDT', available: 10000 },
-      { asset: 'BTC', available: 1 }
+      { asset: 'USDT', quantity: 10000 },
+      { asset: 'BTC', quantity: 1 }
     ]))
 
     scheduler.run(({ expectObservable }) => {

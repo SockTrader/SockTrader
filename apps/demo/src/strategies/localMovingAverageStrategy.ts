@@ -40,7 +40,7 @@ export class LocalMovingAverageStrategy implements Strategy {
     this._localExchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
     this._localExchange.setAssets([{
       asset: 'USDT',
-      available: 10000
+      quantity: 10000
     }])
   }
 
