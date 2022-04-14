@@ -1,4 +1,4 @@
-import { Mode } from '../performance'
+import { Mode } from '../performance/annualReturn'
 import { annualAdjustedSharpeRatio } from './annualAdjustedSharpeRatio'
 
 describe('annualAdjustedSharpeRatio', () => {

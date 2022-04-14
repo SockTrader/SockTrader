@@ -1,12 +1,16 @@
-import { Store, createStore, withProps, select } from '@ngneat/elf'
+import { createStore, select, Store } from '@ngneat/elf'
+import { entitiesPropsFactory, getAllEntities, getEntity, upsertEntitiesById } from '@ngneat/elf-entities';
 import { Subscription } from 'rxjs'
 import { log } from '../utils'
-import { AssetMap } from './spotWallet.interfaces'
 
-export interface SpotWalletState {
-  assets: AssetMap;
-  reservedAssets: AssetMap;
+export interface Asset {
+  asset: string;
+  quantity: number;
 }
+
+const { availableAssetEntitiesRef, withAvailableAssetEntities } = entitiesPropsFactory('availableAsset');
+const { reservedAssetsEntitiesRef, withReservedAssetsEntities } = entitiesPropsFactory('reservedAssets');
+
 
 export class SpotWalletStore {
 
@@ -14,7 +18,8 @@ export class SpotWalletStore {
 
   private store: Store = createStore(
     { name: 'spotWallet' },
-    withProps<SpotWalletState>({ reservedAssets: {}, assets: {} })
+    withAvailableAssetEntities<Asset, 'asset'>({ idKey: 'asset' }),
+    withReservedAssetsEntities<Asset, 'asset'>({ idKey: 'asset' })
   )
 
   constructor() {
@@ -32,22 +37,30 @@ export class SpotWalletStore {
     this.logSubscription.unsubscribe()
   }
 
+  getAvailableAssets() {
+    return this.store.query(getAllEntities({ ref: availableAssetEntitiesRef }))
+  }
+
+  getReservedAssets() {
+    return this.store.query(getAllEntities({ ref: reservedAssetsEntitiesRef }))
+  }
+
   setAsset(asset: string, quantity: number): void {
-    this.store.update(state => ({
-      assets: { ...state.assets, [asset]: quantity }
-    }))
+    this.applyTransactions([
+      { asset: asset, quantity: quantity, update: false, type: EntityType.AVAILABLE },
+    ])
   }
 
   setReservedAsset(asset: string, quantity: number): void {
-    this.store.update(state => ({
-      reservedAssets: { ...state.reservedAssets, [asset]: quantity }
-    }))
+    this.applyTransactions([
+      { asset: asset, quantity: quantity, update: false, type: EntityType.RESERVED },
+    ])
   }
 
   updateAsset(asset: string, quantity: number): void {
-    this.store.update(state => ({
-      assets: this._updateAsset(state.assets, asset, quantity)
-    }))
+    this.applyTransactions([
+      { asset: asset, quantity: quantity, update: true, type: EntityType.AVAILABLE }
+    ])
   }
 
   /**
@@ -56,13 +69,12 @@ export class SpotWalletStore {
    * @param {number} quantity
    */
   reserveAsset(asset: string, quantity: number): void {
-    const state = this.store.getValue()
-    if (!this.hasEnough(state.assets, asset, quantity)) throw new Error(`Could not reserve ${quantity} ${asset}: insufficient funds, only ${state.assets[asset]} available`)
+    if (!this.hasEnough(EntityType.AVAILABLE, asset, quantity)) throw new Error(`Could not reserve ${quantity} ${asset}: insufficient funds`)
 
-    this.store.update(state => ({
-      assets: this._updateAsset(state.assets, asset, -quantity),
-      reservedAssets: this._updateAsset(state.reservedAssets, asset, +quantity),
-    }))
+    this.applyTransactions([
+      { asset: asset, quantity: -quantity, update: true, type: EntityType.AVAILABLE },
+      { asset: asset, quantity: +quantity, update: true, type: EntityType.RESERVED },
+    ])
   }
 
   /**
@@ -71,13 +83,12 @@ export class SpotWalletStore {
    * @param {number} quantity
    */
   revertReserveAsset(asset: string, quantity: number): void {
-    const state = this.store.getValue()
-    if (!this.hasEnough(state.reservedAssets, asset, quantity)) throw new Error(`Could not revert reservation of ${quantity} ${asset}: insufficient funds`)
+    if (!this.hasEnough(EntityType.RESERVED, asset, quantity)) throw new Error(`Could not revert reservation of ${quantity} ${asset}: insufficient funds`)
 
-    this.store.update(state => ({
-      assets: this._updateAsset(state.assets, asset, +quantity),
-      reservedAssets: this._updateAsset(state.reservedAssets, asset, -quantity),
-    }))
+    this.applyTransactions([
+      { asset: asset, quantity: +quantity, update: true, type: EntityType.AVAILABLE },
+      { asset: asset, quantity: -quantity, update: true, type: EntityType.RESERVED },
+    ])
   }
 
   /**
@@ -88,121 +99,39 @@ export class SpotWalletStore {
    * @param {number} quoteQuantity
    */
   releaseAsset(baseAsset: string, quoteAsset: string, baseQuantity: number, quoteQuantity: number): void {
-    const state = this.store.getValue()
-    if (!this.hasEnough(state.reservedAssets, baseAsset, baseQuantity)) throw new Error(`Could not release asset ${baseQuantity} ${baseAsset}: insufficient funds`)
+    if (!this.hasEnough(EntityType.RESERVED, baseAsset, baseQuantity)) throw new Error(`Could not release asset ${baseQuantity} ${baseAsset}: insufficient funds`)
 
-    this.store.update(state => ({
-      assets: this._updateAsset(state.assets, quoteAsset, +quoteQuantity),
-      reservedAssets: this._updateAsset(state.reservedAssets, baseAsset, -baseQuantity),
-    }))
+    this.applyTransactions([
+      { asset: quoteAsset, quantity: +quoteQuantity, update: true, type: EntityType.AVAILABLE },
+      { asset: baseAsset, quantity: -baseQuantity, update: true, type: EntityType.RESERVED },
+    ])
   }
 
-  private hasEnough(assets: AssetMap, asset: string, quantity: number): boolean {
-    return (assets[asset] ?? 0) >= quantity
+  private applyTransactions(transactions: Transaction[]): void {
+    this.store.update(
+      ...transactions.map(tx => {
+        return upsertEntitiesById(tx.asset, {
+          creator: (): Asset => ({ asset: tx.asset, quantity: tx.quantity }),
+          updater: (entity: Asset): Asset => ({
+            ...entity,
+            quantity: tx.update ? entity.quantity + tx.quantity : tx.quantity
+          }),
+          ref: tx.type === EntityType.RESERVED ? reservedAssetsEntitiesRef : availableAssetEntitiesRef
+        })
+      })
+    )
   }
 
-  private _updateAsset(assetMap: AssetMap, asset: string, quantity: number): AssetMap {
-    const assets = { ...assetMap }
-    if (!assets[asset]) assets[asset] = 0
-
-    assets[asset] += quantity
-
-    return assets
+  private hasEnough(type: EntityType, asset: string, quantity: number): boolean {
+    const _asset = this.store.query(getEntity(asset, { ref: type === EntityType.RESERVED ? reservedAssetsEntitiesRef : availableAssetEntitiesRef }))
+    return (_asset?.quantity ?? 0) >= quantity
   }
 
 }
 
-//@StoreConfig({ name: 'spotWallet', resettable: true })
-//export class SpotWalletStore extends Store<SpotWalletState> {
-//
-//  private logSubscription: Subscription
-//
-//  constructor() {
-//    super(createInitialState())
-//    this.logSubscription = this._select(v => v).pipe(log('Wallet')).subscribe()
-//  }
-//
-//  destroy() {
-//    super.destroy()
-//    this.logSubscription.unsubscribe()
-//  }
-//
-//  setAsset(asset: string, quantity: number): void {
-//    this.update(state => ({
-//      assets: { ...state.assets, [asset]: quantity }
-//    }))
-//  }
-//
-//  setReservedAsset(asset: string, quantity: number): void {
-//    this.update(state => ({
-//      reservedAssets: { ...state.reservedAssets, [asset]: quantity }
-//    }))
-//  }
-//
-//  updateAsset(asset: string, quantity: number): void {
-//    this.update(state => ({
-//      assets: this._updateAsset(state.assets, asset, quantity)
-//    }))
-//  }
-//
-//  /**
-//   * Moves a certain amount from the 'available' assets to the 'reserved' assets
-//   * @param {string} asset
-//   * @param {number} quantity
-//   */
-//  reserveAsset(asset: string, quantity: number): void {
-//    const state = this.getValue()
-//    if (!this.hasEnough(state.assets, asset, quantity)) throw new Error(`Could not reserve ${quantity} ${asset}: insufficient funds, only ${state.assets[asset]} available`)
-//
-//    this.update(state => ({
-//      assets: this._updateAsset(state.assets, asset, -quantity),
-//      reservedAssets: this._updateAsset(state.reservedAssets, asset, +quantity),
-//    }))
-//  }
-//
-//  /**
-//   * Moves a certain amount back to the 'available' assets
-//   * @param {string} asset
-//   * @param {number} quantity
-//   */
-//  revertReserveAsset(asset: string, quantity: number): void {
-//    const state = this.getValue()
-//    if (!this.hasEnough(state.reservedAssets, asset, quantity)) throw new Error(`Could not revert reservation of ${quantity} ${asset}: insufficient funds`)
-//
-//    this.update(state => ({
-//      assets: this._updateAsset(state.assets, asset, +quantity),
-//      reservedAssets: this._updateAsset(state.reservedAssets, asset, -quantity),
-//    }))
-//  }
-//
-//  /**
-//   * Converts a certain reserved asset to a corresponding 'available' asset
-//   * @param {string} baseAsset
-//   * @param {string} quoteAsset
-//   * @param {number} baseQuantity
-//   * @param {number} quoteQuantity
-//   */
-//  releaseAsset(baseAsset: string, quoteAsset: string, baseQuantity: number, quoteQuantity: number): void {
-//    const state = this.getValue()
-//    if (!this.hasEnough(state.reservedAssets, baseAsset, baseQuantity)) throw new Error(`Could not release asset ${baseQuantity} ${baseAsset}: insufficient funds`)
-//
-//    this.update(state => ({
-//      assets: this._updateAsset(state.assets, quoteAsset, +quoteQuantity),
-//      reservedAssets: this._updateAsset(state.reservedAssets, baseAsset, -baseQuantity),
-//    }))
-//  }
-//
-//  private hasEnough(assets: AssetMap, asset: string, quantity: number): boolean {
-//    return (assets[asset] ?? 0) >= quantity
-//  }
-//
-//  private _updateAsset(assetMap: AssetMap, asset: string, quantity: number): AssetMap {
-//    const assets = { ...assetMap }
-//    if (!assets[asset]) assets[asset] = 0
-//
-//    assets[asset] += quantity
-//
-//    return assets
-//  }
-//
-//}
+enum EntityType {
+  AVAILABLE,
+  RESERVED,
+}
+
+type Transaction = { asset: string; quantity: number; update: boolean, type: EntityType }
