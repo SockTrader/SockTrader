@@ -40,13 +40,13 @@ jobs:
                 run: npm ci
 
             -   name: Build
-                run: nx affected:build --head=${{ env.NX_HEAD }}
+                run: npx nx affected:build --head=${{ env.NX_HEAD }}
 
             -   name: Lint
-                run: nx affected:lint --head=${{ env.NX_HEAD }}
+                run: npx nx affected:lint --head=${{ env.NX_HEAD }}
 
             -   name: Unit tests
-                run: cross-env TZ=UTC nx affected:test --verbose --head=${{ env.NX_HEAD }}
+                run: cross-env TZ=UTC npx nx affected:test --verbose --head=${{ env.NX_HEAD }}
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
