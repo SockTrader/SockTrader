@@ -61,7 +61,7 @@ jobs:
                     name: codecov-umbrella
                     verbose: true
 
-            -   name: Tag main branch if all jobs succeed
-                if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-                uses: nrwl/nx-tag-successful-ci-run@v1
+#            -   name: Tag main branch if all jobs succeed
+#                if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+#                uses: nrwl/nx-tag-successful-ci-run@v1
 
