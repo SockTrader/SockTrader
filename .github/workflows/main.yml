@@ -12,9 +12,6 @@ jobs:
     build:
         runs-on: ubuntu-latest
         name: Build
-        permissions:
-            contents: 'read'
-            actions: 'write'
 
         strategy:
             matrix:
@@ -22,6 +19,8 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v2
+                with:
+                    fetch-depth: 30
 
             -   name: Use Node.js ${{ matrix.node-version }}
                 uses: actions/setup-node@v1
