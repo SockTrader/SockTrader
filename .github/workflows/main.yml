@@ -25,35 +25,23 @@ jobs:
 
         steps:
             -   uses: actions/checkout@v2
-                with:
-                    fetch-depth: 0
 
             -   name: Use Node.js ${{ matrix.node-version }}
                 uses: actions/setup-node@v1
                 with:
                     node-version: ${{ matrix.node-version }}
 
-            -   name: Set NX_HEAD from last successful build
-                uses: nrwl/nx-set-shas@v2
-                with:
-                    main-branch-name: 'master'
-                    error-on-no-successful-workflow: false
-
-            -   run: |
-                    echo "BASE: ${{ env.NX_BASE }}"
-                    echo "HEAD: ${{ env.NX_HEAD }}"
-
             -   name: Install dependencies
                 run: npm ci
 
-            -   name: Build
-                run: npx nx affected:build --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
+            -   name: Build all packages
+                run: npx nx run-many --target=build --all
 
-            -   name: Lint
-                run: npx nx affected:lint --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
+            -   name: Lint all packages
+                run: npx nx run-many --target=lint --all --fix
 
-            -   name: Unit tests
-                run: npx nx affected:test --verbose --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
+            -   name: Unit tests all packages
+                run: npx nx run-many --target=test --verbose --all --parallel
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
@@ -64,8 +52,3 @@ jobs:
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
-
-#            -   name: Tag main branch if all jobs succeed
-#                if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-#                uses: nrwl/nx-tag-successful-ci-run@v1
-
