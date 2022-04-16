@@ -1,0 +1,28 @@
+{
+  "migrations": [
+    {
+      "version": "13.10.0-beta.0",
+      "description": "Update the decorate-angular-cli script to require nx instead of @nrwl/cli",
+      "cli": "nx",
+      "implementation": "./src/migrations/update-13-10-0/update-decorate-cli",
+      "package": "@nrwl/workspace",
+      "name": "13-10-0-update-decorate-cli"
+    },
+    {
+      "version": "13.10.0-beta.0",
+      "description": "Update the tasks runner property to import it from the nx package instead of @nrwl/worksapce",
+      "cli": "nx",
+      "implementation": "./src/migrations/update-13-10-0/update-tasks-runner",
+      "package": "@nrwl/workspace",
+      "name": "13-10-0-update-tasks-runner"
+    },
+    {
+      "cli": "nx",
+      "version": "13.10.1-beta.1",
+      "description": "Update .lib.swcrc to exclude missing test files",
+      "factory": "./src/migrations/update-13-10-1/update-lib-swcrc-exclude",
+      "package": "@nrwl/js",
+      "name": "update-swcrc-exclude"
+    }
+  ]
+}
