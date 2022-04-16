@@ -22,17 +22,17 @@
   "dependencies": {
     "@ngneat/elf": "^1.5.6",
     "@ngneat/elf-entities": "^4.2.1",
-    "binance-api-node": "^0.11.31",
-    "commander": "^9.1.0",
+    "binance-api-node": "^0.11.35",
+    "commander": "^9.2.0",
     "config": "^3.3.7",
     "cors": "^2.8.5",
     "date-fns": "^2.28.0",
     "express": "^4.17.3",
-    "nanoid": "^3.3.1",
+    "nanoid": "^3.3.2",
     "pg": "^8.7.3",
-    "rxjs": "7.4.0",
+    "rxjs": "7.5.5",
     "technicalindicators": "^3.1.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@nrwl/cli": "13.10.2",
@@ -46,19 +46,19 @@
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.1",
-    "@types/node": "16.11.7",
+    "@types/node": "^17.0.24",
     "@types/pg": "^8.6.5",
-    "@typescript-eslint/eslint-plugin": "5.18.0",
-    "@typescript-eslint/parser": "5.18.0",
-    "eslint": "8.12.0",
-    "eslint-config-prettier": "8.1.0",
+    "@typescript-eslint/eslint-plugin": "5.19.0",
+    "@typescript-eslint/parser": "5.19.0",
+    "eslint": "8.13.0",
+    "eslint-config-prettier": "8.5.0",
     "eslint-plugin-rxjs": "^5.0.2",
     "jest": "27.5.1",
     "nx": "13.10.2",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.4",
-    "typescript": "~4.5.2"
+    "typescript": "~4.6.3"
   },
   "engines": {
     "node": ">=16.14.0"
