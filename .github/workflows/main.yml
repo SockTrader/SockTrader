@@ -34,7 +34,7 @@ jobs:
                 uses: nrwl/nx-set-shas@v2
                 with:
                     main-branch-name: 'master'
-                    error-on-no-successful-workflow: true
+                    error-on-no-successful-workflow: false
 
             -   name: Install dependencies
                 run: npm ci
@@ -57,3 +57,8 @@ jobs:
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
+
+            -   name: Tag main branch if all jobs succeed
+                if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+                uses: nrwl/nx-tag-successful-ci-run@v1
+
