@@ -5,7 +5,6 @@
     "core": "packages/core",
     "demo": "apps/demo",
     "indicators": "packages/indicators",
-    "udf": "packages/udf",
     "web": "packages/web"
   }
 }

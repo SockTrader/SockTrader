@@ -9,15 +9,15 @@
     "apps/**"
   ],
   "scripts": {
-    "build": "nx build",
-    "build:affected": "nx affected:build",
     "clean": "nx reset; npx rimraf dist node_modules **/node_modules",
-    "lint": "nx lint --fix",
+    "build:all": "nx run-many --target=build --all",
+    "build:affected": "nx affected:build",
+    "lint:all": "nx run-many --target=lint --all --fix",
     "lint:affected": "nx affected:lint --fix",
+    "test:all": "cross-env TZ=UTC nx run-many --target=test --verbose --all --parallel",
+    "test:affected": "cross-env TZ=UTC nx affected:test --verbose",
     "start:backtest": "nx serve demo",
-    "start:web": "nx serve web",
-    "test": "TZ=UTC nx run-many --verbose --all --target=test --parallel",
-    "test:affected": "TZ=UTC nx affected:test --verbose"
+    "start:web": "nx serve web"
   },
   "dependencies": {
     "@ngneat/elf": "^1.5.6",
@@ -50,6 +50,7 @@
     "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
+    "cross-env": "^7.0.3",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-rxjs": "^5.0.2",
@@ -68,4 +69,3 @@
     "thijs raets"
   ]
 }
-

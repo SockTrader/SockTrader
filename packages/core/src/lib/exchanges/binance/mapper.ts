@@ -1,4 +1,4 @@
-import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, EventType, ExecutionReport, NewOrderLimit, NewOrderMarketBase, NewOrderRespType_LT, Order as BinanceOrder, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node'
+import { BalanceUpdate, Candle as BinanceCandle, CandleChartResult, ExecutionReport, NewOrderLimit, NewOrderMarketBase, NewOrderRespType_LT, Order as BinanceOrder, OrderType as BinanceOrderType, OutboundAccountPosition } from 'binance-api-node'
 import { AssetDeltaUpdate, Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Trade, WalletUpdate } from '../../interfaces'
 import { dollarCostAverage } from '../../utils'
 
@@ -12,7 +12,7 @@ export const mapCandle = (candle: CandleChartResult | BinanceCandle): Candle => 
 })
 
 export const mapExecutionReportToOrder = (report: ExecutionReport): Order => {
-  if (report.eventType !== <EventType.EXECUTION_REPORT>'executionReport') throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`)
+  if (report.eventType !== <ExecutionReport['eventType']>'executionReport') throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`)
 
   return {
     clientOrderId: report.newClientOrderId,
@@ -28,7 +28,7 @@ export const mapExecutionReportToOrder = (report: ExecutionReport): Order => {
 }
 
 export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
-  if (report.eventType !== <EventType.EXECUTION_REPORT>'executionReport') throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`)
+  if (report.eventType !== <ExecutionReport['eventType']>'executionReport') throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`)
 
   return {
     clientOrderId: report.newClientOrderId,

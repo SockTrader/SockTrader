@@ -24,17 +24,22 @@ jobs:
                 with:
                     node-version: ${{ matrix.node-version }}
 
+            -   name: Set NX_HEAD from last successful build
+                uses: nrwl/nx-set-shas@v2
+                with:
+                    main-branch-name: 'master'
+
             -   name: Install dependencies
                 run: npm ci
 
             -   name: Build
-                run: npm run build -- --noEmit
+                run: npm run build:affected -- --base=${{ env.NX_HEAD }}
 
             -   name: Lint
-                run: npm run lint
+                run: npm run lint:affected -- --base=${{ env.NX_HEAD }}
 
             -   name: Unit tests
-                run: npm run test
+                run: npm run test:affected -- --base=${{ env.NX_HEAD }}
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2

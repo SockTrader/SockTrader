@@ -20,7 +20,6 @@
       "@socktrader/cli": ["packages/cli/src/index.ts"],
       "@socktrader/core": ["packages/core/src/index.ts"],
       "@socktrader/indicators": ["packages/indicators/src/index.ts"],
-      "@socktrader/udf": ["packages/udf/src/index.ts"],
       "@socktrader/web": ["packages/web/src/index.ts"]
     }
   },

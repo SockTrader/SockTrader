@@ -1,11 +1,11 @@
 import { createStore, select, Store } from '@ngneat/elf'
-import { entitiesPropsFactory, getAllEntities, getEntity, upsertEntitiesById } from '@ngneat/elf-entities';
+import { entitiesPropsFactory, getAllEntities, getEntity, upsertEntitiesById } from '@ngneat/elf-entities'
 import { Subscription } from 'rxjs'
 import { Asset } from '../interfaces'
 import { log } from '../utils'
 
-const { availableAssetEntitiesRef, withAvailableAssetEntities } = entitiesPropsFactory('availableAsset');
-const { reservedAssetsEntitiesRef, withReservedAssetsEntities } = entitiesPropsFactory('reservedAssets');
+const { availableAssetEntitiesRef, withAvailableAssetEntities } = entitiesPropsFactory('availableAsset')
+const { reservedAssetsEntitiesRef, withReservedAssetsEntities } = entitiesPropsFactory('reservedAssets')
 
 
 export class SpotWalletStore {
@@ -130,4 +130,4 @@ enum EntityType {
   RESERVED,
 }
 
-type Transaction = { asset: string; quantity: number; update: boolean, type: EntityType }
+type Transaction = { asset: string; quantity: number; update: boolean; type: EntityType }

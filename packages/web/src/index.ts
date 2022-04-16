@@ -1,7 +1,7 @@
 import { Worker } from '@socktrader/cli'
-import { UDF } from '@socktrader/udf'
 import cors from 'cors'
 import express from 'express'
+import { UDF } from './lib/udf'
 
 const udf = new UDF()
 
