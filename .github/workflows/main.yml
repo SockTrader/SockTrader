@@ -8,6 +8,9 @@ on:
         branches:
             - '**'
 
+env:
+    TZ: UTC
+
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -46,7 +49,7 @@ jobs:
                 run: npx nx affected:lint --base=${{ env.NX_HEAD }}
 
             -   name: Unit tests
-                run: cross-env TZ=UTC npx nx affected:test --verbose --base=${{ env.NX_HEAD }}
+                run: npx nx affected:test --verbose --base=${{ env.NX_HEAD }}
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
