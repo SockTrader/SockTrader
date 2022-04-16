@@ -15,9 +15,6 @@ jobs:
     build:
         runs-on: ubuntu-latest
         name: Build
-        permissions:
-            contents: 'read'
-            actions: 'write'
 
         strategy:
             matrix:

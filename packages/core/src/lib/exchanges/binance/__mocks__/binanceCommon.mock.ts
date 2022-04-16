@@ -1,4 +1,4 @@
-import { EventType, ExecutionReport, ExecutionType, Order, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
+import { ExecutionReport, ExecutionType, Order, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
 
 export const mockCommonMarketBuyOrderResponse: Order = {
   symbol: 'BTCUSDT',
@@ -57,7 +57,7 @@ export const mockCommonMarketSellOrderResponse: Order = {
 }
 
 export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582549200000,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
@@ -91,7 +91,7 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
 })
 
 export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582549260000,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
@@ -125,7 +125,7 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
 })
 
 export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582552800000,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
@@ -159,7 +159,7 @@ export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): 
 })
 
 export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582556400000,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
