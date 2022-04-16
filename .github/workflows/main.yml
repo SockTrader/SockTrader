@@ -20,7 +20,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v2
                 with:
-                    fetch-depth: 30
+                    fetch-depth: 0
 
             -   name: Use Node.js ${{ matrix.node-version }}
                 uses: actions/setup-node@v1
@@ -36,13 +36,13 @@ jobs:
                 run: npm ci
 
             -   name: Build
-                run: npm run build:affected -- --base=${{ env.NX_HEAD }}
+                run: npm run build:affected -- --head=${{ env.NX_HEAD }}
 
             -   name: Lint
-                run: npm run lint:affected -- --base=${{ env.NX_HEAD }}
+                run: npm run lint:affected -- --head=${{ env.NX_HEAD }}
 
             -   name: Unit tests
-                run: npm run test:affected -- --base=${{ env.NX_HEAD }}
+                run: npm run test:affected -- --head=${{ env.NX_HEAD }}
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
