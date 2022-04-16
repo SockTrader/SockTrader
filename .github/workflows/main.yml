@@ -39,17 +39,21 @@ jobs:
                     main-branch-name: 'master'
                     error-on-no-successful-workflow: false
 
+            -   run: |
+                    echo "BASE: ${{ env.NX_BASE }}"
+                    echo "HEAD: ${{ env.NX_HEAD }}"
+
             -   name: Install dependencies
                 run: npm ci
 
             -   name: Build
-                run: npx nx affected:build --base=${{ env.NX_HEAD }}
+                run: npx nx affected:build --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
 
             -   name: Lint
-                run: npx nx affected:lint --base=${{ env.NX_HEAD }}
+                run: npx nx affected:lint --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
 
             -   name: Unit tests
-                run: npx nx affected:test --verbose --base=${{ env.NX_HEAD }}
+                run: npx nx affected:test --verbose --base=${{ env.NX_BASE }} --head=${{ env.NX_HEAD }}
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
