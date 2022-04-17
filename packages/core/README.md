@@ -1,7 +1,10 @@
-# core
+<p align="center"><img width="200" height="200" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader_logo.png" alt="SockTrader logo" /></p>
 
-This library was generated with [Nx](https://nx.dev).
+<h1 align="center">SockTrader</h1>
+<p align="center"><b>Core</b></p>
 
-## Running unit tests
+<p align="center"><b>Join the community <a href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img valign="middle" src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a></b></p>
 
-Run `nx test core` to execute the unit tests via [Jest](https://jestjs.io).
+## What is "SockTrader"?
+
+More info the [SockTrader github page](https://github.com/SockTrader/SockTrader)

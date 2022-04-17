@@ -1,41 +1,53 @@
 version: '3.8'
 
 services:
-  postgresql:
-    image: postgres:14-alpine
-    restart: always
-    ports:
-      - 5432:5432
-    volumes:
-      - './docker/database:/docker-entrypoint-initdb.d/'
-# Uncomment if you want to persist data
-#      - 'dbdata:/var/lib/postgresql/data'
-    environment:
-      POSTGRES_USER: socktrader
-      POSTGRES_PASSWORD: socktrader
-    networks:
-      - postgres
-    command: ["postgres", "-c", "log_statement=all"]
+    socktrader:
+        build:
+            context: ./
+            dockerfile: ./docker/Dockerfile
+        volumes:
+            - '/app/node_modules'
+            - './apps:/app/apps'
+            - './config:/app/config'
+        environment:
+            - NODE_ENV=development
+        depends_on:
+            - postgresql
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: socktrader
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    postgresql:
+        image: postgres:14-alpine
+        restart: always
+        ports:
+            - 5432:5432
+        volumes:
+            - './docker/database:/docker-entrypoint-initdb.d/'
+            - 'dbdata:/var/lib/postgresql/data'
+        environment:
+            POSTGRES_USER: socktrader
+            POSTGRES_PASSWORD: socktrader
+        networks:
+            - postgres
+        command: [ "postgres", "-c", "log_statement=all" ]
 
-    volumes:
-      - './docker/pgadmin/servers.json:/pgadmin4/servers.json'
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+            PGADMIN_DEFAULT_PASSWORD: socktrader
+            PGADMIN_CONFIG_SERVER_MODE: 'False'
 
-    ports:
-      - '8000:80'
-    networks:
-      - postgres
-    restart: unless-stopped
+        volumes:
+            - './docker/pgadmin/servers.json:/pgadmin4/servers.json'
+
+        ports:
+            - '8000:80'
+        networks:
+            - postgres
+        restart: unless-stopped
 
 volumes:
-  dbdata:
+    dbdata:
 
 networks:
-  postgres:
-    driver: bridge
+    postgres:
+        driver: bridge

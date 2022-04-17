@@ -1,4 +1,4 @@
-<p align="center"><img width="150" height="150" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader-logo.png" alt="SockTrader logo" /></p>
+<p align="center"><img width="200" height="200" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader_logo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader v2</h1>
 <p align="center"><b>Cryptocurrency trading bot</b></p>
@@ -40,9 +40,10 @@ Use [SockTrader v1](https://github.com/SockTrader/SockTrader/tree/socktrader-v1)
 
 # Quickstart
 
-1. Install NodeJS dependencies. `npm i`
-2. Copy `config/default.json` to `config/local.json` and edit.
-3. Run the MovingAverageStrategy on LocalExchange. `npm start`
+1. Git clone `git clone git@github.com:SockTrader/SockTrader.git && cd SockTrader`
+2. Install NodeJS dependencies. `npm i`
+3. Copy `config/default.json` to `config/local.json` and edit.
+4. Run the MovingAverageStrategy on LocalExchange. `npm start`
 
 ## Additional scripts
 
