@@ -53,4 +53,5 @@ jobs:
                 if: matrix.node-version == '14.x' && github.ref_name == 'master'
                 env:
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
                 run: npx semantic-release
