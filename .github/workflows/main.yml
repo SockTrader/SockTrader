@@ -44,9 +44,7 @@ jobs:
                 uses: codecov/codecov-action@v2
                 if: matrix.node-version == '14.x' && github.ref_name == 'master'
                 with:
-                    token: ${{ secrets.CODECOV_TOKEN }}
-                    files: ./cli/coverage-final.json,./core/coverage-final.json,./indicators/coverage-final.json,./web/coverage-final.json
-                    directory: ./coverage/packages
+                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
