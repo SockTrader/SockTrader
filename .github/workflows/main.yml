@@ -38,14 +38,15 @@ jobs:
                 run: npx nx run-many --target=lint --all --fix
 
             -   name: Unit tests all packages
-                run: npx nx run-many --target=test --verbose --all --parallel
+                run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
             -   name: Upload codecoverage report
                 uses: codecov/codecov-action@v2
                 if: matrix.node-version == '14.x' && github.ref_name == 'master'
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
-                    files: ./coverage/packages/cli/coverage-final.json,./coverage/packages/core/coverage-final.json,./coverage/packages/indicators/coverage-final.json,./coverage/packages/web/coverage-final.json
+                    files: ./cli/coverage-final.json,./core/coverage-final.json,./indicators/coverage-final.json,./web/coverage-final.json
+                    directory: ./coverage/packages
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
