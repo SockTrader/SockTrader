@@ -1,8 +1,8 @@
-import { EventType, ExecutionReport, ExecutionType, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
+import { ExecutionReport, ExecutionType, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
 
 // Create limit buy order
 export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1631473349358,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
@@ -37,7 +37,7 @@ export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
 
 // Create market sell order
 export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1631475323003,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_6952886da2b94fa98719c51d2d12e6e2',
@@ -72,7 +72,7 @@ export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): Ex
 
 // Cancel limit buy order
 export const mockCancelLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1631473613518,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_fdf6e5f898774162b1e7b59b63cde571',
@@ -107,7 +107,7 @@ export const mockCancelLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
 
 // Fill limit order
 export const mockFillLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1631474821249,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_f0c85187a2aa4e6ea2b9c6ad75f1e121',
@@ -142,7 +142,7 @@ export const mockFillLimitBuyOrder = (report?: Partial<ExecutionReport>): Execut
 
 // Partially filled limit order part 1
 export const mockPartiallyFilledLimitBuyOrderPart1 = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1632054666702,
   symbol: 'ICPUSDT',
   newClientOrderId: 'web_e8b94fde828e493aa25b847e75a94d8e',
@@ -177,7 +177,7 @@ export const mockPartiallyFilledLimitBuyOrderPart1 = (report?: Partial<Execution
 
 // Partially filled limit order part 2
 export const mockPartiallyFilledLimitBuyOrderPart2 = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1632054666711,
   symbol: 'ICPUSDT',
   newClientOrderId: 'web_e8b94fde828e493aa25b847e75a94d8e',
@@ -211,7 +211,7 @@ export const mockPartiallyFilledLimitBuyOrderPart2 = (report?: Partial<Execution
 })
 
 export const mockFillMarketSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
-  eventType: <EventType.EXECUTION_REPORT>'executionReport',
+  eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1631475323003,
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_6952886da2b94fa98719c51d2d12e6e2',

@@ -45,7 +45,8 @@ jobs:
                 if: matrix.node-version == '14.x' && github.ref_name == 'master'
                 with:
                     token: ${{ secrets.CODECOV_TOKEN }}
-                    files: ./coverage/coverage-final.json
+                    files: ./cli/coverage-final.json,./core/coverage-final.json,./indicators/coverage-final.json,./web/coverage-final.json
+                    directory: ./coverage/packages
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
