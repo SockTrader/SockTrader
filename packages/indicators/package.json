@@ -1,4 +1,21 @@
 {
   "name": "@socktrader/indicators",
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "keywords": [
+    "tradingbot",
+    "algorithmic-trading",
+    "cryptocurrencies",
+    "binance",
+    "trading-algorithms",
+    "trading-bot",
+    "indicators",
+    "quantitative",
+    "finance",
+    "financial",
+    "analysis",
+    "statistics",
+    "trading",
+    "crypto",
+    "bitcoin"
+  ]
 }

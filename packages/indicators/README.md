@@ -1,4 +1,4 @@
-<p align="center"><img width="200" height="200" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader_logo.png" alt="SockTrader logo" /></p>
+<p align="center"><img width="160" height="160" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader_logo.png" alt="SockTrader logo" /></p>
 
 <h1 align="center">SockTrader</h1>
 <p align="center"><b>Indicators</b></p>

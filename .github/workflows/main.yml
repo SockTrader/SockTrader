@@ -48,3 +48,9 @@ jobs:
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
+
+            -   name: Publish release
+                if: matrix.node-version == '14.x' && github.ref_name == 'master'
+                env:
+                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                run: npx semantic-release

@@ -1,9 +1,20 @@
 {
   "name": "socktrader",
-  "version": "2.0.0",
+  "version": "0.0.0-development",
   "description": "Websocket based trading bot for cryptocurrencies",
   "repository": "https://github.com/SockTrader/SockTrader",
   "license": "GPL-3.0",
+  "keywords": [
+    "tradingbot",
+    "algorithmic-trading",
+    "cryptocurrencies",
+    "binance",
+    "trading-algorithms",
+    "trading-bot",
+    "trading",
+    "crypto",
+    "bitcoin"
+  ],
   "workspaces": [
     "packages/**",
     "apps/**"
@@ -59,7 +70,8 @@
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.1.4",
-    "typescript": "~4.6.3"
+    "typescript": "~4.6.3",
+    "semantic-release": "^19.0.2"
   },
   "engines": {
     "node": ">=16.14.0"
