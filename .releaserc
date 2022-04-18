@@ -5,7 +5,7 @@
         [
             "@semantic-release/exec",
             {
-                "publishCmd": "nx run affected --target=release --args=\"--version=${nextRelease.version}\""
+                "publishCmd": "nx affected --target=release --args=\"--version=${nextRelease.version}\""
             }
         ],
         [
