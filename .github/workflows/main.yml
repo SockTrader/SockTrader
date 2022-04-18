@@ -7,7 +7,7 @@ on:
             - next
             - beta
             - alpha
-            - '*.x' # maintenance releases branches
+            - '*.*.*' # maintenance releases branches
 
     pull_request:
         types:
