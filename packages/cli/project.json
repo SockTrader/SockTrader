@@ -28,6 +28,13 @@
         "jestConfig": "packages/cli/jest.config.js",
         "passWithNoTests": true
       }
+    },
+    "release": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": ["npx semantic-release-plus"],
+        "cwd": "packages/cli/"
+      }
     }
   },
   "tags": []
