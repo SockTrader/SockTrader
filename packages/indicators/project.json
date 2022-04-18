@@ -26,7 +26,8 @@
       "options": {
         "lintFilePatterns": [
           "packages/indicators/**/*.ts"
-        ]
+        ],
+        "fix": true
       }
     },
     "test": {
@@ -36,7 +37,13 @@
       ],
       "options": {
         "jestConfig": "packages/indicators/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": false
+      },
+      "configurations": {
+        "coverage": {
+          "codeCoverage": true
+        }
       }
     },
     "release": {

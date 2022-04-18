@@ -5,34 +5,53 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/web",
         "tsConfig": "packages/web/tsconfig.lib.json",
         "packageJson": "packages/web/package.json",
         "main": "packages/web/src/index.ts",
-        "assets": ["packages/web/*.md"]
+        "assets": [
+          "packages/web/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/web/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/web/**/*.ts"
+        ],
+        "fix": true
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/web"],
+      "outputs": [
+        "coverage/packages/web"
+      ],
       "options": {
         "jestConfig": "packages/web/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": false
+      },
+      "configurations": {
+        "coverage": {
+          "codeCoverage": true
+        }
       }
     },
     "release": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": ["npx semantic-release-plus"],
+        "commands": [
+          "npx semantic-release-plus"
+        ],
         "cwd": "packages/web/"
       }
     }
