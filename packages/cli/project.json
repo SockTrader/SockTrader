@@ -53,7 +53,7 @@
           "cd packages/cli && npm version {args.version}",
           "cd dist/packages/cli && npm version {args.version}",
           {
-            "command": "cd dist/packages/cli && npm publish",
+            "command": "cd dist/packages/cli && npm publish --access public",
             "forwardAllArgs": false
           }
         ],
