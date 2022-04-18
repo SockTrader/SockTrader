@@ -24,7 +24,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [ 14.x, 16.x ]
+                node-version: [ lts/* ]
 
         steps:
             -   uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
                     fetch-depth: 0
 
             -   name: Use Node.js ${{ matrix.node-version }}
-                uses: actions/setup-node@v1
+                uses: actions/setup-node@v3
                 with:
                     node-version: ${{ matrix.node-version }}
 
@@ -66,7 +66,6 @@ jobs:
 
 #            -   name: Upload codecoverage report
 #                uses: codecov/codecov-action@v2
-#                if: matrix.node-version == '14.x' && github.ref_name == 'master'
 #                with:
 #                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
 #                    flags: unittests
@@ -74,7 +73,6 @@ jobs:
 #                    verbose: true
 
 #            -   name: Publish release
-#                if: matrix.node-version == '14.x'
 #                uses: mansagroup/nrwl-nx-action@v2.1.0
 #                with:
 #                    targets: release
@@ -85,7 +83,6 @@ jobs:
 #                run: npx nx run-many --target=release --verbose --all
 
             -   name: Publish release
-                if: matrix.node-version == '14.x'
                 env:
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
                     GH_TOKEN: ${{ secrets.GH_TOKEN }}
