@@ -50,28 +50,28 @@ jobs:
 #            -   name: Lint all packages
 #                run: npx nx run-many --target=lint --all --fix
 
-            -   name: Lint affected
-                uses: mansagroup/nrwl-nx-action@v2.1.0
-                with:
-                    targets: lint
+#            -   name: Lint affected
+#                uses: mansagroup/nrwl-nx-action@v2.1.0
+#                with:
+#                    targets: lint
 
 #            -   name: Unit tests all packages
 #                run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
-            -   name: Unit test affected
-                uses: mansagroup/nrwl-nx-action@v2.1.0
-                with:
-                    targets: test:coverage
-                    parallel: true
+#            -   name: Unit test affected
+#                uses: mansagroup/nrwl-nx-action@v2.1.0
+#                with:
+#                    targets: test:coverage
+#                    parallel: true
 
-            -   name: Upload codecoverage report
-                uses: codecov/codecov-action@v2
-                if: matrix.node-version == '14.x' && github.ref_name == 'master'
-                with:
-                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
-                    flags: unittests
-                    name: codecov-umbrella
-                    verbose: true
+#            -   name: Upload codecoverage report
+#                uses: codecov/codecov-action@v2
+#                if: matrix.node-version == '14.x' && github.ref_name == 'master'
+#                with:
+#                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
+#                    flags: unittests
+#                    name: codecov-umbrella
+#                    verbose: true
 
             -   name: Publish release
                 if: matrix.node-version == '14.x'

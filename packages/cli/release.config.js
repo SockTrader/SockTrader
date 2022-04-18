@@ -13,6 +13,7 @@ module.exports = {
         "@semantic-release/release-notes-generator",
         ["@semantic-release/npm", {
             "tarballDir": `${pathToRepoRoot}/dist/${srcRoot}`,
+            "pkgRoot": `${pathToRepoRoot}/dist/${srcRoot}`,
             // "pkgRoot": "dist",
         }],
         '@semantic-release/github'
