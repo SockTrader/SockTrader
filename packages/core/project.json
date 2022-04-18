@@ -50,9 +50,15 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
-          "npx semantic-release-plus --debug"
+          "cd packages/core && npm version {args.version}",
+          "cd dist/packages/core && npm version {args.version}",
+          {
+            "command": "cd dist/packages/core && npm publish",
+            "forwardAllArgs": false
+          }
         ],
-        "cwd": "packages/core"
+        "cwd": "./",
+        "parallel": false
       }
     }
   },

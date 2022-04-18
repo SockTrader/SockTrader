@@ -73,19 +73,20 @@ jobs:
 #                    name: codecov-umbrella
 #                    verbose: true
 
-            -   name: Publish release
-                if: matrix.node-version == '14.x'
-                uses: mansagroup/nrwl-nx-action@v2.1.0
-                with:
-                    targets: release
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#            -   name: Publish release
+#                if: matrix.node-version == '14.x'
+#                uses: mansagroup/nrwl-nx-action@v2.1.0
+#                with:
+#                    targets: release
+#                env:
+#                    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
 #                run: npx nx run-many --target=release --verbose --all
 
-#            -   name: Publish release
-#                if: matrix.node-version == '14.x' && github.ref_name == 'master'
-#                env:
-#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-#                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
-#                run: npx semantic-release
+            -   name: Publish release
+                if: matrix.node-version == '14.x'
+                env:
+                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+                run: npx semantic-release
