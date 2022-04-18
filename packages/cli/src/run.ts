@@ -21,3 +21,4 @@ program
   .addCommand(runCommand)
 
 program.parse(process.argv)
+
