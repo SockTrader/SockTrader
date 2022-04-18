@@ -50,7 +50,7 @@
       "executor": "@nrwl/workspace:run-commands",
       "options": {
         "commands": [
-          "npx semantic-release-plus"
+          "npx semantic-release-plus --debug"
         ],
         "cwd": "packages/cli"
       }
