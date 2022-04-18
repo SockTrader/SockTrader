@@ -20,6 +20,7 @@
     "apps/**"
   ],
   "scripts": {
+    "nx": "nx",
     "clean": "nx reset; npx rimraf dist node_modules **/node_modules",
     "build:all": "nx run-many --target=build --all",
     "build:affected": "nx affected:build",

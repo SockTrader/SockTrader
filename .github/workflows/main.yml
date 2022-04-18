@@ -55,15 +55,15 @@ jobs:
                     name: codecov-umbrella
                     verbose: true
 
-            -   name: Release
+            -   name: Publish release
                 if: matrix.node-version == '14.x'
-#                uses: mansagroup/nrwl-nx-action@v2.1.0
-#                with:
-#                    targets: release
+                uses: mansagroup/nrwl-nx-action@v2.1.0
+                with:
+                    targets: release
                 env:
                     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
                     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                run: npx nx run-many --target=release --verbose --all
+#                run: npx nx run-many --target=release --verbose --all
 
 #            -   name: Publish release
 #                if: matrix.node-version == '14.x' && github.ref_name == 'master'
