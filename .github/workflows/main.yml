@@ -56,7 +56,7 @@ jobs:
                     verbose: true
 
             -   name: Release affected
-                if: matrix.node-version == '14.x' && github.ref_name == 'master'
+                if: matrix.node-version == '14.x'
                 uses: mansagroup/nrwl-nx-action@v2.1.0
                 with:
                     targets: release
