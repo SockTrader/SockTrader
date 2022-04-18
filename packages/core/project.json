@@ -52,7 +52,7 @@
         "commands": [
           "npx semantic-release-plus"
         ],
-        "cwd": "packages/core/"
+        "cwd": "packages/core"
       }
     }
   },
