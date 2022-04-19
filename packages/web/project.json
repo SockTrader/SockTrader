@@ -53,7 +53,7 @@
           "cd packages/web && npm version {args.version}",
           "cd dist/packages/web && npm version {args.version}",
           {
-            "command": "cd dist/packages/web && npm publish --access public",
+            "command": "cd dist/packages/web && npm login && npm publish --access public",
             "forwardAllArgs": false
           }
         ],

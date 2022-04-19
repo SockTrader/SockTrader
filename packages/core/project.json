@@ -53,7 +53,7 @@
           "cd packages/core && npm version {args.version}",
           "cd dist/packages/core && npm version {args.version}",
           {
-            "command": "cd dist/packages/core && npm publish --access public",
+            "command": "cd dist/packages/core && npm login && npm publish --access public",
             "forwardAllArgs": false
           }
         ],
