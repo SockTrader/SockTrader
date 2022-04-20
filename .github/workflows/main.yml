@@ -16,6 +16,9 @@ on:
 
 env:
     TZ: UTC
+    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
     build:
@@ -81,10 +84,16 @@ jobs:
 #                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 #                run: npx nx run-many --target=release --verbose --all
+            -   name: Build all packages
+#                env:
+#                    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+                run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
             -   name: Publish release
-                env:
-                    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#                env:
+#                    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+#                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
                 run: npx semantic-release
