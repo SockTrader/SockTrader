@@ -16,50 +16,90 @@ on:
 
 env:
     TZ: UTC
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
-    build:
+    pre-run:
         runs-on: ubuntu-latest
-        name: Build
-
-        strategy:
-            matrix:
-                node-version: [ lts/* ]
-
         steps:
             -   uses: actions/checkout@v2
                 with:
                     fetch-depth: 0
 
-            -   name: Use Node.js ${{ matrix.node-version }}
+            -   name: Setup Node LTS
                 uses: actions/setup-node@v3
                 with:
-                    node-version: ${{ matrix.node-version }}
+                    node-version: 'lts/*'
 
+            -   name: Detect changed directories
+                uses: gagle/nx-check-changes@v1.0.0
+                id: nx-changes
+        outputs:
+            changed-libs: ${{ steps.nx-changes.outputs.changed-libs }}
+
+    install:
+        runs-on: ubuntu-latest
+        needs: [pre-run]
+        steps:
             -   name: Install dependencies
                 run: npm ci
 
-#            -   name: Build all packages
-#                run: npx nx run-many --target=build --all
+    build:
+        runs-on: ubuntu-latest
+        needs: [install]
+        steps:
+            -   name: Build all packages
+                run: npx nx run-many --target=build --all
 
-            -   name: Build affected
-                uses: mansagroup/nrwl-nx-action@v2.1.0
+
+    Lint:
+        runs-on: ubuntu-latest
+        needs: [install]
+        steps:
+            -   name: Lint all packages
+                run: npx nx run-many --target=lint --all
+
+
+    test:
+        runs-on: ubuntu-latest
+        needs: [install]
+        steps:
+            -   name: Unit tests all packages
+                run: npx nx run-many --target=test --verbose --all --parallel --coverage
+
+            -   name: Upload codecoverage report
+                uses: codecov/codecov-action@v2
                 with:
-                    targets: build
+                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
+                    flags: unittests
+                    name: codecov-umbrella
+                    verbose: true
 
-#            -   name: Lint all packages
-#                run: npx nx run-many --target=lint --all --fix
+
+    publish:
+        runs-on: ubuntu-latest
+        if: needs.pre-run.outputs.changed-libs > 1
+        needs: [install, build, lint, test]
+        steps:
+            -   name: Changed libs
+                run: echo ${{ needs.pre-run.outputs.changed-libs }}
+
+            -   name: Prepare publish
+                run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+            -   name: Publish all packages
+                run: npx semantic-release
+
+#            -   name: Build affected
+#                uses: mansagroup/nrwl-nx-action@v2.1.0
+#                with:
+#                    targets: build
 
 #            -   name: Lint affected
 #                uses: mansagroup/nrwl-nx-action@v2.1.0
 #                with:
 #                    targets: lint
-
-#            -   name: Unit tests all packages
-#                run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
 #            -   name: Unit test affected
 #                uses: mansagroup/nrwl-nx-action@v2.1.0
@@ -67,13 +107,6 @@ jobs:
 #                    targets: test:coverage
 #                    parallel: true
 
-#            -   name: Upload codecoverage report
-#                uses: codecov/codecov-action@v2
-#                with:
-#                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
-#                    flags: unittests
-#                    name: codecov-umbrella
-#                    verbose: true
 
 #            -   name: Publish release
 #                uses: mansagroup/nrwl-nx-action@v2.1.0
@@ -84,12 +117,4 @@ jobs:
 #                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 #                run: npx nx run-many --target=release --verbose --all
-            -   name: Build all packages
-#                env:
-#                    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-#                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
-                run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
-            -   name: Publish release
-                run: npx semantic-release
