@@ -60,7 +60,7 @@ jobs:
                     verbose: true
 
             -   name: Changed libs
-                run: echo ${{ steps.nx-changes.outputs.changed-libs }}
+                run: echo '${{ steps.nx-changes.outputs.changed-libs }}'
 
             -   name: Prepare publish
                 if: ${{ steps.nx-changes.outputs.changed-libs > 1 }}
