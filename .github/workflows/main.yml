@@ -61,7 +61,7 @@ jobs:
                 run: echo "${{ steps.affected.outputs.affected }}"
 
             -   name: Echo affected3
-                run: echo "${{ steps.affected.outputs.affected != "" }}"
+                run: echo "${{ steps.affected.outputs.affected != '' }}"
 
 
             -   name: Build all packages
