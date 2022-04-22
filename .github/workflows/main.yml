@@ -20,7 +20,7 @@ env:
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
-    pre-run:
+    build:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v2
@@ -35,36 +35,16 @@ jobs:
             -   name: Detect changed directories
                 uses: gagle/nx-check-changes@v1.0.0
                 id: nx-changes
-        outputs:
-            changed-libs: ${{ steps.nx-changes.outputs.changed-libs }}
 
-    install:
-        runs-on: ubuntu-latest
-        needs: [pre-run]
-        steps:
             -   name: Install dependencies
                 run: npm ci
 
-    build:
-        runs-on: ubuntu-latest
-        needs: [install]
-        steps:
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
 
-
-    Lint:
-        runs-on: ubuntu-latest
-        needs: [install]
-        steps:
             -   name: Lint all packages
                 run: npx nx run-many --target=lint --all
 
-
-    test:
-        runs-on: ubuntu-latest
-        needs: [install]
-        steps:
             -   name: Unit tests all packages
                 run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
@@ -76,19 +56,15 @@ jobs:
                     name: codecov-umbrella
                     verbose: true
 
-
-    publish:
-        runs-on: ubuntu-latest
-        if: needs.pre-run.outputs.changed-libs > 1
-        needs: [install, build, lint, test]
-        steps:
             -   name: Changed libs
                 run: echo ${{ needs.pre-run.outputs.changed-libs }}
 
             -   name: Prepare publish
+                if: ${{ needs.pre-run.outputs.changed-libs > 1 }}
                 run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
             -   name: Publish all packages
+                if: ${{ needs.pre-run.outputs.changed-libs > 1 }}
                 run: npx semantic-release
 
 #            -   name: Build affected
