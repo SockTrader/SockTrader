@@ -48,6 +48,12 @@ jobs:
                 id: affected
                 run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
 
+            -   name: Test1
+                run: ${{ steps.affected.outputs.affected != '' }}
+
+            -   name: Test2
+                run: echo ${{ steps.affected.outputs.affected }}
+
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
 
