@@ -55,7 +55,7 @@ jobs:
 
             -   name: Echo affected
                 id: affected
-                run: echo "::set-output name=affected::$(npx nx affected:libs --plain)"
+                run: echo "::set-output name=affected::$({nx affected:apps --plain; nx affected:libs --plain} | tr "\n" " " | wc -w)"
 
             -   name: Echo affected2
                 run: echo "${{ steps.affected.outputs.affected }}"
