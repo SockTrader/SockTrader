@@ -38,9 +38,9 @@ jobs:
             -   name: Install dependencies
                 run: npm ci
 
-#            -   name: Detect changed directories
-#                uses: gagle/nx-check-changes@v1.0.0
-#                id: nx-changes
+            -   name: Detect changed directories
+                uses: gagle/nx-check-changes@v1.0.0
+                id: nx-changes
 
             -   name: Set SHAs for base and head for `nx affected` commands
                 id: setSHAs
@@ -58,7 +58,10 @@ jobs:
                 run: echo "::set-output name=affected::$(npx nx affected:libs --plain)"
 
             -   name: Echo affected2
-                run: echo "${{ steps.affected.affected }}"
+                run: echo "${{ steps.affected.outputs.affected }}"
+
+            -   name: Echo affected3
+                run: echo "${{ steps.affected.outputs.affected > 0 }}"
 
 
             -   name: Build all packages
