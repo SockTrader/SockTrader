@@ -55,13 +55,13 @@ jobs:
 
             -   name: Echo affected
                 id: affected
-                run: echo "::set-output name=affected::{npx nx affected:apps --plain; nx affected:libs --plain} | tr "\n" " " | wc -w"
+                run: echo "::set-output name=affected::$(npx nx affected:libs --plain)"
 
             -   name: Echo affected2
                 run: echo "${{ steps.affected.outputs.affected }}"
 
             -   name: Echo affected3
-                run: echo "${{ steps.affected.outputs.affected > 0 }}"
+                run: echo "${{ steps.affected.outputs.affected != "" }}"
 
 
             -   name: Build all packages
@@ -81,13 +81,13 @@ jobs:
                     name: codecov-umbrella
                     verbose: true
 
-            -   name: Changed libs
-                run: echo '${{ steps.nx-changes.outputs.changed-libs }}'
+#            -   name: Changed libs
+#                run: echo '${{ steps.nx-changes.outputs.changed-libs }}'
 
             -   name: Prepare publish
-                if: ${{ steps.nx-changes.outputs.changed-libs > 1 }}
+                if: ${{ steps.affected.outputs.affected != "" }}
                 run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
             -   name: Publish all packages
-                if: ${{ steps.nx-changes.outputs.changed-libs > 1 }}
+                if: ${{ steps.affected.outputs.affected != "" }}
                 run: npx semantic-release
