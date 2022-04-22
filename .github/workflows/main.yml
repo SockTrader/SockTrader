@@ -35,6 +35,9 @@ jobs:
                 with:
                     node-version: 'lts/*'
 
+            -   name: Install dependencies
+                run: npm ci
+
 #            -   name: Detect changed directories
 #                uses: gagle/nx-check-changes@v1.0.0
 #                id: nx-changes
@@ -57,8 +60,6 @@ jobs:
             -   name: Echo affected2
                 run: echo "${{ steps.affected.affected }}"
 
-            -   name: Install dependencies
-                run: npm ci
 
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
