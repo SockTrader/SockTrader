@@ -44,12 +44,7 @@ jobs:
                 with:
                     main-branch-name: 'master'
 
-            -   name: Test SHA's
-                run: |
-                    echo "BASE: ${{ steps.setSHAs.outputs.base }}"
-                    echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
-
-            -   name: Echo affected
+            -   name: Check if libs are affected
                 id: affected
                 run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
 
