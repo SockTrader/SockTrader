@@ -38,10 +38,6 @@ jobs:
             -   name: Install dependencies
                 run: npm ci
 
-            -   name: Detect changed directories
-                uses: gagle/nx-check-changes@v1.0.0
-                id: nx-changes
-
             -   name: Set SHAs for base and head for `nx affected` commands
                 id: setSHAs
                 uses: nrwl/nx-set-shas@v2
@@ -55,14 +51,7 @@ jobs:
 
             -   name: Echo affected
                 id: affected
-                run: echo "::set-output name=affected::$(npx nx affected:libs --plain)"
-
-            -   name: Echo affected2
-                run: echo "${{ steps.affected.outputs.affected }}"
-
-            -   name: Echo affected3
-                run: echo "${{ steps.affected.outputs.affected != '' }}"
-
+                run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
 
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
@@ -80,9 +69,6 @@ jobs:
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
-
-#            -   name: Changed libs
-#                run: echo '${{ steps.nx-changes.outputs.changed-libs }}'
 
             -   name: Prepare publish
                 if: ${{ steps.affected.outputs.affected != '' }}
