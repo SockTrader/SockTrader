@@ -1,5 +1,6 @@
 name: Build
 
+
 on:
     push:
         branches:
@@ -14,10 +15,12 @@ on:
             - opened
             - synchronize
 
+
 env:
     TZ: UTC
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
 jobs:
     build:
@@ -57,40 +60,12 @@ jobs:
                     verbose: true
 
             -   name: Changed libs
-                run: echo ${{ steps.build.outputs.changed-libs }}
+                run: echo ${{ steps.nx-changes.outputs.changed-libs }}
 
             -   name: Prepare publish
-                if: ${{ steps.build.outputs.changed-libs > 1 }}
+                if: ${{ steps.nx-changes.outputs.changed-libs > 1 }}
                 run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
             -   name: Publish all packages
-                if: ${{ steps.build.outputs.changed-libs > 1 }}
+                if: ${{ steps.nx-changes.outputs.changed-libs > 1 }}
                 run: npx semantic-release
-
-#            -   name: Build affected
-#                uses: mansagroup/nrwl-nx-action@v2.1.0
-#                with:
-#                    targets: build
-
-#            -   name: Lint affected
-#                uses: mansagroup/nrwl-nx-action@v2.1.0
-#                with:
-#                    targets: lint
-
-#            -   name: Unit test affected
-#                uses: mansagroup/nrwl-nx-action@v2.1.0
-#                with:
-#                    targets: test:coverage
-#                    parallel: true
-
-
-#            -   name: Publish release
-#                uses: mansagroup/nrwl-nx-action@v2.1.0
-#                with:
-#                    targets: release
-#                env:
-#                    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-#                run: npx nx run-many --target=release --verbose --all
-
