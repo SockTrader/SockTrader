@@ -35,9 +35,27 @@ jobs:
                 with:
                     node-version: 'lts/*'
 
-            -   name: Detect changed directories
-                uses: gagle/nx-check-changes@v1.0.0
-                id: nx-changes
+#            -   name: Detect changed directories
+#                uses: gagle/nx-check-changes@v1.0.0
+#                id: nx-changes
+
+            -   name: Set SHAs for base and head for `nx affected` commands
+                id: setSHAs
+                uses: nrwl/nx-set-shas@v2
+                with:
+                    main-branch-name: 'master'
+
+            -   name: Test SHA's
+                run: |
+                    echo "BASE: ${{ steps.setSHAs.outputs.base }}"
+                    echo "HEAD: ${{ steps.setSHAs.outputs.head }}"
+
+            -   name: Echo affected
+                id: affected
+                run: echo "::set-output name=affected::$(npx nx affected:libs --plain)"
+
+            -   name: Echo affected2
+                run: echo "${{ steps.affected.affected }}"
 
             -   name: Install dependencies
                 run: npm ci
