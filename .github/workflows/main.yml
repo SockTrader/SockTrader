@@ -15,11 +15,12 @@ on:
 env:
     TZ: UTC
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#    SEMANTIC_RELEASE_GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
 
 
 jobs:
     build:
+        if: "!contains(github.event.head_commit.message, 'skip ci')"
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/checkout@v2
