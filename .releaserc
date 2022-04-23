@@ -9,6 +9,7 @@
                 "publishCmd": "nx run-many --target=release --all --args=\"--version=${nextRelease.version}\""
             }
         ],
+        "@semantic-release/github",
         [
             "@semantic-release/git",
             {
@@ -17,7 +18,6 @@
                 ],
                 "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
-        ],
-        "@semantic-release/github"
+        ]
     ]
 }
