@@ -71,6 +71,7 @@
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "~5.18.0",
     "commitlint-config-eslint": "github:admwx7/commitlint-config-eslint",
+    "conventional-changelog-eslint": "^3.0.9",
     "cross-env": "^7.0.3",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
