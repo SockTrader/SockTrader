@@ -26,7 +26,8 @@
       "options": {
         "lintFilePatterns": [
           "packages/indicators/**/*.ts"
-        ]
+        ],
+        "fix": true
       }
     },
     "test": {
@@ -36,7 +37,28 @@
       ],
       "options": {
         "jestConfig": "packages/indicators/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": false
+      },
+      "configurations": {
+        "coverage": {
+          "codeCoverage": true
+        }
+      }
+    },
+    "release": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "cd packages/indicators && npm version {args.version}",
+          "cd dist/packages/indicators && npm version {args.version}",
+          {
+            "command": "cd dist/packages/indicators && npm publish --access public",
+            "forwardAllArgs": false
+          }
+        ],
+        "cwd": "./",
+        "parallel": false
       }
     }
   },

@@ -1,57 +1,71 @@
 name: Build
 
+
 on:
     push:
-        branches: [ master ]
+        branches:
+            - master
 
     pull_request:
-        branches:
-            - '**'
+        types:
+            - opened
+            - synchronize
+
 
 env:
     TZ: UTC
+    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 
 jobs:
     build:
         runs-on: ubuntu-latest
-        name: Build
-
-        strategy:
-            matrix:
-                node-version: [ 14.x, 16.x ]
-
         steps:
             -   uses: actions/checkout@v2
-
-            -   name: Use Node.js ${{ matrix.node-version }}
-                uses: actions/setup-node@v1
                 with:
-                    node-version: ${{ matrix.node-version }}
+                    fetch-depth: 0
+
+            -   name: Setup Node LTS
+                uses: actions/setup-node@v3
+                with:
+                    node-version: 'lts/*'
 
             -   name: Install dependencies
                 run: npm ci
+
+            -   name: Set SHAs for base and head for `nx affected` commands
+                id: setSHAs
+                uses: nrwl/nx-set-shas@v2
+                with:
+                    main-branch-name: 'master'
+
+            -   name: Check if libs are affected
+                id: affected
+                run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
 
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
 
             -   name: Lint all packages
-                run: npx nx run-many --target=lint --all --fix
+                run: npx nx run-many --target=lint --all
 
             -   name: Unit tests all packages
                 run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
             -   name: Upload codecoverage report
+                if: ${{ github.ref_name == 'master' }}
                 uses: codecov/codecov-action@v2
-                if: matrix.node-version == '14.x' && github.ref_name == 'master'
                 with:
                     files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
                     flags: unittests
                     name: codecov-umbrella
                     verbose: true
 
-            -   name: Publish release
-                if: matrix.node-version == '14.x' && github.ref_name == 'master'
-                env:
-                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-                    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+            -   name: Prepare publish
+                if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
+                run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+            -   name: Publish all packages
+                if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
                 run: npx semantic-release

@@ -5,28 +5,60 @@
   "targets": {
     "build": {
       "executor": "@nrwl/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/cli",
         "tsConfig": "packages/cli/tsconfig.lib.json",
         "packageJson": "packages/cli/package.json",
         "main": "packages/cli/src/index.ts",
-        "assets": ["packages/cli/*.md"]
+        "assets": [
+          "packages/cli/*.md"
+        ]
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/cli/**/*.ts"]
+        "lintFilePatterns": [
+          "packages/cli/**/*.ts"
+        ],
+        "fix": true
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/cli"],
+      "outputs": [
+        "coverage/packages/cli"
+      ],
       "options": {
         "jestConfig": "packages/cli/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": false
+      },
+      "configurations": {
+        "coverage": {
+          "codeCoverage": true
+        }
+      }
+    },
+    "release": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          "cd packages/cli && npm version {args.version}",
+          "cd dist/packages/cli && npm version {args.version}",
+          {
+            "command": "cd dist/packages/cli && npm publish --access public",
+            "forwardAllArgs": false
+          }
+        ],
+        "cwd": "./",
+        "parallel": false
       }
     }
   },
