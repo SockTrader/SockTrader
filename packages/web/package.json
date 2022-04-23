@@ -1,6 +1,13 @@
 {
   "name": "@socktrader/web",
   "version": "0.0.1",
+  "description": "SockTrader web provides a realtime web API for SockTrader core. It will mainly be consumed by https://socktrader.io/",
+  "homepage": "https://github.com/SockTrader/SockTrader.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SockTrader/SockTrader.git"
+  },
+  "license": "GPL-3.0",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -12,12 +19,11 @@
     "binance",
     "trading-algorithms",
     "trading-bot",
-    "indicators",
     "quantitative",
     "finance",
+    "webserver",
     "financial",
     "analysis",
-    "statistics",
     "trading",
     "crypto",
     "bitcoin"

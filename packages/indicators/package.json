@@ -1,6 +1,13 @@
 {
   "name": "@socktrader/indicators",
   "version": "0.0.1",
+  "description": "SockTrader indicators is a single utility package for all technical indicators, financial analysis as well as statistical utilities",
+  "homepage": "https://github.com/SockTrader/SockTrader.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SockTrader/SockTrader.git"
+  },
+  "license": "GPL-3.0",
   "private": false,
   "publishConfig": {
     "access": "public"
