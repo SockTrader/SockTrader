@@ -66,9 +66,9 @@ jobs:
                     verbose: true
 
             -   name: Prepare publish
-                if: github.ref_name == 'master' && ${{ steps.affected.outputs.affected != '' }}
+                if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
                 run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
             -   name: Publish all packages
-                if: github.ref_name == 'master' && ${{ steps.affected.outputs.affected != '' }}
+                if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
                 run: npx semantic-release
