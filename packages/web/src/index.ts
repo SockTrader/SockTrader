@@ -1,6 +1,7 @@
 import { Worker } from '@socktrader/cli'
 import cors from 'cors'
 import express from 'express'
+import helmet from 'helmet'
 import { UDF } from './lib/udf'
 
 const udf = new UDF()
@@ -8,6 +9,7 @@ const udf = new UDF()
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(helmet())
 
 app.get('/udf/config', async (req, res) => {
   res

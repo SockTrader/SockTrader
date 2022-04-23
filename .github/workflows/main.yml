@@ -48,12 +48,6 @@ jobs:
                 id: affected
                 run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
 
-            -   name: Test1
-                run: ${{ steps.affected.outputs.affected != '' }}
-
-            -   name: Test2
-                run: echo ${{ steps.affected.outputs.affected }}
-
             -   name: Build all packages
                 run: npx nx run-many --target=build --all
 
@@ -72,9 +66,9 @@ jobs:
                     verbose: true
 
             -   name: Prepare publish
-                if: ${{ steps.affected.outputs.affected != '' }}
+                if: github.ref_name == 'master' && ${{ steps.affected.outputs.affected != '' }}
                 run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
             -   name: Publish all packages
-                if: ${{ steps.affected.outputs.affected != '' }}
+                if: github.ref_name == 'master' && ${{ steps.affected.outputs.affected != '' }}
                 run: npx semantic-release
