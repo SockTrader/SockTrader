@@ -54,6 +54,7 @@ jobs:
                 run: npx nx run-many --target=test --verbose --all --parallel --coverage
 
             -   name: Upload codecoverage report
+                if: ${{ github.ref_name == 'master' }}
                 uses: codecov/codecov-action@v2
                 with:
                     files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
