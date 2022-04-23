@@ -5,10 +5,6 @@ on:
     push:
         branches:
             - master
-            - next
-            - beta
-            - alpha
-            - '*.*.*' # maintenance releases branches
 
     pull_request:
         types:
