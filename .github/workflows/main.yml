@@ -15,7 +15,6 @@ on:
 env:
     TZ: UTC
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-#    SEMANTIC_RELEASE_GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
 
 
 jobs:
