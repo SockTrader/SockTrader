@@ -7,6 +7,18 @@
             "@semantic-release/commit-analyzer",
             {
                 "preset": "ESLint",
+                "releaseRules": [
+                    {tag: 'Breaking', release: 'major'},
+
+                    {tag: 'Update', release: 'minor'},
+                    {tag: 'New', release: 'minor'},
+                    {tag: 'Upgrade', release: 'minor'},
+
+                    {tag: 'Docs', release: 'patch'},
+                    {tag: 'Build', release: 'patch'},
+                    {tag: 'Chore', release: 'patch'},
+                    {tag: 'Fix', release: 'patch'},
+                ],
             }
         ],
         [
