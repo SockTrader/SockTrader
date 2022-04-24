@@ -1,20 +1,30 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: "[REQ]"
+title: "[REQ] ..."
 labels: feature request
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## :poop: Is your feature request related to a problem? Please describe.
+_A clear and concise description of what the problem is._
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Eg.:** It's very difficult to track the risk and performance of a trading strategy.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## :building_construction: Describe the solution you'd like
+_A clear and concise description of what you want to happen._
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Eg.:** It should be easier if I can use predefined financial analysis metrics. 
+
+### Step 1 : What should be done?
+...
+
+### Step 2 : What should be done?
+...
+
+### Step 3 : What should be done?
+...
+
+### Some extra resources
+- https://en.wikipedia.org/wiki/Financial_analysis
