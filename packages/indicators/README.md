@@ -1,13 +1,12 @@
 <p align="center"><img width="160" height="160" src="https://raw.githubusercontent.com/SockTrader/SockTrader/master/docs/assets/socktrader_logo.png" alt="SockTrader logo" /></p>
 
-<h1 align="center">SockTrader</h1>
-<p align="center"><b>Indicators</b></p>
+<h1 align="center">@socktrader/indicators</h1>
 
 <p align="center"><b>Join the community <a href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img valign="middle" src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a></b></p>
 
-## What is "SockTrader"?
+## What is "@socktrader/indicators"?
 
-More info the [SockTrader github page](https://github.com/SockTrader/SockTrader)
+This independent package contains various utility functions to support risk, performance, quantitative and technical analysis. `@socktrader/indicators` is part of the [SockTrader monorepo project](https://github.com/SockTrader/SockTrader) but can be used in any project without depending on the rest of the SockTrader project.
 
 # Quickstart
 
@@ -15,6 +14,10 @@ More info the [SockTrader github page](https://github.com/SockTrader/SockTrader)
 2. Use library `activeReturn([0.003], [0.04], 12)`
 
 ## Indicators
+
+#### Technical indicators
+`@socktrader/indicators` re-exports all indicators from [technicalindicators](https://www.npmjs.com/package/technicalindicators).
+Check the [technicalindicators docs](https://www.npmjs.com/package/technicalindicators#available-indicators) for more API details.
 
 #### Performance metrics
 
