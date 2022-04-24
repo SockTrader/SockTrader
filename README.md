@@ -23,7 +23,7 @@ The name "SockTrader" comes from web**sock**et based trading bot. Which means th
 that one can act very quickly in a changing market with low latency.
 
 ## Looking for SockTrader v1?
-The dashboard is currently incompatible with SockTrader v2. 
+The [dashboard](https://socktrader.io/) is currently incompatible with SockTrader v2. 
 Use [SockTrader v1](https://github.com/SockTrader/SockTrader/tree/socktrader-v1) instead
 
 ## Features
@@ -43,37 +43,8 @@ Use [SockTrader v1](https://github.com/SockTrader/SockTrader/tree/socktrader-v1)
 1. Git clone `git clone git@github.com:SockTrader/SockTrader.git && cd SockTrader`
 2. Install NodeJS dependencies. `npm i`
 3. Copy `config/default.json` to `config/local.json` and edit.
-4. Run the MovingAverageStrategy on LocalExchange. `npm start`
-
-## Additional scripts
-
-- Development watch mode. `npm run watch`
-- Production build. `npm run build`
-- Build and execute production build. `npm run start:prod`
-- Run test suite. `npm test`
-
-
-## Use CLI
-
-1. Make sure to install project dependencies. `npm i`
-2. Run cli tool. `ts-node src/cli.ts`
-
-You will see the following output:
-```
-Usage: socktrader [options] [command]
-
-Options:
-  -V, --version   output the version number
-  -h, --help      display help for command
-
-Commands:
-  run [options]
-  help [command]  display help for command
-
-```
-
-To start a strategy using the cli run:
-```ts-node src/cli.ts run -s src/strategies/localMovingaverageStrategy.ts```
+4. Start postgres database `docker-compose up`
+5. Run the MovingAverageStrategy on LocalExchange. `npm run start:backtest`
 
 ## Connect your Binance account
 

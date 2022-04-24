@@ -7,6 +7,6 @@
 ## What is "@socktrader/web"?
 
 `@socktrader/web` is part of the [SockTrader monorepo project](https://github.com/SockTrader/SockTrader).
-The main purpose for this package is to provide a web accessible layer to SockTrader so that https://socktrader.io/ can interact with a self-hosted SockTrader instance. 
+The main purpose for this package is to provide a web accessible layer to SockTrader so that the [socktrader.io](https://socktrader.io/) dashboard can interact with a self-hosted SockTrader instance. 
 
 This package is not intended to be used directly, instead use [@socktrader/cli](https://www.npmjs.com/package/@socktrader/cli) to start a webserver.

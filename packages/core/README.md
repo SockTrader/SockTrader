@@ -27,8 +27,9 @@ We have 2 easy options to get you started, choose below:
 ### Start quick demo app
 1. Git clone `git clone git@github.com:SockTrader/SockTrader.git && cd SockTrader`
 2. Install NodeJS dependencies. `npm i`
-3. Copy `config/default.json` to `config/local.json` and edit .
-4. Run the MovingAverageStrategy on LocalExchange. `npm start`
+3. Copy `config/default.json` to `config/local.json` and edit.
+4. Start postgres database `docker-compose up`
+5. Run the MovingAverageStrategy on LocalExchange. `npm run start:backtest`
 
 ### Run SockTrader in your own project
 Start using the SockTrader CLI. More info can be found on [@socktrader/cli](https://www.npmjs.com/package/@socktrader/cli) or on the main [SockTrader GitHub page](https://github.com/SockTrader/SockTrader)

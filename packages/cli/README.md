@@ -30,5 +30,6 @@ While we're doing everything we can to make the SockTrader CLI experience as smo
 ### Start quick demo app
 1. Git clone `git clone git@github.com:SockTrader/SockTrader.git && cd SockTrader`
 2. Install NodeJS dependencies. `npm i`
-3. Copy `config/default.json` to `config/local.json` and edit .
-4. Run the MovingAverageStrategy on LocalExchange. `npm start`
+3. Copy `config/default.json` to `config/local.json` and edit.
+4. Start postgres database `docker-compose up`
+5. Run the MovingAverageStrategy on LocalExchange. `npm run start:backtest`
