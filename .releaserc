@@ -21,6 +21,28 @@
                 "publishCmd": "nx run-many --target=release --all --args=\"--version=${nextRelease.version}\""
             }
         ],
-        "@semantic-release/github"
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    {
+                        path: 'dist/packages/cli/**/*',
+                        label: 'SockTrader CLI package'
+                    },
+                    {
+                        path: 'dist/packages/core/**/*',
+                        label: 'SockTrader Core package'
+                    },
+                    {
+                        path: 'dist/packages/indicators/**/*',
+                        label: 'SockTrader Indicators package'
+                    },
+                    {
+                        path: 'dist/packages/web/**/*',
+                        label: 'SockTrader Web package'
+                    }
+                ]
+            }
+        ]
     ]
 }
