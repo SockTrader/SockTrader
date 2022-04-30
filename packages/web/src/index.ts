@@ -1,4 +1,4 @@
-import { Worker } from '@socktrader/cli'
+import { Worker } from '@socktrader/core'
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'

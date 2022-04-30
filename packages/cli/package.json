@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/SockTrader/SockTrader.git"
   },
+  "bin": "./src/index.js",
   "license": "GPL-3.0",
   "private": false,
   "publishConfig": {

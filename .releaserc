@@ -8,16 +8,38 @@
             {
                 "preset": "ESLint",
                 "releaseRules": [
-                    {tag: 'Breaking', release: 'major'},
-
-                    {tag: 'Update', release: 'minor'},
-                    {tag: 'New', release: 'minor'},
-                    {tag: 'Upgrade', release: 'minor'},
-
-                    {tag: 'Docs', release: 'patch'},
-                    {tag: 'Build', release: 'patch'},
-                    {tag: 'Chore', release: 'patch'},
-                    {tag: 'Fix', release: 'patch'},
+                    {
+                        tag: 'Breaking',
+                        release: 'major'
+                    },
+                    {
+                        tag: 'Update',
+                        release: 'minor'
+                    },
+                    {
+                        tag: 'New',
+                        release: 'minor'
+                    },
+                    {
+                        tag: 'Upgrade',
+                        release: 'minor'
+                    },
+                    {
+                        tag: 'Docs',
+                        release: 'patch'
+                    },
+                    {
+                        tag: 'Build',
+                        release: 'patch'
+                    },
+                    {
+                        tag: 'Chore',
+                        release: 'patch'
+                    },
+                    {
+                        tag: 'Fix',
+                        release: 'patch'
+                    },
                 ],
             }
         ],
@@ -33,27 +55,14 @@
                 "publishCmd": "nx run-many --target=release --all --args=\"--version=${nextRelease.version}\""
             }
         ],
+        "@semantic-release/github",
         [
-            "@semantic-release/github",
+            "@semantic-release/git",
             {
                 "assets": [
-                    {
-                        path: 'dist/packages/cli/**/*',
-                        label: 'SockTrader CLI package'
-                    },
-                    {
-                        path: 'dist/packages/core/**/*',
-                        label: 'SockTrader Core package'
-                    },
-                    {
-                        path: 'dist/packages/indicators/**/*',
-                        label: 'SockTrader Indicators package'
-                    },
-                    {
-                        path: 'dist/packages/web/**/*',
-                        label: 'SockTrader Web package'
-                    }
-                ]
+                    "dist/my-compiled-lib/package.json"
+                ],
+                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
         ]
     ]
