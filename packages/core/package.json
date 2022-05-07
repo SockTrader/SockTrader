@@ -1,6 +1,6 @@
 {
   "name": "@socktrader/core",
-  "version": "0.0.1",
+  "version": "2.0.2",
   "description": "SockTrader core is a realtime websocket based trading bot framework focused on trading cryptocurrencies",
   "homepage": "https://github.com/SockTrader/SockTrader.git",
   "repository": {
