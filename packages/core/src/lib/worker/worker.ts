@@ -20,14 +20,12 @@ export class Worker {
 
     return `
       require("ts-node/register/transpile-only");
-      require("${__dirname}/execution.script");
+      require("${__dirname}/execution.script").default();
     `
   }
 
   private isTsNodeAvailable(): boolean {
-    if (this._tsNodeAvailable) {
-      return this._tsNodeAvailable
-    }
+    if (this._tsNodeAvailable) return this._tsNodeAvailable
 
     try {
       require.resolve('ts-node')

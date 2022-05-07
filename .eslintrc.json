@@ -22,6 +22,7 @@
           "error",
           {
             "enforceBuildableLibDependency": true,
+            "banTransitiveDependencies": true,
             "allow": [],
             "depConstraints": [
               {

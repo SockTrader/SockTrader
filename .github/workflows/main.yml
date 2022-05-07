@@ -1,6 +1,5 @@
 name: Build
 
-
 on:
     push:
         branches:
@@ -11,19 +10,19 @@ on:
             - opened
             - synchronize
 
-
 env:
     TZ: UTC
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+permissions: write-all
 
 jobs:
     build:
         if: "!contains(github.event.head_commit.message, 'skip ci')"
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
                 with:
                     fetch-depth: 0
 
@@ -31,6 +30,7 @@ jobs:
                 uses: actions/setup-node@v3
                 with:
                     node-version: 'lts/*'
+                    cache: 'npm'
 
             -   name: Install dependencies
                 run: npm ci

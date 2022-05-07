@@ -6,8 +6,25 @@ plugins:
         enabled: true
 
     eslint:
+        enabled: true
+        channel: "eslint-7"
+
+checks:
+    method-lines:
+        config:
+            threshold: 100
+    method-complexity:
+        enabled: true
+        config:
+            threshold: 7
+    complex-logic:
+        enabled: true
+        config:
+            threshold: 6
+    similar-code:
         enabled: false
-        channel: "eslint-6"
+    identical-code:
+        enabled: false
 
 exclude_patterns:
 - "**/*.spec.ts"

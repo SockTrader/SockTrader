@@ -46,19 +46,24 @@
         }
       }
     },
+    "pre-release": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "cwd": "./",
+        "parallel": true,
+        "commands": [
+          "cd packages/web && npm version {args.version} --allow-same-version",
+          "cd dist/packages/web && npm version {args.version} --allow-same-version"
+        ]
+      }
+    },
     "release": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
-        "commands": [
-          "cd packages/web && npm version {args.version}",
-          "cd dist/packages/web && npm version {args.version}",
-          {
-            "command": "cd dist/packages/web && npm publish --access public",
-            "forwardAllArgs": false
-          }
-        ],
         "cwd": "./",
-        "parallel": false
+        "commands": [
+          "cd dist/packages/web && npm publish --access public"
+        ]
       }
     }
   },
