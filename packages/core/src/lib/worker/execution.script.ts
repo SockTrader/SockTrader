@@ -25,4 +25,4 @@ class ExecutionScript {
 
 }
 
-new ExecutionScript()
+export default () => new ExecutionScript()
