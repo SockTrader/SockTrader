@@ -21,12 +21,6 @@ checks:
         enabled: true
         config:
             threshold: 6
-    similar-code:
-        config:
-            threshold: 3
-    identical-code:
-        config:
-            threshold: 3
 
 exclude_patterns:
 - "**/*.spec.ts"
