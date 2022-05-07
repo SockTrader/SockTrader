@@ -1,7 +1,7 @@
 import { access } from 'fs'
 import { resolve } from 'path'
 import { workerData } from 'worker_threads'
-import { Strategy } from '@socktrader/core'
+import { Strategy } from '../interfaces'
 import { WorkerData } from './worker.interfaces'
 
 class ExecutionScript {
