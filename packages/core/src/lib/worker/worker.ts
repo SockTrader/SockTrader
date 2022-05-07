@@ -25,9 +25,7 @@ export class Worker {
   }
 
   private isTsNodeAvailable(): boolean {
-    if (this._tsNodeAvailable) {
-      return this._tsNodeAvailable
-    }
+    if (this._tsNodeAvailable) return this._tsNodeAvailable
 
     try {
       require.resolve('ts-node')

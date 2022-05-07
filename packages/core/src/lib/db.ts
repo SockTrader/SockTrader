@@ -2,7 +2,7 @@ import { Pool, QueryResultRow, QueryResult } from 'pg'
 import config from 'config'
 
 const poolCreator = () => {
-  let pool: Pool | null = null;
+  let pool: Pool | null = null
 
   return () => {
     if (!pool) {
