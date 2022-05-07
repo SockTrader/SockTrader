@@ -50,9 +50,16 @@
             }
         ],
         [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "CHANGELOG.md"
+            }
+        ],
+        [
             "@semantic-release/exec",
             {
-                "publishCmd": "nx run-many --target=release --all --args=\"--version=${nextRelease.version}\""
+                "prepareCmd": "nx run-many --target=pre-release --all --args=\"--version=${nextRelease.version}\"",
+                "publishCmd": "nx run-many --target=release --all",
             }
         ],
         "@semantic-release/github",
@@ -60,9 +67,13 @@
             "@semantic-release/git",
             {
                 "assets": [
-                    "dist/my-compiled-lib/package.json"
+                    "CHANGELOG.md",
+                    "packages/cli/package.json",
+                    "packages/core/package.json",
+                    "packages/indicators/package.json",
+                    "packages/web/package.json",
                 ],
-                "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                "message": "Chore: release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
         ]
     ]
