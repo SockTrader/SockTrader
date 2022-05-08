@@ -1,3 +1,12 @@
+## [2.0.3](https://github.com/SockTrader/SockTrader/compare/v2.0.2...v2.0.3) (2022-05-08)
+
+
+### Fix
+
+* rename cli script to "socktrader" instead of "cli" ([e408801](https://github.com/SockTrader/SockTrader/commit/e408801ecc1f883e8448f844b989d314b31dd1a8))
+* update package versions ([44596c7](https://github.com/SockTrader/SockTrader/commit/44596c7925ae5911fe7edd012c0515347df61c14))
+* update package versions ([ad51e27](https://github.com/SockTrader/SockTrader/commit/ad51e274c22a6c52e2b13d75ac72a261ea8d6d23))
+
 ## [2.0.2](https://github.com/SockTrader/SockTrader/compare/v2.0.1...v2.0.2) (2022-05-07)
 
 

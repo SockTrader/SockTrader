@@ -1,6 +1,6 @@
 {
   "name": "@socktrader/web",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "SockTrader web provides a realtime web API for SockTrader core. It will mainly be consumed by https://socktrader.io/",
   "homepage": "https://github.com/SockTrader/SockTrader.git",
   "repository": {
