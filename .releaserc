@@ -68,6 +68,7 @@
             {
                 "assets": [
                     "CHANGELOG.md",
+                    "package-lock.json",
                     "packages/cli/package.json",
                     "packages/core/package.json",
                     "packages/indicators/package.json",
