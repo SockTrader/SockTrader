@@ -1,5 +1,5 @@
 import { default as BinanceExchange } from 'binance-api-node'
-import config from 'config'
+import { config } from '../../config'
 import { Binance } from '../binance'
 
 export class BinanceLocal extends Binance {
@@ -8,7 +8,7 @@ export class BinanceLocal extends Binance {
     super()
 
     this._binance = BinanceExchange({
-      ...config.get('exchanges.binanceLocal')
+      ...config.get('exchanges:binanceLocal')
     })
   }
 

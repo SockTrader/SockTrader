@@ -1,6 +1,6 @@
 import { Binance as BinanceInstance, default as BinanceExchange, Symbol as SymbolInfo } from 'binance-api-node'
-import config from 'config'
 import { Observable } from 'rxjs'
+import { config } from '../../config'
 import { Candle, Exchange, Order, OrderCommand, OrderSide, Trade } from '../../interfaces'
 import { WalletService } from '../../wallet'
 import { CandleOptions } from './binance.interfaces'
@@ -14,7 +14,7 @@ export class Binance implements Exchange {
   readonly wallet: WalletService = new WalletService()
 
   protected _binance: BinanceInstance = BinanceExchange({
-    ...config.get('exchanges.binance')
+    ...config.get('exchanges:binance')
   })
 
   private readonly _data: BinanceData = new BinanceData(this._binance)

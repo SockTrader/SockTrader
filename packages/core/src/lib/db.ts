@@ -1,5 +1,5 @@
 import { Pool, QueryResultRow, QueryResult } from 'pg'
-import config from 'config'
+import { config } from './config'
 
 const poolCreator = () => {
   let pool: Pool | null = null
@@ -7,11 +7,11 @@ const poolCreator = () => {
   return () => {
     if (!pool) {
       pool = new Pool({
-        host: config.get('database.host'),
-        user: config.get('database.username'),
-        database: config.get('database.database'),
-        password: config.get('database.password'),
-        port: config.get('database.port'),
+        host: config.get('database:host'),
+        user: config.get('database:username'),
+        database: config.get('database:name'),
+        password: config.get('database:password'),
+        port: config.get('database:port'),
       })
     }
 

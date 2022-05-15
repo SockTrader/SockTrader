@@ -3,4 +3,5 @@ export * from './lib/interfaces'
 export * from './lib/repositories'
 export * from './lib/stores'
 export * from './lib/worker'
+export * from './lib/config'
 

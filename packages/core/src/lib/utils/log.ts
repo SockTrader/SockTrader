@@ -1,5 +1,5 @@
-import config from 'config'
-import { Observable, OperatorFunction, tap } from 'rxjs'
+import { OperatorFunction, tap } from 'rxjs'
+import { config } from '../config'
 
 export enum LOG {
   error = 'error',

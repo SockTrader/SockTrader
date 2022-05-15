@@ -1,4 +1,4 @@
-import config from 'config'
+import { config } from '../../config'
 import { Candle, Pair, Trade, Order, OrderSide, OrderType } from '../../interfaces'
 import { OpenOrder } from './localExchange.interfaces'
 import { mapOpenOrderToOrder, mapOpenOrderToTrade } from './mapper'
@@ -13,7 +13,7 @@ import { mapOpenOrderToOrder, mapOpenOrderToTrade } from './mapper'
 export const calculateOrderPrice = (order: OpenOrder, candle: Candle): number => {
   if (order.type !== OrderType.MARKET) return <number>order.price
 
-  const slippage = parseFloat(config.get('exchanges.local.slippage'))
+  const slippage = parseFloat(config.get('exchanges:local:slippage'))
   const applied = (order.side === OrderSide.BUY) ? +slippage : -slippage
 
   return candle.close * (1 + applied)

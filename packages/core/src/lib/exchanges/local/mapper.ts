@@ -1,4 +1,4 @@
-import config from 'config'
+import { config } from '../../config'
 import { nanoid } from 'nanoid'
 import { Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Pair, Trade } from '../../interfaces'
 import { OpenOrder } from './localExchange.interfaces'
@@ -31,8 +31,8 @@ export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair
 
 export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Trade => {
   const fee: number = order.type === OrderType.MARKET
-    ? config.get('exchanges.local.feeTaker')
-    : config.get('exchanges.local.feeMaker')
+    ? config.get('exchanges:local:feeTaker')
+    : config.get('exchanges:local:feeMaker')
 
   const commission = order.side === OrderSide.BUY
     ? order.quantity * fee
