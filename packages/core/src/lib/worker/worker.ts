@@ -5,8 +5,8 @@ export class Worker {
 
   private _tsNodeAvailable: boolean | undefined
 
-  run(script: string): void {
-    new NativeWorker(this._createScript(), {
+  run(script: string): NativeWorker {
+    return new NativeWorker(this._createScript(), {
       eval: true,
       workerData: <WorkerData>{
         strategy: script

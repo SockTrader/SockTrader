@@ -1,7 +1,7 @@
 import { asyncScheduler, BehaviorSubject, combineLatest, distinctUntilChanged, from, map, Observable, scheduled, Subject, tap } from 'rxjs'
 import { Asset, Candle, Exchange, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Pair, Trade } from '../../interfaces'
 import { WalletService } from '../../wallet'
-import { OpenOrder } from './localExchange.interfaces'
+import { LocalExchangeCandleOptions, OpenOrder } from './localExchange.interfaces'
 import { mapOpenOrderToOrder, mapOrderCommandToOpenOrder } from './mapper'
 import { calculateOrderPrice, createOrderFromOpenOrder, createTradeFromOpenOrder } from './utils'
 
@@ -51,7 +51,8 @@ export class LocalExchange implements Exchange {
     })
   }
 
-  candles(symbol: string): Observable<Candle> {
+  candles(options: LocalExchangeCandleOptions): Observable<Candle> {
+    const symbol = options.symbol.join('')
     const candles = this._symbolWithCandles.get(symbol)
 
     if (candles == null) {

@@ -21,5 +21,12 @@
       "feeTaker": 0.001
     }
   },
+  "plugin": {
+    "persist": {
+      "candles": false,
+      "orders": false,
+      "trades": false
+    }
+  },
   "debug": false
 }

@@ -1,6 +1,6 @@
 import { BalanceUpdate, CandleChartInterval, ExecutionReport, ExecutionType, OrderStatus, OrderType, OutboundAccountPosition, UserDataStreamEvent } from 'binance-api-node'
 
-export type CandleOptions = {
+export type BinanceCandleOptions = {
   symbol: string | string[];
   interval: CandleChartInterval;
 }

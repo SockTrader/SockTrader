@@ -1,7 +1,7 @@
+import { BaseStrategy, Candle, LocalExchange, Order, OrderSide, OrderStatus, OrderType, Strategy } from '@socktrader/core'
 import parse from 'date-fns/parse'
 import { CrossDown, CrossUp, SMA } from 'technicalindicators'
 import * as data from '../../../../data/coinbase_btcusd_1h.json'
-import { Candle, LocalExchange, Order, OrderSide, OrderStatus, OrderType, Strategy } from '@socktrader/core'
 
 interface CoinbaseCandle {
   Date: string;
@@ -14,9 +14,7 @@ interface CoinbaseCandle {
   'Volume USD': number;
 }
 
-export class LocalMovingAverageStrategy implements Strategy {
-
-  private readonly _localExchange: LocalExchange
+export class LocalMovingAverageStrategy extends BaseStrategy implements Strategy {
 
   private canBuy = true
 
@@ -30,26 +28,33 @@ export class LocalMovingAverageStrategy implements Strategy {
 
   private crossDown: CrossDown
 
+  private exchange: LocalExchange
+
   constructor() {
+    super()
+
     this.fastSMA = new SMA({ period: 12, values: [] })
     this.slowSMA = new SMA({ period: 24, values: [] })
     this.crossUp = new CrossUp({ lineA: [], lineB: [] })
     this.crossDown = new CrossDown({ lineA: [], lineB: [] })
 
-    this._localExchange = new LocalExchange()
-    this._localExchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
-    this._localExchange.setAssets([{
+    const exchange = new LocalExchange()
+
+    //@ts-ignore
+    exchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
+    exchange.setAssets([{
       asset: 'USDT',
       quantity: 10000
     }])
+
+    this.exchange = exchange
   }
 
   onStart(): void {
-    this._localExchange
-      .candles('BTCUSDT')
+    this.candlesFrom(this.exchange, { symbol: ['BTC', 'USDT'] })
       .subscribe(candle => this.updateCandle(candle))
 
-    this._localExchange.orders$
+    this.ordersFrom(this.exchange)
       .subscribe(order => this.updateOrder(order))
   }
 
@@ -79,7 +84,7 @@ export class LocalMovingAverageStrategy implements Strategy {
   }
 
   buy(quantity: number, price: number): void {
-    this._localExchange.buy({
+    this.exchange.buy({
       symbol: 'BTCUSDT',
       price: price,
       type: OrderType.LIMIT,
@@ -88,7 +93,7 @@ export class LocalMovingAverageStrategy implements Strategy {
   }
 
   sell(quantity: number, price: number): void {
-    this._localExchange.sell({
+    this.exchange.sell({
       symbol: 'BTCUSDT',
       price: price,
       type: OrderType.LIMIT,

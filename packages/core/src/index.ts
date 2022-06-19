@@ -4,4 +4,5 @@ export * from './lib/repositories'
 export * from './lib/stores'
 export * from './lib/worker'
 export * from './lib/config'
+export * from './lib/strategy'
 

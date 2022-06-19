@@ -1,7 +1,7 @@
 import { Binance as BinanceInstance, Candle as BinanceCandle, ExchangeInfo, ExecutionReport, Order as BinanceOrder, Symbol as SymbolInfo, UserDataStreamEvent } from 'binance-api-node'
 import { BehaviorSubject, filter, map, merge, Observable, share } from 'rxjs'
 import { AssetDeltaUpdate, Candle, Order, Trade, WalletUpdate } from '../../interfaces'
-import { CandleOptions, isAssetUpdate, isExecutionReport, isMarketOrder, isOrder, isTrade, isWalletUpdate } from './binance.interfaces'
+import { BinanceCandleOptions, isAssetUpdate, isExecutionReport, isMarketOrder, isOrder, isTrade, isWalletUpdate } from './binance.interfaces'
 import { mapAssetUpdate, mapCandle, mapExecutionReportToOrder, mapExecutionReportToTrade, mapOrderResponse, mapWalletUpdate } from './mapper'
 import { log } from '../../utils'
 
@@ -82,12 +82,11 @@ export class BinanceData {
   }
 
   /**
-   * Returns a candle observable. Note that each subscriber will cause a separate
-   * connection to the websocket server!
+   * Returns a candle observable.
    * @param {CandleOptions} options
    * @returns {Observable<Candle>}
    */
-  candles(options: CandleOptions): Observable<Candle> {
+  candles(options: BinanceCandleOptions): Observable<Candle> {
     return new Observable<BinanceCandle>(subscriber => {
       this._binance.ws.candles(options.symbol, options.interval, candle => {
         subscriber.next(candle)
@@ -95,6 +94,7 @@ export class BinanceData {
     }).pipe(
       filter(c => c.isFinal),
       map(candle => mapCandle(candle)),
+      share()
     )
   }
 

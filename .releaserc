@@ -9,35 +9,35 @@
                 "preset": "ESLint",
                 "releaseRules": [
                     {
-                        tag: 'Breaking',
+                        tag: 'breaking',
                         release: 'major'
                     },
                     {
-                        tag: 'Update',
+                        tag: 'update',
                         release: 'minor'
                     },
                     {
-                        tag: 'New',
+                        tag: 'new',
                         release: 'minor'
                     },
                     {
-                        tag: 'Upgrade',
+                        tag: 'upgrade',
                         release: 'minor'
                     },
                     {
-                        tag: 'Docs',
+                        tag: 'docs',
                         release: 'patch'
                     },
                     {
-                        tag: 'Build',
+                        tag: 'build',
                         release: 'patch'
                     },
                     {
-                        tag: 'Chore',
+                        tag: 'chore',
                         release: 'patch'
                     },
                     {
-                        tag: 'Fix',
+                        tag: 'fix',
                         release: 'patch'
                     },
                 ],

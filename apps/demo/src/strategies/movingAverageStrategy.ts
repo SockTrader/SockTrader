@@ -1,10 +1,8 @@
-import { Binance, Candle, Order, OrderSide, OrderStatus, OrderType, Strategy } from '@socktrader/core'
+import { BaseStrategy, Binance, Candle, Order, OrderSide, OrderStatus, OrderType, Strategy } from '@socktrader/core'
 import { CandleChartInterval } from 'binance-api-node'
 import { CrossDown, CrossUp, SMA } from 'technicalindicators'
 
-export class MovingAverageStrategy implements Strategy {
-
-  private readonly _binance: Binance
+export class MovingAverageStrategy extends BaseStrategy implements Strategy {
 
   private canBuy = true
 
@@ -18,21 +16,24 @@ export class MovingAverageStrategy implements Strategy {
 
   private crossDown: CrossDown
 
+  private binance: Binance
+
   constructor() {
+    super()
+
     this.fastSMA = new SMA({ period: 12, values: [] })
     this.slowSMA = new SMA({ period: 24, values: [] })
     this.crossUp = new CrossUp({ lineA: [], lineB: [] })
     this.crossDown = new CrossDown({ lineA: [], lineB: [] })
 
-    this._binance = new Binance()
+    this.binance = new Binance()
   }
 
   onStart(): void {
-    this._binance
-      .candles({ symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR, })
+    this.candlesFrom(this.binance, { symbol: 'BTCUSDT', interval: CandleChartInterval.ONE_HOUR, })
       .subscribe(candle => this.updateCandle(candle))
 
-    this._binance.orders$
+    this.ordersFrom(this.binance)
       .subscribe(order => this.updateOrder(order))
   }
 
@@ -62,7 +63,7 @@ export class MovingAverageStrategy implements Strategy {
   }
 
   buy(quantity: number, price: number): void {
-    this._binance.buy({
+    this.binance.buy({
       symbol: 'BTCUSDT',
       price: price,
       type: OrderType.LIMIT,
@@ -71,7 +72,7 @@ export class MovingAverageStrategy implements Strategy {
   }
 
   sell(quantity: number, price: number): void {
-    this._binance.sell({
+    this.binance.sell({
       symbol: 'BTCUSDT',
       price: price,
       type: OrderType.LIMIT,

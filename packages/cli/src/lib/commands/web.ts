@@ -1,11 +1,11 @@
 import { config } from '@socktrader/core'
-import { createServer } from '@socktrader/web'
+import { forkServer } from '@socktrader/web'
 import { CommandBuilder } from 'yargs'
 
 export const command: string = 'web'
 export const desc: string = 'Start SockTrader web API'
 export const builder: CommandBuilder = {
-  detach: {
+  detached: {
     boolean: true,
     alias: 'd',
     desc: 'Start in detached mode'
@@ -18,5 +18,12 @@ export const builder: CommandBuilder = {
 }
 export const handler = (argv: any) => {
   console.log(argv, config.get('database'))
-  createServer(argv.port)
+
+  if (argv.detached) {
+    console.log('start detached server')
+    forkServer(argv.port) // @todo finish me..
+  } else {
+    console.log('start server')
+    //createServer(argv.port)
+  }
 }

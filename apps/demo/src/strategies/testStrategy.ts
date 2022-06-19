@@ -1,4 +1,4 @@
-import { Candle, createExchange, LocalExchange, OrderType, Strategy } from '@socktrader/core'
+import { BaseStrategy, Candle, LocalExchange, OrderType, Strategy } from '@socktrader/core'
 import parse from 'date-fns/parse'
 import * as data from '../../../../data/coinbase_btcusd_1h.json'
 
@@ -13,29 +13,35 @@ interface CoinbaseCandle {
   'Volume USD': number;
 }
 
-export class TestStrategy implements Strategy {
+export class TestStrategy extends BaseStrategy implements Strategy {
 
   bought = false
 
   sold = false
 
-  private readonly _exchange: LocalExchange
+  exchange : LocalExchange
 
   constructor() {
-    this._exchange = createExchange(new LocalExchange(), this)
-    this._exchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
-    this._exchange.setAssets([{
+    super()
+
+    const exchange = new LocalExchange()
+
+    //@ts-ignore
+    exchange.addCandles(['BTC', 'USDT'], data.candles.map((c: CoinbaseCandle) => this.mapCoinbaseCandle(c)))
+    exchange.setAssets([{
       asset: 'USDT',
       quantity: 10000
     }])
+
+    this.exchange = exchange
   }
 
   onStart(): void {
-    this._exchange
-      .candles('BTCUSDT')
+    this.candlesFrom(this.exchange, { symbol: ['BTC', 'USDT'] })
       .subscribe(candle => this.updateCandle(candle))
 
-    this._exchange.orders$.subscribe(console.log)
+    this.ordersFrom(this.exchange)
+      .subscribe(console.log)
   }
 
   mapCoinbaseCandle(candle: CoinbaseCandle) {
@@ -51,12 +57,12 @@ export class TestStrategy implements Strategy {
 
   private async updateCandle(candle: Candle) {
     if (candle.close > 7000 && !this.bought) {
-      await this._exchange.buy({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 })
+      await this.exchange.buy({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 })
       this.bought = true
     }
 
     if (candle.close > 10000 && !this.sold) {
-      await this._exchange.sell({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 })
+      await this.exchange.sell({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 })
       this.sold = true
     }
   }

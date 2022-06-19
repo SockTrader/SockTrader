@@ -3,7 +3,7 @@ import { Observable } from 'rxjs'
 import { config } from '../../config'
 import { Candle, Exchange, Order, OrderCommand, OrderSide, Trade } from '../../interfaces'
 import { WalletService } from '../../wallet'
-import { CandleOptions } from './binance.interfaces'
+import { BinanceCandleOptions } from './binance.interfaces'
 import { BinanceData } from './binanceData'
 import { BinanceError } from './binanceError'
 import { BinanceErrorHandler } from './binanceErrorHandler'
@@ -32,7 +32,7 @@ export class Binance implements Exchange {
     this._data.assetUpdate$.subscribe(update => this.wallet.updateSpotByAssetDeltaUpdate(update))
   }
 
-  candles(options: CandleOptions): Observable<Candle> {
+  candles(options: BinanceCandleOptions): Observable<Candle> {
     return this._data.candles(options)
   }
 
