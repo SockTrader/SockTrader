@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-    socktrader:
-        build:
-            context: ./
-            dockerfile: ./docker/Dockerfile
-        volumes:
-            - '/app/node_modules'
-            - './apps:/app/apps'
-            - './config:/app/config'
-        environment:
-            - NODE_ENV=development
-        depends_on:
-            - postgresql
+#    socktrader:
+#        build:
+#            context: ./
+#            dockerfile: ./docker/Dockerfile
+#        volumes:
+#            - '/app/node_modules'
+#            - './apps:/app/apps'
+#            - './config:/app/config'
+#        environment:
+#            - NODE_ENV=development
+#        depends_on:
+#            - postgresql
 
     postgresql:
         image: postgres:14-alpine
