@@ -2,9 +2,6 @@ plugins:
     fixme:
         enabled: true
 
-    nodesecurity:
-        enabled: true
-
     eslint:
         enabled: true
         channel: "eslint-7"
