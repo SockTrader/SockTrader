@@ -32,18 +32,20 @@ jobs:
                     env
                     npm ci
 
-            -   name: Set env vars for Nx affected
-                uses: nrwl/nx-set-shas@v3
+#            -   name: Set env vars for Nx affected
+#                uses: mansagroup/nrwl-nx-action@v3
+#                with:
+#                    targets: build
+#                    affected: 'true' # Defaults to true, therefore optional
+#                uses: nrwl/nx-set-shas@v3
+#                with:
+#                    main-branch-name: 'master'
+#                    last-successful-event: 'workflow_dispatch'
+##                    last-successful-event: 'pull-request'
+
+            -   name: Build, lint & test affected packages
+                uses: mansagroup/nrwl-nx-action@v3
                 with:
-                    main-branch-name: 'master'
-                    last-successful-event: 'workflow_dispatch'
-#                    last-successful-event: 'pull-request'
+                    targets: build,lint,test
+                    affected: 'true'
 
-            -   name: Build affected packages
-                run: npx nx affected --target=build
-
-            -   name: Lint affected packages
-                run: npx nx affected --target=lint
-
-            -   name: Unit tests all packages
-                run: npx nx affected --target=test --verbose --parallel
