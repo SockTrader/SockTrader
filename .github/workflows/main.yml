@@ -63,10 +63,8 @@ jobs:
                     name: codecov-umbrella
                     verbose: true
 
-            -   name: Prepare publish
+            -   name: Publish packages
                 if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
-                run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-
-            -   name: Publish all packages
-                if: ${{ github.ref_name == 'master' && steps.affected.outputs.affected != '' }}
-                run: npx semantic-release
+                run: |
+                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+                    npx semantic-release
