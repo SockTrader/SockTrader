@@ -1,0 +1,46 @@
+name: Pull request
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+
+env:
+    TZ: UTC
+    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions: write-all
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v3
+                with:
+                    fetch-depth: 0
+
+            -   name: Setup Node LTS
+                uses: actions/setup-node@v3
+                with:
+                    node-version: 'lts/*'
+                    cache: 'npm'
+
+            -   name: Install dependencies
+                run: npm ci
+
+            -   name: Set SHAs for base and head for `nx affected` commands
+                uses: nrwl/nx-set-shas@v3
+                with:
+                    main-branch-name: 'master'
+                    last-successful-event: 'pull-request'
+
+            -   name: Build affected packages
+                run: npx nx affected --target=build
+
+            -   name: Lint affected packages
+                run: npx nx affected --target=lint
+
+            -   name: Unit tests all packages
+                run: npx nx affected --target=test --verbose --parallel
