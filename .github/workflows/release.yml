@@ -32,8 +32,7 @@ jobs:
                     env
                     npm ci
 
-            -   name: Set SHAs for base and head for `nx affected` commands
-                id: setSHAs
+            -   name: Set env vars for Nx affected
                 uses: nrwl/nx-set-shas@v3
                 with:
                     main-branch-name: 'master'

@@ -30,8 +30,6 @@
       "files": ["*.ts"],
       "extends": ["plugin:@nx/typescript"],
       "rules": {
-        "@typescript-eslint/semi": ["error", "never"],
-        "@typescript-eslint/no-extra-semi": ["error"],
         "@typescript-eslint/member-delimiter-style": ["error"],
         "rxjs/no-async-subscribe": "error",
         "rxjs/no-nested-subscribe": "error",
