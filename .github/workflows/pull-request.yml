@@ -32,17 +32,6 @@ jobs:
                     env
                     npm ci
 
-#            -   name: Set env vars for Nx affected
-#                uses: mansagroup/nrwl-nx-action@v3
-#                with:
-#                    targets: build
-#                    affected: 'true' # Defaults to true, therefore optional
-#                uses: nrwl/nx-set-shas@v3
-#                with:
-#                    main-branch-name: 'master'
-#                    last-successful-event: 'workflow_dispatch'
-##                    last-successful-event: 'pull-request'
-
             -   name: Build, lint & test affected packages
                 uses: mansagroup/nrwl-nx-action@v3
                 with:
