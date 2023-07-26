@@ -13,32 +13,33 @@ export class UDF {
   }
 
   async loadSymbols() {
-    const sets = await getCandleSets()
-    this.symbols = sets.map(symbol => {
-      return {
-        symbol: symbol.symbol.toUpperCase(),
-        ticker: symbol.symbol,
-        name: symbol.symbol,
-        full_name: symbol.symbol,
-        description: `${symbol.baseAsset} / ${symbol.quoteAsset}`,
-        exchange: symbol.exchange.toUpperCase(),
-        listed_exchange: symbol.exchange.toUpperCase(),
-        type: 'crypto',
-        currency_code: symbol.quoteAsset,
-        session: '24x7',
-        timezone: 'UTC',
-        minmovement: 1,
-        minmov: 1,
-        minmovement2: 0,
-        minmov2: 0,
-        pricescale: Math.round(1 / parseFloat(symbol.tickSize)),
-        supported_resolutions: ['60'],
-        has_intraday: true,
-        has_daily: true,
-        has_weekly_and_monthly: true,
-        data_status: 'streaming'
-      }
-    })
+    this.symbols = []
+    //const sets = await getCandleSets()f
+    //this.symbols = sets.map(symbol => {
+    //  return {
+    //    symbol: symbol.symbol.toUpperCase(),
+    //    ticker: symbol.symbol,
+    //    name: symbol.symbol,
+    //    full_name: symbol.symbol,
+    //    description: `${symbol.baseAsset} / ${symbol.quoteAsset}`,
+    //    exchange: symbol.exchange.toUpperCase(),
+    //    listed_exchange: symbol.exchange.toUpperCase(),
+    //    type: 'crypto',
+    //    currency_code: symbol.quoteAsset,
+    //    session: '24x7',
+    //    timezone: 'UTC',
+    //    minmovement: 1,
+    //    minmov: 1,
+    //    minmovement2: 0,
+    //    minmov2: 0,
+    //    pricescale: Math.round(1 / parseFloat(symbol.tickSize)),
+    //    supported_resolutions: ['60'],
+    //    has_intraday: true,
+    //    has_daily: true,
+    //    has_weekly_and_monthly: true,
+    //    data_status: 'streaming'
+    //  }
+    //})
   }
 
   hasSymbol(symbol: string): boolean {

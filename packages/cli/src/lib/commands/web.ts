@@ -1,4 +1,3 @@
-import { config } from '@socktrader/core'
 import { forkServer } from '@socktrader/web'
 import { CommandBuilder } from 'yargs'
 
@@ -17,7 +16,6 @@ export const builder: CommandBuilder = {
   }
 }
 export const handler = (argv: any) => {
-  console.log(argv, config.get('database'))
 
   if (argv.detached) {
     console.log('start detached server')
