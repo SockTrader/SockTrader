@@ -1,6 +1,6 @@
-const nxPreset = require('@nrwl/jest/preset');
+const nxPreset = require('@nx/jest/preset').default;
 
 module.exports = {
     ...nxPreset,
-    coverageReporters: ['clover', ['text', {'skipFull': false}]]
+    coverageReporters: ['clover', ['text', { skipFull: false }]],
 };
