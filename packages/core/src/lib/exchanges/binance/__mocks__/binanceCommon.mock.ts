@@ -1,4 +1,15 @@
-import { ExecutionReport, ExecutionType, Order, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
+import {
+  ExecutionReport,
+  ExecutionType,
+  Order,
+  ExecutionType_LT,
+  OrderSide_LT,
+  TimeInForce_LT,
+  OrderStatus_LT,
+  OrderType_LT,
+  FuturesOrderType_LT,
+  OrderRejectReason,
+} from 'binance-api-node';
 
 export const mockCommonMarketBuyOrderResponse: Order = {
   symbol: 'BTCUSDT',
@@ -13,20 +24,20 @@ export const mockCommonMarketBuyOrderResponse: Order = {
   isWorking: true,
   updateTime: 1582542000000,
   time: new Date('2020-02-24T12:00:00').getTime(),
-  status: <OrderStatus>'FILLED',
-  timeInForce: <TimeInForce>'GTC',
-  type: <OrderType>'MARKET',
-  side: <OrderSide>'BUY',
+  status: <OrderStatus_LT>'FILLED',
+  timeInForce: <TimeInForce_LT>'GTC',
+  type: <OrderType_LT>'MARKET',
+  side: <OrderSide_LT>'BUY',
   fills: [
     {
       tradeId: 1,
       price: '9800.00000000',
       qty: '1.00000000',
       commission: '0.00100000',
-      commissionAsset: 'BTC'
-    }
-  ]
-}
+      commissionAsset: 'BTC',
+    },
+  ],
+};
 
 export const mockCommonMarketSellOrderResponse: Order = {
   symbol: 'BTCUSDT',
@@ -41,20 +52,20 @@ export const mockCommonMarketSellOrderResponse: Order = {
   isWorking: true,
   updateTime: 1582545600000,
   time: new Date('2020-02-24T13:00:00').getTime(),
-  status: <OrderStatus>'FILLED',
-  timeInForce: <TimeInForce>'GTC',
-  type: <OrderType>'MARKET',
-  side: <OrderSide>'SELL',
+  status: <OrderStatus_LT>'FILLED',
+  timeInForce: <TimeInForce_LT>'GTC',
+  type: <OrderType_LT>'MARKET',
+  side: <OrderSide_LT>'SELL',
   fills: [
     {
       tradeId: 1,
       price: '9750.42000000',
       qty: '1.00000000',
       commission: '9.75042000',
-      commissionAsset: 'USDT'
-    }
-  ]
-}
+      commissionAsset: 'USDT',
+    },
+  ],
+};
 
 export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
@@ -62,15 +73,15 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',
-  side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
-  timeInForce: <TimeInForce>'GTC',
+  side: <OrderSide_LT>'BUY',
+  orderType: <FuturesOrderType_LT>'LIMIT',
+  timeInForce: <TimeInForce_LT>'GTC',
   quantity: '1.00000000',
   price: '9700.00000000',
   executionType: <ExecutionType>'NEW',
   stopPrice: '0.00000000',
   icebergQuantity: '0.00000000',
-  orderStatus: <OrderStatus>'NEW',
+  orderStatus: <OrderStatus_LT>'NEW',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602299,
   orderTime: new Date('2020-02-24T14:00:00').getTime(),
@@ -87,8 +98,8 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
@@ -96,15 +107,15 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',
-  side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
-  timeInForce: <TimeInForce>'GTC',
+  side: <OrderSide_LT>'BUY',
+  orderType: <FuturesOrderType_LT>'LIMIT',
+  timeInForce: <TimeInForce_LT>'GTC',
   quantity: '1.00000000',
   price: '9700.00000000',
-  executionType: <ExecutionType>'TRADE',
+  executionType: <ExecutionType_LT>'TRADE',
   stopPrice: '0.00000000',
   icebergQuantity: '0.00000000',
-  orderStatus: <OrderStatus>'FILLED',
+  orderStatus: <OrderStatus_LT>'FILLED',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602299,
   orderTime: new Date('2020-02-24T15:00:00').getTime(),
@@ -121,8 +132,8 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
@@ -130,15 +141,15 @@ export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): 
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',
-  side: <OrderSide>'SELL',
-  orderType: <OrderType>'LIMIT',
-  timeInForce: <TimeInForce>'GTC',
+  side: <OrderSide_LT>'SELL',
+  orderType: <FuturesOrderType_LT>'LIMIT',
+  timeInForce: <TimeInForce_LT>'GTC',
   quantity: '1.00000000',
   price: '9800.00000000',
-  executionType: <ExecutionType>'NEW',
+  executionType: <ExecutionType_LT>'NEW',
   stopPrice: '0.00000000',
   icebergQuantity: '0.00000000',
-  orderStatus: <OrderStatus>'NEW',
+  orderStatus: <OrderStatus_LT>'NEW',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602300,
   orderTime: new Date('2020-02-24T15:00:00').getTime(),
@@ -155,8 +166,8 @@ export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): 
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
@@ -164,15 +175,15 @@ export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>
   symbol: 'BTCUSDT',
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',
-  side: <OrderSide>'SELL',
-  orderType: <OrderType>'LIMIT',
-  timeInForce: <TimeInForce>'GTC',
+  side: <OrderSide_LT>'SELL',
+  orderType: <FuturesOrderType_LT>'LIMIT',
+  timeInForce: <TimeInForce_LT>'GTC',
   quantity: '1.00000000',
   price: '9800.00000000',
-  executionType: <ExecutionType>'TRADE',
+  executionType: <ExecutionType_LT>'TRADE',
   stopPrice: '0.00000000',
   icebergQuantity: '0.00000000',
-  orderStatus: <OrderStatus>'FILLED',
+  orderStatus: <OrderStatus_LT>'FILLED',
   orderRejectReason: <OrderRejectReason>'NONE',
   orderId: 7510602300,
   orderTime: new Date('2020-02-24T16:00:00').getTime(),
@@ -189,5 +200,5 @@ export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});

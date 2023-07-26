@@ -102,7 +102,7 @@ describe('Combine candles', () => {
 describe('AggregateCandles', () => {
   let scheduler: TestScheduler
 
-  jest.useFakeTimers('modern')
+  jest.useFakeTimers()
   jest.setSystemTime(new Date('2021-12-01T11:40:00'))
 
   beforeEach(() => {

@@ -35,10 +35,8 @@ services:
             PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
             PGADMIN_DEFAULT_PASSWORD: socktrader
             PGADMIN_CONFIG_SERVER_MODE: 'False'
-
         volumes:
             - './docker/pgadmin/servers.json:/pgadmin4/servers.json'
-
         ports:
             - '8000:80'
         networks:
