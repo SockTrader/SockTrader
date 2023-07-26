@@ -5,27 +5,21 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "generatePackageJson": true,
-        "outputPath": "dist/apps/demo",
-        "tsConfig": "apps/demo/tsconfig.app.json",
-        "main": "apps/demo/src/main.ts",
+        "target": "node",
         "compiler": "tsc",
-        "target": "node"
+        "outputPath": "dist/apps/demo",
+        "main": "apps/demo/src/main.ts",
+        "tsConfig": "apps/demo/tsconfig.app.json",
+        "generatePackageJson": true
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/demo/src/environments/environment.ts",
-              "with": "apps/demo/src/environments/environment.prod.ts"
-            }
-          ]
+          "inspect": false
         }
       }
     },
