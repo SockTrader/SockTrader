@@ -36,7 +36,8 @@ jobs:
                 uses: nrwl/nx-set-shas@v3
                 with:
                     main-branch-name: 'master'
-                    last-successful-event: 'pull-request'
+                    last-successful-event: 'workflow_dispatch'
+#                    last-successful-event: 'pull-request'
 
             -   name: Build affected packages
                 run: npx nx affected --target=build
