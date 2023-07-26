@@ -81,7 +81,7 @@
     "commitlint-config-eslint": "github:admwx7/commitlint-config-eslint",
     "conventional-changelog-eslint": "^3.0.9",
     "cross-env": "^7.0.3",
-    "eslint": "8.15.0",
+    "eslint": "8.44.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-rxjs": "^5.0.2",
     "husky": "^7.0.4",
