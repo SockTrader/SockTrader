@@ -1,4 +1,13 @@
-import { ExecutionReport, ExecutionType, OrderRejectReason, OrderSide, OrderStatus, OrderType, TimeInForce } from 'binance-api-node'
+import {
+  FuturesOrderType_LT,
+  ExecutionReport,
+  ExecutionType,
+  OrderRejectReason,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+  TimeInForce,
+} from 'binance-api-node';
 
 // Create limit buy order
 export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -8,7 +17,7 @@ export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
   newClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   originalClientOrderId: '',
   side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
+  orderType: <FuturesOrderType_LT>'LIMIT',
   timeInForce: <TimeInForce>'GTC',
   quantity: '0.00312000',
   price: '32000.00000000',
@@ -32,8 +41,8 @@ export const mockCreateLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 // Create market sell order
 export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -43,7 +52,7 @@ export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): Ex
   newClientOrderId: 'web_6952886da2b94fa98719c51d2d12e6e2',
   originalClientOrderId: '',
   side: <OrderSide>'SELL',
-  orderType: <OrderType>'MARKET',
+  orderType: <FuturesOrderType_LT>'MARKET',
   timeInForce: <TimeInForce>'GTC',
   quantity: '0.00216000',
   price: '0.00000000',
@@ -67,8 +76,8 @@ export const mockCreateMarketSellOrder = (report?: Partial<ExecutionReport>): Ex
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 // Cancel limit buy order
 export const mockCancelLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -78,7 +87,7 @@ export const mockCancelLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
   newClientOrderId: 'web_fdf6e5f898774162b1e7b59b63cde571',
   originalClientOrderId: 'web_4a64263cfd544a6c8ed40856dc9fee04',
   side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
+  orderType: <FuturesOrderType_LT>'LIMIT',
   timeInForce: <TimeInForce>'GTC',
   quantity: '0.00312000',
   price: '32000.00000000',
@@ -102,8 +111,8 @@ export const mockCancelLimitBuyOrder = (report?: Partial<ExecutionReport>): Exec
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '0.00000000',
-  ...report
-})
+  ...report,
+});
 
 // Fill limit order
 export const mockFillLimitBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -113,7 +122,7 @@ export const mockFillLimitBuyOrder = (report?: Partial<ExecutionReport>): Execut
   newClientOrderId: 'web_f0c85187a2aa4e6ea2b9c6ad75f1e121',
   originalClientOrderId: '',
   side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
+  orderType: <FuturesOrderType_LT>'LIMIT',
   timeInForce: <TimeInForce>'GTC',
   quantity: '0.00217000',
   price: '45881.18000000',
@@ -137,8 +146,8 @@ export const mockFillLimitBuyOrder = (report?: Partial<ExecutionReport>): Execut
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '99.56216060',
-  ...report
-})
+  ...report,
+});
 
 // Partially filled limit order part 1
 export const mockPartiallyFilledLimitBuyOrderPart1 = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -148,7 +157,7 @@ export const mockPartiallyFilledLimitBuyOrderPart1 = (report?: Partial<Execution
   newClientOrderId: 'web_e8b94fde828e493aa25b847e75a94d8e',
   originalClientOrderId: '',
   side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
+  orderType: <FuturesOrderType_LT>'LIMIT',
   timeInForce: <TimeInForce>'GTC',
   quantity: '35.37000000',
   price: '56.57000000',
@@ -172,8 +181,8 @@ export const mockPartiallyFilledLimitBuyOrderPart1 = (report?: Partial<Execution
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '1333.92060000',
-  ...report
-})
+  ...report,
+});
 
 // Partially filled limit order part 2
 export const mockPartiallyFilledLimitBuyOrderPart2 = (report?: Partial<ExecutionReport>): ExecutionReport => ({
@@ -183,7 +192,7 @@ export const mockPartiallyFilledLimitBuyOrderPart2 = (report?: Partial<Execution
   newClientOrderId: 'web_e8b94fde828e493aa25b847e75a94d8e',
   originalClientOrderId: '',
   side: <OrderSide>'BUY',
-  orderType: <OrderType>'LIMIT',
+  orderType: <FuturesOrderType_LT>'LIMIT',
   timeInForce: <TimeInForce>'GTC',
   quantity: '35.37000000',
   price: '56.57000000',
@@ -207,8 +216,8 @@ export const mockPartiallyFilledLimitBuyOrderPart2 = (report?: Partial<Execution
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '666.96030000',
-  ...report
-})
+  ...report,
+});
 
 export const mockFillMarketSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
@@ -217,7 +226,7 @@ export const mockFillMarketSellOrder = (report?: Partial<ExecutionReport>): Exec
   newClientOrderId: 'web_6952886da2b94fa98719c51d2d12e6e2',
   originalClientOrderId: '',
   side: <OrderSide>'SELL',
-  orderType: <OrderType>'MARKET',
+  orderType: <FuturesOrderType_LT>'MARKET',
   timeInForce: <TimeInForce>'GTC',
   quantity: '0.00216000',
   price: '0.00000000',
@@ -241,5 +250,5 @@ export const mockFillMarketSellOrder = (report?: Partial<ExecutionReport>): Exec
   orderListId: -1,
   quoteOrderQuantity: '0.00000000',
   lastQuoteTransacted: '99.25532640',
-  ...report
-})
+  ...report,
+});
