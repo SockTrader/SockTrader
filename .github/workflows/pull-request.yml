@@ -28,7 +28,9 @@ jobs:
                     cache: 'npm'
 
             -   name: Install dependencies
-                run: npm ci
+                run: |
+                    env
+                    npm ci
 
             -   name: Set SHAs for base and head for `nx affected` commands
                 uses: nrwl/nx-set-shas@v3
