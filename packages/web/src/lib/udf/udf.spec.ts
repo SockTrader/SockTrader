@@ -1,5 +1,5 @@
-import { UDF } from './udf'
-import { UDFSymbol } from './udf.interfaces'
+import { UDF } from './udf';
+import { UDFSymbol } from './udf.interfaces';
 
 const baseSymbol = {
   exchange: 'BINANCE',
@@ -16,14 +16,14 @@ const baseSymbol = {
   has_intraday: true,
   has_daily: true,
   has_weekly_and_monthly: true,
-  data_status: 'streaming'
-}
+  data_status: 'streaming',
+};
 
 describe('UDF', () => {
-  let service: UDF
+  let service: UDF;
 
   beforeEach(() => {
-    service = new UDF()
+    service = new UDF();
     service.symbols = [
       {
         ...baseSymbol,
@@ -46,8 +46,8 @@ describe('UDF', () => {
         has_intraday: false,
         has_weekly_and_monthly: false,
       } as UDFSymbol,
-    ]
-  })
+    ];
+  });
 
   it('Should return symbolInfo as a table response', () => {
     expect(service.symbolInfo()).toEqual({
@@ -67,11 +67,14 @@ describe('UDF', () => {
       name: ['BTCUSD', 'ETHUSDT'],
       pricescale: [100, 100],
       session: ['24x7', '24x7'],
-      supported_resolutions: [['1h', '4h'], ['1h', '4h']],
+      supported_resolutions: [
+        ['1h', '4h'],
+        ['1h', '4h'],
+      ],
       symbol: ['BTCUSD', 'ETHUSDT'],
       ticker: ['BTCUSD', 'ETHUSDT'],
       timezone: ['UTC', 'UTC'],
-      type: ['crypto', 'crypto']
-    })
-  })
-})
+      type: ['crypto', 'crypto'],
+    });
+  });
+});
