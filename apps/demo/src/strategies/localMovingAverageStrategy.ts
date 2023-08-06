@@ -1,7 +1,15 @@
 import parse from 'date-fns/parse';
 import { CrossDown, CrossUp, SMA } from 'technicalindicators';
 import * as data from '../../../../data/coinbase_btcusd_1h.json';
-import { Candle, LocalExchange, Order, OrderSide, OrderStatus, OrderType, Strategy } from '@socktrader/core';
+import {
+  Candle,
+  LocalExchange,
+  Order,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+  Strategy,
+} from '@socktrader/core';
 
 interface CoinbaseCandle {
   Date: string;
@@ -49,7 +57,9 @@ export class LocalMovingAverageStrategy implements Strategy {
   }
 
   onStart(): void {
-    this._localExchange.candles('BTCUSDT').subscribe((candle) => this.updateCandle(candle));
+    this._localExchange
+      .candles('BTCUSDT')
+      .subscribe((candle) => this.updateCandle(candle));
 
     this._localExchange.orders$.subscribe((order) => this.updateOrder(order));
   }
@@ -65,8 +75,10 @@ export class LocalMovingAverageStrategy implements Strategy {
     const fastSMA = this.fastSMA.nextValue(candle.close);
     const slowSMA = this.slowSMA.nextValue(candle.close);
 
-    const up = fastSMA != null ? this.crossUp.nextValue(fastSMA, slowSMA ?? 0) : false;
-    const down = fastSMA != null ? this.crossDown.nextValue(fastSMA, slowSMA ?? 0) : false;
+    const up =
+      fastSMA != null ? this.crossUp.nextValue(fastSMA, slowSMA ?? 0) : false;
+    const down =
+      fastSMA != null ? this.crossDown.nextValue(fastSMA, slowSMA ?? 0) : false;
 
     if (up && this.canBuy) {
       this.canBuy = false;

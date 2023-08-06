@@ -18,7 +18,10 @@ import { isNumber } from '../utils';
  */
 function arrayFn(x: number, fn: (x: number) => number): number;
 function arrayFn(x: number[], fn: (x: number) => number): number[];
-function arrayFn(x: number | number[], fn: (x: number) => number): number | number[] {
+function arrayFn(
+  x: number | number[],
+  fn: (x: number) => number
+): number | number[] {
   return isNumber(x) ? fn(x) : x.map(fn);
 }
 

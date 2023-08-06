@@ -18,7 +18,9 @@ import { prctile } from './prctile';
  */
 export function quantile(x: number[], p: number): number {
   if (p < 0 || p > 1) {
-    throw new Error('p-th percentile must be a real value between 0 and 1 inclusive');
+    throw new Error(
+      'p-th percentile must be a real value between 0 and 1 inclusive'
+    );
   }
 
   return prctile(x, p * 100);

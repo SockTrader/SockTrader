@@ -19,7 +19,8 @@ import { isNumber } from '../utils';
 function power(x: number[], y: number): number[];
 function power(x: number[], y: number[]): number[];
 function power(x: number[], y: number | number[]): number | number[] {
-  if (Array.isArray(y) && x.length !== y.length) throw new Error('invalid length');
+  if (Array.isArray(y) && x.length !== y.length)
+    throw new Error('invalid length');
 
   const getYVal = isNumber(y) ? () => y : (index: number) => y[index];
 

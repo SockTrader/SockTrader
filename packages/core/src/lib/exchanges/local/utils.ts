@@ -1,5 +1,12 @@
 import config from 'config';
-import { Candle, Pair, Trade, Order, OrderSide, OrderType } from '../../interfaces';
+import {
+  Candle,
+  Pair,
+  Trade,
+  Order,
+  OrderSide,
+  OrderType,
+} from '../../interfaces';
 import { OpenOrder } from './localExchange.interfaces';
 import { mapOpenOrderToOrder, mapOpenOrderToTrade } from './mapper';
 
@@ -10,7 +17,10 @@ import { mapOpenOrderToOrder, mapOpenOrderToTrade } from './mapper';
  * @param {OpenOrder} order
  * @returns {boolean}
  */
-export const calculateOrderPrice = (order: OpenOrder, candle: Candle): number => {
+export const calculateOrderPrice = (
+  order: OpenOrder,
+  candle: Candle
+): number => {
   if (order.type !== OrderType.MARKET) return <number>order.price;
 
   const slippage = parseFloat(config.get('exchanges.local.slippage'));
@@ -29,7 +39,10 @@ export const canBeFilled = (candle: Candle, order: OpenOrder): boolean => {
   if (order.type === OrderType.MARKET) return true; // market order
 
   //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return (order.side === OrderSide.BUY && candle.low <= order.price!) || (order.side === OrderSide.SELL && candle.high >= order.price!);
+  return (
+    (order.side === OrderSide.BUY && candle.low <= order.price!) ||
+    (order.side === OrderSide.SELL && candle.high >= order.price!)
+  );
 };
 
 /**
@@ -40,7 +53,12 @@ export const canBeFilled = (candle: Candle, order: OpenOrder): boolean => {
  * @param orderPrice
  * @returns {Trade | undefined}
  */
-export const createTradeFromOpenOrder = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Trade | void => {
+export const createTradeFromOpenOrder = (
+  order: OpenOrder,
+  candle: Candle,
+  pair: Pair,
+  orderPrice: number
+): Trade | void => {
   if (canBeFilled(candle, order)) {
     return mapOpenOrderToTrade(order, candle, pair, orderPrice);
   }

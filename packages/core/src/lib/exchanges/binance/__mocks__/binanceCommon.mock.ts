@@ -67,7 +67,9 @@ export const mockCommonMarketSellOrderResponse: Order = {
   ],
 };
 
-export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
+export const mockCommonLimitNewBuyOrder = (
+  report?: Partial<ExecutionReport>
+): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582549200000,
   symbol: 'BTCUSDT',
@@ -101,7 +103,9 @@ export const mockCommonLimitNewBuyOrder = (report?: Partial<ExecutionReport>): E
   ...report,
 });
 
-export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
+export const mockCommonLimitFilledBuyOrder = (
+  report?: Partial<ExecutionReport>
+): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582549260000,
   symbol: 'BTCUSDT',
@@ -135,7 +139,9 @@ export const mockCommonLimitFilledBuyOrder = (report?: Partial<ExecutionReport>)
   ...report,
 });
 
-export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
+export const mockCommonLimitNewSellOrder = (
+  report?: Partial<ExecutionReport>
+): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582552800000,
   symbol: 'BTCUSDT',
@@ -169,7 +175,9 @@ export const mockCommonLimitNewSellOrder = (report?: Partial<ExecutionReport>): 
   ...report,
 });
 
-export const mockCommonLimitFilledSellOrder = (report?: Partial<ExecutionReport>): ExecutionReport => ({
+export const mockCommonLimitFilledSellOrder = (
+  report?: Partial<ExecutionReport>
+): ExecutionReport => ({
   eventType: <ExecutionReport['eventType']>'executionReport',
   eventTime: 1582556400000,
   symbol: 'BTCUSDT',

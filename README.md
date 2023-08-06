@@ -30,14 +30,14 @@ Use [SockTrader v1](https://github.com/SockTrader/SockTrader/tree/socktrader-v1)
 
 ## Features
 
--   🚀 Realtime super-fast websocket trading.
--   📈 50+ Technical indicators. ([docs](https://github.com/anandanand84/technicalindicators))
--   🌈 Written in TypeScript!
--   🌿 Unit tested source code.
--   📝 Paper trading a strategy on LIVE exchange data.
--   🏡 Backtesting engine with local data.
--   🚢 Run SockTrader inside a docker container.
--   More features soon..
+- 🚀 Realtime super-fast websocket trading.
+- 📈 50+ Technical indicators. ([docs](https://github.com/anandanand84/technicalindicators))
+- 🌈 Written in TypeScript!
+- 🌿 Unit tested source code.
+- 📝 Paper trading a strategy on LIVE exchange data.
+- 🏡 Backtesting engine with local data.
+- 🚢 Run SockTrader inside a docker container.
+- More features soon..
 
 ## Getting started
 

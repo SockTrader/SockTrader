@@ -27,11 +27,17 @@ describe('WalletService', () => {
 
   it('Should not overwrite previous state', () => {
     service.store.setReservedAsset('ETH', 10);
-    const walletUpdate: WalletUpdate = { asset: 'BTC', available: 10, reserved: 5 };
+    const walletUpdate: WalletUpdate = {
+      asset: 'BTC',
+      available: 10,
+      reserved: 5,
+    };
 
     service.updateSpotByWalletUpdate([walletUpdate]);
 
-    expect(service.store.getAvailableAssets()).toEqual([{ asset: 'BTC', quantity: 10 }]);
+    expect(service.store.getAvailableAssets()).toEqual([
+      { asset: 'BTC', quantity: 10 },
+    ]);
     expect(service.store.getReservedAssets()).toEqual(
       expect.arrayContaining([
         { asset: 'BTC', quantity: 5 },
@@ -51,8 +57,12 @@ describe('WalletService', () => {
 
     service.updateSpotByAssetDeltaUpdate(deltaUpdate);
 
-    expect(service.store.getAvailableAssets()).toEqual([{ asset: 'ETH', quantity: 5 }]);
-    expect(service.store.getReservedAssets()).toEqual([{ asset: 'ETH', quantity: 10 }]);
+    expect(service.store.getAvailableAssets()).toEqual([
+      { asset: 'ETH', quantity: 5 },
+    ]);
+    expect(service.store.getReservedAssets()).toEqual([
+      { asset: 'ETH', quantity: 10 },
+    ]);
   });
 
   it('Should update assets in store on + delta update', () => {
@@ -63,7 +73,11 @@ describe('WalletService', () => {
 
     service.updateSpotByAssetDeltaUpdate(deltaUpdate);
 
-    expect(service.store.getAvailableAssets()).toEqual([{ asset: 'ETH', quantity: 15 }]);
-    expect(service.store.getReservedAssets()).toEqual([{ asset: 'ETH', quantity: 10 }]);
+    expect(service.store.getAvailableAssets()).toEqual([
+      { asset: 'ETH', quantity: 15 },
+    ]);
+    expect(service.store.getReservedAssets()).toEqual([
+      { asset: 'ETH', quantity: 10 },
+    ]);
   });
 });

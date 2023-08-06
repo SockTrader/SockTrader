@@ -33,7 +33,11 @@ function findNeighbour(value: number, arr: number[]) {
  */
 function interp1(x: number[], y: number[], xnew: number): number;
 function interp1(x: number[], y: number[], xnew: number[]): number[];
-function interp1(x: number[], y: number[], xnew: number | number[]): number | number[] {
+function interp1(
+  x: number[],
+  y: number[],
+  xnew: number | number[]
+): number | number[] {
   if (x.length !== y.length) {
     throw new Error('input dimension mismatch');
   }

@@ -22,7 +22,9 @@ export class TestStrategy<T extends Exchange> implements Strategy {
 
   //@ts-ignore
   onStart(candleOptions: unknown): void {
-    this._candleSub = this._exchange.candles(candleOptions).subscribe((candle) => this.updateCandle(candle));
+    this._candleSub = this._exchange
+      .candles(candleOptions)
+      .subscribe((candle) => this.updateCandle(candle));
 
     this._orderSub = this._exchange.orders$.subscribe(this.noop);
     this._tradeSub = this._exchange.trades$.subscribe(this.noop);

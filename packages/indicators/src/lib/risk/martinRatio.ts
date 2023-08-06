@@ -29,7 +29,12 @@ import { ulcerIndex } from './ulcerIndex';
  * martinRatio(cat(0,x,y),0,12);
  * // [ [ 44.425456 ], [ 2.438364 ] ]
  */
-export function martinRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.return) {
+export function martinRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.return
+) {
   const annret = annualReturn(x, t);
   // @TODO bug? const "dd" is not used!
   const dd = sqrt(sum(power(continuousDrawdown(x), 2)));

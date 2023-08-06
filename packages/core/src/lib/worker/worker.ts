@@ -15,7 +15,10 @@ export class Worker {
   }
 
   private _createScript(): string {
-    if (!this.isTsNodeAvailable()) throw new Error('ts-node is not installed. Run "npm install -D ts-node“ and continue.');
+    if (!this.isTsNodeAvailable())
+      throw new Error(
+        'ts-node is not installed. Run "npm install -D ts-node“ and continue.'
+      );
 
     return `
       require("ts-node/register/transpile-only");

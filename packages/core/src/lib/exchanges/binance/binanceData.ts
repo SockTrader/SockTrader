@@ -8,8 +8,22 @@ import {
   UserDataStreamEvent,
 } from 'binance-api-node';
 import { BehaviorSubject, filter, map, merge, Observable, share } from 'rxjs';
-import { AssetDeltaUpdate, Candle, Order, Trade, WalletUpdate } from '../../interfaces';
-import { CandleOptions, isAssetUpdate, isExecutionReport, isMarketOrder, isOrder, isTrade, isWalletUpdate } from './binance.interfaces';
+import {
+  AssetDeltaUpdate,
+  Candle,
+  Order,
+  Trade,
+  WalletUpdate,
+} from '../../interfaces';
+import {
+  CandleOptions,
+  isAssetUpdate,
+  isExecutionReport,
+  isMarketOrder,
+  isOrder,
+  isTrade,
+  isWalletUpdate,
+} from './binance.interfaces';
 import {
   mapAssetUpdate,
   mapCandle,
@@ -28,29 +42,45 @@ export class BinanceData {
     this._binance.ws.user((msg: UserDataStreamEvent) => subscriber.next(msg));
   }).pipe(log('User info'), share());
 
-  readonly assetUpdate$: Observable<AssetDeltaUpdate> = this._userInfo$.pipe(filter(isAssetUpdate), map(mapAssetUpdate));
+  readonly assetUpdate$: Observable<AssetDeltaUpdate> = this._userInfo$.pipe(
+    filter(isAssetUpdate),
+    map(mapAssetUpdate)
+  );
 
-  readonly walletUpdate$: Observable<WalletUpdate[]> = this._userInfo$.pipe(filter(isWalletUpdate), map(mapWalletUpdate));
+  readonly walletUpdate$: Observable<WalletUpdate[]> = this._userInfo$.pipe(
+    filter(isWalletUpdate),
+    map(mapWalletUpdate)
+  );
 
-  private readonly _exchangeInfo$ = new BehaviorSubject<ExchangeInfo | undefined>(undefined);
+  private readonly _exchangeInfo$ = new BehaviorSubject<
+    ExchangeInfo | undefined
+  >(undefined);
 
-  private readonly _marketOrders$ = new BehaviorSubject<Order | undefined>(undefined);
+  private readonly _marketOrders$ = new BehaviorSubject<Order | undefined>(
+    undefined
+  );
 
   readonly orders$: Observable<Order> = merge(
     this._marketOrders$.pipe(filter((v): v is Order => !!v)),
     this._userInfo$.pipe(
-      filter((msg): msg is ExecutionReport => isExecutionReport(msg) && isOrder(msg)),
+      filter(
+        (msg): msg is ExecutionReport => isExecutionReport(msg) && isOrder(msg)
+      ),
       filter((trade) => !isMarketOrder(trade)),
       map(mapExecutionReportToOrder)
     )
   );
 
-  private readonly _marketTrades$ = new BehaviorSubject<Trade | undefined>(undefined);
+  private readonly _marketTrades$ = new BehaviorSubject<Trade | undefined>(
+    undefined
+  );
 
   readonly trades$: Observable<Trade> = merge(
     this._marketTrades$.pipe(filter((v): v is Trade => !!v)),
     this._userInfo$.pipe(
-      filter((msg): msg is ExecutionReport => isExecutionReport(msg) && isTrade(msg)),
+      filter(
+        (msg): msg is ExecutionReport => isExecutionReport(msg) && isTrade(msg)
+      ),
       filter((trade) => !isMarketOrder(trade)),
       map(mapExecutionReportToTrade)
     )
@@ -77,7 +107,10 @@ export class BinanceData {
     return this._exchangeInfo$.pipe(
       map((info) => {
         const sym = info?.symbols.find((info) => info.symbol === symbol);
-        if (!sym) throw new Error(`Could not find Symbol information on Binance for ${symbol}`);
+        if (!sym)
+          throw new Error(
+            `Could not find Symbol information on Binance for ${symbol}`
+          );
         return sym;
       })
     );

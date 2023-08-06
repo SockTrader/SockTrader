@@ -6,8 +6,14 @@ export type BasicOrder = { price: number; quantity: number };
  * @returns {number}
  */
 export const dollarCostAverage = (order: BasicOrder[]): number => {
-  const totalCost = order.reduce((prev, current) => prev + current.price * current.quantity, 0);
-  const totalAmount = order.reduce((prev, current) => prev + current.quantity, 0);
+  const totalCost = order.reduce(
+    (prev, current) => prev + current.price * current.quantity,
+    0
+  );
+  const totalAmount = order.reduce(
+    (prev, current) => prev + current.quantity,
+    0
+  );
 
   return totalCost / totalAmount;
 };

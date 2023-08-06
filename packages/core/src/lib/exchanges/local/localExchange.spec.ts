@@ -34,7 +34,10 @@ describe('LocalExchange', () => {
 
   it('should sort reversed candles', () => {
     scheduler.run(({ expectObservable }) => {
-      localExchange.addCandles(['ETH', 'USDT'], [candleMock[2], candleMock[1], candleMock[0]]);
+      localExchange.addCandles(
+        ['ETH', 'USDT'],
+        [candleMock[2], candleMock[1], candleMock[0]]
+      );
 
       expectObservable(localExchange.candles('ETHUSDT')).toBe('(abc)', {
         a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') }),
@@ -45,18 +48,27 @@ describe('LocalExchange', () => {
   });
 
   it('should throw if candles could not be found', () => {
-    expect(() => localExchange.candles('DOES_NOT_EXIST')).toThrowError('No candles added to local exchange for "DOES_NOT_EXIST"');
+    expect(() => localExchange.candles('DOES_NOT_EXIST')).toThrowError(
+      'No candles added to local exchange for "DOES_NOT_EXIST"'
+    );
   });
 
   it('should throw if candles already have been added', () => {
-    expect(() => localExchange.addCandles(['BTC', 'USDT'], candleMock)).toThrowError('A set of candles has already been added for BTCUSDT');
+    expect(() =>
+      localExchange.addCandles(['BTC', 'USDT'], candleMock)
+    ).toThrowError('A set of candles has already been added for BTCUSDT');
   });
 
   it('should be able to set assets', () => {
-    const setInitialWalletSpy = jest.spyOn(localExchange.wallet, 'setInitialWallet');
+    const setInitialWalletSpy = jest.spyOn(
+      localExchange.wallet,
+      'setInitialWallet'
+    );
 
     localExchange.setAssets([{ asset: 'BTC', quantity: 1 }]);
-    expect(setInitialWalletSpy).toHaveBeenCalledWith([{ asset: 'BTC', quantity: 1 }]);
+    expect(setInitialWalletSpy).toHaveBeenCalledWith([
+      { asset: 'BTC', quantity: 1 },
+    ]);
   });
 
   it('should throw if LIMIT buy is performed without price', async () => {
@@ -86,7 +98,9 @@ describe('LocalExchange', () => {
   });
 
   it('should throw when trying to add an empty list of candles', async () => {
-    expect(() => localExchange.addCandles(['BTC', 'USDT'], [])).toThrowError('Candle array should contain at least 1 candle');
+    expect(() => localExchange.addCandles(['BTC', 'USDT'], [])).toThrowError(
+      'Candle array should contain at least 1 candle'
+    );
   });
 
   // @TODO test it should not be possible to fill an open order with a candle from a different pair

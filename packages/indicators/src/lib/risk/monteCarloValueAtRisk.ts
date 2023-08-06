@@ -26,11 +26,20 @@ import { prctile } from '../statistics/prctile';
  * monteCarloValueAtRisk(std(x),0.99,10,0,100000);
  * // 25254.640005
  */
-export function monteCarloValueAtRisk(x: number[], p = 0.95, t = 1, fr = 0, v = 1, iter = 10000): number {
+export function monteCarloValueAtRisk(
+  x: number[],
+  p = 0.95,
+  t = 1,
+  fr = 0,
+  v = 1,
+  iter = 10000
+): number {
   const s = std(x);
   const mcvar = [];
   for (let i = 0; i < iter; i++) {
-    mcvar[i] = Math.exp(fr - 0.5 * Math.pow(s, 2) + s * norminv(Math.random(), 0, 1)) - 1;
+    mcvar[i] =
+      Math.exp(fr - 0.5 * Math.pow(s, 2) + s * norminv(Math.random(), 0, 1)) -
+      1;
   }
   return -Math.pow(t, 0.5) * prctile(mcvar, 1 - p) * v;
 }
