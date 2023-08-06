@@ -27,7 +27,7 @@ services:
             POSTGRES_PASSWORD: socktrader
         networks:
             - postgres
-        command: [ "postgres", "-c", "log_statement=all" ]
+        command: ['postgres', '-c', 'log_statement=all']
 
     pgadmin:
         image: dpage/pgadmin4

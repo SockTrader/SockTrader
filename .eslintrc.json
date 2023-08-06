@@ -28,24 +28,14 @@
     },
     {
       "files": ["*.ts"],
-      "extends": ["plugin:@nx/typescript"],
+      "extends": ["plugin:@nx/typescript", "prettier"],
       "rules": {
-        "@typescript-eslint/member-delimiter-style": ["error"],
         "rxjs/no-async-subscribe": "error",
         "rxjs/no-nested-subscribe": "error",
         "rxjs/throw-error": "error",
         "rxjs/no-unsafe-takeuntil": "error",
         "@typescript-eslint/ban-ts-comment": "off",
-        "quotes": ["error", "single"],
-        "lines-between-class-members": ["error", "always"],
-        "padded-blocks": [
-          "error",
-          {
-            "blocks": "never",
-            "classes": "always",
-            "switches": "never"
-          }
-        ]
+        "lines-between-class-members": ["error", "always"]
       }
     },
     {
