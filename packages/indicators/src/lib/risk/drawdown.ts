@@ -1,10 +1,10 @@
-import { plus } from '../math'
-import { cumprod } from '../math/cumprod'
-import { log } from '../math/log'
+import { plus } from '../math';
+import { cumprod } from '../math/cumprod';
+import { log } from '../math/log';
 
 export enum Mode {
   return,
-  geometric
+  geometric,
 }
 
 /**
@@ -32,48 +32,48 @@ export enum Mode {
  * //   maxdd: 0.014, maxddrecov: [ 8, 9 ] }
  */
 export function drawdown(x: number[], mode = Mode.return) {
-  let _a
+  let _a;
   if (mode === Mode.return) {
-    _a = cumprod(plus(x, 1))
+    _a = cumprod(plus(x, 1));
   } else if (mode === Mode.geometric) {
-    _a = log(cumprod(plus(x, 1)))
+    _a = log(cumprod(plus(x, 1)));
   } else {
-    throw new Error('unknown drawdown mode')
+    throw new Error('unknown drawdown mode');
   }
 
-  const _dd = new Array(_a.length).fill(0)
-  const _recov = new Array(_a.length).fill(0)
-  const _maxddidx = [1, _a.length]
-  const _cdd = []
-  const t = 0
-  _cdd[t] = 0
+  const _dd = new Array(_a.length).fill(0);
+  const _recov = new Array(_a.length).fill(0);
+  const _maxddidx = [1, _a.length];
+  const _cdd = [];
+  const t = 0;
+  _cdd[t] = 0;
 
-  let highest = _a[0]
-  let highestidx = 1
-  let _maxdd = 0
+  let highest = _a[0];
+  let highestidx = 1;
+  let _maxdd = 0;
 
   for (let i = 0; i < _a.length; i++) {
     if (highest <= _a[i]) {
-      highest = _a[i]
-      highestidx = i + 1
+      highest = _a[i];
+      highestidx = i + 1;
     }
 
     if (mode === Mode.return) {
-      _dd[i] = (highest - _a[i]) / highest
+      _dd[i] = (highest - _a[i]) / highest;
     } else if (mode === Mode.geometric) {
-      _dd[i] = (highest - _a[i])
+      _dd[i] = highest - _a[i];
     }
 
     if (_dd[i] !== 0) {
-      _recov[i] = i + 1
+      _recov[i] = i + 1;
     }
 
     if (_dd[i] > _maxdd) {
-      _maxdd = _dd[i]
-      _maxddidx[0] = highestidx
-      _maxddidx[1] = i + 1
+      _maxdd = _dd[i];
+      _maxddidx[0] = highestidx;
+      _maxddidx[1] = i + 1;
     }
   }
 
-  return { dd: _dd, ddrecov: _recov, maxdd: _maxdd, maxddrecov: _maxddidx }
+  return { dd: _dd, ddrecov: _recov, maxdd: _maxdd, maxddrecov: _maxddidx };
 }

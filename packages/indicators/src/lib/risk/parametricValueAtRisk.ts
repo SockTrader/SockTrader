@@ -1,6 +1,6 @@
-import { norminv } from '../statistics/norminv'
-import { isNumber } from '../utils'
-import { isArray } from '../utils/isArray'
+import { norminv } from '../statistics/norminv';
+import { isNumber } from '../utils';
+import { isArray } from '../utils/isArray';
 
 /**
  * @method parametricValueAtRisk
@@ -38,22 +38,21 @@ import { isArray } from '../utils/isArray'
  * parametricValueAtRisk(mean(cat(0,x,y)),std(cat(0,x,y)),0.99,100000,10);
  * // [ [ 11429.165523 ], [ 34867.319072 ] ]
  */
-function parametricValueAtRisk(mu: number, sigma: number, p?: number, amount?: number, period?: number): number
-function parametricValueAtRisk(mu: number[], sigma: number[], p?: number, amount?: number, period?: number): number[]
+function parametricValueAtRisk(mu: number, sigma: number, p?: number, amount?: number, period?: number): number;
+function parametricValueAtRisk(mu: number[], sigma: number[], p?: number, amount?: number, period?: number): number[];
 function parametricValueAtRisk(mu: number | number[], sigma: number | number[], p = 0.95, amount = 1, period = 1): number | number[] {
-  const _pvar = (_mu: number, _sigma: number, p: number, amount: number, period: number) => (-norminv(1 - p) * _sigma - _mu) * Math.sqrt(period) * amount
+  const _pvar = (_mu: number, _sigma: number, p: number, amount: number, period: number) =>
+    (-norminv(1 - p) * _sigma - _mu) * Math.sqrt(period) * amount;
 
   if (isNumber(mu) && isNumber(sigma)) {
-    return _pvar(mu, sigma, p, amount, period)
+    return _pvar(mu, sigma, p, amount, period);
   }
 
   if (isArray(mu) && isArray(sigma)) {
-    return mu.map((el, idx) => _pvar(mu[idx], sigma[idx], p, amount, period))
+    return mu.map((el, idx) => _pvar(mu[idx], sigma[idx], p, amount, period));
   }
 
-  throw new Error('Invalid arguments')
+  throw new Error('Invalid arguments');
 }
 
-export {
-  parametricValueAtRisk
-}
+export { parametricValueAtRisk };

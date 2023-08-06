@@ -1,4 +1,4 @@
-import { arrayFn } from './arrayFn'
+import { arrayFn } from './arrayFn';
 
 /**
  * @method  substelin
@@ -27,5 +27,5 @@ import { arrayFn } from './arrayFn'
  * // [ [ 5, 6 ], [ 6, 3 ] ]
  */
 export function subsetlin(m: number[], idx: number[]): number[] {
-  return arrayFn(idx, val => m[val])
+  return arrayFn(idx, (val) => m[val]);
 }

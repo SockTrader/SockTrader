@@ -1,9 +1,9 @@
-import { plus } from '../math'
-import { cumprod } from '../math/cumprod'
+import { plus } from '../math';
+import { cumprod } from '../math/cumprod';
 
 export enum Mode {
   returns,
-  cumulative
+  cumulative,
 }
 
 /**
@@ -26,15 +26,15 @@ export enum Mode {
  * // 0.04
  */
 export function rateOfReturn(x: number[], mode: Mode = Mode.returns): number {
-  let eq
+  let eq;
 
   if (mode === Mode.returns) {
-    eq = cumprod(plus(x, 1))
+    eq = cumprod(plus(x, 1));
   } else if (mode === Mode.cumulative) {
-    eq = [...x]
+    eq = [...x];
   } else {
-    throw new Error('unknown value')
+    throw new Error('unknown value');
   }
 
-  return eq[eq.length - 1] / eq[0] - 1
+  return eq[eq.length - 1] / eq[0] - 1;
 }

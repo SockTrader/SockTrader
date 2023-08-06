@@ -1,4 +1,4 @@
-import { arrayFn } from '../utils/arrayFn'
+import { arrayFn } from '../utils/arrayFn';
 
 /**
  * @method fix
@@ -18,13 +18,11 @@ import { arrayFn } from '../utils/arrayFn'
  * fix([[4.51,-1.4],[3.78,0.01]]);
  * // [ [ 4, -1 ], [ 3, 0 ] ]
  */
-function fix(x: number): number
-function fix(x: number[]): number[]
+function fix(x: number): number;
+function fix(x: number[]): number[];
 function fix(x: number | number[]): number | number[] {
-  const _fix = (y: number) => y < 0 ? Math.ceil(y) : Math.floor(y)
-  return arrayFn(x as never, _fix)
+  const _fix = (y: number) => (y < 0 ? Math.ceil(y) : Math.floor(y));
+  return arrayFn(x as never, _fix);
 }
 
-export {
-  fix
-}
+export { fix };

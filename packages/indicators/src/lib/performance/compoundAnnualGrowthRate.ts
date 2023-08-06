@@ -1,4 +1,4 @@
-import { Mode, rateOfReturn } from './rateOfReturn'
+import { Mode, rateOfReturn } from './rateOfReturn';
 
 /**
  * @method compoundAnnualGrowthRate
@@ -19,5 +19,5 @@ import { Mode, rateOfReturn } from './rateOfReturn'
  * // 0.229388
  */
 export function compoundAnnualGrowthRate(x: number[], p = 1): number {
-  return Math.pow(1 + rateOfReturn(x, Mode.returns), (1 / p)) - 1
+  return Math.pow(1 + rateOfReturn(x, Mode.returns), 1 / p) - 1;
 }

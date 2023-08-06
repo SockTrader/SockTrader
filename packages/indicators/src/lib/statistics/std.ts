@@ -1,5 +1,5 @@
-import { sqrt } from '../math'
-import { Variance, variance } from './variance'
+import { sqrt } from '../math';
+import { Variance, variance } from './variance';
 
 /**
  * @method std
@@ -20,5 +20,5 @@ import { Variance, variance } from './variance'
  * // 1.24722
  */
 export const std = (x: number[], flag: Variance = Variance.sample): number => {
-  return sqrt(variance(x, flag))
-}
+  return sqrt(variance(x, flag));
+};

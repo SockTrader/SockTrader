@@ -14,9 +14,9 @@
  * // 0.0025
  */
 export const downsidePotential = function (x: number[], mar = 0): number {
-  let z = 0
+  let z = 0;
   for (let i = 0; i < x.length; i++) {
-    z += Math.max(mar - x[i], 0) / x.length
+    z += Math.max(mar - x[i], 0) / x.length;
   }
-  return z
-}
+  return z;
+};

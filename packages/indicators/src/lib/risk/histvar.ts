@@ -1,4 +1,4 @@
-import { quantile } from '../statistics/quantile'
+import { quantile } from '../statistics/quantile';
 
 /**
  * @method histvar
@@ -24,5 +24,5 @@ import { quantile } from '../statistics/quantile'
  * // [ [ 4427.188724 ], [ 19289.893727 ] ]
  */
 export function histvar(x: number[], p = 0.95, amount = 1, period = 1): number {
-  return -quantile(x, 1 - p) * Math.sqrt(period) * amount
+  return -quantile(x, 1 - p) * Math.sqrt(period) * amount;
 }

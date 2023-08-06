@@ -1,5 +1,5 @@
-import { isNumber } from '../utils'
-import { isArray } from '../utils/isArray'
+import { isNumber } from '../utils';
+import { isArray } from '../utils/isArray';
 
 /**
  * @method mdietz
@@ -22,42 +22,40 @@ import { isArray } from '../utils/isArray'
  * mdietz(ev,bv,cf,cfd,cd);
  * // 0.0804
  */
-function mdietz(ev: number, bv: number, cf: number, cfd: number, cd: number): number
-function mdietz(ev: number, bv: number, cf: number[], cfd: number[], cd: number): number
+function mdietz(ev: number, bv: number, cf: number, cfd: number, cd: number): number;
+function mdietz(ev: number, bv: number, cf: number[], cfd: number[], cd: number): number;
 function mdietz(ev: number, bv: number, cf: number | number[], cfd: number | number[], cd: number): number {
-  let md = -99999
-  const w = []
+  let md = -99999;
+  const w = [];
   if (isNumber(cf) && isNumber(cfd)) {
-    md = (ev - bv - cf) / (bv + (cf * (1 - cfd / cd)))
+    md = (ev - bv - cf) / (bv + cf * (1 - cfd / cd));
   } else if (isArray(cf) && isArray(cfd)) {
     if (cd <= 0) {
-      throw new Error('actual number of days in the period negative or zero')
+      throw new Error('actual number of days in the period negative or zero');
     }
 
     for (let i = 0; i < cf.length; i++) {
       if (cfd[i] < 0) {
-        throw new Error('number of days negative or zero')
+        throw new Error('number of days negative or zero');
       }
 
-      w[i] = (1 - cfd[i] / cd)
+      w[i] = 1 - cfd[i] / cd;
     }
 
-    let totalWeightedCashFlow = 0 //total weighted cash flows
+    let totalWeightedCashFlow = 0; //total weighted cash flows
     for (let i = 0; i < cf.length; i++) {
-      totalWeightedCashFlow += w[i] * cf[i]
+      totalWeightedCashFlow += w[i] * cf[i];
     }
 
-    let totalNetCashFlow = 0 //total net cash flows
+    let totalNetCashFlow = 0; //total net cash flows
     for (let i = 0; i < cf.length; i++) {
-      totalNetCashFlow += cf[i]
+      totalNetCashFlow += cf[i];
     }
 
-    md = (ev - bv - totalNetCashFlow) / (bv + totalWeightedCashFlow)
+    md = (ev - bv - totalNetCashFlow) / (bv + totalWeightedCashFlow);
   }
 
-  return md
+  return md;
 }
 
-export {
-  mdietz
-}
+export { mdietz };

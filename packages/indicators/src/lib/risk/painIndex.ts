@@ -1,5 +1,5 @@
-import { sum } from '../math'
-import { Mode, drawdown } from './drawdown'
+import { sum } from '../math';
+import { Mode, drawdown } from './drawdown';
 
 /**
  * @method painIndex
@@ -17,7 +17,7 @@ import { Mode, drawdown } from './drawdown'
  * // 0.0023
  */
 export function painIndex(x: number[], mode: Mode = Mode.return) {
-  const dd = drawdown(x, mode).dd
-  const n = x.length
-  return sum(dd) / n
+  const dd = drawdown(x, mode).dd;
+  const n = x.length;
+  return sum(dd) / n;
 }

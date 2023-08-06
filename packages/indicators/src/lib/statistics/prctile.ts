@@ -1,8 +1,8 @@
-import { interp1 } from '../math/interp1'
-import { rdivide } from '../math/rdivide'
-import { times } from '../math/times'
-import { colon } from '../utils/colon'
-import { sort } from '../utils/sort'
+import { interp1 } from '../math/interp1';
+import { rdivide } from '../math/rdivide';
+import { times } from '../math/times';
+import { colon } from '../utils/colon';
+import { sort } from '../utils/sort';
 
 /**
  * @method prctile
@@ -25,15 +25,15 @@ import { sort } from '../utils/sort'
  */
 export function prctile(x: number[], p: number): number {
   if (p < 0 || p > 100) {
-    throw new Error('p-th percentile must be a real value between 0 and 100 inclusive')
+    throw new Error('p-th percentile must be a real value between 0 and 100 inclusive');
   }
 
-  const arrnum = colon(0.5, x.length - 0.5)
-  let _a = sort(x)
-  let pq = rdivide(times(arrnum, 100), x.length)
+  const arrnum = colon(0.5, x.length - 0.5);
+  let _a = sort(x);
+  let pq = rdivide(times(arrnum, 100), x.length);
 
-  pq = pq.concat(0, pq, 100)
-  _a = _a.concat(_a[0], _a, _a[_a.length - 1])
+  pq = pq.concat(0, pq, 100);
+  _a = _a.concat(_a[0], _a, _a[_a.length - 1]);
 
-  return interp1(pq, _a, p)
+  return interp1(pq, _a, p);
 }

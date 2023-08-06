@@ -13,7 +13,9 @@
  * // 0.8
  */
 export function percpos(x: number[]): number {
-  return x.reduce((prev, current) => {
-    return (current >= 0) ? prev + 1 : prev
-  }, 0) / x.length
+  return (
+    x.reduce((prev, current) => {
+      return current >= 0 ? prev + 1 : prev;
+    }, 0) / x.length
+  );
 }

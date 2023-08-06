@@ -18,11 +18,11 @@
  * // [ [ 0.0202 ], [ 0.0299 ] ]
  */
 export function upsidePotential(x: number[], mar = 0): number {
-  let z = 0
+  let z = 0;
 
   for (let i = 0; i < x.length; i++) {
-    z += Math.max(x[i] - mar, 0) / x.length
+    z += Math.max(x[i] - mar, 0) / x.length;
   }
 
-  return z
+  return z;
 }

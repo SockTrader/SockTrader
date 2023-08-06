@@ -1,11 +1,11 @@
-import { power, sqrt, sum } from '../math'
-import { annualReturn } from '../performance'
-import { Frequency } from '../type/frequency'
-import { continuousDrawdown } from './continuousDrawdown'
+import { power, sqrt, sum } from '../math';
+import { annualReturn } from '../performance';
+import { Frequency } from '../type/frequency';
+import { continuousDrawdown } from './continuousDrawdown';
 
 export enum Mode {
   simple,
-  modified
+  modified,
 }
 
 /**
@@ -34,14 +34,14 @@ export enum Mode {
  * // 44.425456
  */
 export function burkeRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.simple): number {
-  const annret = annualReturn(x, t)
-  const dd = sqrt(sum(power(continuousDrawdown(x), 2)))
+  const annret = annualReturn(x, t);
+  const dd = sqrt(sum(power(continuousDrawdown(x), 2)));
 
   if (mode === Mode.simple) {
-    return (annret - frisk) / dd
+    return (annret - frisk) / dd;
   } else if (mode === Mode.modified) {
-    return (annret - frisk) / dd * sqrt(x.length)
+    return ((annret - frisk) / dd) * sqrt(x.length);
   } else {
-    throw new Error('unknown mode')
+    throw new Error('unknown mode');
   }
 }

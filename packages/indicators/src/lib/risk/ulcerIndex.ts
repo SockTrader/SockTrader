@@ -1,5 +1,5 @@
-import { power, sqrt, sum } from '../math'
-import { Mode, drawdown } from './drawdown'
+import { power, sqrt, sum } from '../math';
+import { Mode, drawdown } from './drawdown';
 
 /**
  * @method ulcerIndex
@@ -21,7 +21,7 @@ import { Mode, drawdown } from './drawdown'
  * // [ [ 0.006261, 0.004025 ] ]
  */
 export function ulcerIndex(x: number[], mode: Mode = Mode.return) {
-  const dd = drawdown(x, mode).dd
-  const n = x.length
-  return sqrt(sum(power(dd, 2)) / n)
+  const dd = drawdown(x, mode).dd;
+  const n = x.length;
+  return sqrt(sum(power(dd, 2)) / n);
 }

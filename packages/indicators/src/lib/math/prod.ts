@@ -11,5 +11,5 @@
  * // 90
  */
 export function prod(x: number[]): number {
-  return x.reduce((prev, current) => prev * current, 1)
+  return x.reduce((prev, current) => prev * current, 1);
 }

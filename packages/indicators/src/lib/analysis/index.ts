@@ -1,1 +1,1 @@
-export * from './hurst'
+export * from './hurst';

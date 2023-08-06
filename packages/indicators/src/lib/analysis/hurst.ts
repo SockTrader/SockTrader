@@ -1,5 +1,5 @@
-import { cumdev } from '../math/cumdev'
-import { std, Variance } from '../statistics'
+import { cumdev } from '../math/cumdev';
+import { std, Variance } from '../statistics';
 
 /**
  * @method hurst
@@ -24,7 +24,7 @@ import { std, Variance } from '../statistics'
  * // 0.3669383
  */
 export function hurst(x: number[], flag: Variance = Variance.sample): number {
-  const cdev = cumdev(x)
-  const rs = (Math.max(...cdev) - Math.min(...cdev)) / std(x, flag)
-  return Math.log(rs) / Math.log(x.length)
+  const cdev = cumdev(x);
+  const rs = (Math.max(...cdev) - Math.min(...cdev)) / std(x, flag);
+  return Math.log(rs) / Math.log(x.length);
 }

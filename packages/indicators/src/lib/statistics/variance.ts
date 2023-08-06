@@ -1,9 +1,9 @@
-import { abs, minus, power, sum } from '../math'
-import { mean } from './mean'
+import { abs, minus, power, sum } from '../math';
+import { mean } from './mean';
 
 export enum Variance {
   population = 0,
-  sample = 1
+  sample = 1,
 }
 
 /**
@@ -32,5 +32,5 @@ export enum Variance {
  * // [ [ 1, 1, 9 ] ]
  */
 export const variance = (x: number[], flag: Variance = Variance.sample): number => {
-  return (sum(power(abs(minus(x, mean(x))), 2))) / (x.length - flag)
-}
+  return sum(power(abs(minus(x, mean(x))), 2)) / (x.length - flag);
+};

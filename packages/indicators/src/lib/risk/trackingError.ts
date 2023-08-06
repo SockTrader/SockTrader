@@ -1,5 +1,5 @@
-import { minus } from '../math'
-import { std } from '../statistics'
+import { minus } from '../math';
+import { std } from '../statistics';
 
 /**
  * @method trackingError
@@ -23,5 +23,5 @@ import { std } from '../statistics'
  * // [ [ 0.068436 ], [ 0.058622 ] ]
  */
 export const trackingError = function (x: number[], y: number[]): number {
-  return std(minus(x, y))
-}
+  return std(minus(x, y));
+};

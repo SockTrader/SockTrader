@@ -17,35 +17,35 @@
  * // [ [ 0.009, 0.014 ], [ 0.005, 0.095743, 0.068971 ] ]
  */
 export function continuousDrawdown(x: number[]): number[] {
-  const cdd = []
-  let tmp = 0
-  let t = 0
+  const cdd = [];
+  let tmp = 0;
+  let t = 0;
 
   for (let i = 0; i < x.length; i++) {
     if (i === 0 && x[i] < 0) {
-      tmp = 1 + x[i]
+      tmp = 1 + x[i];
     }
     if (i > 0) {
       if (x[i] < 0) {
         if (tmp === 0) {
-          tmp = 1 + x[i]
+          tmp = 1 + x[i];
         } else {
-          tmp = tmp * (1 + x[i])
+          tmp = tmp * (1 + x[i]);
         }
       }
       if (x[i] >= 0) {
         if (tmp !== 0) {
-          cdd[t] = 1 - tmp
-          t++
-          tmp = 0
+          cdd[t] = 1 - tmp;
+          t++;
+          tmp = 0;
         }
       }
     }
   }
 
   if (tmp !== 0) {
-    cdd.push(1 - tmp)
+    cdd.push(1 - tmp);
   }
 
-  return cdd
+  return cdd;
 }

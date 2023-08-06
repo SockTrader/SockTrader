@@ -1,9 +1,9 @@
-import { power, sqrt, sum } from '../math'
-import { annualReturn } from '../performance'
-import { Frequency } from '../type/frequency'
-import { continuousDrawdown } from './continuousDrawdown'
-import { Mode } from './drawdown'
-import { ulcerIndex } from './ulcerIndex'
+import { power, sqrt, sum } from '../math';
+import { annualReturn } from '../performance';
+import { Frequency } from '../type/frequency';
+import { continuousDrawdown } from './continuousDrawdown';
+import { Mode } from './drawdown';
+import { ulcerIndex } from './ulcerIndex';
 
 /**
  * @method martinRatio
@@ -30,8 +30,8 @@ import { ulcerIndex } from './ulcerIndex'
  * // [ [ 44.425456 ], [ 2.438364 ] ]
  */
 export function martinRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.return) {
-  const annret = annualReturn(x, t)
+  const annret = annualReturn(x, t);
   // @TODO bug? const "dd" is not used!
-  const dd = sqrt(sum(power(continuousDrawdown(x), 2)))
-  return (annret - frisk) / ulcerIndex(x, mode)
+  const dd = sqrt(sum(power(continuousDrawdown(x), 2)));
+  return (annret - frisk) / ulcerIndex(x, mode);
 }

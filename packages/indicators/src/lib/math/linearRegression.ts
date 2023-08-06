@@ -1,5 +1,5 @@
-import { sum } from './sum'
-import { times } from './times'
+import { sum } from './sum';
+import { times } from './times';
 
 /**
  * @method  linearRegression
@@ -25,17 +25,20 @@ import { times } from './times'
  *
  */
 export function linearRegression(y: number[], x: number[]) {
-  const n = y.length
-  const sx = sum(x)
-  const sy = sum(y)
-  const sxy = sum(times(x, y))
-  const sxx = sum(times(x, x))
-  const syy = sum(times(y, y))
-  const beta = (n * sxy - sx * sy) / (n * sxx - sx * sx)
-  const alpha = (sy - beta * sx) / n
-  const rsq = Math.pow((n * sxy - sx * sy) / Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy)), 2)
+  const n = y.length;
+  const sx = sum(x);
+  const sy = sum(y);
+  const sxy = sum(times(x, y));
+  const sxx = sum(times(x, x));
+  const syy = sum(times(y, y));
+  const beta = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+  const alpha = (sy - beta * sx) / n;
+  const rsq = Math.pow((n * sxy - sx * sy) / Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy)), 2);
 
   return {
-    beta: beta, alpha: alpha, rsq: rsq, fun: (x: number) => beta * x + alpha
-  }
+    beta: beta,
+    alpha: alpha,
+    rsq: rsq,
+    fun: (x: number) => beta * x + alpha,
+  };
 }

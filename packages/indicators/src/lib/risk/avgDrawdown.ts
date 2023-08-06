@@ -1,8 +1,8 @@
-import { mean } from '../statistics'
-import { colon } from '../utils/colon'
-import { Sort, sort } from '../utils/sort'
-import { subsetlin } from '../utils/subsetlin'
-import { continuousDrawdown } from './continuousDrawdown'
+import { mean } from '../statistics';
+import { colon } from '../utils/colon';
+import { Sort, sort } from '../utils/sort';
+import { subsetlin } from '../utils/subsetlin';
+import { continuousDrawdown } from './continuousDrawdown';
 
 /**
  * @method avgDrawdown
@@ -27,14 +27,14 @@ import { continuousDrawdown } from './continuousDrawdown'
  * // 0.014
  */
 export function avgDrawdown(x: number[], k = 0): number {
-  const cdd = continuousDrawdown(x)
+  const cdd = continuousDrawdown(x);
 
   if (k === 0) {
-    return mean(cdd)
+    return mean(cdd);
   } else if (k > 0 && k <= cdd.length) {
-    const cdds = sort(cdd, Sort.descending)
-    return mean(subsetlin(cdds, colon(0, k - 1)))
+    const cdds = sort(cdd, Sort.descending);
+    return mean(subsetlin(cdds, colon(0, k - 1)));
   } else {
-    return NaN
+    return NaN;
   }
 }

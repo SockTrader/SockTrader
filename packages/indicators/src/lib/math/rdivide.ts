@@ -1,5 +1,5 @@
-import { isNumber } from '../utils'
-import { arrayFn } from '../utils/arrayFn'
+import { isNumber } from '../utils';
+import { arrayFn } from '../utils/arrayFn';
 
 /**
  * @method rdivide
@@ -28,8 +28,8 @@ import { arrayFn } from '../utils/arrayFn'
  */
 export function rdivide(x: number[], y: number | number[]): number[] {
   if (isNumber(y)) {
-    return arrayFn(x, val => val / y)
+    return arrayFn(x, (val) => val / y);
   }
 
-  return x.map((x, idx) => x / y[idx])
+  return x.map((x, idx) => x / y[idx]);
 }

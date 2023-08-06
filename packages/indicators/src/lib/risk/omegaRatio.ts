@@ -1,5 +1,5 @@
-import { downsidePotential } from './downsidePotential'
-import { upsidePotential } from './upsidePotential'
+import { downsidePotential } from './downsidePotential';
+import { upsidePotential } from './upsidePotential';
 
 /**
  * @method omegaRatio
@@ -17,5 +17,5 @@ import { upsidePotential } from './upsidePotential'
  * // 8.782609
  */
 export function omegaRatio(x: number[], mar = 0) {
-  return upsidePotential(x, mar) / downsidePotential(x, mar)
+  return upsidePotential(x, mar) / downsidePotential(x, mar);
 }

@@ -1,16 +1,16 @@
-import { isNumber } from '../utils'
+import { isNumber } from '../utils';
 
 function findNeighbour(value: number, arr: number[]) {
   let dist = Number.MAX_VALUE,
-    idx = -1
+    idx = -1;
   for (let i = 0; i < arr.length; i++) {
-    const newdist = value - arr[i]
+    const newdist = value - arr[i];
     if (newdist > 0 && newdist < dist) {
-      dist = newdist
-      idx = i
+      dist = newdist;
+      idx = i;
     }
   }
-  return idx
+  return idx;
 }
 
 /**
@@ -31,15 +31,15 @@ function findNeighbour(value: number, arr: number[]) {
  * interp1(x,y,xnew);
  * // [ 4, 8, 12 ]
  */
-function interp1(x: number[], y: number[], xnew: number): number
-function interp1(x: number[], y: number[], xnew: number[]): number[]
+function interp1(x: number[], y: number[], xnew: number): number;
+function interp1(x: number[], y: number[], xnew: number[]): number[];
 function interp1(x: number[], y: number[], xnew: number | number[]): number | number[] {
   if (x.length !== y.length) {
-    throw new Error('input dimension mismatch')
+    throw new Error('input dimension mismatch');
   }
 
   if (isNumber(xnew)) {
-    xnew = [xnew]
+    xnew = [xnew];
   }
 
   const ynew = new Array(xnew.length),
@@ -47,38 +47,36 @@ function interp1(x: number[], y: number[], xnew: number | number[]): number | nu
     dx = new Array(n),
     dy = new Array(n),
     slope = new Array(n),
-    intercept = new Array(n)
+    intercept = new Array(n);
 
   for (let i = 0; i < n; i++) {
     if (i < n - 1) {
-      dx[i] = x[i + 1] - x[i]
-      dy[i] = y[i + 1] - y[i]
-      slope[i] = dy[i] / dx[i]
-      intercept[i] = y[i] - x[i] * slope[i]
+      dx[i] = x[i + 1] - x[i];
+      dy[i] = y[i + 1] - y[i];
+      slope[i] = dy[i] / dx[i];
+      intercept[i] = y[i] - x[i] * slope[i];
     } else {
-      dx[i] = dx[i - 1]
-      dy[i] = dy[i - 1]
-      slope[i] = slope[i - 1]
-      intercept[i] = intercept[i - 1]
+      dx[i] = dx[i - 1];
+      dy[i] = dy[i - 1];
+      slope[i] = slope[i - 1];
+      intercept[i] = intercept[i - 1];
     }
   }
 
   for (let j = 0; j < xnew.length; j++) {
     if (xnew[j] < Math.min(...x) || xnew[j] > Math.max(...x)) {
-      ynew[j] = NaN
+      ynew[j] = NaN;
     } else {
-      const idx = findNeighbour(xnew[j], x)
-      ynew[j] = slope[idx] * xnew[j] + intercept[idx]
+      const idx = findNeighbour(xnew[j], x);
+      ynew[j] = slope[idx] * xnew[j] + intercept[idx];
     }
   }
 
   if (ynew.length === 1) {
-    return ynew[0]
+    return ynew[0];
   } else {
-    return ynew
+    return ynew;
   }
 }
 
-export {
-  interp1
-}
+export { interp1 };

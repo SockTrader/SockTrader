@@ -1,4 +1,4 @@
-import { mean } from './mean'
+import { mean } from './mean';
 
 /**
  * @method moment
@@ -20,6 +20,6 @@ import { mean } from './mean'
  * // 0
  */
 export function moment(x: number[], k: number) {
-  const mu = mean(x)
-  return mean(x.map(b => Math.pow(b - mu, k)))
+  const mu = mean(x);
+  return mean(x.map((b) => Math.pow(b - mu, k)));
 }

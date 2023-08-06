@@ -1,6 +1,6 @@
-import { annualReturn } from '../performance'
-import { Frequency } from '../type/frequency'
-import { continuousDrawdown } from './continuousDrawdown'
+import { annualReturn } from '../performance';
+import { Frequency } from '../type/frequency';
+import { continuousDrawdown } from './continuousDrawdown';
 
 /**
  * @method sterlingRatio
@@ -22,7 +22,7 @@ import { continuousDrawdown } from './continuousDrawdown'
  * // 16.701049
  */
 export function sterlingRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily): number {
-  const annret = annualReturn(x, t)
-  const ldd = Math.max(...continuousDrawdown(x))
-  return (annret - frisk) / ldd
+  const annret = annualReturn(x, t);
+  const ldd = Math.max(...continuousDrawdown(x));
+  return (annret - frisk) / ldd;
 }

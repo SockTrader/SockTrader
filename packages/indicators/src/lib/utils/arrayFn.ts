@@ -1,4 +1,4 @@
-import { isNumber } from '../utils'
+import { isNumber } from '../utils';
 
 /**
  * @method arrayFn
@@ -16,12 +16,10 @@ import { isNumber } from '../utils'
  * arrayFn([4.51,-1.4], (x) => x);
  * // [ 4.51,-1.4 ]
  */
-function arrayFn(x: number, fn: (x: number) => number): number
-function arrayFn(x: number[], fn: (x: number) => number): number[]
+function arrayFn(x: number, fn: (x: number) => number): number;
+function arrayFn(x: number[], fn: (x: number) => number): number[];
 function arrayFn(x: number | number[], fn: (x: number) => number): number | number[] {
-  return isNumber(x) ? fn(x) : x.map(fn)
+  return isNumber(x) ? fn(x) : x.map(fn);
 }
 
-export {
-  arrayFn
-}
+export { arrayFn };
