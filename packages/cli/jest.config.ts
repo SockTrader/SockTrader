@@ -2,7 +2,6 @@
 module.exports = {
   displayName: 'cli',
   preset: '../../jest.preset.js',
-  globals: {},
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]sx?$': [
@@ -12,6 +11,6 @@ module.exports = {
       },
     ],
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  moduleFileExtensions: ['ts', 'js'],
   coverageDirectory: '../../coverage/packages/cli',
 };

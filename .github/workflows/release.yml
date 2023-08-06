@@ -58,8 +58,9 @@ jobs:
           flags: unittests
           name: codecov-umbrella
           verbose: true
-#            - name: Publish packages
-#              if: ${{ steps.affected.outputs.affected != '' }}
-#              run: |
-#                  echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-#                  npx semantic-release
+
+#      - name: Publish packages
+#        if: ${{ steps.affected.outputs.affected != '' }}
+#        run: |
+#          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#          npx semantic-release
