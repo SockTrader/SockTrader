@@ -1,4 +1,3 @@
-import { Store } from '@ngneat/elf';
 import { SpotWalletStore } from './spotWallet.store';
 
 describe('SpotWalletStore', () => {

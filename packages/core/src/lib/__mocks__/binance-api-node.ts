@@ -18,6 +18,7 @@ export const __emitUserDataStreamEvents = (event: UserDataStreamEvent) => {
   }
 };
 
+//eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const __orderResponse = jest.fn((options: NewOrderSpot): Order => {
   return {} as Order;
 });

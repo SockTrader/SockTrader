@@ -1,14 +1,11 @@
-import { Store } from '@ngneat/elf';
 import { AssetDeltaUpdate, WalletUpdate } from '../interfaces';
 import { WalletService } from './wallet.service';
 
 describe('WalletService', () => {
   let service: WalletService;
-  let store: Store<any, any>;
 
   beforeEach(() => {
     service = new WalletService();
-    store = service.store.getStoreInstance();
   });
 
   it('Should update store by wallet update', () => {
