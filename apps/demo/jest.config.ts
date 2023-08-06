@@ -2,10 +2,9 @@
 module.exports = {
   displayName: 'demo',
   preset: '../../jest.preset.js',
-  globals: {},
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]s$': [
+    '^.+\\.[tj]sx?$': [
       'ts-jest',
       {
         tsconfig: '<rootDir>/tsconfig.spec.json',
