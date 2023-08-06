@@ -1,38 +1,38 @@
 plugins:
-    fixme:
-        enabled: true
+  fixme:
+    enabled: true
 
-    eslint:
-        enabled: true
-        channel: 'eslint-7'
+  eslint:
+    enabled: true
+    channel: 'eslint-7'
 
 checks:
-    method-lines:
-        config:
-            threshold: 100
-    method-complexity:
-        enabled: true
-        config:
-            threshold: 7
-    complex-logic:
-        enabled: true
-        config:
-            threshold: 6
-    similar-code:
-        enabled: false
-    identical-code:
-        enabled: false
+  method-lines:
+    config:
+      threshold: 100
+  method-complexity:
+    enabled: true
+    config:
+      threshold: 7
+  complex-logic:
+    enabled: true
+    config:
+      threshold: 6
+  similar-code:
+    enabled: false
+  identical-code:
+    enabled: false
 
 exclude_patterns:
-    - '**/*.spec.ts'
-    - '**/*.mock.ts'
-    - '**/jest.config.js'
-    - '**/node_modules'
-    - 'apps/demo/**/*'
-    - 'docker/'
-    - 'docs/'
-    - 'build/'
-    - 'dist/'
-    - 'tmp/'
-    - '.github/'
-    - '.husky/'
+  - '**/*.spec.ts'
+  - '**/*.mock.ts'
+  - '**/jest.config.js'
+  - '**/node_modules'
+  - 'apps/demo/**/*'
+  - 'docker/'
+  - 'docs/'
+  - 'build/'
+  - 'dist/'
+  - 'tmp/'
+  - '.github/'
+  - '.husky/'

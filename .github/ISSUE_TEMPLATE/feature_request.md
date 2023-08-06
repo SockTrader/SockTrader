@@ -32,4 +32,4 @@ _A clear and concise description of what you want to happen._
 
 ### Some extra resources
 
--   https://en.wikipedia.org/wiki/Financial_analysis
+- https://en.wikipedia.org/wiki/Financial_analysis

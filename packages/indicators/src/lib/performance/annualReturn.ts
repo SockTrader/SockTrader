@@ -25,7 +25,11 @@ export enum Mode {
  * annualReturn(x,12);
  * // 0.233815
  */
-export function annualReturn(x: number[], t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
+export function annualReturn(
+  x: number[],
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.geometric
+): number {
   const n = x.length;
   if (mode === Mode.geometric) {
     return Math.pow(prod(plus(x, 1)), t / n) - 1;

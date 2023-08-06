@@ -33,7 +33,10 @@ export function linearRegression(y: number[], x: number[]) {
   const syy = sum(times(y, y));
   const beta = (n * sxy - sx * sy) / (n * sxx - sx * sx);
   const alpha = (sy - beta * sx) / n;
-  const rsq = Math.pow((n * sxy - sx * sy) / Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy)), 2);
+  const rsq = Math.pow(
+    (n * sxy - sx * sy) / Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy)),
+    2
+  );
 
   return {
     beta: beta,

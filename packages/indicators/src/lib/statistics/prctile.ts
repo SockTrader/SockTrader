@@ -25,7 +25,9 @@ import { sort } from '../utils/sort';
  */
 export function prctile(x: number[], p: number): number {
   if (p < 0 || p > 100) {
-    throw new Error('p-th percentile must be a real value between 0 and 100 inclusive');
+    throw new Error(
+      'p-th percentile must be a real value between 0 and 100 inclusive'
+    );
   }
 
   const arrnum = colon(0.5, x.length - 0.5);

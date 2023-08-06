@@ -11,24 +11,37 @@ export class BinanceError implements Error {
       (order: OrderCommand) =>
         `The price must be within its boundaries see: multiplierDown * currentPrice < ${order.price} < multiplierUp * currentPrice`,
     ],
-    ['MIN_NOTIONAL', (order: OrderCommand) => `The total price must meet a minimum see ${order.quantity} * ${order.price} >= minNotional`],
+    [
+      'MIN_NOTIONAL',
+      (order: OrderCommand) =>
+        `The total price must meet a minimum see ${order.quantity} * ${order.price} >= minNotional`,
+    ],
     [
       'LOT_SIZE',
-      (order: OrderCommand) => `Quantity '${order.quantity}' must be within its boundaries and should be a multiple of stepSize.`,
+      (order: OrderCommand) =>
+        `Quantity '${order.quantity}' must be within its boundaries and should be a multiple of stepSize.`,
     ],
   ]);
 
   constructor(private _error: unknown, private _orderCommand: OrderCommand) {
-    this.message = this._error instanceof Error ? this.createErrorMsg(this._error) : `Error encountered: ${this._error}`;
+    this.message =
+      this._error instanceof Error
+        ? this.createErrorMsg(this._error)
+        : `Error encountered: ${this._error}`;
   }
 
-  moreInfo = (order: OrderCommand) => `\nFor more information try calling exchange.getSymbol('${order.symbol}')`;
+  moreInfo = (order: OrderCommand) =>
+    `\nFor more information try calling exchange.getSymbol('${order.symbol}')`;
 
   createErrorMsg(error: Error) {
     const key = this.getErrorKey(error.message);
     const gen = this.errorMap.get(key);
 
-    return gen ? `[${key}] ${gen(this._orderCommand)} ${this.moreInfo(this._orderCommand)}` : `Error encountered: ${error.stack}`;
+    return gen
+      ? `[${key}] ${gen(this._orderCommand)} ${this.moreInfo(
+          this._orderCommand
+        )}`
+      : `Error encountered: ${error.stack}`;
   }
 
   getErrorKey(msg: string): string {

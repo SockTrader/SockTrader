@@ -25,5 +25,7 @@ export function kurtosis(x: number[], flag: Kurtosis = Kurtosis.simple) {
   const n = x.length;
   const mom4 = moment(x, 4) / Math.pow(moment(x, 2), 2);
 
-  return flag === 1 ? mom4 : (((n + 1) * mom4 - 3 * (n - 1)) * (n - 1)) / ((n - 2) * (n - 3)) + 3;
+  return flag === 1
+    ? mom4
+    : (((n + 1) * mom4 - 3 * (n - 1)) * (n - 1)) / ((n - 2) * (n - 3)) + 3;
 }

@@ -1,7 +1,13 @@
 import { TestScheduler } from 'rxjs/testing';
 import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock';
 import { TestStrategy } from '../../__mocks__/testStrategy.mock';
-import { Trade, Order, OrderSide, OrderStatus, OrderType } from '../../interfaces';
+import {
+  Trade,
+  Order,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+} from '../../interfaces';
 import { LocalExchange } from './localExchange';
 import { of, switchMapTo, tap } from 'rxjs';
 

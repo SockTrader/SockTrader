@@ -2,7 +2,10 @@ import { Exchange, Order, Strategy, Trade } from '../interfaces';
 import { insertOrder, insertTrade } from '../repositories';
 import { LOG, log, noop } from '../utils';
 
-const persistActions = <T extends Exchange>(exchange: T, strategy: Strategy) => {
+const persistActions = <T extends Exchange>(
+  exchange: T,
+  strategy: Strategy
+) => {
   const originalOnStop = strategy.onStop?.bind(strategy) ?? noop;
 
   const orderSubs = exchange.orders$.subscribe((o: Order) => insertOrder(o));
@@ -33,7 +36,10 @@ const logActions = <T extends Exchange>(exchange: T) => {
   exchange.orders$ = exchange.orders$.pipe(log('Orders'));
 };
 
-export const createExchange = <T extends Exchange>(exchange: T, strategy: Strategy): T => {
+export const createExchange = <T extends Exchange>(
+  exchange: T,
+  strategy: Strategy
+): T => {
   logActions(exchange);
   persistActions(exchange, strategy);
 

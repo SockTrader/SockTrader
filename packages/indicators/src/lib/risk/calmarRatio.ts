@@ -21,7 +21,11 @@ import { drawdown } from './drawdown';
  * calmarRatio(x,0,12);
  * // 16.701049
  */
-export function calmarRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily) {
+export function calmarRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily
+) {
   const annret = annualReturn(x, t);
   const maxdd = drawdown(x).maxdd;
   return (annret - frisk) / maxdd;

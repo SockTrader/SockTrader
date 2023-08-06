@@ -20,7 +20,12 @@ const mapResultToCandle = (r: any): Candle => {
  * @param {number} countBack
  * @returns {Promise<Candle[]>}
  */
-export const getCandles = async (symbol: string, from: Date, to: Date, countBack?: number): Promise<Candle[]> => {
+export const getCandles = async (
+  symbol: string,
+  from: Date,
+  to: Date,
+  countBack?: number
+): Promise<Candle[]> => {
   const result = countBack
     ? await query(
         `
@@ -53,7 +58,10 @@ export const getCandles = async (symbol: string, from: Date, to: Date, countBack
   return result.rows.map(mapResultToCandle);
 };
 
-export const getLastCandle = async (symbol: string, before: Date): Promise<Candle | null> => {
+export const getLastCandle = async (
+  symbol: string,
+  before: Date
+): Promise<Candle | null> => {
   const result = await query(
     `
     SELECT *

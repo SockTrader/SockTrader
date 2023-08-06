@@ -1,4 +1,10 @@
-import { Candle, createExchange, LocalExchange, OrderType, Strategy } from '@socktrader/core';
+import {
+  Candle,
+  createExchange,
+  LocalExchange,
+  OrderType,
+  Strategy,
+} from '@socktrader/core';
 import parse from 'date-fns/parse';
 import * as data from '../../../../data/coinbase_btcusd_1h.json';
 
@@ -35,7 +41,9 @@ export class TestStrategy implements Strategy {
   }
 
   onStart(): void {
-    this._exchange.candles('BTCUSDT').subscribe((candle) => this.updateCandle(candle));
+    this._exchange
+      .candles('BTCUSDT')
+      .subscribe((candle) => this.updateCandle(candle));
 
     this._exchange.orders$.subscribe(console.log);
   }
@@ -53,12 +61,20 @@ export class TestStrategy implements Strategy {
 
   private async updateCandle(candle: Candle) {
     if (candle.close > 7000 && !this.bought) {
-      await this._exchange.buy({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 });
+      await this._exchange.buy({
+        symbol: 'BTCUSDT',
+        type: OrderType.MARKET,
+        quantity: 1,
+      });
       this.bought = true;
     }
 
     if (candle.close > 10000 && !this.sold) {
-      await this._exchange.sell({ symbol: 'BTCUSDT', type: OrderType.MARKET, quantity: 1 });
+      await this._exchange.sell({
+        symbol: 'BTCUSDT',
+        type: OrderType.MARKET,
+        quantity: 1,
+      });
       this.sold = true;
     }
   }
