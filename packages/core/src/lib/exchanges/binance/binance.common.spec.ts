@@ -1,5 +1,5 @@
-//@ts-ignore
 import {
+  //@ts-ignore
   __emitUserDataStreamEvents,
   CandleChartInterval,
 } from 'binance-api-node';
