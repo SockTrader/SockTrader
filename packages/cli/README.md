@@ -14,6 +14,7 @@
 <p align="center"><b>Join the community <a href="https://join.slack.com/t/socktrader/shared_invite/zt-12ncj65l3-T7cacrk7~cEacjZUyxnamA"><img valign="middle" src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack" alt="Slack"></a></b></p>
 
 ## What is "SockTrader"?
+
 SockTrader is an open source cryptocurrency trading bot. You can use it to automatically buy and/or sell cryptocurrencies based on a strategy that you've programmed.
 The strategy basically contains a set of rules that will define when and how the bot should act in the cryptocurrency market. These rules can be based on technical analysis ([what is technical analysis?](https://www.investopedia.com/terms/t/technicalanalysis.asp))
 or you could simply tell the bot to buy/sell at certain price levels. In fact, it's up to you to decide the rules of the game!
@@ -22,12 +23,14 @@ The name "SockTrader" comes from web**sock**et based trading bot. Which means th
 that one can act very quickly in a changing market with low latency.
 
 ## Sounds interesting?
+
 :construction: Sorry, things are still WIP for now.. :construction:
 
 You can already start discovering SockTrader with our 'demo app' below.
 While we're doing everything we can to make the SockTrader CLI experience as smooth as possible.
 
 ### Start quick demo app
+
 1. Git clone `git clone git@github.com:SockTrader/SockTrader.git && cd SockTrader`
 2. Install NodeJS dependencies. `npm i`
 3. Copy `config/default.json` to `config/local.json` and edit.

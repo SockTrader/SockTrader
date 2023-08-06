@@ -1,8 +1,8 @@
-import { annualReturn } from '../performance'
-import { Mode } from '../performance/annualReturn'
-import { kurtosis, skewness } from '../statistics'
-import { Frequency } from '../type/frequency'
-import { annualRisk } from './annualRisk'
+import { annualReturn } from '../performance';
+import { Mode } from '../performance/annualReturn';
+import { kurtosis, skewness } from '../statistics';
+import { Frequency } from '../type/frequency';
+import { annualRisk } from './annualRisk';
 
 /**
  * @method annualAdjustedSharpeRatio
@@ -29,10 +29,10 @@ import { annualRisk } from './annualRisk'
  * // 0.748134
  */
 export function annualAdjustedSharpeRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.geometric) {
-  const aret = annualReturn(x, t, mode)
-  const arisk = annualRisk(x, t)
-  const sr = (aret - frisk) / arisk
-  const sk = skewness(x)
-  const ku = kurtosis(x)
-  return sr * (1 + (sk / 6) * sr - ((ku - 3) / 24) * Math.sqrt(sr))
+  const aret = annualReturn(x, t, mode);
+  const arisk = annualRisk(x, t);
+  const sr = (aret - frisk) / arisk;
+  const sk = skewness(x);
+  const ku = kurtosis(x);
+  return sr * (1 + (sk / 6) * sr - ((ku - 3) / 24) * Math.sqrt(sr));
 }

@@ -1,5 +1,5 @@
-import { std } from '../statistics'
-import { Frequency } from '../type/frequency'
+import { std } from '../statistics';
+import { Frequency } from '../type/frequency';
 
 /**
  * @method annualRisk
@@ -17,5 +17,5 @@ import { Frequency } from '../type/frequency'
  * // 0.080473
  */
 export function annualRisk(x: number[], t: Frequency = Frequency.daily) {
-  return Math.sqrt(t) * std(x)
+  return Math.sqrt(t) * std(x);
 }

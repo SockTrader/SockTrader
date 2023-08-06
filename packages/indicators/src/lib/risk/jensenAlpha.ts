@@ -1,5 +1,5 @@
-import { linearRegression } from '../math/linearRegression'
-import { mean } from '../statistics'
+import { linearRegression } from '../math/linearRegression';
+import { mean } from '../statistics';
 
 /**
  * @method jensenAlpha
@@ -21,6 +21,6 @@ import { mean } from '../statistics'
  * // 0.017609
  */
 export function jensenAlpha(x: number[], y: number[], frisk = 0) {
-  const beta = linearRegression(x, y).beta
-  return mean(x) - frisk - beta * (mean(y) - frisk)
+  const beta = linearRegression(x, y).beta;
+  return mean(x) - frisk - beta * (mean(y) - frisk);
 }

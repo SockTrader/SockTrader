@@ -1,4 +1,4 @@
-import { prod } from '../math'
+import { prod } from '../math';
 
 /**
  * @method timeWeightedReturn
@@ -18,16 +18,14 @@ import { prod } from '../math'
 
 function timeWeightedReturn(mv: number[], cf: number[]): number {
   if (mv.length !== cf.length) {
-    throw new Error('market value and cash flows must be of the same size')
+    throw new Error('market value and cash flows must be of the same size');
   }
 
-  const _twr = [1]
+  const _twr = [1];
   for (let i = 1; i < mv.length; i++) {
-    _twr[i] = mv[i] / (mv[i - 1] + cf[i - 1])
+    _twr[i] = mv[i] / (mv[i - 1] + cf[i - 1]);
   }
-  return prod(_twr) - 1
+  return prod(_twr) - 1;
 }
 
-export {
-  timeWeightedReturn
-}
+export { timeWeightedReturn };

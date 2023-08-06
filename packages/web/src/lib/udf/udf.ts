@@ -1,20 +1,19 @@
-import {getCandles, getLastCandle, getCandleSets, getUniqueExchanges} from '@socktrader/core'
-import { toTable } from './utils/toTable'
-import { UDFSymbol } from './udf.interfaces'
+import { getCandles, getLastCandle, getCandleSets, getUniqueExchanges } from '@socktrader/core';
+import { toTable } from './utils/toTable';
+import { UDFSymbol } from './udf.interfaces';
 
 export class UDF {
+  supportedResolutions: string[] = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M'];
 
-  supportedResolutions: string[] = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M']
-
-  symbols: UDFSymbol[] = []
+  symbols: UDFSymbol[] = [];
 
   constructor() {
-    this.loadSymbols()
+    this.loadSymbols();
   }
 
   async loadSymbols() {
-    const sets = await getCandleSets()
-    this.symbols = sets.map(symbol => {
+    const sets = await getCandleSets();
+    this.symbols = sets.map((symbol) => {
       return {
         symbol: symbol.symbol.toUpperCase(),
         ticker: symbol.symbol,
@@ -36,22 +35,22 @@ export class UDF {
         has_intraday: true,
         has_daily: true,
         has_weekly_and_monthly: true,
-        data_status: 'streaming'
-      }
-    })
+        data_status: 'streaming',
+      };
+    });
   }
 
   hasSymbol(symbol: string): boolean {
-    return !!this.symbols.find(s => s.symbol === symbol)
+    return !!this.symbols.find((s) => s.symbol === symbol);
   }
 
   /**
    * Data feed configuration data.
    */
   async config() {
-    const exchanges = await getUniqueExchanges()
+    const exchanges = await getUniqueExchanges();
     return {
-      exchanges: exchanges.map(e => ({
+      exchanges: exchanges.map((e) => ({
         value: e.exchange.toUpperCase(),
         name: e.exchange,
         desc: e.description,
@@ -59,16 +58,16 @@ export class UDF {
       symbols_types: [
         {
           value: 'crypto',
-          name: 'Cryptocurrency'
-        }
+          name: 'Cryptocurrency',
+        },
       ],
       supported_resolutions: this.supportedResolutions,
       supports_search: true,
       supports_group_request: false,
       supports_marks: false,
       supports_timescale_marks: false,
-      supports_time: true
-    }
+      supports_time: true,
+    };
   }
 
   /**
@@ -76,7 +75,7 @@ export class UDF {
    * eg: { a: [1,2,3], b: [4,5,6] }
    */
   symbolInfo() {
-    return toTable(this.symbols)
+    return toTable(this.symbols);
   }
 
   /**
@@ -85,13 +84,13 @@ export class UDF {
    * @returns {object} Symbol.
    */
   async symbol(symbol: string) {
-    const result = this.symbols.find(s => s.symbol === symbol)
+    const result = this.symbols.find((s) => s.symbol === symbol);
 
     if (!result) {
-      throw new Error('Symbol not found')
+      throw new Error('Symbol not found');
     }
 
-    return result
+    return result;
   }
 
   /**
@@ -103,31 +102,31 @@ export class UDF {
    * @returns {array} Array of symbols.
    */
   async search(query: string, type: string, exchange: string, limit: number) {
-    let symbols = this.symbols
+    let symbols = this.symbols;
 
     if (type) {
-      symbols = symbols.filter(s => s.type === type)
+      symbols = symbols.filter((s) => s.type === type);
     }
 
     if (exchange) {
-      symbols = symbols.filter(s => s.exchange === s.exchange)
+      symbols = symbols.filter((s) => s.exchange === s.exchange);
     }
 
-    query = query.toUpperCase()
-    symbols = symbols.filter(s => s.symbol.indexOf(query) >= 0)
+    query = query.toUpperCase();
+    symbols = symbols.filter((s) => s.symbol.indexOf(query) >= 0);
 
     if (limit) {
-      symbols = symbols.slice(0, limit)
+      symbols = symbols.slice(0, limit);
     }
 
-    return symbols.map(s => ({
+    return symbols.map((s) => ({
       symbol: s.symbol,
       full_name: s.full_name,
       description: s.description,
       exchange: s.exchange,
       ticker: s.ticker,
-      type: s.type
-    }))
+      type: s.type,
+    }));
   }
 
   /**
@@ -140,22 +139,20 @@ export class UDF {
    */
   async history(symbol: string, from: number, to: number, resolution: string, countBack: number) {
     if (!this.hasSymbol(symbol)) {
-      throw new Error('Symbol not found')
+      throw new Error('Symbol not found');
     }
 
-    const candles = (await getCandles(symbol, new Date(from * 1000), new Date(to * 1000), countBack)).map(c => ({
+    const candles = (await getCandles(symbol, new Date(from * 1000), new Date(to * 1000), countBack)).map((c) => ({
       ...c,
-      start: c.start.getTime() / 1000
-    }))
+      start: c.start.getTime() / 1000,
+    }));
 
     if (candles.length <= 0) {
-      const lastCandle = await getLastCandle(symbol, new Date(from * 1000))
-      return lastCandle
-        ? { s: 'no_data', nextTime: lastCandle.start.getTime() / 1000 }
-        : { s: 'no_data' }
+      const lastCandle = await getLastCandle(symbol, new Date(from * 1000));
+      return lastCandle ? { s: 'no_data', nextTime: lastCandle.start.getTime() / 1000 } : { s: 'no_data' };
     }
 
-    const table = toTable(candles)
+    const table = toTable(candles);
     return {
       s: 'ok',
       t: table.start,
@@ -164,7 +161,6 @@ export class UDF {
       h: table.high,
       l: table.low,
       v: table.volume,
-    }
+    };
   }
-
 }

@@ -1,5 +1,5 @@
-import { minus } from '../math'
-import { mean, std } from '../statistics'
+import { minus } from '../math';
+import { mean, std } from '../statistics';
 
 /**
  * @method informationRatio
@@ -19,5 +19,5 @@ import { mean, std } from '../statistics'
  * // 0.0936915
  */
 export function informationRatio(x: number[], y: number[]): number {
-  return mean(minus(x, y)) / std(minus(x, y))
+  return mean(minus(x, y)) / std(minus(x, y));
 }

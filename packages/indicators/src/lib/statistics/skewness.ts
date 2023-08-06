@@ -1,8 +1,8 @@
-import { moment } from './moment'
+import { moment } from './moment';
 
 export enum Skewness {
   biasCorrection,
-  simple
+  simple,
 }
 
 /**
@@ -22,10 +22,8 @@ export enum Skewness {
  * // 0.617481
  */
 export function skewness(x: number[], flag: Skewness = Skewness.simple) {
-  const n = x.length
-  const mom3 = moment(x, 3) / Math.pow(moment(x, 2), 1.5)
+  const n = x.length;
+  const mom3 = moment(x, 3) / Math.pow(moment(x, 2), 1.5);
 
-  return flag === 1
-    ? mom3
-    : Math.sqrt((n - 1) / n) * (n / (n - 2)) * mom3
+  return flag === 1 ? mom3 : Math.sqrt((n - 1) / n) * (n / (n - 2)) * mom3;
 }

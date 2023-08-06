@@ -1,0 +1,69 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - master
+
+env:
+    TZ: UTC
+    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions: write-all
+
+jobs:
+    build:
+        if: "!contains(github.event.head_commit.message, 'skip ci')"
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: Setup Node LTS
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: |
+                  env
+                  npm ci
+
+            - name: Build affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: build
+                  affected: 'true'
+
+            - name: Lint affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: lint
+                  affected: 'true'
+
+            - name: Test affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: test
+                  affected: 'true'
+                  args:
+                      - '--coverage'
+                      - '--verbose'
+                      - '--parallel'
+
+            - name: Upload codecoverage report
+              uses: codecov/codecov-action@v3
+              with:
+                  files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
+                  flags: unittests
+                  name: codecov-umbrella
+                  verbose: true
+
+#            - name: Publish packages
+#              if: ${{ steps.affected.outputs.affected != '' }}
+#              run: |
+#                  echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#                  npx semantic-release

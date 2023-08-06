@@ -1,4 +1,4 @@
-import { CandleChartInterval } from 'binance-api-node'
+import { CandleChartInterval } from 'binance-api-node';
 
 export enum OrderType {
   LIMIT = 'LIMIT',

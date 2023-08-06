@@ -1,4 +1,4 @@
-import { BalanceUpdate, EventType } from 'binance-api-node'
+import { BalanceUpdate, EventType } from 'binance-api-node';
 
 /**
  * Balance update
@@ -13,8 +13,8 @@ export const balanceUpdateMarginToSpot: BalanceUpdate = {
   balanceDelta: '100.00000000',
   clearTime: 1631472686037,
   eventTime: 1631472686037,
-  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate'
-}
+  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate',
+};
 
 // Spot to margin transaction
 export const balanceUpdateSpotToMargin: BalanceUpdate = {
@@ -22,5 +22,5 @@ export const balanceUpdateSpotToMargin: BalanceUpdate = {
   balanceDelta: '-100.00000000',
   clearTime: 1631472738674,
   eventTime: 1631472738675,
-  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate'
-}
+  eventType: <EventType.BALANCE_UPDATE>'balanceUpdate',
+};

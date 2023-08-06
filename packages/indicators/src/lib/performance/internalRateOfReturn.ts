@@ -1,4 +1,4 @@
-import { colon } from '../utils/colon'
+import { colon } from '../utils/colon';
 
 /**
  * @method internalRateOfReturn
@@ -29,43 +29,43 @@ import { colon } from '../utils/colon'
  */
 export const internalRateOfReturn = function (cf: number[], cfd?: number[], cd = 1, guess = 0.1) {
   const _npv = function (cf: number[], cfd: number[], cd: number, guess: number) {
-    let npv = 0
+    let npv = 0;
     for (let i = 0; i < cf.length; i++) {
-      npv += cf[i] / Math.pow((1 + guess), cfd[i] / cd)
+      npv += cf[i] / Math.pow(1 + guess, cfd[i] / cd);
     }
-    return npv
-  }
+    return npv;
+  };
 
   const _npvd = function (cf: number[], cfd: number[], cd: number, guess: number) {
-    let npv = 0
+    let npv = 0;
     for (let i = 0; i < cf.length; i++) {
-      npv -= cfd[i] / cd * cf[i] / Math.pow((1 + guess), cfd[i] / cd)
+      npv -= ((cfd[i] / cd) * cf[i]) / Math.pow(1 + guess, cfd[i] / cd);
     }
-    return npv
-  }
+    return npv;
+  };
 
-  if (!cfd) cfd = colon(0, cf.length - 1, 1)
+  if (!cfd) cfd = colon(0, cf.length - 1, 1);
 
-  const maxeps = 1e-6
-  const maxiter = 50
-  let cnt = 0
-  let rate = guess
-  let newrate = 0
-  let epsrate = 0
-  let npv = 0
-  let cntv = true
+  const maxeps = 1e-6;
+  const maxiter = 50;
+  let cnt = 0;
+  let rate = guess;
+  let newrate = 0;
+  let epsrate = 0;
+  let npv = 0;
+  let cntv = true;
 
   do {
-    npv = _npv(cf, cfd, cd, rate)
-    newrate = rate - npv / _npvd(cf, cfd, cd, rate)
-    epsrate = Math.abs(newrate - rate)
-    rate = newrate
-    cntv = (epsrate > maxeps) && (Math.abs(npv) > maxeps)
-  } while (cntv && (cnt++ < maxiter))
+    npv = _npv(cf, cfd, cd, rate);
+    newrate = rate - npv / _npvd(cf, cfd, cd, rate);
+    epsrate = Math.abs(newrate - rate);
+    rate = newrate;
+    cntv = epsrate > maxeps && Math.abs(npv) > maxeps;
+  } while (cntv && cnt++ < maxiter);
 
   if (cntv) {
-    throw new Error('number error')
+    throw new Error('number error');
   }
 
-  return rate
-}
+  return rate;
+};

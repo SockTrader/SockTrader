@@ -11,5 +11,5 @@
  * // 14
  */
 export function sum(x: number[]) {
-  return x.reduce((prev: number, current: number) => prev + current, 0)
+  return x.reduce((prev: number, current: number) => prev + current, 0);
 }

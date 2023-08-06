@@ -1,4 +1,4 @@
-import { ExchangeInfo, TradingType, OrderType } from 'binance-api-node'
+import { ExchangeInfo, TradingType, OrderType } from 'binance-api-node';
 
 export const binanceExchangeInfoMock: ExchangeInfo = {
   timezone: 'UTC',
@@ -42,10 +42,7 @@ export const binanceExchangeInfoMock: ExchangeInfo = {
         //These are defined in the Filters section.
         //All filters are optional
       ],
-      permissions: [
-        <TradingType>'SPOT',
-        <TradingType>'MARGIN',
-      ]
-    }
-  ]
-}
+      permissions: [<TradingType>'SPOT', <TradingType>'MARGIN'],
+    },
+  ],
+};

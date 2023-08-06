@@ -1,8 +1,8 @@
-import { sqrt } from '../math'
-import { annualReturn } from '../performance'
-import { Frequency } from '../type/frequency'
-import { downsideRisk } from './downsideRisk'
-import { sortino } from './sortino'
+import { sqrt } from '../math';
+import { annualReturn } from '../performance';
+import { Frequency } from '../type/frequency';
+import { downsideRisk } from './downsideRisk';
+import { sortino } from './sortino';
 
 /**
  * @method m2sortino
@@ -24,5 +24,5 @@ import { sortino } from './sortino'
  * // 0.103486
  */
 export function m2sortino(x: number[], y: number[], frisk = 0, mar = 0, t: Frequency = Frequency.daily) {
-  return annualReturn(x, t) + sortino(x, frisk, mar) * (downsideRisk(y, mar) * sqrt(t) - downsideRisk(x, mar) * sqrt(t))
+  return annualReturn(x, t) + sortino(x, frisk, mar) * (downsideRisk(y, mar) * sqrt(t) - downsideRisk(x, mar) * sqrt(t));
 }

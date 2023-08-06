@@ -1,5 +1,5 @@
-import { Frequency } from '../type/frequency'
-import { Mode, annualReturn } from './annualReturn'
+import { Frequency } from '../type/frequency';
+import { Mode, annualReturn } from './annualReturn';
 
 /**
  * @method activeReturn
@@ -20,5 +20,5 @@ import { Mode, annualReturn } from './annualReturn'
  * // 0.041979
  */
 export function activeReturn(x: number[], y: number[], t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
-  return annualReturn(x, t, mode) - annualReturn(y, t, mode)
+  return annualReturn(x, t, mode) - annualReturn(y, t, mode);
 }

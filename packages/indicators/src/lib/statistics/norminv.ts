@@ -1,4 +1,4 @@
-import { erfcinv } from '../math/erfcinv'
+import { erfcinv } from '../math/erfcinv';
 
 /**
  * @method norminv
@@ -24,9 +24,9 @@ import { erfcinv } from '../math/erfcinv'
  */
 export function norminv(p: number, mu = 0, sigma = 1): number {
   if (p <= 0 || p >= 1) {
-    throw new Error('invalid input argument')
+    throw new Error('invalid input argument');
   }
 
-  const x0 = -Math.sqrt(2) * erfcinv(2 * p)
-  return x0 * sigma + mu
+  const x0 = -Math.sqrt(2) * erfcinv(2 * p);
+  return x0 * sigma + mu;
 }

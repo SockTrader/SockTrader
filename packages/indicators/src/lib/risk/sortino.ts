@@ -1,5 +1,5 @@
-import { mean } from '../statistics'
-import { downsideRisk } from './downsideRisk'
+import { mean } from '../statistics';
+import { downsideRisk } from './downsideRisk';
 
 /**
  * @method sortino
@@ -22,5 +22,5 @@ import { downsideRisk } from './downsideRisk'
  * // [ [ 0.035364 ], [ 0.024015 ] ]
  */
 export function sortino(x: number[], frisk = 0, mar = 0): number {
-  return (mean(x) - frisk) / downsideRisk(x, mar)
+  return (mean(x) - frisk) / downsideRisk(x, mar);
 }

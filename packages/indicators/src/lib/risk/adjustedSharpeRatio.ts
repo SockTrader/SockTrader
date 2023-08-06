@@ -1,5 +1,5 @@
-import { kurtosis, skewness } from '../statistics'
-import { sharpeRatio } from './sharpeRatio'
+import { kurtosis, skewness } from '../statistics';
+import { sharpeRatio } from './sharpeRatio';
 
 /**
  * @method adjustedSharpeRatio
@@ -24,8 +24,8 @@ import { sharpeRatio } from './sharpeRatio'
  * // 0.748134
  */
 export function adjustedSharpeRatio(x: number[], frisk = 0) {
-  const sr = sharpeRatio(x, frisk)
-  const sk = skewness(x)
-  const ku = kurtosis(x)
-  return sr * (1 + (sk / 6) * sr - ((ku - 3) / 24) * Math.sqrt(sr))
+  const sr = sharpeRatio(x, frisk);
+  const sk = skewness(x);
+  const ku = kurtosis(x);
+  return sr * (1 + (sk / 6) * sr - ((ku - 3) / 24) * Math.sqrt(sr));
 }

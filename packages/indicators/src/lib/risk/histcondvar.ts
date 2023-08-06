@@ -1,5 +1,5 @@
-import { mean } from '../statistics'
-import { histvar } from './histvar'
+import { mean } from '../statistics';
+import { histvar } from './histvar';
 
 /**
  * @method histcondvar
@@ -25,16 +25,16 @@ import { histvar } from './histvar'
  * // [ [ 4427.188724 ], [ 19289.893727 ] ]
  */
 export function histcondvar(x: number[], p = 0.95, amount = 1, period = 1): number {
-  const _var = -histvar(x, p)
-  const z = []
-  let t = 0
+  const _var = -histvar(x, p);
+  const z = [];
+  let t = 0;
 
   for (let i = 0; i < x.length; i++) {
     if (x[i] <= _var) {
-      z[t] = x[i]
-      t++
+      z[t] = x[i];
+      t++;
     }
   }
 
-  return -mean(z) * Math.sqrt(period) * amount
+  return -mean(z) * Math.sqrt(period) * amount;
 }

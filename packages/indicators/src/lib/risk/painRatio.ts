@@ -1,9 +1,9 @@
-import { power, sqrt, sum } from '../math'
-import { annualReturn } from '../performance'
-import { Frequency } from '../type/frequency'
-import { continuousDrawdown } from './continuousDrawdown'
-import { Mode } from './drawdown'
-import { painIndex } from './painIndex'
+import { power, sqrt, sum } from '../math';
+import { annualReturn } from '../performance';
+import { Frequency } from '../type/frequency';
+import { continuousDrawdown } from './continuousDrawdown';
+import { Mode } from './drawdown';
+import { painIndex } from './painIndex';
 
 /**
  * @method painRatio
@@ -25,8 +25,8 @@ import { painIndex } from './painIndex'
  * // 101.044955
  */
 export function painRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
-  const annRet = annualReturn(x, t)
+  const annRet = annualReturn(x, t);
   // @TODO bug? const "dd" is not used!
-  const dd = sqrt(sum(power(continuousDrawdown(x), 2)))
-  return (annRet - frisk) / painIndex(x, mode)
+  const dd = sqrt(sum(power(continuousDrawdown(x), 2)));
+  return (annRet - frisk) / painIndex(x, mode);
 }

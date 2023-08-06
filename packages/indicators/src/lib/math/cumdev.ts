@@ -1,6 +1,6 @@
-import { mean } from '../statistics'
-import { cumsum } from './cumsum'
-import { minus } from './minus'
+import { mean } from '../statistics';
+import { cumsum } from './cumsum';
+import { minus } from './minus';
 
 /**
  * @method cumdev
@@ -18,5 +18,5 @@ import { minus } from './minus'
  * // [ 0.333333, 1.666667, -0 ]
  */
 export function cumdev(x: number[]): number[] {
-  return cumsum(minus(x, mean(x)))
+  return cumsum(minus(x, mean(x)));
 }

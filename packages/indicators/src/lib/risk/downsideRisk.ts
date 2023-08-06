@@ -16,9 +16,9 @@
  * // 0.00570088
  */
 export function downsideRisk(x: number[], mar = 0): number {
-  let z = 0
+  let z = 0;
   for (let i = 0; i < x.length; i++) {
-    z += Math.pow(Math.min(x[i] - mar, 0), 2) / x.length
+    z += Math.pow(Math.min(x[i] - mar, 0), 2) / x.length;
   }
-  return Math.sqrt(z)
+  return Math.sqrt(z);
 }

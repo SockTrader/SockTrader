@@ -1,4 +1,4 @@
-import { Candle } from '../interfaces/candle.interfaces'
+import { Candle } from '../interfaces/candle.interfaces';
 
 export const localExchangeCandlesMock: Candle[] = [
   {
@@ -7,7 +7,7 @@ export const localExchangeCandlesMock: Candle[] = [
     low: 9561,
     close: 9592.42,
     volume: 367.99,
-    start: new Date('2020-02-24T20:00:00')
+    start: new Date('2020-02-24T20:00:00'),
   },
   {
     open: 9580.45,
@@ -80,5 +80,5 @@ export const localExchangeCandlesMock: Candle[] = [
     close: 9820.01,
     volume: 528.06,
     start: new Date('2020-02-24T11:00:00'),
-  }
-].reverse()
+  },
+].reverse();

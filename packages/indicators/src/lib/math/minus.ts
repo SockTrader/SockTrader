@@ -1,4 +1,4 @@
-import { isNumber } from '../utils'
+import { isNumber } from '../utils';
 
 /**
  * @method minus
@@ -16,16 +16,14 @@ import { isNumber } from '../utils'
  * minus([5,6,4],10);
  * // [-5, -4, -6]
  */
-function minus(x: number[], y: number): number[]
-function minus(x: number[], y: number[]): number[]
+function minus(x: number[], y: number): number[];
+function minus(x: number[], y: number[]): number[];
 function minus(x: number[], y: number | number[]): number | number[] {
-  if (Array.isArray(y) && x.length !== y.length) throw new Error('invalid length')
+  if (Array.isArray(y) && x.length !== y.length) throw new Error('invalid length');
 
-  const getYVal = isNumber(y)
-    ? () => y
-    : (index: number) => y[index]
+  const getYVal = isNumber(y) ? () => y : (index: number) => y[index];
 
-  return x.map((x, idx) => x - getYVal(idx))
+  return x.map((x, idx) => x - getYVal(idx));
 }
 
-export { minus }
+export { minus };

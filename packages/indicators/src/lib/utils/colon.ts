@@ -1,4 +1,4 @@
-import { fix } from '../math/fix'
+import { fix } from '../math/fix';
 
 /**
  * @method colon
@@ -25,14 +25,14 @@ import { fix } from '../math/fix'
  */
 export function colon(l: number, u: number, s = 1): number[] {
   if (s === 0 || (s > 0 && l > u) || (s < 0 && l < u)) {
-    return []
+    return [];
   }
 
-  const t = fix((u - l) / s)
-  const out = [l]
+  const t = fix((u - l) / s);
+  const out = [l];
   for (let i = 1; i <= t; i++) {
-    out[i] = out[i - 1] + s
+    out[i] = out[i - 1] + s;
   }
 
-  return out
+  return out;
 }

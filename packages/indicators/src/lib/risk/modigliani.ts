@@ -1,5 +1,5 @@
-import { mean, std } from '../statistics'
-import { sharpeRatio } from './sharpeRatio'
+import { mean, std } from '../statistics';
+import { sharpeRatio } from './sharpeRatio';
 
 /**
  * @method modigliani
@@ -21,5 +21,5 @@ import { sharpeRatio } from './sharpeRatio'
  * // 0.0406941
  */
 export function modigliani(x: number[], y: number[], frisk = 0) {
-  return mean(x) + sharpeRatio(x, frisk) * (std(y) - std(x))
+  return mean(x) + sharpeRatio(x, frisk) * (std(y) - std(x));
 }

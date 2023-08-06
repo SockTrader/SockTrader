@@ -1,6 +1,6 @@
 export enum Sort {
   ascending,
-  descending
+  descending,
 }
 
 /**
@@ -17,9 +17,7 @@ export enum Sort {
  * // [ -4, -1, 0, 0, 3, 5, 9 ]
  */
 export function sort(x: number[], mode: Sort = Sort.ascending) {
-  const sort = (mode === Sort.ascending)
-    ? (a: number, b: number) => a - b
-    : (a: number, b: number) => b - a
+  const sort = mode === Sort.ascending ? (a: number, b: number) => a - b : (a: number, b: number) => b - a;
 
-  return x.sort(sort)
+  return x.sort(sort);
 }

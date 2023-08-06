@@ -1,4 +1,4 @@
-import { sum } from '../math'
+import { sum } from '../math';
 
 /**
  * @method mean
@@ -22,7 +22,7 @@ import { sum } from '../math'
  * // [ [ 6, 7, 2 ] ]
  */
 function mean(x: number[]): number {
-  return sum(x) / x.length
+  return sum(x) / x.length;
 }
 
-export { mean }
+export { mean };

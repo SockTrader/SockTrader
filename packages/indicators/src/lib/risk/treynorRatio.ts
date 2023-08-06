@@ -1,5 +1,5 @@
-import { linearRegression } from '../math/linearRegression'
-import { mean } from '../statistics'
+import { linearRegression } from '../math/linearRegression';
+import { mean } from '../statistics';
 
 /**
  * @method treynorRatio
@@ -25,6 +25,6 @@ import { mean } from '../statistics'
  * // [ [ -0.095687 ], [ 0.029863 ] ]
  */
 export function treynorRatio(x: number[], y: number[], frisk = 0) {
-  const beta = linearRegression(x, y).beta
-  return (mean(x) - frisk) / beta
+  const beta = linearRegression(x, y).beta;
+  return (mean(x) - frisk) / beta;
 }

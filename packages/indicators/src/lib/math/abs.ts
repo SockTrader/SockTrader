@@ -1,4 +1,4 @@
-import { isNumber } from '../utils'
+import { isNumber } from '../utils';
 
 /**
  * @method abs
@@ -18,12 +18,12 @@ import { isNumber } from '../utils'
  * abs([[5,-2],[-3,4]]);
  * // [[5, 2], [3, 4]]
  */
-function abs(x: number): number
-function abs(x: number[]): number[]
+function abs(x: number): number;
+function abs(x: number[]): number[];
 function abs(x: number | number[]): number | number[] {
-  if (isNumber(x)) return Math.abs(x)
+  if (isNumber(x)) return Math.abs(x);
 
-  return x.map(x => Math.abs(x))
+  return x.map((x) => Math.abs(x));
 }
 
-export { abs }
+export { abs };

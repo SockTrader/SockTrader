@@ -1,10 +1,10 @@
-import { plus, prod } from '../math'
-import { mean } from '../statistics'
-import { Frequency } from '../type/frequency'
+import { plus, prod } from '../math';
+import { mean } from '../statistics';
+import { Frequency } from '../type/frequency';
 
 export enum Mode {
   geometric,
-  simple
+  simple,
 }
 
 /**
@@ -26,12 +26,12 @@ export enum Mode {
  * // 0.233815
  */
 export function annualReturn(x: number[], t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
-  const n = x.length
+  const n = x.length;
   if (mode === Mode.geometric) {
-    return Math.pow(prod(plus(x, 1)), (t / n)) - 1
+    return Math.pow(prod(plus(x, 1)), t / n) - 1;
   } else if (mode === Mode.simple) {
-    return mean(x) * t
+    return mean(x) * t;
   } else {
-    throw new Error('unknown mode')
+    throw new Error('unknown mode');
   }
 }

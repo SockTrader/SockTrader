@@ -17,7 +17,10 @@
  * // [ [ 5, 30, 150 ], [ 7, 56, -56 ] ]
  */
 export function cumprod(x: number[]): number[] {
-  return x.slice(1).reduce((prev, current, idx) => {
-    return [...prev, prev[idx] * current]
-  }, [x[0]])
+  return x.slice(1).reduce(
+    (prev, current, idx) => {
+      return [...prev, prev[idx] * current];
+    },
+    [x[0]]
+  );
 }

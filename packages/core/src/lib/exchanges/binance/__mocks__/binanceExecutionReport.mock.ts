@@ -5,7 +5,6 @@ import {
   OrderRejectReason,
   OrderSide,
   OrderStatus,
-  OrderType,
   TimeInForce,
 } from 'binance-api-node';
 

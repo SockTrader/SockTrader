@@ -4,7 +4,7 @@ plugins:
 
     eslint:
         enabled: true
-        channel: "eslint-7"
+        channel: 'eslint-7'
 
 checks:
     method-lines:
@@ -24,15 +24,15 @@ checks:
         enabled: false
 
 exclude_patterns:
-- "**/*.spec.ts"
-- "**/*.mock.ts"
-- "**/jest.config.js"
-- "**/node_modules"
-- "apps/demo/**/*"
-- "docker/"
-- "docs/"
-- "build/"
-- "dist/"
-- "tmp/"
-- ".github/"
-- ".husky/"
+    - '**/*.spec.ts'
+    - '**/*.mock.ts'
+    - '**/jest.config.js'
+    - '**/node_modules'
+    - 'apps/demo/**/*'
+    - 'docker/'
+    - 'docs/'
+    - 'build/'
+    - 'dist/'
+    - 'tmp/'
+    - '.github/'
+    - '.husky/'

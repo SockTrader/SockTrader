@@ -1,4 +1,4 @@
-import { mean, std } from '../statistics'
+import { mean, std } from '../statistics';
 
 /**
  * @method sharpeRatio
@@ -17,5 +17,5 @@ import { mean, std } from '../statistics'
  * // 0.698794
  */
 export function sharpeRatio(x: number[], riskFreeRate = 0): number {
-  return (mean(x) - riskFreeRate) / std(x)
+  return (mean(x) - riskFreeRate) / std(x);
 }

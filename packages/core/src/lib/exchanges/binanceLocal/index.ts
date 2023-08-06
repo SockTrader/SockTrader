@@ -1,1 +1,1 @@
-export * from './binanceLocal'
+export * from './binanceLocal';
