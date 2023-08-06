@@ -28,7 +28,12 @@ import { annualRisk } from './annualRisk';
  * annualAdjustedSharpeRatio(x,0.02/12);
  * // 0.748134
  */
-export function annualAdjustedSharpeRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.geometric) {
+export function annualAdjustedSharpeRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.geometric
+) {
   const aret = annualReturn(x, t, mode);
   const arisk = annualRisk(x, t);
   const sr = (aret - frisk) / arisk;

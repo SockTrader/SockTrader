@@ -1,12 +1,25 @@
 import config from 'config';
 import { nanoid } from 'nanoid';
-import { Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Pair, Trade } from '../../interfaces';
+import {
+  Candle,
+  Order,
+  OrderCommand,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+  Pair,
+  Trade,
+} from '../../interfaces';
 import { OpenOrder } from './localExchange.interfaces';
 
-export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: Candle): OpenOrder => {
+export const mapOrderCommandToOpenOrder = (
+  orderCommand: OrderCommand,
+  candle: Candle
+): OpenOrder => {
   return {
     clientOrderId: orderCommand.clientOrderId ?? nanoid(),
-    price: orderCommand.type === OrderType.LIMIT ? orderCommand.price : undefined,
+    price:
+      orderCommand.type === OrderType.LIMIT ? orderCommand.price : undefined,
     quantity: orderCommand.quantity,
     side: orderCommand.side,
     status: OrderStatus.NEW,
@@ -16,7 +29,12 @@ export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: C
   };
 };
 
-export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Omit<Order, 'status'> => {
+export const mapOpenOrderToOrder = (
+  order: OpenOrder,
+  candle: Candle,
+  pair: Pair,
+  orderPrice: number
+): Omit<Order, 'status'> => {
   return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: order.originalClientOrderId,
@@ -29,10 +47,21 @@ export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair
   };
 };
 
-export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Trade => {
-  const fee: number = order.type === OrderType.MARKET ? config.get('exchanges.local.feeTaker') : config.get('exchanges.local.feeMaker');
+export const mapOpenOrderToTrade = (
+  order: OpenOrder,
+  candle: Candle,
+  pair: Pair,
+  orderPrice: number
+): Trade => {
+  const fee: number =
+    order.type === OrderType.MARKET
+      ? config.get('exchanges.local.feeTaker')
+      : config.get('exchanges.local.feeMaker');
 
-  const commission = order.side === OrderSide.BUY ? order.quantity * fee : order.quantity * (fee * orderPrice);
+  const commission =
+    order.side === OrderSide.BUY
+      ? order.quantity * fee
+      : order.quantity * (fee * orderPrice);
 
   return {
     clientOrderId: order.clientOrderId,

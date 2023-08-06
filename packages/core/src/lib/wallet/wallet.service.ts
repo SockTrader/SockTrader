@@ -1,5 +1,15 @@
 import { emitOnce } from '@ngneat/elf';
-import { Asset, AssetDeltaUpdate, Candle, OrderCommand, OrderSide, OrderType, Pair, Trade, WalletUpdate } from '../interfaces';
+import {
+  Asset,
+  AssetDeltaUpdate,
+  Candle,
+  OrderCommand,
+  OrderSide,
+  OrderType,
+  Pair,
+  Trade,
+  WalletUpdate,
+} from '../interfaces';
 import { SpotWalletQuery, SpotWalletStore } from '../stores';
 
 export class WalletService {
@@ -35,8 +45,15 @@ export class WalletService {
     this.store.updateAsset(asset, assetDelta);
   }
 
-  updateSpotByOrderCommand(pair: Pair, orderCommand: OrderCommand, candle: Candle): void {
-    const price: number = orderCommand.type === OrderType.LIMIT ? <number>orderCommand.price : candle.close;
+  updateSpotByOrderCommand(
+    pair: Pair,
+    orderCommand: OrderCommand,
+    candle: Candle
+  ): void {
+    const price: number =
+      orderCommand.type === OrderType.LIMIT
+        ? <number>orderCommand.price
+        : candle.close;
 
     if (orderCommand.side === OrderSide.BUY) {
       this.store.reserveAsset(pair[1], price * orderCommand.quantity);
@@ -47,9 +64,19 @@ export class WalletService {
 
   updateSpotByTrade(trade: Trade, pair: Pair): void {
     if (trade.side === OrderSide.BUY) {
-      this.store.releaseAsset(pair[1], pair[0], trade.price * trade.quantity, trade.quantity);
+      this.store.releaseAsset(
+        pair[1],
+        pair[0],
+        trade.price * trade.quantity,
+        trade.quantity
+      );
     } else if (trade.side === OrderSide.SELL) {
-      this.store.releaseAsset(pair[0], pair[1], trade.quantity, trade.price * trade.quantity);
+      this.store.releaseAsset(
+        pair[0],
+        pair[1],
+        trade.quantity,
+        trade.price * trade.quantity
+      );
     }
   }
 }

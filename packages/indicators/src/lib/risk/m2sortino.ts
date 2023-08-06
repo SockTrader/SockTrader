@@ -23,6 +23,16 @@ import { sortino } from './sortino';
  * m2sortino(x,y,0,0,12);
  * // 0.103486
  */
-export function m2sortino(x: number[], y: number[], frisk = 0, mar = 0, t: Frequency = Frequency.daily) {
-  return annualReturn(x, t) + sortino(x, frisk, mar) * (downsideRisk(y, mar) * sqrt(t) - downsideRisk(x, mar) * sqrt(t));
+export function m2sortino(
+  x: number[],
+  y: number[],
+  frisk = 0,
+  mar = 0,
+  t: Frequency = Frequency.daily
+) {
+  return (
+    annualReturn(x, t) +
+    sortino(x, frisk, mar) *
+      (downsideRisk(y, mar) * sqrt(t) - downsideRisk(x, mar) * sqrt(t))
+  );
 }

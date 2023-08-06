@@ -31,6 +31,9 @@ export enum Variance {
  * variance(a,0,1);
  * // [ [ 1, 1, 9 ] ]
  */
-export const variance = (x: number[], flag: Variance = Variance.sample): number => {
+export const variance = (
+  x: number[],
+  flag: Variance = Variance.sample
+): number => {
   return sum(power(abs(minus(x, mean(x))), 2)) / (x.length - flag);
 };

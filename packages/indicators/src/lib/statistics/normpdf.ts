@@ -22,5 +22,8 @@
  * // 12.7622
  */
 export function normpdf(x: number, mu = 0, sigma = 1): number {
-  return Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2)) / (Math.sqrt(2 * Math.PI) * sigma);
+  return (
+    Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2)) /
+    (Math.sqrt(2 * Math.PI) * sigma)
+  );
 }

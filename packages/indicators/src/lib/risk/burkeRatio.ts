@@ -33,7 +33,12 @@ export enum Mode {
  * burkeRatio(x,0,12,'modified');
  * // 44.425456
  */
-export function burkeRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.simple): number {
+export function burkeRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.simple
+): number {
   const annret = annualReturn(x, t);
   const dd = sqrt(sum(power(continuousDrawdown(x), 2)));
 

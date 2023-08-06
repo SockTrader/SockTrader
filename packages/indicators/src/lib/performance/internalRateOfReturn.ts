@@ -27,8 +27,18 @@ import { colon } from '../utils/colon';
  * internalRateOfReturn([74.2,37.1,-104.4],[0,14,31],31);
  * // -0.07271456460699813
  */
-export const internalRateOfReturn = function (cf: number[], cfd?: number[], cd = 1, guess = 0.1) {
-  const _npv = function (cf: number[], cfd: number[], cd: number, guess: number) {
+export const internalRateOfReturn = function (
+  cf: number[],
+  cfd?: number[],
+  cd = 1,
+  guess = 0.1
+) {
+  const _npv = function (
+    cf: number[],
+    cfd: number[],
+    cd: number,
+    guess: number
+  ) {
     let npv = 0;
     for (let i = 0; i < cf.length; i++) {
       npv += cf[i] / Math.pow(1 + guess, cfd[i] / cd);
@@ -36,7 +46,12 @@ export const internalRateOfReturn = function (cf: number[], cfd?: number[], cd =
     return npv;
   };
 
-  const _npvd = function (cf: number[], cfd: number[], cd: number, guess: number) {
+  const _npvd = function (
+    cf: number[],
+    cfd: number[],
+    cd: number,
+    guess: number
+  ) {
     let npv = 0;
     for (let i = 0; i < cf.length; i++) {
       npv -= ((cfd[i] / cd) * cf[i]) / Math.pow(1 + guess, cfd[i] / cd);

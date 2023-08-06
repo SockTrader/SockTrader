@@ -21,7 +21,11 @@ import { continuousDrawdown } from './continuousDrawdown';
  * sterlingRatio(x,0,12);
  * // 16.701049
  */
-export function sterlingRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily): number {
+export function sterlingRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily
+): number {
   const annret = annualReturn(x, t);
   const ldd = Math.max(...continuousDrawdown(x));
   return (annret - frisk) / ldd;

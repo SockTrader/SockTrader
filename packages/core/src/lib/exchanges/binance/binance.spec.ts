@@ -1,6 +1,10 @@
 //@ts-ignore
 import { __emitUserDataStreamEvents, ExecutionReport } from 'binance-api-node';
-import { mockCancelLimitBuyOrder, mockCreateLimitBuyOrder, mockCreateMarketSellOrder } from './__mocks__/binanceExecutionReport.mock';
+import {
+  mockCancelLimitBuyOrder,
+  mockCreateLimitBuyOrder,
+  mockCreateMarketSellOrder,
+} from './__mocks__/binanceExecutionReport.mock';
 import { RunHelpers, TestScheduler } from 'rxjs/testing';
 import { feedObservable } from '../../utils';
 import { Binance } from './binance';
@@ -27,11 +31,21 @@ describe('Binance', () => {
         b: mockCancelLimitBuyOrder(),
       });
 
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.orders$);
+      const src$ = feedObservable(
+        toggleEvents$,
+        __emitUserDataStreamEvents,
+        binance.orders$
+      );
 
       expectObservable(src$).toBe(detailsVisibleMarble, {
-        a: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'NEW' }),
-        b: expect.objectContaining(<Partial<ExecutionReport>>{ side: 'BUY', status: 'CANCELED' }),
+        a: expect.objectContaining(<Partial<ExecutionReport>>{
+          side: 'BUY',
+          status: 'NEW',
+        }),
+        b: expect.objectContaining(<Partial<ExecutionReport>>{
+          side: 'BUY',
+          status: 'CANCELED',
+        }),
       });
     });
   });
@@ -44,7 +58,11 @@ describe('Binance', () => {
         a: mockCreateMarketSellOrder(),
       });
 
-      const src$ = feedObservable(toggleEvents$, __emitUserDataStreamEvents, binance.trades$);
+      const src$ = feedObservable(
+        toggleEvents$,
+        __emitUserDataStreamEvents,
+        binance.trades$
+      );
 
       expectObservable(src$).toBe('', {});
     });

@@ -22,6 +22,9 @@ const poolCreator = () => {
 const getPool = poolCreator();
 
 //eslint-disable-next-line
-export const query = <R extends QueryResultRow = any, I extends any[] = any[]>(text: string, params?: I): Promise<QueryResult<R>> => {
+export const query = <R extends QueryResultRow = any, I extends any[] = any[]>(
+  text: string,
+  params?: I
+): Promise<QueryResult<R>> => {
   return getPool().query(text, params);
 };

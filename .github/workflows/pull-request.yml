@@ -1,39 +1,52 @@
 name: Pull request
 
 on:
-    pull_request:
-        types:
-            - opened
-            - synchronize
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 env:
-    TZ: UTC
-    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  TZ: UTC
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions: write-all
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-            - name: Setup Node LTS
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 'lts/*'
-                  cache: 'npm'
+      - name: Setup Node LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
 
-            - name: Install dependencies
-              run: |
-                  env
-                  npm ci
+      - name: Install dependencies
+        run: |
+          env
+          npm ci
 
-            - name: Build, lint & test affected packages
-              uses: mansagroup/nrwl-nx-action@v3
-              with:
-                  targets: build,lint,test
-                  affected: 'true'
+      - name: Build affected packages
+        uses: mansagroup/nrwl-nx-action@v3
+        with:
+          targets: build
+          affected: 'true'
+
+      - name: Lint affected packages
+        uses: mansagroup/nrwl-nx-action@v3
+        with:
+          targets: lint
+          affected: 'true'
+
+      - name: Test affected packages
+        uses: mansagroup/nrwl-nx-action@v3
+        with:
+          targets: test
+          affected: 'true'
+          args: '--coverage --verbose'

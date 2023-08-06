@@ -19,6 +19,11 @@ import { Mode, annualReturn } from './annualReturn';
  * activeReturn(x,y,12);
  * // 0.041979
  */
-export function activeReturn(x: number[], y: number[], t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
+export function activeReturn(
+  x: number[],
+  y: number[],
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.geometric
+): number {
   return annualReturn(x, t, mode) - annualReturn(y, t, mode);
 }

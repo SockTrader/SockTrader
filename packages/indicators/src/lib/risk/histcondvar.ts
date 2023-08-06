@@ -24,7 +24,12 @@ import { histvar } from './histvar';
  * histcondvar(cat(0,x,y),0.99,100000,10);
  * // [ [ 4427.188724 ], [ 19289.893727 ] ]
  */
-export function histcondvar(x: number[], p = 0.95, amount = 1, period = 1): number {
+export function histcondvar(
+  x: number[],
+  p = 0.95,
+  amount = 1,
+  period = 1
+): number {
   const _var = -histvar(x, p);
   const z = [];
   let t = 0;

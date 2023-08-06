@@ -22,9 +22,27 @@ import { isArray } from '../utils/isArray';
  * mdietz(ev,bv,cf,cfd,cd);
  * // 0.0804
  */
-function mdietz(ev: number, bv: number, cf: number, cfd: number, cd: number): number;
-function mdietz(ev: number, bv: number, cf: number[], cfd: number[], cd: number): number;
-function mdietz(ev: number, bv: number, cf: number | number[], cfd: number | number[], cd: number): number {
+function mdietz(
+  ev: number,
+  bv: number,
+  cf: number,
+  cfd: number,
+  cd: number
+): number;
+function mdietz(
+  ev: number,
+  bv: number,
+  cf: number[],
+  cfd: number[],
+  cd: number
+): number;
+function mdietz(
+  ev: number,
+  bv: number,
+  cf: number | number[],
+  cfd: number | number[],
+  cd: number
+): number {
   let md = -99999;
   const w = [];
   if (isNumber(cf) && isNumber(cfd)) {

@@ -28,8 +28,20 @@ import { isArray } from '../utils/isArray';
  * parametricConditionalValueAtRisk(mean(cat(0,x,y)),std(cat(0,x,y)),0.99,100000,10);
  * // [ [ 19578.980844 ], [ 44511.107219 ] ]
  */
-function parametricConditionalValueAtRisk(mu: number, sigma: number, p?: number, amount?: number, period?: number): number;
-function parametricConditionalValueAtRisk(mu: number[], sigma: number[], p?: number, amount?: number, period?: number): number;
+function parametricConditionalValueAtRisk(
+  mu: number,
+  sigma: number,
+  p?: number,
+  amount?: number,
+  period?: number
+): number;
+function parametricConditionalValueAtRisk(
+  mu: number[],
+  sigma: number[],
+  p?: number,
+  amount?: number,
+  period?: number
+): number;
 function parametricConditionalValueAtRisk(
   mu: number | number[],
   sigma: number | number[],
@@ -37,8 +49,19 @@ function parametricConditionalValueAtRisk(
   amount = 1,
   period = 1
 ): number | number[] {
-  const _pcvar = (_mu: number, _sigma: number, p: number, amount: number, period: number) => {
-    return ((_sigma * normpdf(norminv(1 - p))) / (1 - p)) * amount * Math.sqrt(period) - _mu;
+  const _pcvar = (
+    _mu: number,
+    _sigma: number,
+    p: number,
+    amount: number,
+    period: number
+  ) => {
+    return (
+      ((_sigma * normpdf(norminv(1 - p))) / (1 - p)) *
+        amount *
+        Math.sqrt(period) -
+      _mu
+    );
   };
 
   if (isNumber(mu) && isNumber(sigma)) {

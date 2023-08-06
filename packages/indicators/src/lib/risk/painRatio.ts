@@ -24,7 +24,12 @@ import { painIndex } from './painIndex';
  * painRatio(x,0,12);
  * // 101.044955
  */
-export function painRatio(x: number[], frisk = 0, t: Frequency = Frequency.daily, mode: Mode = Mode.geometric): number {
+export function painRatio(
+  x: number[],
+  frisk = 0,
+  t: Frequency = Frequency.daily,
+  mode: Mode = Mode.geometric
+): number {
   const annRet = annualReturn(x, t);
   // @TODO bug? const "dd" is not used!
   const dd = sqrt(sum(power(continuousDrawdown(x), 2)));

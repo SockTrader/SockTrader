@@ -52,7 +52,9 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "./",
-        "commands": ["cd dist/packages/indicators && npm publish --access public"]
+        "commands": [
+          "cd dist/packages/indicators && npm publish --access public"
+        ]
       }
     }
   },

@@ -10,10 +10,22 @@ import {
   OrderType as BinanceOrderType,
   OutboundAccountPosition,
 } from 'binance-api-node';
-import { AssetDeltaUpdate, Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Trade, WalletUpdate } from '../../interfaces';
+import {
+  AssetDeltaUpdate,
+  Candle,
+  Order,
+  OrderCommand,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+  Trade,
+  WalletUpdate,
+} from '../../interfaces';
 import { dollarCostAverage } from '../../utils';
 
-export const mapCandle = (candle: CandleChartResult | BinanceCandle): Candle => ({
+export const mapCandle = (
+  candle: CandleChartResult | BinanceCandle
+): Candle => ({
   open: parseFloat(candle.open),
   high: parseFloat(candle.high),
   low: parseFloat(candle.low),
@@ -24,11 +36,16 @@ export const mapCandle = (candle: CandleChartResult | BinanceCandle): Candle => 
 
 export const mapExecutionReportToOrder = (report: ExecutionReport): Order => {
   if (report.eventType !== <ExecutionReport['eventType']>'executionReport')
-    throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`);
+    throw new Error(
+      `Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`
+    );
 
   return {
     clientOrderId: report.newClientOrderId,
-    originalClientOrderId: !report.originalClientOrderId || report.originalClientOrderId === '' ? undefined : report.originalClientOrderId,
+    originalClientOrderId:
+      !report.originalClientOrderId || report.originalClientOrderId === ''
+        ? undefined
+        : report.originalClientOrderId,
     price: parseFloat(report.price),
     quantity: parseFloat(report.quantity),
     side: <OrderSide>report.side,
@@ -41,11 +58,16 @@ export const mapExecutionReportToOrder = (report: ExecutionReport): Order => {
 
 export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
   if (report.eventType !== <ExecutionReport['eventType']>'executionReport')
-    throw new Error(`Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`);
+    throw new Error(
+      `Report has incorrect EventType. Expected 'executionReport', received: ${report.eventType}`
+    );
 
   return {
     clientOrderId: report.newClientOrderId,
-    originalClientOrderId: !report.originalClientOrderId || report.originalClientOrderId === '' ? undefined : report.originalClientOrderId,
+    originalClientOrderId:
+      !report.originalClientOrderId || report.originalClientOrderId === ''
+        ? undefined
+        : report.originalClientOrderId,
     price: parseFloat(report.price),
     quantity: parseFloat(report.quantity),
     side: <OrderSide>report.side,
@@ -58,13 +80,18 @@ export const mapExecutionReportToTrade = (report: ExecutionReport): Trade => {
   };
 };
 
-export const mapOrderCommand = (order: OrderCommand): NewOrderMarketBase | NewOrderLimit => {
-  if (!Object.values(OrderType).includes(order.type)) throw new Error("Given 'type' in order is not supported.");
+export const mapOrderCommand = (
+  order: OrderCommand
+): NewOrderMarketBase | NewOrderLimit => {
+  if (!Object.values(OrderType).includes(order.type))
+    throw new Error("Given 'type' in order is not supported.");
 
   const orderBase = {
     symbol: order.symbol,
     side: order.side,
-    type: order.type as unknown as NewOrderMarketBase['type'] | NewOrderLimit['type'],
+    type: order.type as unknown as
+      | NewOrderMarketBase['type']
+      | NewOrderLimit['type'],
     quantity: order.quantity.toString(),
     newOrderRespType: <NewOrderRespType_LT>'FULL',
   };
@@ -77,7 +104,9 @@ export const mapOrderCommand = (order: OrderCommand): NewOrderMarketBase | NewOr
       };
 };
 
-export const mapWalletUpdate = (accountPosition: OutboundAccountPosition): WalletUpdate[] => {
+export const mapWalletUpdate = (
+  accountPosition: OutboundAccountPosition
+): WalletUpdate[] => {
   return accountPosition.balances.map((update) => ({
     reserved: parseFloat(update.locked),
     available: parseFloat(update.free),
@@ -92,7 +121,9 @@ export const mapAssetUpdate = (update: BalanceUpdate): AssetDeltaUpdate => {
   };
 };
 
-export const mapOrderResponse = (order: BinanceOrder): { order: Order; trades: Trade[] } | undefined => {
+export const mapOrderResponse = (
+  order: BinanceOrder
+): { order: Order; trades: Trade[] } | undefined => {
   if (order.type !== <BinanceOrderType.MARKET>'MARKET') return undefined;
 
   return {

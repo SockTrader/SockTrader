@@ -10,9 +10,19 @@ export enum LOG {
   silly = 'silly',
 }
 
-export const LEVELS = [LOG.error, LOG.warn, LOG.info, LOG.verbose, LOG.debug, LOG.silly] as const;
+export const LEVELS = [
+  LOG.error,
+  LOG.warn,
+  LOG.info,
+  LOG.verbose,
+  LOG.debug,
+  LOG.silly,
+] as const;
 
-export const log = <T>(tag: string, level: LOG = LOG.info): OperatorFunction<T, any> => {
+export const log = <T>(
+  tag: string,
+  level: LOG = LOG.info
+): OperatorFunction<T, any> => {
   return (source) =>
     source.pipe(
       tap((v) => {

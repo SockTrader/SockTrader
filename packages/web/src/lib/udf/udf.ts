@@ -1,9 +1,30 @@
-import { getCandles, getLastCandle, getCandleSets, getUniqueExchanges } from '@socktrader/core';
+import {
+  getCandles,
+  getLastCandle,
+  getCandleSets,
+  getUniqueExchanges,
+} from '@socktrader/core';
 import { toTable } from './utils/toTable';
 import { UDFSymbol } from './udf.interfaces';
 
 export class UDF {
-  supportedResolutions: string[] = ['1', '3', '5', '15', '30', '60', '120', '240', '360', '480', '720', '1D', '3D', '1W', '1M'];
+  supportedResolutions: string[] = [
+    '1',
+    '3',
+    '5',
+    '15',
+    '30',
+    '60',
+    '120',
+    '240',
+    '360',
+    '480',
+    '720',
+    '1D',
+    '3D',
+    '1W',
+    '1M',
+  ];
 
   symbols: UDFSymbol[] = [];
 
@@ -137,19 +158,34 @@ export class UDF {
    * @param {string} resolution
    * @param {number} countBack
    */
-  async history(symbol: string, from: number, to: number, resolution: string, countBack: number) {
+  async history(
+    symbol: string,
+    from: number,
+    to: number,
+    resolution: string,
+    countBack: number
+  ) {
     if (!this.hasSymbol(symbol)) {
       throw new Error('Symbol not found');
     }
 
-    const candles = (await getCandles(symbol, new Date(from * 1000), new Date(to * 1000), countBack)).map((c) => ({
+    const candles = (
+      await getCandles(
+        symbol,
+        new Date(from * 1000),
+        new Date(to * 1000),
+        countBack
+      )
+    ).map((c) => ({
       ...c,
       start: c.start.getTime() / 1000,
     }));
 
     if (candles.length <= 0) {
       const lastCandle = await getLastCandle(symbol, new Date(from * 1000));
-      return lastCandle ? { s: 'no_data', nextTime: lastCandle.start.getTime() / 1000 } : { s: 'no_data' };
+      return lastCandle
+        ? { s: 'no_data', nextTime: lastCandle.start.getTime() / 1000 }
+        : { s: 'no_data' };
     }
 
     const table = toTable(candles);
