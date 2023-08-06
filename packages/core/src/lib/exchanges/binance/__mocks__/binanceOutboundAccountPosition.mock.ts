@@ -1,4 +1,4 @@
-import { EventType, OutboundAccountPosition } from 'binance-api-node'
+import { EventType, OutboundAccountPosition } from 'binance-api-node';
 
 /**
  * outboundAccountPosition
@@ -12,21 +12,21 @@ export const outboundAccountPositionMarginToSpot: OutboundAccountPosition = {
   balances: [{ asset: 'USDT', free: '100.00000000', locked: '0.00000000' }],
   eventTime: 1631472686037,
   eventType: <EventType.OUTBOUND_ACCOUNT_POSITION>'outboundAccountPosition',
-  lastAccountUpdate: 1631472686037
-}
+  lastAccountUpdate: 1631472686037,
+};
 
 // Spot to margin transaction
 export const outboundAccountPositionSpotToMargin: OutboundAccountPosition = {
   balances: [{ asset: 'USDT', free: '0.00000000', locked: '0.00000000' }],
   eventTime: 1631472738675,
   eventType: <EventType.OUTBOUND_ACCOUNT_POSITION>'outboundAccountPosition',
-  lastAccountUpdate: 1631472738674
-}
+  lastAccountUpdate: 1631472738674,
+};
 
 // Create limit order
 export const outboundAccountPosition: OutboundAccountPosition = {
   balances: [{ asset: 'USDT', free: '0.16000000', locked: '99.84000000' }],
   eventTime: 1631473349358,
   eventType: <EventType.OUTBOUND_ACCOUNT_POSITION>'outboundAccountPosition',
-  lastAccountUpdate: 1631473349358
-}
+  lastAccountUpdate: 1631473349358,
+};

@@ -1,1 +1,1 @@
-export const noop = () => null
+export const noop = () => null;

@@ -1,7 +1,7 @@
-import config from 'config'
-import { nanoid } from 'nanoid'
-import { Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Pair, Trade } from '../../interfaces'
-import { OpenOrder } from './localExchange.interfaces'
+import config from 'config';
+import { nanoid } from 'nanoid';
+import { Candle, Order, OrderCommand, OrderSide, OrderStatus, OrderType, Pair, Trade } from '../../interfaces';
+import { OpenOrder } from './localExchange.interfaces';
 
 export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: Candle): OpenOrder => {
   return {
@@ -13,11 +13,11 @@ export const mapOrderCommandToOpenOrder = (orderCommand: OrderCommand, candle: C
     symbol: orderCommand.symbol,
     type: orderCommand.type,
     createTime: candle.start,
-  }
-}
+  };
+};
 
 export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Omit<Order, 'status'> => {
-  return ({
+  return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: order.originalClientOrderId,
     price: orderPrice,
@@ -25,20 +25,16 @@ export const mapOpenOrderToOrder = (order: OpenOrder, candle: Candle, pair: Pair
     side: order.side,
     symbol: order.symbol,
     type: order.type,
-    createTime: order.createTime
-  })
-}
+    createTime: order.createTime,
+  };
+};
 
 export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair, orderPrice: number): Trade => {
-  const fee: number = order.type === OrderType.MARKET
-    ? config.get('exchanges.local.feeTaker')
-    : config.get('exchanges.local.feeMaker')
+  const fee: number = order.type === OrderType.MARKET ? config.get('exchanges.local.feeTaker') : config.get('exchanges.local.feeMaker');
 
-  const commission = order.side === OrderSide.BUY
-    ? order.quantity * fee
-    : order.quantity * (fee * orderPrice)
+  const commission = order.side === OrderSide.BUY ? order.quantity * fee : order.quantity * (fee * orderPrice);
 
-  return ({
+  return {
     clientOrderId: order.clientOrderId,
     originalClientOrderId: order.originalClientOrderId,
     price: orderPrice,
@@ -52,6 +48,6 @@ export const mapOpenOrderToTrade = (order: OpenOrder, candle: Candle, pair: Pair
     // @todo:
     // It would be better to increment createTime with 1 interval or wait for the next candle to use `candle.start`.
     // or else the trade would be created in the ‘past'
-    createTime: candle.start
-  })
-}
+    createTime: candle.start,
+  };
+};

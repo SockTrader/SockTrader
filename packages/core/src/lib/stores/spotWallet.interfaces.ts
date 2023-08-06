@@ -1,1 +1,1 @@
-export type AssetMap = Record<string, number>
+export type AssetMap = Record<string, number>;

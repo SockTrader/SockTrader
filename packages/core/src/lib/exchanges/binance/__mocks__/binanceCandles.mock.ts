@@ -1,5 +1,5 @@
-import { Candle } from 'binance-api-node'
-import { add } from 'date-fns'
+import { Candle } from 'binance-api-node';
+import { add } from 'date-fns';
 
 export const binanceCandlesMock: Candle[] = [
   {
@@ -221,6 +221,5 @@ export const binanceCandlesMock: Candle[] = [
     baseAssetVolume: '528.06',
     quoteAssetVolume: '5172365',
     trades: 0,
-  }
-].reverse()
-
+  },
+].reverse();

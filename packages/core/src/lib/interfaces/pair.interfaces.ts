@@ -1,1 +1,1 @@
-export type Pair = [string, string]
+export type Pair = [string, string];

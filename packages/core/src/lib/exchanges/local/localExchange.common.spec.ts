@@ -1,32 +1,32 @@
-import { TestScheduler } from 'rxjs/testing'
-import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock'
-import { TestStrategy } from '../../__mocks__/testStrategy.mock'
-import { Trade, Order, OrderSide, OrderStatus, OrderType } from '../../interfaces'
-import { LocalExchange } from './localExchange'
-import { of, switchMapTo, tap } from 'rxjs'
+import { TestScheduler } from 'rxjs/testing';
+import { localExchangeCandlesMock as candleMock } from '../../__mocks__/localExchange.mock';
+import { TestStrategy } from '../../__mocks__/testStrategy.mock';
+import { Trade, Order, OrderSide, OrderStatus, OrderType } from '../../interfaces';
+import { LocalExchange } from './localExchange';
+import { of, switchMapTo, tap } from 'rxjs';
 
 describe('LocalExchange common', () => {
-  const candleMockSet1 = [candleMock[0], candleMock[1], candleMock[2]]
-  const candleMockSet2 = [candleMock[0]]
+  const candleMockSet1 = [candleMock[0], candleMock[1], candleMock[2]];
+  const candleMockSet2 = [candleMock[0]];
 
-  let strategy: TestStrategy<LocalExchange>
-  let scheduler: TestScheduler
-  let instance: LocalExchange
+  let strategy: TestStrategy<LocalExchange>;
+  let scheduler: TestScheduler;
+  let instance: LocalExchange;
 
   beforeEach(() => {
-    instance = new LocalExchange()
-    strategy = new TestStrategy(instance)
+    instance = new LocalExchange();
+    strategy = new TestStrategy(instance);
     scheduler = new TestScheduler((received, expected) => {
-      expect(received).toEqual(expected)
-    })
-  })
+      expect(received).toEqual(expected);
+    });
+  });
 
   afterEach(() => {
-    strategy.onStop()
-  })
+    strategy.onStop();
+  });
 
   it('#LocalExchange should listen to candle events', () => {
-    instance.addCandles(['BTC', 'USDT'], candleMockSet1)
+    instance.addCandles(['BTC', 'USDT'], candleMockSet1);
 
     scheduler.run(({ expectObservable }) => {
       expectObservable(instance.candles('BTCUSDT')).toBe('(abc)', {
@@ -53,40 +53,40 @@ describe('LocalExchange common', () => {
           close: 9750.42,
           volume: 285.34,
           start: new Date('2020-02-24T13:00:00'),
-        }
-      })
-    })
-  })
+        },
+      });
+    });
+  });
 
   it('#LocalExchange should listen to multiple candle events simultaneously', () => {
-    instance.addCandles(['ETH', 'USDT'], candleMockSet1)
-    instance.addCandles(['BTC', 'USDT'], candleMockSet2)
+    instance.addCandles(['ETH', 'USDT'], candleMockSet1);
+    instance.addCandles(['BTC', 'USDT'], candleMockSet2);
 
     scheduler.run(({ expectObservable }) => {
       expectObservable(instance.candles('BTCUSDT')).toBe('(a)', {
-        a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') })
-      })
+        a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') }),
+      });
 
       expectObservable(instance.candles('ETHUSDT')).toBe('(abc)', {
         a: expect.objectContaining({ start: new Date('2020-02-24T11:00:00') }),
         b: expect.objectContaining({ start: new Date('2020-02-24T12:00:00') }),
         c: expect.objectContaining({ start: new Date('2020-02-24T13:00:00') }),
-      })
-    })
-  })
+      });
+    });
+  });
 
   it('#LocalExchange should provide a Trades stream', () => {
-    instance.addCandles(['BTC', 'USDT'], candleMock)
-    instance.setAssets(([
+    instance.addCandles(['BTC', 'USDT'], candleMock);
+    instance.setAssets([
       { asset: 'USDT', quantity: 10000 },
-      { asset: 'BTC', quantity: 1 }
-    ]))
+      { asset: 'BTC', quantity: 1 },
+    ]);
 
     scheduler.run(({ expectObservable }) => {
       const src$ = of(null).pipe(
         tap(() => strategy.onStart('BTCUSDT')),
         switchMapTo(instance.trades$)
-      )
+      );
 
       expectObservable(src$).toBe('(abcd)', {
         a: <Trade>{
@@ -100,7 +100,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.BUY,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          tradeQuantity: 1
+          tradeQuantity: 1,
         },
         b: <Trade>{
           clientOrderId: expect.any(String),
@@ -113,7 +113,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.SELL,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          tradeQuantity: 1
+          tradeQuantity: 1,
         },
         c: <Trade>{
           clientOrderId: expect.any(String),
@@ -126,7 +126,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.BUY,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          tradeQuantity: 1
+          tradeQuantity: 1,
         },
         d: <Trade>{
           clientOrderId: expect.any(String),
@@ -139,24 +139,24 @@ describe('LocalExchange common', () => {
           side: OrderSide.SELL,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          tradeQuantity: 1
-        }
-      })
-    })
-  })
+          tradeQuantity: 1,
+        },
+      });
+    });
+  });
 
   it('#LocalExchange should provide an Order stream', () => {
-    instance.addCandles(['BTC', 'USDT'], candleMock)
-    instance.setAssets(([
+    instance.addCandles(['BTC', 'USDT'], candleMock);
+    instance.setAssets([
       { asset: 'USDT', quantity: 10000 },
-      { asset: 'BTC', quantity: 1 }
-    ]))
+      { asset: 'BTC', quantity: 1 },
+    ]);
 
     scheduler.run(({ expectObservable }) => {
       const src$ = of(null).pipe(
         tap(() => strategy.onStart('BTCUSDT')),
-        switchMapTo(instance.orders$),
-      )
+        switchMapTo(instance.orders$)
+      );
 
       expectObservable(src$).toBe('(abcdef)', {
         a: <Order>{
@@ -167,7 +167,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.BUY,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          type: OrderType.MARKET
+          type: OrderType.MARKET,
         },
         b: <Order>{
           clientOrderId: expect.any(String),
@@ -177,7 +177,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.SELL,
           status: OrderStatus.FILLED,
           symbol: 'BTCUSDT',
-          type: OrderType.MARKET
+          type: OrderType.MARKET,
         },
         c: {
           clientOrderId: expect.any(String),
@@ -188,7 +188,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.BUY,
           status: OrderStatus.NEW,
           symbol: 'BTCUSDT',
-          type: OrderType.LIMIT
+          type: OrderType.LIMIT,
         },
         d: {
           clientOrderId: expect.any(String),
@@ -210,7 +210,7 @@ describe('LocalExchange common', () => {
           side: OrderSide.SELL,
           status: OrderStatus.NEW,
           symbol: 'BTCUSDT',
-          type: OrderType.LIMIT
+          type: OrderType.LIMIT,
         },
         f: {
           clientOrderId: expect.any(String),
@@ -223,7 +223,7 @@ describe('LocalExchange common', () => {
           symbol: 'BTCUSDT',
           type: OrderType.LIMIT,
         },
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});

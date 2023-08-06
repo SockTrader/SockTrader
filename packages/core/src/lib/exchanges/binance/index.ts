@@ -1,2 +1,2 @@
-export * from './binance.interfaces'
-export * from './binance'
+export * from './binance.interfaces';
+export * from './binance';

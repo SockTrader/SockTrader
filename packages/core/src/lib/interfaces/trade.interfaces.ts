@@ -1,4 +1,4 @@
-import { OrderSide, OrderStatus } from './order.interfaces'
+import { OrderSide, OrderStatus } from './order.interfaces';
 
 export interface Trade {
   clientOrderId: string;
