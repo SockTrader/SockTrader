@@ -49,10 +49,7 @@ jobs:
               with:
                   targets: test
                   affected: 'true'
-                  args:
-                      - '--coverage'
-                      - '--verbose'
-                      - '--parallel'
+                  args: '--coverage --verbose --parallel'
 
             - name: Upload codecoverage report
               uses: codecov/codecov-action@v3
