@@ -16,6 +16,8 @@ export const binanceExchangeInfoMock: ExchangeInfo = {
   symbols: [
     {
       baseAsset: 'BTC',
+      pricePrecision: 8,
+      quantityPrecision: 8,
       baseAssetPrecision: 8,
       baseCommissionPrecision: 8,
       quoteCommissionPrecision: 8,
