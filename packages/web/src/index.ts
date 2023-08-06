@@ -25,7 +25,7 @@ app.get('/udf/symbol_info', (req, res) => {
 });
 
 app.get('/udf/symbols', async (req, res) => {
-  res.status(200).send(await udf.symbol(req.query.symbol as string));
+  res.status(200).send(await udf.symbol(req.query['symbol'] as string));
 });
 
 app.get('/udf/search', async (req, res) => {
@@ -33,10 +33,10 @@ app.get('/udf/search', async (req, res) => {
     .status(200)
     .send(
       await udf.search(
-        req.query.query as string,
-        req.query.type as string,
-        req.query.exchange as string,
-        parseInt(req.query.limit as string)
+        req.query['query'] as string,
+        req.query['type'] as string,
+        req.query['exchange'] as string,
+        parseInt(req.query['limit'] as string)
       )
     );
 });
@@ -46,11 +46,11 @@ app.get('/udf/history', async (req, res) => {
     .status(200)
     .send(
       await udf.history(
-        req.query.symbol as string,
-        parseInt(req.query.from as string),
-        parseInt(req.query.to as string),
-        req.query.resolution as string,
-        parseInt(req.query.countback as string)
+        req.query['symbol'] as string,
+        parseInt(req.query['from'] as string),
+        parseInt(req.query['to'] as string),
+        req.query['resolution'] as string,
+        parseInt(req.query['countback'] as string)
       )
     );
 });
