@@ -17,24 +17,23 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
-                with:
-                    fetch-depth: 0
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
 
-            -   name: Setup Node LTS
-                uses: actions/setup-node@v3
-                with:
-                    node-version: 'lts/*'
-                    cache: 'npm'
+            - name: Setup Node LTS
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: 'npm'
 
-            -   name: Install dependencies
-                run: |
-                    env
-                    npm ci
+            - name: Install dependencies
+              run: |
+                  env
+                  npm ci
 
-            -   name: Build, lint & test affected packages
-                uses: mansagroup/nrwl-nx-action@v3
-                with:
-                    targets: build,lint,test
-                    affected: 'true'
-
+            - name: Build, lint & test affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: build,lint,test
+                  affected: 'true'

@@ -17,59 +17,53 @@ jobs:
         if: "!contains(github.event.head_commit.message, 'skip ci')"
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v3
-                with:
-                    fetch-depth: 0
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
 
-            -   name: Setup Node LTS
-                uses: actions/setup-node@v3
-                with:
-                    node-version: 'lts/*'
-                    cache: 'npm'
+            - name: Setup Node LTS
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: 'npm'
 
-            -   name: Install dependencies
-                run: |
-                    env
-                    npm ci
+            - name: Install dependencies
+              run: |
+                  env
+                  npm ci
 
-            -   name: Set env vars for Nx affected
-                uses: nrwl/nx-set-shas@v3
-                with:
-                    main-branch-name: 'master'
-                    last-successful-event: 'push'
+            - name: Build affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: build
+                  affected: 'true'
 
-            -   name: Check if libs are affected
-                id: affected
-                run: echo "::set-output name=affected::$(npx nx affected:libs --base=${{ steps.setSHAs.outputs.base }} --head=${{ steps.setSHAs.outputs.head }} --plain)"
+            - name: Lint affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: lint
+                  affected: 'true'
 
-            -   name: Build affected packages
-                run: npx nx affected --target=build
+            - name: Test affected packages
+              uses: mansagroup/nrwl-nx-action@v3
+              with:
+                  targets: test
+                  affected: 'true'
+                  args:
+                      - '--coverage'
+                      - '--verbose'
+                      - '--parallel'
 
-            -   name: Lint affected packages
-                run: npx nx affected --target=lint
+            - name: Upload codecoverage report
+              uses: codecov/codecov-action@v3
+              with:
+                  files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
+                  flags: unittests
+                  name: codecov-umbrella
+                  verbose: true
 
-            -   name: Unit tests all packages
-                run: npx nx affected --target=test --verbose --parallel
-
-            -   name: Build all packages
-                run: npx nx run-many --target=build --all
-
-            -   name: Lint all packages
-                run: npx nx run-many --target=lint --all
-
-            -   name: Unit tests all packages
-                run: npx nx run-many --target=test --verbose --all --parallel --coverage
-
-            -   name: Upload codecoverage report
-                uses: codecov/codecov-action@v3
-                with:
-                    files: ./coverage/packages/cli/clover.xml,./coverage/packages/core/clover.xml,./coverage/packages/indicators/clover.xml,./coverage/packages/web/clover.xml
-                    flags: unittests
-                    name: codecov-umbrella
-                    verbose: true
-
-            -   name: Publish packages
-                if: ${{ steps.affected.outputs.affected != '' }}
-                run: |
-                    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-                    npx semantic-release
+#            - name: Publish packages
+#              if: ${{ steps.affected.outputs.affected != '' }}
+#              run: |
+#                  echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#                  npx semantic-release
