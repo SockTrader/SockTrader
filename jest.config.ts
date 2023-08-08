@@ -1,5 +1,5 @@
-const { getJestProjects } = require('@nx/jest');
+import { getJestProjects } from '@nx/jest';
 
-module.exports = {
+export default {
   projects: getJestProjects(),
 };

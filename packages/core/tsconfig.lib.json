@@ -1,16 +1,25 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
     "outDir": "../../dist/out-tsc",
     "declaration": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ],
+    "target": "es2021",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "exclude": [
-    "**/__mocks__/*.ts",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "jest.config.ts"
+  "include": [
+    "src/**/*.ts"
   ],
-  "include": ["**/*.ts"]
+  "exclude": [
+    "jest.config.ts",
+    "src/**/__mocks__/*.ts",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts"
+  ]
 }

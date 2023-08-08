@@ -4,7 +4,7 @@ import {
   getCandleSets,
   getUniqueExchanges,
 } from '@socktrader/core';
-import { toTable } from './utils/toTable';
+import { toTable } from './toTable';
 import { UDFSymbol } from './udf.interfaces';
 
 export class UDF {
