@@ -56,7 +56,7 @@
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.1.3",
     "@nx/eslint-plugin": "16.5.3",
-    "@nx/jest": "16.5.3",
+    "@nx/jest": "16.5.4",
     "@nx/js": "16.5.3",
     "@nx/linter": "16.5.3",
     "@nx/nest": "16.5.3",
