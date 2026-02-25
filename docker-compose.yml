@@ -9,10 +9,12 @@ services:
       - './config:/app/config'
     environment:
       - NODE_ENV=development
+      - NODE_CONFIG={"database":{"host":"postgresql"}}
     depends_on:
       - postgresql
     networks:
       - postgres
+    restart: unless-stopped
 
   postgresql:
     image: postgres:14-alpine
