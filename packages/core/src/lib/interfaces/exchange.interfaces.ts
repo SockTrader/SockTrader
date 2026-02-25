@@ -7,10 +7,12 @@ import { WalletService } from '../wallet';
 export interface Exchange {
   candles(options: unknown): Observable<Candle>;
 
+  /** Rejects if insufficient funds in wallet */
   buy(orderCommand: Omit<OrderCommand, 'side'>): Promise<void>;
 
   buyMargin(): Promise<void>;
 
+  /** Rejects if insufficient funds in wallet */
   sell(orderCommand: Omit<OrderCommand, 'side'>): Promise<void>;
 
   sellMargin(): Promise<void>;

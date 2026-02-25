@@ -28,8 +28,10 @@ export class UDF {
 
   symbols: UDFSymbol[] = [];
 
+  readonly ready: Promise<void>;
+
   constructor() {
-    this.loadSymbols();
+    this.ready = this.loadSymbols();
   }
 
   async loadSymbols() {
@@ -130,7 +132,7 @@ export class UDF {
     }
 
     if (exchange) {
-      symbols = symbols.filter((s) => s.exchange === s.exchange);
+      symbols = symbols.filter((s) => s.exchange === exchange.toUpperCase());
     }
 
     query = query.toUpperCase();

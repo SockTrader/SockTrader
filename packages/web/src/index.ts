@@ -1,4 +1,3 @@
-import { Worker } from '@socktrader/core';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -12,7 +11,13 @@ app.use(cors());
 app.use(helmet());
 
 app.get('/udf/config', async (req, res) => {
-  res.status(200).send(await udf.config());
+  try {
+    await udf.ready;
+    res.status(200).send(await udf.config());
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 });
 
 app.get('/udf/time', (req, res) => {
@@ -20,53 +25,73 @@ app.get('/udf/time', (req, res) => {
   res.set('Content-Type', 'text/plain').send(time.toString());
 });
 
-app.get('/udf/symbol_info', (req, res) => {
-  res.status(200).send(udf.symbolInfo());
+app.get('/udf/symbol_info', async (req, res) => {
+  try {
+    await udf.ready;
+    res.status(200).send(udf.symbolInfo());
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 });
 
 app.get('/udf/symbols', async (req, res) => {
-  res.status(200).send(await udf.symbol(req.query['symbol'] as string));
+  try {
+    await udf.ready;
+    res.status(200).send(await udf.symbol(req.query['symbol'] as string));
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 });
 
 app.get('/udf/search', async (req, res) => {
-  res
-    .status(200)
-    .send(
-      await udf.search(
-        req.query['query'] as string,
-        req.query['type'] as string,
-        req.query['exchange'] as string,
-        parseInt(req.query['limit'] as string)
-      )
-    );
+  try {
+    await udf.ready;
+    const limit = parseInt(req.query['limit'] as string) || 100;
+    res
+      .status(200)
+      .send(
+        await udf.search(
+          req.query['query'] as string,
+          req.query['type'] as string,
+          req.query['exchange'] as string,
+          limit
+        )
+      );
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({ error: 'Internal server error' });
+  }
 });
 
 app.get('/udf/history', async (req, res) => {
-  res
-    .status(200)
-    .send(
-      await udf.history(
-        req.query['symbol'] as string,
-        parseInt(req.query['from'] as string),
-        parseInt(req.query['to'] as string),
-        req.query['resolution'] as string,
-        parseInt(req.query['countback'] as string)
-      )
-    );
-});
-
-app.post('/run-strategy', (req, res) => {
-  const strategy = req.body?.strategy;
   try {
-    const worker = new Worker();
-    worker.run(strategy);
+    await udf.ready;
+    const from = parseInt(req.query['from'] as string) || 0;
+    const to =
+      parseInt(req.query['to'] as string) || Math.floor(Date.now() / 1000);
+    const countBack = parseInt(req.query['countback'] as string) || 300;
+    res
+      .status(200)
+      .send(
+        await udf.history(
+          req.query['symbol'] as string,
+          from,
+          to,
+          req.query['resolution'] as string,
+          countBack
+        )
+      );
   } catch (e) {
     console.error(e);
+    res.status(500).send({ error: 'Internal server error' });
   }
-
-  res.status(200).send('hello world');
 });
 
-app.listen(3001, () => {
+const server = app.listen(3001, () => {
   console.log('Server started. Listening on: 3001');
 });
+
+process.on('SIGTERM', () => server.close());
+process.on('SIGINT', () => server.close());

@@ -13,6 +13,10 @@ const poolCreator = () => {
         password: config.get('database.password'),
         port: config.get('database.port'),
       });
+
+      pool.on('error', (err) => {
+        console.error('Unexpected DB pool error:', err);
+      });
     }
 
     return pool;
@@ -27,4 +31,8 @@ export const query = <R extends QueryResultRow = any, I extends any[] = any[]>(
   params?: I
 ): Promise<QueryResult<R>> => {
   return getPool().query(text, params);
+};
+
+export const closePool = async (): Promise<void> => {
+  await getPool().end();
 };

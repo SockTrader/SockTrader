@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   socktrader:
     build:
@@ -13,6 +11,8 @@ services:
       - NODE_ENV=development
     depends_on:
       - postgresql
+    networks:
+      - postgres
 
   postgresql:
     image: postgres:14-alpine
