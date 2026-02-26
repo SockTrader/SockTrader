@@ -37,6 +37,12 @@
         }
       }
     },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "web:build"
+      }
+    },
     "pre-release": {
       "executor": "nx:run-commands",
       "options": {

@@ -8,8 +8,12 @@ const persistActions = <T extends Exchange>(
 ) => {
   const originalOnStop = strategy.onStop?.bind(strategy) ?? noop;
 
-  const orderSubs = exchange.orders$.subscribe((o: Order) => insertOrder(o));
-  const tradesSubs = exchange.trades$.subscribe((t: Trade) => insertTrade(t));
+  const orderSubs = exchange.orders$.subscribe((o: Order) =>
+    insertOrder(o).catch((err) => console.error('Failed to persist order:', err))
+  );
+  const tradesSubs = exchange.trades$.subscribe((t: Trade) =>
+    insertTrade(t).catch((err) => console.error('Failed to persist trade:', err))
+  );
 
   strategy.onStop = () => {
     orderSubs.unsubscribe();

@@ -3,3 +3,4 @@ export * from './lib/interfaces';
 export * from './lib/repositories';
 export * from './lib/stores';
 export * from './lib/worker';
+export { closePool } from './lib/db';

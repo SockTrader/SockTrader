@@ -78,5 +78,10 @@ export class WalletService {
         trade.price * trade.quantity
       );
     }
+
+    // Deduct trading commission from received asset
+    if (trade.commission && trade.commissionAsset) {
+      this.store.updateAsset(trade.commissionAsset, -trade.commission);
+    }
   }
 }

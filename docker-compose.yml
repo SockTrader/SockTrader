@@ -1,18 +1,19 @@
-version: '3.8'
-
 services:
   socktrader:
     build:
       context: ./
       dockerfile: ./docker/Dockerfile
     volumes:
-      - '/app/node_modules'
       - './apps:/app/apps'
       - './config:/app/config'
     environment:
       - NODE_ENV=development
+      - NODE_CONFIG={"database":{"host":"postgresql"}}
     depends_on:
       - postgresql
+    networks:
+      - postgres
+    restart: unless-stopped
 
   postgresql:
     image: postgres:14-alpine
