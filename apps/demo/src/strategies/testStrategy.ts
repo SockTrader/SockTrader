@@ -60,22 +60,26 @@ export class TestStrategy implements Strategy {
   }
 
   private async updateCandle(candle: Candle) {
-    if (candle.close > 7000 && !this.bought) {
-      await this._exchange.buy({
-        symbol: 'BTCUSDT',
-        type: OrderType.MARKET,
-        quantity: 1,
-      });
-      this.bought = true;
-    }
+    try {
+      if (candle.close > 7000 && !this.bought) {
+        await this._exchange.buy({
+          symbol: 'BTCUSDT',
+          type: OrderType.MARKET,
+          quantity: 1,
+        });
+        this.bought = true;
+      }
 
-    if (candle.close > 10000 && !this.sold) {
-      await this._exchange.sell({
-        symbol: 'BTCUSDT',
-        type: OrderType.MARKET,
-        quantity: 1,
-      });
-      this.sold = true;
+      if (candle.close > 10000 && !this.sold) {
+        await this._exchange.sell({
+          symbol: 'BTCUSDT',
+          type: OrderType.MARKET,
+          quantity: 0.999,
+        });
+        this.sold = true;
+      }
+    } catch (e) {
+      console.error('Strategy error:', e);
     }
   }
 }

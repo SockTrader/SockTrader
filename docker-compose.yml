@@ -4,7 +4,6 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile
     volumes:
-      - '/app/node_modules'
       - './apps:/app/apps'
       - './config:/app/config'
     environment:
